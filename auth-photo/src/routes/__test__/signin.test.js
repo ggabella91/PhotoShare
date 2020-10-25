@@ -34,30 +34,73 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import express from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser';
-import cookieSession from 'cookie-session';
-import { errorHandler, NotFoundError } from '@ggabella-photo-share/common';
-import { currentUserRouter } from './routes/current-user';
-import { signinRouter } from './routes/signin';
-import { signoutRouter } from './routes/signout';
-import { signupRouter } from './routes/signup';
-var app = express();
-app.set('trust proxy', true);
-app.use(json());
-app.use(cookieSession({
-    signed: false,
-    secure: false,
-}));
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
-app.all('*', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+import request from 'supertest';
+import { app } from '../../app';
+it('fails when a email that does not exist is supplied', function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        throw new NotFoundError();
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, request(app)
+                    .post('/api/users/signin')
+                    .send({
+                    email: 'test@test.com',
+                    password: 'password',
+                })
+                    .expect(400)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
     });
 }); });
-app.use(errorHandler);
-export { app };
+it('fails when an incorrect password is supplied', function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, request(app)
+                    .post('/api/users/signup')
+                    .send({
+                    email: 'test@test.com',
+                    password: 'password',
+                })
+                    .expect(201)];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, request(app)
+                        .post('/api/users/signin')
+                        .send({
+                        email: 'test@test.com',
+                        password: 'dgusueou',
+                    })
+                        .expect(400)];
+            case 2:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+it('responds with a cookie when given valid credentials', function () { return __awaiter(void 0, void 0, void 0, function () {
+    var response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, request(app)
+                    .post('/api/users/signup')
+                    .send({
+                    email: 'test@test.com',
+                    password: 'password',
+                })
+                    .expect(201)];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, request(app)
+                        .post('/api/users/signin')
+                        .send({
+                        email: 'test@test.com',
+                        password: 'password',
+                    })
+                        .expect(200)];
+            case 2:
+                response = _a.sent();
+                expect(response.get('Set-Cookie')).toBeDefined();
+                return [2 /*return*/];
+        }
+    });
+}); });

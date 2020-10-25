@@ -34,30 +34,42 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import express from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser';
-import cookieSession from 'cookie-session';
-import { errorHandler, NotFoundError } from '@ggabella-photo-share/common';
-import { currentUserRouter } from './routes/current-user';
-import { signinRouter } from './routes/signin';
-import { signoutRouter } from './routes/signout';
-import { signupRouter } from './routes/signup';
-var app = express();
-app.set('trust proxy', true);
-app.use(json());
-app.use(cookieSession({
-    signed: false,
-    secure: false,
-}));
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
-app.all('*', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        throw new NotFoundError();
-    });
-}); });
-app.use(errorHandler);
-export { app };
+import { scrypt, randomBytes } from 'crypto';
+import { promisify } from 'util';
+var scryptAsync = promisify(scrypt);
+var Password = /** @class */ (function () {
+    function Password() {
+    }
+    Password.toHash = function (password) {
+        return __awaiter(this, void 0, void 0, function () {
+            var salt, buf;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        salt = randomBytes(8).toString('hex');
+                        return [4 /*yield*/, scryptAsync(password, salt, 64)];
+                    case 1:
+                        buf = (_a.sent());
+                        return [2 /*return*/, buf.toString('hex') + "." + salt];
+                }
+            });
+        });
+    };
+    Password.compare = function (storedPassword, suppliedPassword) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, hashedPassword, salt, buf;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = storedPassword.split('.'), hashedPassword = _a[0], salt = _a[1];
+                        return [4 /*yield*/, scryptAsync(suppliedPassword, salt, 64)];
+                    case 1:
+                        buf = (_b.sent());
+                        return [2 /*return*/, buf.toString('hex') === hashedPassword];
+                }
+            });
+        });
+    };
+    return Password;
+}());
+export { Password };

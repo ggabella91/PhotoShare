@@ -35,29 +35,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import express from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser';
-import cookieSession from 'cookie-session';
-import { errorHandler, NotFoundError } from '@ggabella-photo-share/common';
-import { currentUserRouter } from './routes/current-user';
-import { signinRouter } from './routes/signin';
-import { signoutRouter } from './routes/signout';
-import { signupRouter } from './routes/signup';
-var app = express();
-app.set('trust proxy', true);
-app.use(json());
-app.use(cookieSession({
-    signed: false,
-    secure: false,
-}));
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
-app.all('*', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        throw new NotFoundError();
+import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
+import { User } from '../models/user';
+var router = express.Router();
+router.post('/api/users/signup', [
+    body('email').isEmail().withMessage('Email must be valid'),
+    body('password')
+        .trim()
+        .isLength({ min: 4, max: 20 })
+        .withMessage('Password must be between 4 and 20 characters'),
+], validateRequest, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, password, existingUser, user, userJwt;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, email = _a.email, password = _a.password;
+                return [4 /*yield*/, User.findOne({ email: email })];
+            case 1:
+                existingUser = _b.sent();
+                if (existingUser) {
+                    throw new BadRequestError('Email in use');
+                }
+                user = User.build({ email: email, password: password });
+                return [4 /*yield*/, user.save()];
+            case 2:
+                _b.sent();
+                userJwt = jwt.sign({
+                    id: user.id,
+                    email: user.email,
+                }, process.env.JWT_KEY);
+                // Store it on the session object
+                req.session = {
+                    jwt: userJwt,
+                };
+                res.status(201).send(user);
+                return [2 /*return*/];
+        }
     });
 }); });
-app.use(errorHandler);
-export { app };
+export { router as signupRouter };

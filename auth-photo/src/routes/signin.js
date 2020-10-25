@@ -35,29 +35,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import express from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser';
-import cookieSession from 'cookie-session';
-import { errorHandler, NotFoundError } from '@ggabella-photo-share/common';
-import { currentUserRouter } from './routes/current-user';
-import { signinRouter } from './routes/signin';
-import { signoutRouter } from './routes/signout';
-import { signupRouter } from './routes/signup';
-var app = express();
-app.set('trust proxy', true);
-app.use(json());
-app.use(cookieSession({
-    signed: false,
-    secure: false,
-}));
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
-app.all('*', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        throw new NotFoundError();
+import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { Password } from '../services/password';
+import { User } from '../models/user';
+import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
+var router = express.Router();
+router.post('/api/users/signin', [
+    body('email').isEmail().withMessage('Email must be valid'),
+    body('password')
+        .trim()
+        .notEmpty()
+        .withMessage('You must supply a password'),
+], validateRequest, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, password, existingUser, passwordsMatch, userJwt;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, email = _a.email, password = _a.password;
+                return [4 /*yield*/, User.findOne({ email: email })];
+            case 1:
+                existingUser = _b.sent();
+                if (!existingUser) {
+                    throw new BadRequestError('Invalid credentials');
+                }
+                return [4 /*yield*/, Password.compare(existingUser.password, password)];
+            case 2:
+                passwordsMatch = _b.sent();
+                if (!passwordsMatch) {
+                    throw new BadRequestError('Invalid credentials');
+                }
+                userJwt = jwt.sign({
+                    id: existingUser.id,
+                    email: existingUser.email,
+                }, process.env.JWT_KEY);
+                // Store it on the session object
+                req.session = {
+                    jwt: userJwt,
+                };
+                res.status(200).send(existingUser);
+                return [2 /*return*/];
+        }
     });
 }); });
-app.use(errorHandler);
-export { app };
+export { router as signinRouter };
