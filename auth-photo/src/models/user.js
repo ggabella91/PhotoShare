@@ -34,30 +34,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import express from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser';
-import cookieSession from 'cookie-session';
-import { errorHandler, NotFoundError } from '@ggabella-photo-share/common';
-import { currentUserRouter } from './routes/current-user';
-import { signinRouter } from './routes/signin';
-import { signoutRouter } from './routes/signout';
-import { signupRouter } from './routes/signup';
-var app = express();
-app.set('trust proxy', true);
-app.use(json());
-app.use(cookieSession({
-    signed: false,
-    secure: false,
-}));
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
-app.all('*', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        throw new NotFoundError();
+import mongoose from 'mongoose';
+import { Password } from '../services/password';
+var userSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+}, {
+    toJSON: {
+        transform: function (doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.password;
+            delete ret.__v;
+        },
+    },
+});
+userSchema.pre('save', function (done) {
+    return __awaiter(this, void 0, void 0, function () {
+        var hashed;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!this.isModified('password')) return [3 /*break*/, 2];
+                    return [4 /*yield*/, Password.toHash(this.get('password'))];
+                case 1:
+                    hashed = _a.sent();
+                    this.set('password', hashed);
+                    _a.label = 2;
+                case 2:
+                    done();
+                    return [2 /*return*/];
+            }
+        });
     });
-}); });
-app.use(errorHandler);
-export { app };
+});
+userSchema.statics.build = function (attrs) {
+    return new User(attrs);
+};
+var User = mongoose.model('User', userSchema);
+export { User };

@@ -34,42 +34,85 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import { app } from './app';
-var start = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var err_1;
+import request from 'supertest';
+import { app } from '../app';
+var mongo;
+beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+    var mongoUri;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('Starting up...');
-                if (!process.env.JWT_KEY) {
-                    throw new Error('JWT_KEY must be defined');
-                }
-                if (!process.env.MONGO_URI) {
-                    throw new Error('MONGO_URI must be defined');
-                }
-                _a.label = 1;
+                process.env.JWT_KEY = 'asdfasdf';
+                mongo = new MongoMemoryServer();
+                return [4 /*yield*/, mongo.getUri()];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, mongoose.connect(process.env.MONGO_URI, {
+                mongoUri = _a.sent();
+                return [4 /*yield*/, mongoose.connect(mongoUri, {
                         useNewUrlParser: true,
                         useUnifiedTopology: true,
-                        useCreateIndex: true,
                     })];
             case 2:
                 _a.sent();
-                console.log('Connected to MongoDB');
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _a.sent();
-                console.log(err_1);
-                return [3 /*break*/, 4];
-            case 4:
-                app.listen(3000, function () {
-                    console.log('Listening on port 3000!');
-                });
                 return [2 /*return*/];
         }
     });
+}); });
+beforeEach(function () { return __awaiter(void 0, void 0, void 0, function () {
+    var collections, _i, collections_1, collection;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, mongoose.connection.db.collections()];
+            case 1:
+                collections = _a.sent();
+                _i = 0, collections_1 = collections;
+                _a.label = 2;
+            case 2:
+                if (!(_i < collections_1.length)) return [3 /*break*/, 5];
+                collection = collections_1[_i];
+                return [4 /*yield*/, collection.deleteMany({})];
+            case 3:
+                _a.sent();
+                _a.label = 4;
+            case 4:
+                _i++;
+                return [3 /*break*/, 2];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); });
+afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, mongo.stop()];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, mongoose.connection.close()];
+            case 2:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+global.signin = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var email, password, response, cookie;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                email = 'test@test.com';
+                password = 'password';
+                return [4 /*yield*/, request(app)
+                        .post('/api/users/signup')
+                        .send({
+                        email: email,
+                        password: password,
+                    })
+                        .expect(201)];
+            case 1:
+                response = _a.sent();
+                cookie = response.get('Set-Cookie');
+                return [2 /*return*/, cookie];
+        }
+    });
 }); };
-start();
