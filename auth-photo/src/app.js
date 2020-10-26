@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,30 +35,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import express from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser';
-import cookieSession from 'cookie-session';
-import { errorHandler, NotFoundError } from '@ggabella-photo-share/common';
-import { currentUserRouter } from './routes/current-user';
-import { signinRouter } from './routes/signin';
-import { signoutRouter } from './routes/signout';
-import { signupRouter } from './routes/signup';
-var app = express();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.app = void 0;
+var express_1 = __importDefault(require("express"));
+require("express-async-errors");
+var body_parser_1 = require("body-parser");
+var cookie_session_1 = __importDefault(require("cookie-session"));
+var common_1 = require("@ggabella-photo-share/common");
+var current_user_1 = require("./routes/current-user");
+var signin_1 = require("./routes/signin");
+var signout_1 = require("./routes/signout");
+var signup_1 = require("./routes/signup");
+var app = express_1.default();
+exports.app = app;
 app.set('trust proxy', true);
-app.use(json());
-app.use(cookieSession({
+app.use(body_parser_1.json());
+app.use(cookie_session_1.default({
     signed: false,
     secure: false,
 }));
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
+app.use(current_user_1.currentUserRouter);
+app.use(signin_1.signinRouter);
+app.use(signout_1.signoutRouter);
+app.use(signup_1.signupRouter);
 app.all('*', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        throw new NotFoundError();
+        throw new common_1.NotFoundError();
     });
 }); });
-app.use(errorHandler);
-export { app };
+app.use(common_1.errorHandler);

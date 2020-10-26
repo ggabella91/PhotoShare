@@ -7,10 +7,10 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
   rules:
-    - host: ticketing.dev
+    - host: photo-share.dev
       http:
         paths:
           - path: /api/users/?(.*)
             backend:
-              serviceName: auth-srv
+              serviceName: auth-photo-srv
               servicePort: 3000

@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,10 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-import request from 'supertest';
-import { app } from '../app';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongodb_memory_server_1 = require("mongodb-memory-server");
+var mongoose_1 = __importDefault(require("mongoose"));
+var supertest_1 = __importDefault(require("supertest"));
+var app_1 = require("../app");
 var mongo;
 beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
     var mongoUri;
@@ -45,11 +50,11 @@ beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         switch (_a.label) {
             case 0:
                 process.env.JWT_KEY = 'asdfasdf';
-                mongo = new MongoMemoryServer();
+                mongo = new mongodb_memory_server_1.MongoMemoryServer();
                 return [4 /*yield*/, mongo.getUri()];
             case 1:
                 mongoUri = _a.sent();
-                return [4 /*yield*/, mongoose.connect(mongoUri, {
+                return [4 /*yield*/, mongoose_1.default.connect(mongoUri, {
                         useNewUrlParser: true,
                         useUnifiedTopology: true,
                     })];
@@ -63,7 +68,7 @@ beforeEach(function () { return __awaiter(void 0, void 0, void 0, function () {
     var collections, _i, collections_1, collection;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose.connection.db.collections()];
+            case 0: return [4 /*yield*/, mongoose_1.default.connection.db.collections()];
             case 1:
                 collections = _a.sent();
                 _i = 0, collections_1 = collections;
@@ -88,7 +93,7 @@ afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
             case 0: return [4 /*yield*/, mongo.stop()];
             case 1:
                 _a.sent();
-                return [4 /*yield*/, mongoose.connection.close()];
+                return [4 /*yield*/, mongoose_1.default.connection.close()];
             case 2:
                 _a.sent();
                 return [2 /*return*/];
@@ -102,7 +107,7 @@ global.signin = function () { return __awaiter(void 0, void 0, void 0, function 
             case 0:
                 email = 'test@test.com';
                 password = 'password';
-                return [4 /*yield*/, request(app)
+                return [4 /*yield*/, supertest_1.default(app_1.app)
                         .post('/api/users/signup')
                         .send({
                         email: email,

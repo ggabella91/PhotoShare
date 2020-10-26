@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,9 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import mongoose from 'mongoose';
-import { Password } from '../services/password';
-var userSchema = new mongoose.Schema({
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
+var mongoose_1 = __importDefault(require("mongoose"));
+var password_1 = require("../services/password");
+var userSchema = new mongoose_1.default.Schema({
     email: {
         type: String,
         required: true,
@@ -62,7 +68,7 @@ userSchema.pre('save', function (done) {
             switch (_a.label) {
                 case 0:
                     if (!this.isModified('password')) return [3 /*break*/, 2];
-                    return [4 /*yield*/, Password.toHash(this.get('password'))];
+                    return [4 /*yield*/, password_1.Password.toHash(this.get('password'))];
                 case 1:
                     hashed = _a.sent();
                     this.set('password', hashed);
@@ -77,5 +83,5 @@ userSchema.pre('save', function (done) {
 userSchema.statics.build = function (attrs) {
     return new User(attrs);
 };
-var User = mongoose.model('User', userSchema);
-export { User };
+var User = mongoose_1.default.model('User', userSchema);
+exports.User = User;
