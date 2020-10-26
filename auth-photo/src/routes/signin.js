@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,38 +35,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import express from 'express';
-import { body } from 'express-validator';
-import jwt from 'jsonwebtoken';
-import { Password } from '../services/password';
-import { User } from '../models/user';
-import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
-var router = express.Router();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.signinRouter = void 0;
+var express_1 = __importDefault(require("express"));
+var express_validator_1 = require("express-validator");
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var password_1 = require("../services/password");
+var user_1 = require("../models/user");
+var common_1 = require("@ggabella-photo-share/common");
+var router = express_1.default.Router();
+exports.signinRouter = router;
 router.post('/api/users/signin', [
-    body('email').isEmail().withMessage('Email must be valid'),
-    body('password')
+    express_validator_1.body('email').isEmail().withMessage('Email must be valid'),
+    express_validator_1.body('password')
         .trim()
         .notEmpty()
         .withMessage('You must supply a password'),
-], validateRequest, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+], common_1.validateRequest, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, email, password, existingUser, passwordsMatch, userJwt;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = req.body, email = _a.email, password = _a.password;
-                return [4 /*yield*/, User.findOne({ email: email })];
+                return [4 /*yield*/, user_1.User.findOne({ email: email })];
             case 1:
                 existingUser = _b.sent();
                 if (!existingUser) {
-                    throw new BadRequestError('Invalid credentials');
+                    throw new common_1.BadRequestError('Invalid credentials');
                 }
-                return [4 /*yield*/, Password.compare(existingUser.password, password)];
+                return [4 /*yield*/, password_1.Password.compare(existingUser.password, password)];
             case 2:
                 passwordsMatch = _b.sent();
                 if (!passwordsMatch) {
-                    throw new BadRequestError('Invalid credentials');
+                    throw new common_1.BadRequestError('Invalid credentials');
                 }
-                userJwt = jwt.sign({
+                userJwt = jsonwebtoken_1.default.sign({
                     id: existingUser.id,
                     email: existingUser.email,
                 }, process.env.JWT_KEY);
@@ -78,4 +85,3 @@ router.post('/api/users/signin', [
         }
     });
 }); });
-export { router as signinRouter };

@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,8 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import mongoose from 'mongoose';
-import { app } from './app';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose_1 = __importDefault(require("mongoose"));
+var app_1 = require("./app");
 var start = function () { return __awaiter(void 0, void 0, void 0, function () {
     var err_1;
     return __generator(this, function (_a) {
@@ -51,7 +56,7 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, mongoose.connect(process.env.MONGO_URI, {
+                return [4 /*yield*/, mongoose_1.default.connect(process.env.MONGO_URI, {
                         useNewUrlParser: true,
                         useUnifiedTopology: true,
                         useCreateIndex: true,
@@ -65,7 +70,7 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                 console.log(err_1);
                 return [3 /*break*/, 4];
             case 4:
-                app.listen(3000, function () {
+                app_1.app.listen(3000, function () {
                     console.log('Listening on port 3000!');
                 });
                 return [2 /*return*/];

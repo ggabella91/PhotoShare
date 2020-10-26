@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,9 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { scrypt, randomBytes } from 'crypto';
-import { promisify } from 'util';
-var scryptAsync = promisify(scrypt);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Password = void 0;
+var crypto_1 = require("crypto");
+var util_1 = require("util");
+var scryptAsync = util_1.promisify(crypto_1.scrypt);
 var Password = /** @class */ (function () {
     function Password() {
     }
@@ -46,7 +49,7 @@ var Password = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        salt = randomBytes(8).toString('hex');
+                        salt = crypto_1.randomBytes(8).toString('hex');
                         return [4 /*yield*/, scryptAsync(password, salt, 64)];
                     case 1:
                         buf = (_a.sent());
@@ -72,4 +75,4 @@ var Password = /** @class */ (function () {
     };
     return Password;
 }());
-export { Password };
+exports.Password = Password;
