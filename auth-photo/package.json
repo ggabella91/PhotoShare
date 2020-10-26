@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc-watch src/index.ts",
-    "start": "nodemon src/index.js",
+    "compile": "node build/index.js",
+    "start": "tsc-watch --onSuccess \"npm run compile\"",
     "test": "jest --watchAll --no-cache"
   },
   "jest": {
@@ -38,7 +38,7 @@
     "express-validator": "^6.6.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.10",
-    "nodemon": "^2.0.6",
+    "tsc-watch": "^4.2.9",
     "typescript": "^4.0.3"
   },
   "devDependencies": {
@@ -49,7 +49,6 @@
     "jest": "^26.6.1",
     "mongodb-memory-server": "^6.9.2",
     "supertest": "^5.0.0",
-    "ts-jest": "^26.4.2",
-    "tsc-watch": "^4.2.9"
+    "ts-jest": "^26.4.2"
   }
 }
