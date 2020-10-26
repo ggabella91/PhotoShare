@@ -71,7 +71,7 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [3 /*break*/, 4];
             case 4:
                 app_1.app.listen(3000, function () {
-                    console.log('Listening on port 3000!');
+                    console.log('Listening on port 3000!!');
                 });
                 return [2 /*return*/];
         }
