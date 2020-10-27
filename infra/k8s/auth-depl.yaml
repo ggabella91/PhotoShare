@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-photo-depl
+  name: auth-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth-photo
+      app: auth
   template:
     metadata:
       labels:
-        app: auth-photo
+        app: auth
     spec:
       containers:
-        - name: auth-photo
-          image: ggabella91/auth-photo
+        - name: auth
+          image: ggabella91/auth
           env:
             - name: MONGO_URI
-              value: 'mongodb://auth-photo-mongo-srv:27017/auth-photo'
+              value: 'mongodb://auth-mongo-srv:27017/auth'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -27,12 +27,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-photo-srv
+  name: auth-srv
 spec:
   selector:
-    app: auth-photo
+    app: auth
   ports:
-    - name: auth-photo
+    - name: auth
       protocol: TCP
       port: 3000
       targetPort: 3000

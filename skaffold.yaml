@@ -8,16 +8,16 @@ build:
   local:
     push: false
   artifacts:
-    - image: ggabella91/auth-photo
-      context: auth-photo
+    - image: ggabella91/auth
+      context: auth
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
           - src: 'src/**/*.js'
             dest: .
-    - image: ggabella91/client-photo
-      context: client-photo
+    - image: ggabella91/client
+      context: client
       docker:
         dockerfile: Dockerfile
       sync:
