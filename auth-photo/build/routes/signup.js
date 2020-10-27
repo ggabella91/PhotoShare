@@ -48,29 +48,40 @@ var user_1 = require("../models/user");
 var router = express_1.default.Router();
 exports.signupRouter = router;
 router.post('/api/users/signup', [
+    express_validator_1.body('name').trim().not().isEmpty().withMessage('A name must be provided'),
     express_validator_1.body('email').isEmail().withMessage('Email must be valid'),
     express_validator_1.body('password')
         .trim()
         .isLength({ min: 4, max: 20 })
         .withMessage('Password must be between 4 and 20 characters'),
+    express_validator_1.body('passwordConfirm')
+        .trim()
+        .custom(function (value, _a) {
+        var req = _a.req;
+        if (value !== req.body.password) {
+            throw new Error('Password confirmation does not match password');
+        }
+        return true;
+    }),
 ], common_1.validateRequest, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, existingUser, user, userJwt;
+    var _a, name, email, password, existingUser, user, userJwt;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = req.body, email = _a.email, password = _a.password;
+                _a = req.body, name = _a.name, email = _a.email, password = _a.password;
                 return [4 /*yield*/, user_1.User.findOne({ email: email })];
             case 1:
                 existingUser = _b.sent();
                 if (existingUser) {
                     throw new common_1.BadRequestError('Email in use');
                 }
-                user = user_1.User.build({ email: email, password: password });
+                user = user_1.User.build({ name: name, email: email, password: password });
                 return [4 /*yield*/, user.save()];
             case 2:
                 _b.sent();
                 userJwt = jsonwebtoken_1.default.sign({
                     id: user.id,
+                    name: user.name,
                     email: user.email,
                 }, process.env.JWT_KEY);
                 // Store it on the session object
