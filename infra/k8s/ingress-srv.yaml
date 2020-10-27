@@ -12,7 +12,7 @@ spec:
         paths:
           - path: /api/users/?(.*)
             backend:
-              serviceName: auth-photo-srv
+              serviceName: auth-srv
               servicePort: 3000
           - path: /?(.*)
             backend:
