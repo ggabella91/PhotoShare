@@ -43,6 +43,10 @@ exports.User = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
 var password_1 = require("../services/password");
 var userSchema = new mongoose_1.default.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,

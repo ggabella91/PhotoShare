@@ -16,3 +16,11 @@ build:
         manual:
           - src: 'src/**/*.js'
             dest: .
+    - image: ggabella91/client-photo
+      context: client-photo
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.ts(x)'
+            dest: .
