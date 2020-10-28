@@ -1,6 +1,6 @@
 import UserActions from './user.types';
 
-interface UserState {
+export interface UserState {
   currentUser: { name: string; email: string } | null;
   signUpError: string | null;
   signInOrOutError: string | null;
