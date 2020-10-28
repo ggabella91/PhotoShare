@@ -1,0 +1,17 @@
+.header {
+  background-color: #3b5ab1;
+  min-height: 15vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 0;
+
+  .app-name {
+    justify-content: left;
+    margin-left: 20px;
+    margin-top: 40px;
+    padding-bottom: 0;
+  }
+}
