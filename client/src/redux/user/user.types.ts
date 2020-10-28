@@ -1,4 +1,5 @@
 interface UserTypes {
+  CHECK_USER_SESSION: string;
   SET_CURRENT_USER: string;
   SIGN_UP_START: string;
   SIGN_UP_SUCCESS: string;
@@ -12,6 +13,7 @@ interface UserTypes {
 }
 
 const UserActions: UserTypes = {
+  CHECK_USER_SESSION: 'CHECK_USER_SESSION',
   SET_CURRENT_USER: 'SET_CURRENT_USER',
   SIGN_UP_START: 'SIGN_UP_START',
   SIGN_UP_SUCCESS: 'SIGN_UP_SUCCESS',
