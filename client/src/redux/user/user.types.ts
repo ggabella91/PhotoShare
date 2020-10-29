@@ -57,6 +57,7 @@ export interface SignUpFailure {
 
 export interface CheckUserSession {
   type: typeof UserActions.CHECK_USER_SESSION;
+  payload: null;
 }
 
 export interface SetCurrentUser {
@@ -81,10 +82,12 @@ export interface SignInFailure {
 
 export interface SignOutStart {
   type: typeof UserActions.SIGN_OUT_START;
+  payload: null;
 }
 
 export interface SignOutSuccess {
   type: typeof UserActions.SIGN_OUT_SUCCESS;
+  payload: null;
 }
 
 export interface SignOutFailure {

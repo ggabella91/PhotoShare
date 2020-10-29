@@ -26,6 +26,7 @@ export const signUpFailure = (error: Error): UserActionTypes => ({
 
 export const checkUserSession = (): UserActionTypes => ({
   type: UserActions.CHECK_USER_SESSION,
+  payload: null,
 });
 
 export const setCurrentUser = (user: User): UserActionTypes => ({
@@ -50,10 +51,12 @@ export const signInFailure = (error: Error): UserActionTypes => ({
 
 export const signOutStart = (): UserActionTypes => ({
   type: UserActions.SIGN_OUT_START,
+  payload: null,
 });
 
 export const signOutSuccess = (): UserActionTypes => ({
   type: UserActions.SIGN_OUT_SUCCESS,
+  payload: null,
 });
 
 export const signOutFailure = (error: Error): UserActionTypes => ({
