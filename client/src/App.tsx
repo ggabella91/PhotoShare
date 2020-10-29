@@ -38,4 +38,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   checkUserSession: () => dispatch(checkUserSession()),
 });
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
