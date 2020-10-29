@@ -1,10 +1,4 @@
-import UserActions from './user.types';
-
-export interface UserState {
-  currentUser: { name: string; email: string } | null;
-  signUpError: string | null;
-  signInOrOutError: string | null;
-}
+import { UserActions, UserState } from './user.types';
 
 const INITIAL_STATE: UserState = {
   currentUser: null,
@@ -29,6 +23,12 @@ const userReducer = (state = INITIAL_STATE, action: any) => {
       return {
         ...state,
         currentUser: action.payload,
+        signInOrOutError: null,
+      };
+    case UserActions.SIGN_OUT_SUCCESS:
+      return {
+        ...state,
+        currentUser: null,
         signInOrOutError: null,
       };
     case UserActions.SIGN_UP_FAILURE:
