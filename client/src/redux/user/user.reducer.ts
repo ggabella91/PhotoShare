@@ -1,10 +1,4 @@
-import UserActions from './user.types';
-
-export interface UserState {
-  currentUser: { name: string; email: string } | null;
-  signUpError: string | null;
-  signInOrOutError: string | null;
-}
+import { UserActions, UserActionTypes, UserState } from './user.types';
 
 const INITIAL_STATE: UserState = {
   currentUser: null,
@@ -12,7 +6,7 @@ const INITIAL_STATE: UserState = {
   signInOrOutError: null,
 };
 
-const userReducer = (state = INITIAL_STATE, action: any) => {
+const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
   switch (action.type) {
     case UserActions.SET_CURRENT_USER:
       return {
@@ -31,6 +25,12 @@ const userReducer = (state = INITIAL_STATE, action: any) => {
         currentUser: action.payload,
         signInOrOutError: null,
       };
+    case UserActions.SIGN_OUT_SUCCESS:
+      return {
+        ...state,
+        currentUser: action.payload,
+        signInOrOutError: null,
+      };
     case UserActions.SIGN_UP_FAILURE:
       return {
         ...state,
@@ -42,6 +42,8 @@ const userReducer = (state = INITIAL_STATE, action: any) => {
         ...state,
         signInOrOutError: action.payload,
       };
+    default:
+      return state;
   }
 };
 
