@@ -42,6 +42,8 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         ...state,
         signInOrOutError: action.payload,
       };
+    default:
+      return state;
   }
 };
 
