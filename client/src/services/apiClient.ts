@@ -5,7 +5,7 @@ import axios, {
   AxiosError,
 } from 'axios';
 
-const apiClient = ({ req }: AxiosRequestConfig) => {
+const apiClient = ({ req }: any) => {
   return axios.create({
     baseURL: '/api',
     responseType: 'json',
@@ -13,4 +13,4 @@ const apiClient = ({ req }: AxiosRequestConfig) => {
   });
 };
 
-export default
+export default apiClient;
