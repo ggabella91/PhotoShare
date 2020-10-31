@@ -40,6 +40,8 @@ export interface Error {
   message: string;
 }
 
+export type   = UserSignUp | UserSignIn | User | Error;
+
 export interface SignUpStart {
   type: typeof UserActions.SIGN_UP_START;
   payload: UserSignUp;

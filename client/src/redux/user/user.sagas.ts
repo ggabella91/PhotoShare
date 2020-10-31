@@ -1,10 +1,27 @@
+import { Action, ActionCreator } from 'redux';
 import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
-import { ActionPattern } from '@redux-saga/types';
+import { ActionPattern, ActionType, Saga } from '@redux-saga/types';
 
-import { UserSignUp, User, UserActions, UserActionTypes } from './user.types';
+import {
+  UserSignUp,
+  User,
+  UserActions,
+  UserPayload,
+  UserActionTypes,
+} from './user.types';
 
-import axios from 'axios';
+import axios, {
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+} from 'axios';
+
+interface MyAction extends Action {
+  type: string;
+  payload?: UserPayload;
+}
 
 import {
   setCurrentUser,
@@ -22,12 +39,12 @@ export function* signUp({
   payload: UserSignUp;
 }): SagaIterator {
   try {
-    const { data } = yield axios.post('api/v1/users/signup', {
+    const { data } = yield axios.post<UserSignUp, AxiosResponse<User>>('/api/v1/users/signup', {
       name,
       email,
       password,
       passwordConfirm,
-    });
+    }): Promise<AxiosResponse<User>>;
 
     yield put(signUpSuccess(data.data.user));
   } catch (err) {
@@ -35,12 +52,21 @@ export function* signUp({
   }
 }
 
+export function* signIn() {}
+
+export function* isLoggedIn() {}
+
+export function* signOut() {}
+
 export function* onSignUpStart(): SagaIterator {
-  yield takeLatest<T, Fn extends (...args: any[]) => any>(UserActions.SIGN_UP_START, signUp): SagaGenerator;
+  yield takeLatest<ActionPattern, Saga>(UserActions.SIGN_UP_START, signUp);
 }
 
 export function* onSignUpSuccess(): SagaIterator {
-  yield takeLatest(UserActions.SIGN_UP_SUCCESS, signInAfterSignUp);
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.SIGN_UP_SUCCESS,
+    signInAfterSignUp
+  );
 }
 
 export function* signInAfterSignUp({
@@ -52,15 +78,18 @@ export function* signInAfterSignUp({
 }
 
 export function* onSignInStart(): SagaIterator {
-  yield takeLatest(UserActions.SIGN_IN_START, signIn);
+  yield takeLatest<ActionPattern, Saga>(UserActions.SIGN_IN_START, signIn);
 }
 
 export function* onCheckUserSession(): SagaIterator {
-  yield takeLatest(UserActions.CHECK_USER_SESSION, isLoggedIn);
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.CHECK_USER_SESSION,
+    isLoggedIn
+  );
 }
 
 export function* onSignOutStart(): SagaIterator {
-  yield takeLatest(UserActions.SIGN_OUT_START, signOut);
+  yield takeLatest<ActionPattern, Saga>(UserActions.SIGN_OUT_START, signOut);
 }
 
 export function* userSagas(): SagaIterator {
