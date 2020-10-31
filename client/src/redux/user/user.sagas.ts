@@ -1,6 +1,6 @@
 import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
-import {ActionPattern} from '@redux-saga/types'
+import { ActionPattern } from '@redux-saga/types';
 
 import { UserSignUp, User, UserActions, UserActionTypes } from './user.types';
 
@@ -19,7 +19,7 @@ import {
 export function* signUp({
   payload: { name, email, password, passwordConfirm },
 }: {
-  UserActionTypes;
+  payload: UserSignUp;
 }): SagaIterator {
   try {
     const { data } = yield axios.post('api/v1/users/signup', {
@@ -36,14 +36,18 @@ export function* signUp({
 }
 
 export function* onSignUpStart(): SagaIterator {
-  yield takeLatest<ActionPattern>(UserActions.SIGN_UP_START, signUp);
+  yield takeLatest<T, Fn extends (...args: any[]) => any>(UserActions.SIGN_UP_START, signUp): SagaGenerator;
 }
 
 export function* onSignUpSuccess(): SagaIterator {
   yield takeLatest(UserActions.SIGN_UP_SUCCESS, signInAfterSignUp);
 }
 
-export function* signInAfterSignUp({ payload: user }): SagaIterator {
+export function* signInAfterSignUp({
+  payload: user,
+}: {
+  payload: User;
+}): SagaIterator {
   yield put(setCurrentUser(user));
 }
 
