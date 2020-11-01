@@ -70,14 +70,14 @@ const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
           name='email'
           type='email'
           value={email}
-          handleChange={handleChange}
+          onChange={handleChange}
           label='email'
         />
         <FormInput
           name='password'
           type='password'
           value={password}
-          handleChange={handleChange}
+          onChange={handleChange}
           label='password'
         />
         <div>
@@ -87,7 +87,11 @@ const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
         </div>
 
         <div className='button'>
-          <Button className='submit-button' onSubmit={handleSubmit}>
+          <Button
+            className='submit-button'
+            onSubmit={handleSubmit}
+            type='submit'
+          >
             Sign In
           </Button>
         </div>

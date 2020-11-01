@@ -6,6 +6,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   className: string;
   onSubmit: React.FormEventHandler;
   children: any;
+  type: string;
 }
 
 const Button: React.FC<ButtonProps> = ({ children, ...otherProps }) => (
