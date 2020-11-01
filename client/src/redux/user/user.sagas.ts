@@ -1,23 +1,8 @@
-import { Action, ActionCreator } from 'redux';
-import {
-  takeLatest,
-  put,
-  all,
-  call,
-  SagaReturnType,
-  PutEffect,
-} from 'redux-saga/effects';
+import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
-import { ActionPattern, ActionType, Effect, Saga } from '@redux-saga/types';
+import { ActionPattern, Saga } from '@redux-saga/types';
 
-import { UserSignUp, User, UserActions, UserActionTypes } from './user.types';
-
-import axios, {
-  AxiosPromise,
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosError,
-} from 'axios';
+import { UserSignUp, UserSignIn, User, UserActions } from './user.types';
 
 import {
   setCurrentUser,
@@ -36,15 +21,12 @@ export function* signUp({
 }): SagaIterator {
   try {
     // @ts-ignore
-    const { data } = yield axios.post<UserSignUp, AxiosResponse<User>>(
-      '/api/v1/users/signup',
-      {
-        name,
-        email,
-        password,
-        passwordConfirm,
-      }
-    );
+    const { data } = yield axios.post('/api/users/signup', {
+      name,
+      email,
+      password,
+      passwordConfirm,
+    });
 
     yield put(signUpSuccess(data.data.user));
   } catch (err) {
@@ -52,11 +34,45 @@ export function* signUp({
   }
 }
 
-export function* signIn() {}
+export function* signIn({
+  payload: { email, password },
+}: {
+  payload: UserSignIn;
+}): SagaIterator {
+  try {
+    // @ts-ignore
+    const { data } = yield axios.post('/api/users/signin/', {
+      email,
+      password,
+    });
 
-export function* isLoggedIn() {}
+    yield put(signInSuccess(data.data.user));
+  } catch (err) {
+    yield put(signInFailure(err));
+  }
+}
 
-export function* signOut() {}
+export function* isLoggedIn(): SagaIterator {
+  try {
+    //@ts-ignore
+    const userLoggedIn = yield axios.get('/api/users/currentuser');
+
+    if (!userLoggedIn.data.currentUser) return;
+    yield put(setCurrentUser(userLoggedIn.data.currentUser));
+  } catch (err) {
+    yield put(signInFailure(err));
+  }
+}
+
+export function* signOut(): SagaIterator {
+  try {
+    //@ts-ignore
+    yield axios.get(`${origin}api/users/signout`);
+    yield put(signOutSuccess());
+  } catch (err) {
+    yield put(signOutFailure(err));
+  }
+}
 
 export function* onSignUpStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(UserActions.SIGN_UP_START, signUp);
@@ -93,5 +109,11 @@ export function* onSignOutStart(): SagaIterator {
 }
 
 export function* userSagas(): SagaIterator {
-  yield all([]);
+  yield all([
+    call(onSignUpStart),
+    call(onSignUpSuccess),
+    call(onSignInStart),
+    call(onCheckUserSession),
+    call(onSignOutStart),
+  ]);
 }

@@ -1,4 +1,3 @@
-import { Reducer } from 'redux';
 import { UserActions, UserActionTypes, UserState } from './user.types';
 
 const INITIAL_STATE: UserState = {

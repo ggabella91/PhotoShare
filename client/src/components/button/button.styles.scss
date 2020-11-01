@@ -1,0 +1,61 @@
+.button {
+  border-radius: 15px;
+}
+
+.submit-button {
+  min-width: 180px;
+  width: auto;
+  height: 60px;
+  letter-spacing: 0.5px;
+  line-height: 50px;
+  padding: 0 35px 0 35px;
+  font-weight: 380;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  background-color: #05347a;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  text-transform: capitalize;
+  text-decoration: none;
+}
+
+.modal-button {
+  width: 120px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  max-width: 120px;
+  padding: 0 20px 0 35px;
+  cursor: pointer;
+  justify-content: center;
+  background-color: #05347a;
+  color: white;
+  border: none;
+  text-transform: capitalize;
+  text-decoration: none;
+  span {
+    font-size: 14px;
+    font-weight: 380;
+  }
+}
+
+.delete-button {
+  background-color: #f44336;
+  text-align: center;
+  min-width: 180px;
+}
+
+.submit-button:hover {
+  opacity: 0.9;
+}
+
+span {
+  font-size: 20px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  margin: auto;
+  font-family: 'Lato', sans-serif;
+}
