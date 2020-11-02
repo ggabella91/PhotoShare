@@ -10,10 +10,20 @@ export interface FormInputProps {
   label: string;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ children, ...otherProps }) => (
+const FormInput: React.FC<FormInputProps> = ({
+  children,
+  label,
+  ...otherProps
+}) => (
   <div className='group'>
+    {label ? (
+      <label
+        className={`${otherProps.value.length ? 'hide' : ''} form-input-label`}
+      >
+        {label}
+      </label>
+    ) : null}
     <input className='form-input' {...otherProps} />
-    <label className='form-input-label' />
   </div>
 );
 

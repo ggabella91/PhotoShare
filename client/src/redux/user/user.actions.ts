@@ -32,7 +32,7 @@ export const checkUserSession = (): UserActionTypes => ({
   payload: null,
 });
 
-export const setCurrentUser = (user: User): UserActionTypes => ({
+export const setCurrentUser = (user: User | null): UserActionTypes => ({
   type: UserActions.SET_CURRENT_USER,
   payload: user,
 });

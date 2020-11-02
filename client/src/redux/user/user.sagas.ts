@@ -14,6 +14,8 @@ import {
   signUpFailure,
 } from './user.actions';
 
+import axios from 'axios';
+
 export function* signUp({
   payload: { name, email, password, passwordConfirm },
 }: {
@@ -28,7 +30,7 @@ export function* signUp({
       passwordConfirm,
     });
 
-    yield put(signUpSuccess(data.data.user));
+    yield put(signUpSuccess(data));
   } catch (err) {
     yield put(signUpFailure(err));
   }
@@ -46,7 +48,7 @@ export function* signIn({
       password,
     });
 
-    yield put(signInSuccess(data.data.user));
+    yield put(signInSuccess(data));
   } catch (err) {
     yield put(signInFailure(err));
   }
@@ -60,7 +62,7 @@ export function* isLoggedIn(): SagaIterator {
     if (!userLoggedIn.data.currentUser) return;
     yield put(setCurrentUser(userLoggedIn.data.currentUser));
   } catch (err) {
-    yield put(signInFailure(err));
+    yield put(setCurrentUser(null));
   }
 }
 

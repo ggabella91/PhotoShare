@@ -64,7 +64,7 @@ export interface CheckUserSession {
 
 export interface SetCurrentUser {
   type: typeof UserActions.SET_CURRENT_USER;
-  payload: User;
+  payload: User | null;
 }
 
 export interface SignInStart {
