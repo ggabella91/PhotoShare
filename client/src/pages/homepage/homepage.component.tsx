@@ -7,7 +7,7 @@ import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 interface HomePageProps {
-  currentUser: typeof selectCurrentUser;
+  currentUser?: typeof selectCurrentUser;
 }
 
 const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {

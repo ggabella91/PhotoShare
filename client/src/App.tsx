@@ -2,26 +2,46 @@ import React, { useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector, Selector } from 'reselect';
+import { createStructuredSelector } from 'reselect';
 
 import { AppState } from './redux/root-reducer';
-import { User } from './redux/user/user.types';
+import { User, UserPayload } from './redux/user/user.types';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { checkUserSession } from './redux/user/user.actions';
-import axios from 'axios';
 
 import './App.scss';
 import Header from './components/header/header.component';
+import SignUpAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-sign-up.component';
+import HomePage from './pages/homepage/homepage.component';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface AppProps {
-  // For when createStructuredSelector includes a selection
-  // that depends on the app's props
+  checkUserSession: typeof checkUserSession;
+  currentUser: UserPayload;
 }
 
-const App: React.FC<AppProps> = () => {
+const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
+  useEffect(() => {
+    checkUserSession();
+  }, []);
+
   return (
     <div className='App'>
       <Header />
+      <Switch>
+        <Route
+          exact
+          path='/me'
+          render={() => (!currentUser ? <Redirect to='/' /> : <HomePage />)}
+        />
+        <Route
+          exact
+          path='/'
+          render={() =>
+            currentUser ? <Redirect to='/me' /> : <SignUpAndSignUpPage />
+          }
+        />
+      </Switch>
     </div>
   );
 };
