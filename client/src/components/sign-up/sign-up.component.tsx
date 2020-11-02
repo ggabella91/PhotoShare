@@ -102,11 +102,7 @@ const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
             : null}
         </div>
         <div className='button'>
-          <Button
-            className='submit-button'
-            onSubmit={handleSubmit}
-            type='submit'
-          >
+          <Button className='submit-button' onSubmit={handleSubmit}>
             Sign Up
           </Button>
         </div>

@@ -9,10 +9,9 @@ import Button from '../button/button.component';
 import Alert from 'react-bootstrap/Alert';
 
 import { AppState } from '../../redux/root-reducer';
-import { Error } from '../../redux/user/user.types';
 import { signInStart } from '../../redux/user/user.actions';
 import { selectUserSignInOrOutError } from '../../redux/user/user.selectors';
-import { UserSignIn, UserPayload } from '../../redux/user/user.types';
+import { UserSignIn, UserPayload, Error } from '../../redux/user/user.types';
 
 import './sign-in.styles.scss';
 
@@ -87,11 +86,7 @@ const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
         </div>
 
         <div className='button'>
-          <Button
-            className='submit-button'
-            onSubmit={handleSubmit}
-            type='submit'
-          >
+          <Button className='submit-button' onSubmit={handleSubmit}>
             Sign In
           </Button>
         </div>
