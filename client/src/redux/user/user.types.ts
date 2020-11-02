@@ -12,12 +12,6 @@ export enum UserActions {
   SIGN_OUT_FAILURE = 'SIGN_OUT_FAILURE',
 }
 
-export interface UserState {
-  currentUser: { name: string; email: string } | null;
-  signUpError: string | null;
-  signInOrOutError: string | null;
-}
-
 export interface UserSignUp {
   name: string;
   email: string;
@@ -40,7 +34,13 @@ export interface Error {
   message: string;
 }
 
-export type UserPayload = UserSignUp | UserSignIn | User | Error;
+export type UserPayload = UserSignUp | UserSignIn | User | Error | null;
+
+export interface UserState {
+  currentUser: { name: string; email: string } | null;
+  signUpError: Error | null;
+  signInOrOutError: Error | null;
+}
 
 export interface SignUpStart {
   type: typeof UserActions.SIGN_UP_START;
@@ -64,7 +64,7 @@ export interface CheckUserSession {
 
 export interface SetCurrentUser {
   type: typeof UserActions.SET_CURRENT_USER;
-  payload: User;
+  payload: User | null;
 }
 
 export interface SignInStart {

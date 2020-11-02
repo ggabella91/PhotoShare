@@ -3,7 +3,7 @@ import React, { ChangeEvent } from 'react';
 import './form-input.styles.scss';
 
 export interface FormInputProps {
-  handleChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: React.ChangeEventHandler;
   name: string;
   type: string;
   value: string;
@@ -11,12 +11,19 @@ export interface FormInputProps {
 }
 
 const FormInput: React.FC<FormInputProps> = ({
-  handleChange,
+  children,
+  label,
   ...otherProps
 }) => (
   <div className='group'>
+    {label ? (
+      <label
+        className={`${otherProps.value.length ? 'hide' : ''} form-input-label`}
+      >
+        {label}
+      </label>
+    ) : null}
     <input className='form-input' {...otherProps} />
-    <label className='form-input-label' />
   </div>
 );
 

@@ -7,11 +7,14 @@ import {
   Error,
 } from './user.types';
 
-export const signUpStart = (
-  signUpCredentials: UserSignUp
-): UserActionTypes => ({
+export const signUpStart = ({
+  name,
+  email,
+  password,
+  passwordConfirm,
+}: UserSignUp): UserActionTypes => ({
   type: UserActions.SIGN_UP_START,
-  payload: signUpCredentials,
+  payload: { name, email, password, passwordConfirm },
 });
 
 export const signUpSuccess = (user: User): UserActionTypes => ({
@@ -29,14 +32,20 @@ export const checkUserSession = (): UserActionTypes => ({
   payload: null,
 });
 
-export const setCurrentUser = (user: User): UserActionTypes => ({
+export const setCurrentUser = (user: User | null): UserActionTypes => ({
   type: UserActions.SET_CURRENT_USER,
   payload: user,
 });
 
-export const signInStart = (userCredentials: UserSignIn): UserActionTypes => ({
+export const signInStart = ({
+  email,
+  password,
+}: UserSignIn): UserActionTypes => ({
   type: UserActions.SIGN_IN_START,
-  payload: userCredentials,
+  payload: {
+    email,
+    password,
+  },
 });
 
 export const signInSuccess = (user: User): UserActionTypes => ({

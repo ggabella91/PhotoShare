@@ -12,6 +12,8 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
       return {
         ...state,
         currentUser: action.payload,
+        signInOrOutError: null,
+        signUpError: null,
       };
     case UserActions.SIGN_UP_SUCCESS:
       return {
