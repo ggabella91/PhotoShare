@@ -57,4 +57,27 @@ span {
       @include hideLabel();
     }
   }
+
+  .form-file-input {
+    background: none;
+    background-color: white;
+    color: $sub-color;
+    font-size: 18px;
+    padding: 8px 8px 8px 4px;
+    display: block;
+    min-width: 200px;
+    border: 1.8px solid $main-color;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+
+  .form-file-input-label {
+    color: $sub-color;
+    font-size: 16px;
+    font-weight: normal;
+    position: relative;
+    margin-right: 10px;
+    left: 5px;
+    top: 10px;
+  }
 }

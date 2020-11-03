@@ -10,7 +10,15 @@ export interface FormInputProps {
   label: string;
 }
 
-const FormInput: React.FC<FormInputProps> = ({
+export interface FormFileInputType {
+  onChange?: React.ChangeEventHandler;
+  name: string;
+  type: string;
+  label: string;
+  accept: string;
+}
+
+export const FormInput: React.FC<FormInputProps> = ({
   children,
   label,
   ...otherProps
@@ -27,4 +35,13 @@ const FormInput: React.FC<FormInputProps> = ({
   </div>
 );
 
-export default FormInput;
+export const FormFileInput: React.FC<FormFileInputType> = ({
+  children,
+  label,
+  ...otherProps
+}) => (
+  <div className='group'>
+    <label className='form-file-input-label'>{label}</label>
+    <input className='form-file-input' {...otherProps} />
+  </div>
+);

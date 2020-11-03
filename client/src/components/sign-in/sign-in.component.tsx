@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import FormInput from '../form-input/form-input.component';
+import { FormInput } from '../form-input/form-input.component';
 import Button from '../button/button.component';
 import Alert from 'react-bootstrap/Alert';
 
