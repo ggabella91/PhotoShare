@@ -5,7 +5,7 @@ import './button.styles.scss';
 export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   className: string;
   onSubmit: React.FormEventHandler;
-  children: any;
+  children?: any;
 }
 
 const Button: React.FC<ButtonProps> = ({ children, ...otherProps }) => (
