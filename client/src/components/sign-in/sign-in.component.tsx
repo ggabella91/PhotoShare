@@ -59,9 +59,9 @@ const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
 
   return (
     <div className='sign-in'>
-      <h3>I already have an account</h3>
+      <h4>Existing user?</h4>
       <div className='sub-text'>
-        <span>Sign in with your email and password</span>
+        <span>Sign in</span>
       </div>
 
       <form onSubmit={handleSubmit}>

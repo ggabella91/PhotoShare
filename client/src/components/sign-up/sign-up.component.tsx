@@ -63,7 +63,7 @@ const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
 
   return (
     <div>
-      <h3 className='title'>Don't have an account yet?</h3>
+      <h4 className='title'>Don't have an account yet?</h4>
       <div className='sub-text'>
         <span>Sign up below!</span>
       </div>
