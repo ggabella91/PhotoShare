@@ -25,9 +25,8 @@ span {
     padding: 8px 8px 8px 4px;
     display: block;
     width: 100%;
-    border: none;
-    border-radius: 0;
-    border-bottom: 1px solid $main-color;
+    border: 1.8px solid $main-color;
+    border-radius: 6px;
     margin: 12px 0;
 
     &:focus {
