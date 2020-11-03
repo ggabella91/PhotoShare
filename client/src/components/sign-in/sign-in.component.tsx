@@ -13,8 +13,6 @@ import { signInStart } from '../../redux/user/user.actions';
 import { selectUserSignInOrOutError } from '../../redux/user/user.selectors';
 import { UserSignIn, UserPayload, Error } from '../../redux/user/user.types';
 
-import './sign-in.styles.scss';
-
 interface SignInProps {
   signInStart: typeof signInStart;
   signInError: UserPayload;
@@ -61,8 +59,10 @@ const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
 
   return (
     <div className='sign-in'>
-      <h2>I already have an account</h2>
-      <span>Sign in with your email and password</span>
+      <h4>Existing user?</h4>
+      <div className='sub-text'>
+        <span>Sign in</span>
+      </div>
 
       <form onSubmit={handleSubmit}>
         <FormInput

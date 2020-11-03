@@ -11,6 +11,7 @@ import { checkUserSession } from './redux/user/user.actions';
 
 import './App.scss';
 import Header from './components/header/header.component';
+import Footer from './components/footer/footer.component';
 import SignUpAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-sign-up.component';
 import HomePage from './pages/homepage/homepage.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -42,6 +43,7 @@ const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           }
         />
       </Switch>
+      <Footer />
     </div>
   );
 };

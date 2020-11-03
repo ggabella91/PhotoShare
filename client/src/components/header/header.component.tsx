@@ -5,7 +5,7 @@ const Header: React.FC = () => {
   return (
     <div className='header'>
       <div className='app-name'>
-        <h1>PhotoShare</h1>
+        <h1 className='title'>PhotoShare</h1>
       </div>
     </div>
   );
