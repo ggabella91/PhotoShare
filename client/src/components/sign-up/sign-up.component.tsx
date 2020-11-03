@@ -14,8 +14,6 @@ import { signUpStart } from '../../redux/user/user.actions';
 import { selectUserSignUpError } from '../../redux/user/user.selectors';
 import { UserSignUp, UserPayload } from '../../redux/user/user.types';
 
-import './sign-up.styles.scss';
-
 interface SignUpProps {
   signUpStart: typeof signUpStart;
   signUpError: UserPayload;
@@ -65,8 +63,10 @@ const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
 
   return (
     <div>
-      <h2 className='title'>I do not have an account</h2>
-      <span>Sign up with your email and password</span>
+      <h3 className='title'>Don't have an account yet?</h3>
+      <div className='sub-text'>
+        <span>Sign up below!</span>
+      </div>
       <form className='sign-up-form' onSubmit={handleSubmit}>
         <FormInput
           type='text'

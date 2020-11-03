@@ -15,20 +15,20 @@ span {
 
 .group {
   position: relative;
-  margin: 45px 0;
+  margin: 35px 0;
 
   .form-input {
     background: none;
     background-color: white;
     color: $sub-color;
     font-size: 18px;
-    padding: 10px 10px 10px 5px;
+    padding: 8px 8px 8px 4px;
     display: block;
     width: 100%;
     border: none;
     border-radius: 0;
     border-bottom: 1px solid $main-color;
-    margin: 25px 0;
+    margin: 12px 0;
 
     &:focus {
       outline: none;
