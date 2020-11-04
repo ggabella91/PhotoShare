@@ -67,8 +67,15 @@ span {
     display: block;
     min-width: 200px;
     border: 1.8px solid $main-color;
-    border-radius: 6px;
+    border-radius: 8px;
     margin: 12px 0;
+
+    &::-webkit-file-upload-button {
+      font-size: 16px;
+      border-radius: 8px;
+      color: white;
+      background-color: #074aaf;
+    }
   }
 
   .form-file-input-label {
