@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import AWS from 'aws-sdk';
 import { app } from './app';
 
 const start = async () => {
@@ -31,9 +32,18 @@ const start = async () => {
     console.log(err);
   }
 
+  AWS.config.update({
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+    region: 'us-west-1',
+  });
+
   app.listen(3000, () => {
     console.log('Listening on port 3000!!!!');
   });
 };
 
 start();
+export { AWS };
