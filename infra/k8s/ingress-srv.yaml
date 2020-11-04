@@ -10,6 +10,10 @@ spec:
     - host: photo-share.dev
       http:
         paths:
+          - path: /api/posts/?(.*)
+            backend:
+              serviceName: posts-srv
+              servicePort: 3000
           - path: /api/users/?(.*)
             backend:
               serviceName: auth-srv

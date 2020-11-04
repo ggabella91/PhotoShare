@@ -14,7 +14,15 @@ build:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: 'src/**/*.js'
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: ggabella91/posts
+      context: posts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
             dest: .
     - image: ggabella91/client
       context: client
