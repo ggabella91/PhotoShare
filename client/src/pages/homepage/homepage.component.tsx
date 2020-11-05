@@ -12,6 +12,8 @@ import {
 } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
 
+import axios from 'axios';
+
 import './homepage.styles.scss';
 
 interface HomePageProps {
@@ -42,7 +44,7 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
     setCaption(value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData();
@@ -50,6 +52,16 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
     if (post) {
       formData.append('post', post, post.name);
       console.log(post.name);
+    }
+    if (caption) {
+      formData.append('caption', caption);
+      console.log(caption);
+    }
+
+    try {
+      await axios.post('/api/posts', { data: formData });
+    } catch (err) {
+      console.log('An error occurred');
     }
   };
 
