@@ -8,6 +8,7 @@ import {
   currentUser,
 } from '@ggabella-photo-share/common';
 import { indexBucketsRouter } from './routes/index';
+import { createPostRouter } from './routes/new';
 
 const app = express();
 app.set('trust proxy', true);
@@ -19,7 +20,10 @@ app.use(
   })
 );
 
+app.use(currentUser);
+
 app.use(indexBucketsRouter);
+app.use(createPostRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();

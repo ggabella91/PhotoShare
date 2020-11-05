@@ -6,8 +6,13 @@ import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
-import { FormFileInput } from '../../components/form-input/form-input.component';
+import {
+  FormInput,
+  FormFileInput,
+} from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
+
+import axios from 'axios';
 
 import './homepage.styles.scss';
 
@@ -18,6 +23,7 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
   const [name, setName] = useState('');
   const [post, setPost] = useState<File | null>(null);
+  const [caption, setCaption] = useState('');
 
   useEffect(() => {
     if (currentUser) {
@@ -25,14 +31,20 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
     }
   }, []);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
       setPost(file);
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCaptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setCaption(value);
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData();
@@ -40,6 +52,16 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
     if (post) {
       formData.append('post', post, post.name);
       console.log(post.name);
+    }
+    if (caption) {
+      formData.append('caption', caption);
+      console.log(caption);
+    }
+
+    try {
+      await axios.post('/api/posts', { data: formData });
+    } catch (err) {
+      console.log('An error occurred');
     }
   };
 
@@ -56,7 +78,14 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
             type='file'
             label='Select photo'
             accept='image/*'
-            onChange={handleChange}
+            onChange={handleFileChange}
+          />
+          <FormInput
+            name='caption'
+            type='text'
+            label='Add a caption'
+            value={caption}
+            onChange={handleCaptionChange}
           />
           <div className='button'>
             <Button className='submit-button' onSubmit={handleSubmit}>
