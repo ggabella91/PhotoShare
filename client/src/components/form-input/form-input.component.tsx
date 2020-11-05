@@ -3,7 +3,7 @@ import React, { ChangeEvent } from 'react';
 import './form-input.styles.scss';
 
 export interface FormInputProps {
-  onChange?: React.ChangeEventHandler;
+  onChange: React.ChangeEventHandler;
   name: string;
   type: string;
   value: string;
@@ -11,7 +11,7 @@ export interface FormInputProps {
 }
 
 export interface FormFileInputType {
-  onChange?: React.ChangeEventHandler;
+  onChange: React.ChangeEventHandler;
   name: string;
   type: string;
   label: string;
