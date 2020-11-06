@@ -11,7 +11,7 @@ interface PostAttrs {
   s3ObjectURL: string;
 }
 
-interface PostDoc extends mongoose.Document {
+export interface PostDoc extends mongoose.Document {
   fileName: string;
   caption?: string;
   location?: string;

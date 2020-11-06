@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
-import { Post } from '../models/post';
+import { Post, PostDoc } from '../models/post';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
 import { generateKey } from '../utils/generateKey';
@@ -30,7 +30,7 @@ router.post(
   requireAuth,
   upload.single('photo'),
   async (req: Request, res: Response) => {
-    console.log(req.body);
+    const caption = req.body.caption || '';
 
     const key = generateKey(req.file.originalname);
 
@@ -46,30 +46,31 @@ router.post(
     const fileStream = buffToStream(fileBuffer);
 
     uploadParams.Body = fileStream;
+
     let location = '';
 
-    s3.upload(uploadParams, (err, data) => {
+    s3.upload(uploadParams, async (err, data) => {
       if (err) {
         throw new Error('Error uploading the photo');
       }
       if (data) {
         location = data.Location;
         console.log('Upload success!', location);
+
+        const post = Post.build({
+          fileName: req.file.originalname,
+          caption: '',
+          createdAt: new Date(Date.now()),
+          userId: req.currentUser!.id,
+          s3Key: key,
+          s3ObjectURL: location,
+        });
+
+        await post.save();
+
+        res.status(201).send(post);
       }
     });
-
-    const post = Post.build({
-      fileName: req.file.originalname,
-      caption: '',
-      createdAt: new Date(Date.now()),
-      userId: req.currentUser!.id,
-      s3Key: key,
-      s3ObjectURL: location,
-    });
-
-    await post.save();
-
-    res.status(201).send(post);
   }
 );
 
