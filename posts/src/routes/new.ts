@@ -59,7 +59,7 @@ router.post(
 
         const post = Post.build({
           fileName: req.file.originalname,
-          caption: '',
+          caption,
           createdAt: new Date(Date.now()),
           userId: req.currentUser!.id,
           s3Key: key,
