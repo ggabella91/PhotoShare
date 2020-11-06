@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
-import { v4 } from 'uuid';
-import slugify from 'slugify';
+import { Post } from '../models/post';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
-import buffToStream from '../utils/buffToStream';
+import { buffToStream } from '../utils/buffToStream';
+import { generateKey } from '../utils/generateKey';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 
@@ -30,13 +30,15 @@ router.post(
   requireAuth,
   upload.single('photo'),
   async (req: Request, res: Response) => {
-    console.log(req.file);
+    console.log(req.body);
+
+    const key = generateKey(req.file.originalname);
 
     const s3 = new AWS.S3();
 
     const uploadParams: S3.Types.PutObjectRequest = {
       Bucket: 'photo-share-app',
-      Key: '',
+      Key: key,
       Body: '',
     };
 
@@ -44,16 +46,30 @@ router.post(
     const fileStream = buffToStream(fileBuffer);
 
     uploadParams.Body = fileStream;
-    uploadParams.Key = req.file.originalname;
+    let location: string;
 
     s3.upload(uploadParams, (err, data) => {
       if (err) {
         throw new Error('Error uploading the photo');
       }
       if (data) {
-        console.log('Upload success!', data.Location);
+        location = data.Location;
+        console.log('Upload success!', location);
       }
     });
+
+    const post = Post.build({
+      fileName: req.file.originalname,
+      caption: '',
+      createdAt: new Date(Date.now()),
+      userId: req.currentUser.id,
+      s3Key: key,
+      s3ObjectURL: location,
+    });
+
+    await post.save();
+
+    res.status(201).send(post);
   }
 );
 

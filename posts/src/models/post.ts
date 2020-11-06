@@ -3,8 +3,8 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface PostAttrs {
   fileName: string;
-  caption: string;
-  location: string;
+  caption?: string;
+  location?: string;
   createdAt: Date;
   userId: string;
   s3Key: string;
@@ -13,8 +13,8 @@ interface PostAttrs {
 
 interface PostDoc extends mongoose.Document {
   fileName: string;
-  caption: string;
-  location: string;
+  caption?: string;
+  location?: string;
   createdAt: Date;
   userId: string;
   s3Key: string;
@@ -74,4 +74,4 @@ postSchema.statics.build = (attrs: PostAttrs) => {
 
 const Post = mongoose.model<PostDoc, PostModel>('Post', postSchema);
 
-export default Post;
+export { Post };
