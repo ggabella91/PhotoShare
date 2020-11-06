@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
+import { v4 } from 'uuid';
+import slugify from 'slugify';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import buffToStream from '../utils/buffToStream';
 import { AWS } from '../index';
