@@ -11,4 +11,4 @@ const buffToStream = (binary: Buffer): Readable => {
   return readableInstanceStream;
 };
 
-export default buffToStream;
+export { buffToStream };
