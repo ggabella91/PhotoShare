@@ -22,7 +22,7 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
   const [name, setName] = useState('');
-  const [post, setPost] = useState<File | null>(null);
+  const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
 
   useEffect(() => {
@@ -34,7 +34,11 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
-      setPost(file);
+
+      const formData = new FormData();
+      formData.append('photo', file, file.name);
+
+      setPost(formData);
     }
   };
 
@@ -47,19 +51,15 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData();
-
-    if (post) {
-      formData.append('post', post, post.name);
-      console.log(post.name);
-    }
-    if (caption) {
-      formData.append('caption', caption);
+    if (post && caption) {
+      console.log(post.get('photo'));
       console.log(caption);
+
+      post.append('caption', caption);
     }
 
     try {
-      await axios.post('/api/posts', { data: formData });
+      await axios.post('/api/posts', post);
     } catch (err) {
       console.log('An error occurred');
     }
@@ -72,7 +72,7 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
       </div>
       <div className='upload'>
         <h4>Upload a photo</h4>
-        <form onSubmit={handleSubmit}>
+        <form encType='multipart/form-data' onSubmit={handleSubmit}>
           <FormFileInput
             name='photo'
             type='file'
