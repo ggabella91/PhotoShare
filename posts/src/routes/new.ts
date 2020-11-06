@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
-import fs from 'fs';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
+import buffToStream from '../utils/buffToStream';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 
@@ -23,35 +23,36 @@ const imageFilter = (
 
 const upload = multer({ storage: fileStorage, fileFilter: imageFilter });
 
-router.post('/api/posts', requireAuth, async (req: Request, res: Response) => {
-  upload.single('photo');
+router.post(
+  '/api/posts',
+  requireAuth,
+  upload.single('photo'),
+  async (req: Request, res: Response) => {
+    console.log(req.file);
 
-  console.log(req.file);
+    const s3 = new AWS.S3();
 
-  const s3 = new AWS.S3();
+    const uploadParams: S3.Types.PutObjectRequest = {
+      Bucket: 'photo-share-app',
+      Key: '',
+      Body: '',
+    };
 
-  const uploadParams: S3.Types.PutObjectRequest = {
-    Bucket: 'photo-share-app',
-    Key: '',
-    Body: '',
-  };
+    const fileBuffer = req.file.buffer;
+    const fileStream = buffToStream(fileBuffer);
 
-  const fileStream = fs.createReadStream(req.file.buffer);
+    uploadParams.Body = fileStream;
+    uploadParams.Key = req.file.originalname;
 
-  fileStream.on('error', (err) => {
-    throw new Error('Error processing the photo');
-  });
-  uploadParams.Body = fileStream;
-  uploadParams.Key = req.file.originalname;
-
-  s3.upload(uploadParams, (err, data) => {
-    if (err) {
-      throw new Error('Error uploading the photo');
-    }
-    if (data) {
-      console.log('Upload success!', data.Location);
-    }
-  });
-});
+    s3.upload(uploadParams, (err, data) => {
+      if (err) {
+        throw new Error('Error uploading the photo');
+      }
+      if (data) {
+        console.log('Upload success!', data.Location);
+      }
+    });
+  }
+);
 
 export { router as createPostRouter };
