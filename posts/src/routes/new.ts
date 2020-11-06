@@ -46,7 +46,7 @@ router.post(
     const fileStream = buffToStream(fileBuffer);
 
     uploadParams.Body = fileStream;
-    let location: string;
+    let location = '';
 
     s3.upload(uploadParams, (err, data) => {
       if (err) {
@@ -62,7 +62,7 @@ router.post(
       fileName: req.file.originalname,
       caption: '',
       createdAt: new Date(Date.now()),
-      userId: req.currentUser.id,
+      userId: req.currentUser!.id,
       s3Key: key,
       s3ObjectURL: location,
     });
