@@ -52,11 +52,13 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (post && caption) {
+    if (post) {
       console.log(post.get('photo'));
       console.log(caption);
 
-      post.append('caption', caption);
+      if (caption) {
+        post.append('caption', caption);
+      }
     }
 
     try {
