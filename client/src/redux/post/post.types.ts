@@ -6,7 +6,6 @@ export enum PostActions {
 
 export interface CreatePost {
   post: FormData;
-  caption?: string;
 }
 
 export interface PostError {
