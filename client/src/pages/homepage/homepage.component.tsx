@@ -32,10 +32,11 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
   }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
+    if (event.target.files?.length) {
       const file = event.target.files[0];
 
       const formData = new FormData();
+
       formData.append('photo', file, file.name);
 
       setPost(formData);
