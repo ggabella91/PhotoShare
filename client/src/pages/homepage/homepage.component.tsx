@@ -32,6 +32,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
+  const [imgPreview, setImgPreview] = useState({ src: '', alt: '' });
 
   useEffect(() => {
     if (currentUser) {
@@ -48,6 +49,11 @@ const HomePage: React.FC<HomePageProps> = ({
       formData.append('photo', file, file.name);
 
       setPost(formData);
+
+      setImgPreview({ src: URL.createObjectURL(file), alt: file.name });
+    } else {
+      setPost(null);
+      setImgPreview({ src: '', alt: '' });
     }
   };
 
@@ -68,6 +74,8 @@ const HomePage: React.FC<HomePageProps> = ({
         post.append('caption', caption);
       }
       createPostStart(post);
+      setPost(null);
+      setImgPreview({ src: '', alt: '' });
     }
   };
 
@@ -78,6 +86,11 @@ const HomePage: React.FC<HomePageProps> = ({
       </div>
       <div className='upload'>
         <h4>Upload a photo</h4>
+        <img
+          className='img-preview'
+          src={imgPreview.src}
+          alt={imgPreview.alt}
+        />
         <form encType='multipart/form-data' onSubmit={handleSubmit}>
           <FormFileInput
             name='photo'
