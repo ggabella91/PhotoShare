@@ -14,3 +14,8 @@ export const selectPostError = createSelector(
   [selectPostState],
   (postState: PostState) => postState.postError
 );
+
+export const selectPostConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postConfirm
+);

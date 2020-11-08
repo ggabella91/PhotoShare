@@ -6,8 +6,12 @@ import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { Post, PostActionTypes } from '../../redux/post/post.types';
-import { selectPosts, selectPostError } from '../../redux/post/post.selectors';
+import { Post, PostError } from '../../redux/post/post.types';
+import {
+  selectPosts,
+  selectPostError,
+  selectPostConfirm,
+} from '../../redux/post/post.selectors';
 import { createPostStart } from '../../redux/post/post.actions';
 
 import {
@@ -15,13 +19,21 @@ import {
   FormFileInput,
 } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
+import Alert from 'react-bootstrap/Alert';
 
 import './homepage.styles.scss';
+
+interface PostStatus {
+  success: boolean;
+  error: boolean;
+}
 
 interface HomePageProps {
   currentUser: User | null;
   createPostStart: typeof createPostStart;
   posts: Post[] | null;
+  postConfirm: string | null;
+  postError: PostError | null;
 }
 
 interface ImgPreview {
@@ -33,11 +45,17 @@ const HomePage: React.FC<HomePageProps> = ({
   currentUser,
   createPostStart,
   posts,
+  postConfirm,
+  postError,
 }) => {
   const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
+  const [postStatus, setPostStatus] = useState<PostStatus>({
+    success: false,
+    error: false,
+  });
 
   useEffect(() => {
     if (currentUser) {
@@ -135,11 +153,15 @@ const HomePage: React.FC<HomePageProps> = ({
 interface LinkStateProps {
   currentUser: User | null;
   posts: Post[] | null;
+  postConfirm: string | null;
+  postError: PostError | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   posts: selectPosts,
+  postConfirm: selectPostConfirm,
+  postError: selectPostError,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
