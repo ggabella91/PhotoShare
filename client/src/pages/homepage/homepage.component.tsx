@@ -54,6 +54,7 @@ const HomePage: React.FC<HomePageProps> = ({
     } else {
       setPost(null);
       setImgPreview({ src: '', alt: '' });
+      setCaption('');
     }
   };
 
@@ -74,9 +75,10 @@ const HomePage: React.FC<HomePageProps> = ({
         post.append('caption', caption);
       }
       createPostStart(post);
-      setPost(null);
-      setImgPreview({ src: '', alt: '' });
     }
+    setPost(null);
+    setImgPreview({ src: '', alt: '' });
+    setCaption('');
   };
 
   return (
