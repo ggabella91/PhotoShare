@@ -24,6 +24,11 @@ interface HomePageProps {
   posts: Post[] | null;
 }
 
+interface ImgPreview {
+  src: string;
+  alt: string;
+}
+
 const HomePage: React.FC<HomePageProps> = ({
   currentUser,
   createPostStart,
@@ -32,7 +37,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
-  const [imgPreview, setImgPreview] = useState({ src: '', alt: '' });
+  const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -53,7 +58,7 @@ const HomePage: React.FC<HomePageProps> = ({
       setImgPreview({ src: URL.createObjectURL(file), alt: file.name });
     } else {
       setPost(null);
-      setImgPreview({ src: '', alt: '' });
+      setImgPreview(null);
       setCaption('');
     }
   };
@@ -77,7 +82,7 @@ const HomePage: React.FC<HomePageProps> = ({
       createPostStart(post);
     }
     setPost(null);
-    setImgPreview({ src: '', alt: '' });
+    setImgPreview(null);
     setCaption('');
   };
 
@@ -87,12 +92,20 @@ const HomePage: React.FC<HomePageProps> = ({
         <h2>Welcome, {name.split(' ')[0]}!</h2>
       </div>
       <div className='upload'>
-        <h4>Upload a photo</h4>
-        <img
-          className='img-preview'
-          src={imgPreview.src}
-          alt={imgPreview.alt}
-        />
+        <div className='img-preview-container'>
+          {imgPreview ? null : (
+            <div className='img-preview-placeholder'>
+              <div className='placeholder-text-container'>
+                <span className='placeholder-text'>Upload an image</span>
+              </div>
+            </div>
+          )}
+          <img
+            className='img-preview'
+            src={imgPreview ? imgPreview.src : ''}
+            alt={imgPreview ? imgPreview.alt : ''}
+          />
+        </div>
         <form encType='multipart/form-data' onSubmit={handleSubmit}>
           <FormFileInput
             name='photo'
