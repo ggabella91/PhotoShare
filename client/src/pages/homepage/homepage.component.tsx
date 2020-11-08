@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { CreatePost, Post, PostActionTypes } from '../../redux/post/post.types';
+import { selectPosts, selectPostError } from '../../redux/post/post.selectors';
+import { createPostStart } from '../../redux/post/post.actions';
 
 import {
   FormInput,
@@ -12,15 +16,19 @@ import {
 } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
 
-import axios from 'axios';
-
 import './homepage.styles.scss';
 
 interface HomePageProps {
-  currentUser?: typeof selectCurrentUser;
+  currentUser: User | null;
+  createPostStart: typeof createPostStart;
+  posts: Post[] | null;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
+const HomePage: React.FC<HomePageProps> = ({
+  currentUser,
+  createPostStart,
+  posts,
+}) => {
   const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
@@ -59,12 +67,7 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
       if (caption) {
         post.append('caption', caption);
       }
-    }
-
-    try {
-      await axios.post('/api/posts', post);
-    } catch (err) {
-      console.log('An error occurred');
+      createPostStart({ post });
     }
   };
 
@@ -103,10 +106,16 @@ const HomePage: React.FC<HomePageProps> = ({ currentUser }) => {
 
 interface LinkStateProps {
   currentUser: User | null;
+  posts: Post[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
+  posts: selectPosts,
 });
 
-export default connect(mapStateToProps, null)(HomePage);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  createPostStart: (post: CreatePost) => dispatch(createPostStart(post)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

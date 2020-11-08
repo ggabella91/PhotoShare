@@ -2,7 +2,7 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
-import { CreatePost, Post, PostError, PostActions } from './post.types';
+import { CreatePost, PostActions } from './post.types';
 
 import { createPostSuccess, createPostFailure } from './post.actions';
 
