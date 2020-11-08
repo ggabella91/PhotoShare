@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { CreatePost, Post, PostActionTypes } from '../../redux/post/post.types';
+import { Post, PostActionTypes } from '../../redux/post/post.types';
 import { selectPosts, selectPostError } from '../../redux/post/post.selectors';
 import { createPostStart } from '../../redux/post/post.actions';
 
@@ -32,6 +32,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
+  const [imgPreview, setImgPreview] = useState({ src: '', alt: '' });
 
   useEffect(() => {
     if (currentUser) {
@@ -48,6 +49,12 @@ const HomePage: React.FC<HomePageProps> = ({
       formData.append('photo', file, file.name);
 
       setPost(formData);
+
+      setImgPreview({ src: URL.createObjectURL(file), alt: file.name });
+    } else {
+      setPost(null);
+      setImgPreview({ src: '', alt: '' });
+      setCaption('');
     }
   };
 
@@ -67,8 +74,11 @@ const HomePage: React.FC<HomePageProps> = ({
       if (caption) {
         post.append('caption', caption);
       }
-      createPostStart({ post });
+      createPostStart(post);
     }
+    setPost(null);
+    setImgPreview({ src: '', alt: '' });
+    setCaption('');
   };
 
   return (
@@ -78,6 +88,11 @@ const HomePage: React.FC<HomePageProps> = ({
       </div>
       <div className='upload'>
         <h4>Upload a photo</h4>
+        <img
+          className='img-preview'
+          src={imgPreview.src}
+          alt={imgPreview.alt}
+        />
         <form encType='multipart/form-data' onSubmit={handleSubmit}>
           <FormFileInput
             name='photo'
@@ -115,7 +130,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  createPostStart: (post: CreatePost) => dispatch(createPostStart(post)),
+  createPostStart: (post: FormData) => dispatch(createPostStart(post)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
