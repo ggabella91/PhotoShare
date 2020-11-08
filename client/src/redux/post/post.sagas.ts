@@ -2,7 +2,7 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
-import { CreatePost, PostActions } from './post.types';
+import { PostActions } from './post.types';
 
 import { createPostSuccess, createPostFailure } from './post.actions';
 
@@ -11,13 +11,11 @@ import axios from 'axios';
 export function* createPost({
   payload: post,
 }: {
-  payload: CreatePost;
+  payload: FormData;
 }): SagaIterator {
   try {
     // @ts-ignore
-    const { data } = yield axios.post('/api/users/signup', {
-      post,
-    });
+    const { data } = yield axios.post('/api/posts', post);
 
     yield put(createPostSuccess(data));
   } catch (err) {

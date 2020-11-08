@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { CreatePost, Post, PostActionTypes } from '../../redux/post/post.types';
+import { Post, PostActionTypes } from '../../redux/post/post.types';
 import { selectPosts, selectPostError } from '../../redux/post/post.selectors';
 import { createPostStart } from '../../redux/post/post.actions';
 
@@ -67,7 +67,7 @@ const HomePage: React.FC<HomePageProps> = ({
       if (caption) {
         post.append('caption', caption);
       }
-      createPostStart({ post });
+      createPostStart(post);
     }
   };
 
@@ -115,7 +115,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  createPostStart: (post: CreatePost) => dispatch(createPostStart(post)),
+  createPostStart: (post: FormData) => dispatch(createPostStart(post)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

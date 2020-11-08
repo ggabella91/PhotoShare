@@ -51,6 +51,7 @@ router.post(
 
     s3.upload(uploadParams, async (err, data) => {
       if (err) {
+        console.log(err);
         throw new Error('Error uploading the photo');
       }
       if (data) {

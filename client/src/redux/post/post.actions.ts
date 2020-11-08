@@ -1,14 +1,8 @@
-import {
-  CreatePost,
-  Post,
-  PostError,
-  PostActions,
-  PostActionTypes,
-} from './post.types';
+import { Post, PostError, PostActions, PostActionTypes } from './post.types';
 
-export const createPostStart = (postFields: CreatePost): PostActionTypes => ({
+export const createPostStart = (post: FormData): PostActionTypes => ({
   type: PostActions.CREATE_POST_START,
-  payload: postFields,
+  payload: post,
 });
 
 export const createPostSuccess = (post: Post): PostActionTypes => ({
