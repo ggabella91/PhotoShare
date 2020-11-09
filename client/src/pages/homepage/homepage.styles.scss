@@ -38,6 +38,14 @@
     }
   }
 
+  .alert {
+    position: relative;
+    width: 300px;
+    margin-top: 50%;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
   .img-preview {
     margin-top: 50%;
     transform: translateY(-50%);

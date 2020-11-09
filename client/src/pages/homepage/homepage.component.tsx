@@ -52,6 +52,8 @@ const HomePage: React.FC<HomePageProps> = ({
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
+
+  const [showAlert, setShowAlert] = useState(false);
   const [postStatus, setPostStatus] = useState<PostStatus>({
     success: false,
     error: false,
@@ -62,6 +64,14 @@ const HomePage: React.FC<HomePageProps> = ({
       setName(currentUser.name);
     }
   }, []);
+
+  useEffect(() => {
+    if (postError) {
+      setPostStatus({ ...postStatus, error: true });
+    } else if (postConfirm) {
+      setPostStatus({ ...postStatus, success: true });
+    }
+  }, [postError, postConfirm]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
@@ -89,6 +99,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setPostStatus({ success: false, error: false });
 
     if (post) {
       console.log(post.get('photo'));
@@ -98,10 +109,39 @@ const HomePage: React.FC<HomePageProps> = ({
         post.append('caption', caption);
       }
       createPostStart(post);
+      setShowAlert(true);
     }
     setPost(null);
     setImgPreview(null);
     setCaption('');
+  };
+
+  const handleRenderAlert = (type: string, message: string) => {
+    if (type === 'error' && showAlert) {
+      setTimeout(() => {
+        setPostStatus({ success: false, error: false });
+        setShowAlert(false);
+      }, 5000);
+      return (
+        <Alert variant='danger' onClose={() => setShowAlert(false)} dismissible>
+          {message}
+        </Alert>
+      );
+    } else if (type === 'success' && showAlert) {
+      setTimeout(() => {
+        setPostStatus({ success: false, error: false });
+        setShowAlert(false);
+      }, 5000);
+      return (
+        <Alert
+          variant='success'
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
+    }
   };
 
   return (
@@ -111,13 +151,26 @@ const HomePage: React.FC<HomePageProps> = ({
       </div>
       <div className='upload'>
         <div className='img-preview-container'>
-          {imgPreview ? null : (
+          {imgPreview || showAlert ? null : (
             <div className='img-preview-placeholder'>
               <div className='placeholder-text-container'>
                 <span className='placeholder-text'>Upload an image</span>
               </div>
             </div>
           )}
+          {showAlert ? (
+            <div className='alert'>
+              {postStatus.error
+                ? handleRenderAlert(
+                    'error',
+                    'Error uploading post. Please try again.'
+                  )
+                : null}
+              {postStatus.success
+                ? handleRenderAlert('success', 'Post uploaded successfully!')
+                : null}
+            </div>
+          ) : null}
           <img
             className='img-preview'
             src={imgPreview ? imgPreview.src : ''}
