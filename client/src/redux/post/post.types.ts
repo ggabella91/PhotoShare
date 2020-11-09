@@ -4,10 +4,6 @@ export enum PostActions {
   CREATE_POST_FAILURE = 'CREATE_POST_FAILURE',
 }
 
-// export interface CreatePost {
-//   post: FormData;
-// }
-
 export interface PostError {
   statusCode: number;
   message: string;
@@ -26,6 +22,7 @@ export interface Post {
 export interface PostState {
   posts: Post[];
   postError: PostError | null;
+  postConfirm: string | null;
 }
 
 export interface CreatePostStart {
