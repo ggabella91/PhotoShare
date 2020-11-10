@@ -171,11 +171,13 @@ const HomePage: React.FC<HomePageProps> = ({
                 : null}
             </div>
           ) : null}
-          <img
-            className='img-preview'
-            src={imgPreview ? imgPreview.src : ''}
-            alt={imgPreview ? imgPreview.alt : ''}
-          />
+          {imgPreview ? (
+            <img
+              className='img-preview'
+              src={imgPreview ? imgPreview.src : ''}
+              alt={imgPreview ? imgPreview.alt : ''}
+            />
+          ) : null}
         </div>
         <form encType='multipart/form-data' onSubmit={handleSubmit}>
           <FormFileInput
