@@ -1,21 +1,44 @@
 .header {
   background-color: #3b5ab1;
-  min-height: 15vh;
+  min-height: 12vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   font-size: calc(10px + 2vmin);
   color: white;
   padding: 0;
+  position: relative;
 
   .app-name {
+    position: absolute;
     justify-content: left;
-    margin-left: 20px;
-    margin-top: 40px;
+    left: 20px;
+    bottom: 10px;
     padding-bottom: 0;
+    color: white;
+    text-decoration: none;
+
+    &:hover,
+    &:active {
+      color: white;
+      text-decoration: none;
+    }
 
     .title {
       font-weight: 560;
+    }
+  }
+
+  .header-menu {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    justify-items: stretch;
+
+    .link {
+      font-size: 16px;
+      color: white;
+      margin: 0 5px;
     }
   }
 }

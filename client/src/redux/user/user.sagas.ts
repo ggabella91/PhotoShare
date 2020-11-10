@@ -69,7 +69,7 @@ export function* isLoggedIn(): SagaIterator {
 export function* signOut(): SagaIterator {
   try {
     //@ts-ignore
-    yield axios.get(`${origin}api/users/signout`);
+    yield axios.post('/api/users/signout');
     yield put(signOutSuccess());
   } catch (err) {
     yield put(signOutFailure(err));
