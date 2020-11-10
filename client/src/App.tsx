@@ -15,6 +15,7 @@ import Footer from './components/footer/footer.component';
 import SignUpAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-sign-up.component';
 import HomePage from './pages/homepage/homepage.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SettingsPage from './pages/settings-page/settings-page.component';
 
 interface AppProps {
   checkUserSession: typeof checkUserSession;
@@ -34,6 +35,11 @@ const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           exact
           path='/me'
           render={() => (!currentUser ? <Redirect to='/' /> : <HomePage />)}
+        />
+        <Route
+          exact
+          path='/settings'
+          render={() => (!currentUser ? <Redirect to='/' /> : <SettingsPage />)}
         />
         <Route
           exact
