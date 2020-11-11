@@ -1,16 +1,27 @@
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 import { Password } from '../services/password';
 
 interface UserAttrs {
   name: string;
   email: string;
   password: string;
+  photo?: string;
+  passwordChangedAt?: Date;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
+  active: boolean;
 }
 
 interface UserDoc extends mongoose.Document {
   name: string;
   email: string;
   password: string;
+  photo?: string;
+  passwordChangedAt?: Date;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
+  active: boolean;
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
@@ -27,9 +38,24 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    photo: {
+      type: String,
+      default: '',
+    },
     password: {
       type: String,
       required: true,
+    },
+    passwordChangedAt: {
+      type: Date,
+      default: null,
+    },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
   },
   {
@@ -51,6 +77,28 @@ userSchema.pre('save', async function (done) {
   }
   done();
 });
+
+userSchema.pre<UserDoc>('save', async function (done) {
+  if (!this.isModified('password') || this.isNew) {
+    return done();
+  }
+
+  this.passwordChangedAt = new Date(Date.now() - 1000);
+  done();
+});
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+  return resetToken;
+};
 
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
