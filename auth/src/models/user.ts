@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 import { Password } from '../services/password';
 
 interface UserAttrs {
@@ -85,6 +86,19 @@ userSchema.pre<UserDoc>('save', async function (done) {
   this.passwordChangedAt = new Date(Date.now() - 1000);
   done();
 });
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+  return resetToken;
+};
 
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
