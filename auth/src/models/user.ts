@@ -9,7 +9,7 @@ interface UserAttrs {
   photo?: string;
   passwordChangedAt?: Date;
   passwordResetToken?: string;
-  passwordResetExpires?: Date;
+  passwordResetExpires?: number;
   active: boolean;
 }
 
@@ -18,9 +18,9 @@ interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
   photo?: string;
-  passwordChangedAt?: Date;
+  passwordChangedAt?: number;
   passwordResetToken?: string;
-  passwordResetExpires?: Date;
+  passwordResetExpires?: number;
   active: boolean;
 }
 
@@ -47,11 +47,11 @@ export const userSchema = new mongoose.Schema(
       required: true,
     },
     passwordChangedAt: {
-      type: Date,
+      type: Number,
       default: null,
     },
     passwordResetToken: String,
-    passwordResetExpires: Date,
+    passwordResetExpires: Number,
     active: {
       type: Boolean,
       default: true,
@@ -83,7 +83,7 @@ userSchema.pre<UserDoc>('save', async function (done) {
     return done();
   }
 
-  this.passwordChangedAt = new Date(Date.now() - 1000);
+  this.passwordChangedAt = Date.now() - 1000;
   done();
 });
 
@@ -95,7 +95,7 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest('hex');
 
-  this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
 };

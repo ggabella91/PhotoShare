@@ -42,3 +42,5 @@ router.post(
     }
   }
 );
+
+export { router as forgotPasswordRouter };
