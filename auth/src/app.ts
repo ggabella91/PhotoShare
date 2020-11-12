@@ -10,6 +10,7 @@ import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
 import { forgotPasswordRouter } from './routes/forgot-password';
 import { resetPasswordRouter } from './routes/reset-password';
+import { updatePasswordRouter } from './routes/update-password';
 
 const app = express();
 app.set('trust proxy', true);
@@ -27,6 +28,7 @@ app.use(signoutRouter);
 app.use(signupRouter);
 app.use(forgotPasswordRouter);
 app.use(resetPasswordRouter);
+app.use(updatePasswordRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
