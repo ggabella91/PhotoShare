@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "slugify": "^1.4.6",
-    "uuid": "^8.3.1"
-  }
-}

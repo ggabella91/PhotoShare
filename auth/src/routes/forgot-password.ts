@@ -1,14 +1,12 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import jwt from 'jsonwebtoken';
 
-import { Password } from '../services/password';
-import { User, userSchema } from '../models/user';
+import { User } from '../models/user';
 import {
   validateRequest,
-  BadRequestError,
   NotFoundError,
   InternalServerError,
+  Email,
 } from '@ggabella-photo-share/common';
 
 const router = express.Router();
@@ -30,7 +28,7 @@ router.post(
     try {
       const resetURL = `${req.protocol}://photo-share.dev/reset-password/${resetToken}`;
 
-      // SEND EMAIL TO USER - NEED TO IMPLEMENT EMAIL SERVICE
+      await new Email(user, resetURL).sendPasswordReset();
 
       res
         .status(200)
