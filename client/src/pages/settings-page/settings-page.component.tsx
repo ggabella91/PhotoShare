@@ -47,7 +47,7 @@ const SettingsPage: React.FC = () => {
         />
         <div className='button'>
           <Button
-            className='button settings-button'
+            className='submit-button settings-button'
             onSubmit={handleSubmitInfo}
           >
             <span>Update Info</span>
