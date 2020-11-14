@@ -1,18 +1,19 @@
 .settings {
   width: 850px;
-  height: 800px;
+  height: 1000px;
   display: flex;
   flex-direction: column;
   justify-items: center;
   align-items: center;
   margin-top: 30px;
+  margin-left: 50%;
+  transform: translate(-50%);
 
   .group {
     margin: 10px;
   }
 
   .change-info {
-    // width: 25%;
     min-width: 200px;
     max-width: 250px;
     top: 20px;
@@ -21,17 +22,31 @@
     justify-items: center;
     align-items: center;
     justify-content: center;
-    margin: 40px 0px 80px 0px;
-    // margin-left: -20px;
+    margin: 40px 0px 40px 0px;
 
     span {
       font-weight: 400;
       margin: 0px;
       width: 300px;
+      line-height: 1.5;
+    }
+
+    .update-info {
+      margin-bottom: 50%;
+      transform: translateY(50%);
+    }
+
+    .password {
+      transform: translateY(30%);
+    }
+
+    .password-button {
+      min-height: 80px;
     }
   }
 
   .settings-button {
+    color: black;
     min-width: 180px;
     max-width: 220px;
   }

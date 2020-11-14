@@ -12,7 +12,14 @@ const SettingsPage: React.FC = () => {
     email: '',
   });
 
+  const [userPassword, setUserPassword] = useState({
+    passwordCurrent: '',
+    password: '',
+    passwordConfirm: '',
+  });
+
   const { name, email } = userInfo;
+  const { passwordCurrent, password, passwordConfirm } = userPassword;
 
   const handleInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -24,6 +31,20 @@ const SettingsPage: React.FC = () => {
     event.preventDefault();
 
     // changeInfoStart(name, email);
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target;
+
+    setUserPassword({ ...userPassword, [name]: value });
+  };
+
+  const handleSubmitPassword = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    // changePasswordStart(passwordCurrent, password, passwordConfirm);
   };
 
   return (
@@ -50,7 +71,39 @@ const SettingsPage: React.FC = () => {
             className='submit-button settings-button'
             onSubmit={handleSubmitInfo}
           >
-            <span>Update Info</span>
+            <span className='update-info'>Update Info</span>
+          </Button>
+        </div>
+      </form>
+      <form className='change-info' onSubmit={handleSubmitPassword}>
+        <span>Change your password</span>
+        <FormInput
+          type='password'
+          name='passwordCurrent'
+          value={passwordCurrent}
+          onChange={handlePasswordChange}
+          label='current password'
+        />
+        <FormInput
+          type='password'
+          name='password'
+          value={password}
+          onChange={handlePasswordChange}
+          label='new password'
+        />
+        <FormInput
+          type='password'
+          name='passwordConfirm'
+          value={passwordConfirm}
+          onChange={handlePasswordChange}
+          label='confirm new password'
+        />
+        <div className='button'>
+          <Button
+            className='submit-button settings-button password-button'
+            onSubmit={handleSubmitPassword}
+          >
+            <span className='update-info password'>Change Password</span>
           </Button>
         </div>
       </form>
