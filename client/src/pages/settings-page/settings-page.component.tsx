@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import { FormInput } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
@@ -111,4 +113,8 @@ const SettingsPage: React.FC = () => {
   );
 };
 
-export default SettingsPage;
+const mapStateToProps = createStructuredSelector({});
+
+const mapDispatchProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchProps)(SettingsPage);
