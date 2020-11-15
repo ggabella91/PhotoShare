@@ -7,8 +7,9 @@ interface Props {
   header: string;
   subheader: string;
   bodytext: string;
-  onHide: () => {};
-  handleConfirm: () => {};
+  show: boolean;
+  onHide: () => void;
+  handleConfirm: () => void;
   actionLabel: string;
 }
 
