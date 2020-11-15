@@ -4,6 +4,8 @@ import { createStructuredSelector } from 'reselect';
 
 import { FormInput } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
+import CustomModal from '../../components/modal/modal.component';
+
 import Alert from 'react-bootstrap/Alert';
 
 import './settings-page.styles.scss';
@@ -19,6 +21,8 @@ const SettingsPage: React.FC = () => {
     password: '',
     passwordConfirm: '',
   });
+
+  const [modalShow, setModalShow] = useState(false);
 
   const { name, email } = userInfo;
   const { passwordCurrent, password, passwordConfirm } = userPassword;
@@ -109,6 +113,25 @@ const SettingsPage: React.FC = () => {
           </Button>
         </div>
       </form>
+      <div>
+        <Button
+          className='button settings-button'
+          onSubmit={() => {} /*setModalShow(true)*/}
+        >
+          <span>Delete Account</span>
+        </Button>
+      </div>
+      <CustomModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        header='Confirm Account Deletion'
+        subheader='Are you sure you want to delete your account?'
+        bodytext='This action cannot be undone.'
+        actionLabel='Delete Account'
+        handleConfirm={() => {
+          /*deleteAccountStart();*/
+        }}
+      />
     </div>
   );
 };
