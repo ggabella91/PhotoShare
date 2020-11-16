@@ -24,6 +24,14 @@ build:
         manual:
           - src: 'src/**/*.js'
             dest: .
+    - image: ggabella91/email
+      context: email
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.js'
+            dest: .
     - image: ggabella91/client
       context: client
       docker:
