@@ -23,6 +23,22 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
+            - name: EMAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap-user
+                  key: EMAIL_USERNAME
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap-pass
+                  key: EMAIL_PASSWORD
+            - name: EMAIL_HOST
+              value: 'smtp.mailtrap.io'
+            - name: EMAIL_PORT
+              value: 2525
+            - name: EMAIL_FROM
+              value: 'giuliano@photo-share.dev'
 ---
 apiVersion: v1
 kind: Service
