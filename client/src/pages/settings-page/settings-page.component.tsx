@@ -75,7 +75,7 @@ const SettingsPage: React.FC = () => {
         <div className='button'>
           <Button
             className='submit-button settings-button'
-            onSubmit={handleSubmitInfo}
+            onClick={handleSubmitInfo}
           >
             <span className='update-info'>Update Info</span>
           </Button>
@@ -107,7 +107,7 @@ const SettingsPage: React.FC = () => {
         <div className='button'>
           <Button
             className='submit-button settings-button password-button'
-            onSubmit={handleSubmitPassword}
+            onClick={handleSubmitPassword}
           >
             <span className='update-info password'>Change Password</span>
           </Button>
@@ -115,8 +115,8 @@ const SettingsPage: React.FC = () => {
       </form>
       <div>
         <Button
-          className='button settings-button'
-          onSubmit={() => {} /*setModalShow(true)*/}
+          className='submit-button settings-button'
+          onClick={() => setModalShow(true)}
         >
           <span>Delete Account</span>
         </Button>
@@ -127,8 +127,8 @@ const SettingsPage: React.FC = () => {
         header='Confirm Account Deletion'
         subheader='Are you sure you want to delete your account?'
         bodytext='This action cannot be undone.'
-        actionLabel='Delete Account'
-        handleConfirm={() => {
+        actionlabel='Delete Account'
+        handleconfirm={() => {
           /*deleteAccountStart();*/
         }}
       />

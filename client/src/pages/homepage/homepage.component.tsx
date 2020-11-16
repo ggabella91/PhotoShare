@@ -193,7 +193,7 @@ const HomePage: React.FC<HomePageProps> = ({
             onChange={handleCaptionChange}
           />
           <div className='button'>
-            <Button className='submit-button' onSubmit={handleSubmit}>
+            <Button className='submit-button' onClick={handleSubmit}>
               Upload photo
             </Button>
           </div>

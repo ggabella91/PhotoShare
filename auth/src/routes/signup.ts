@@ -2,7 +2,11 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
-import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
+import {
+  validateRequest,
+  BadRequestError,
+  Email,
+} from '@ggabella-photo-share/common';
 import { User } from '../models/user';
 
 const router = express.Router();
@@ -38,6 +42,8 @@ router.post(
 
     const user = User.build({ name, email, password, active: true });
     await user.save();
+
+    const url = `${req.protocol}://photo-share.dev/me`;
 
     // Generate JWT
     const userJwt = jwt.sign(
