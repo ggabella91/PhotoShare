@@ -4,7 +4,7 @@ import './button.styles.scss';
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   className: string;
-  onSubmit: React.FormEventHandler;
+  onClick: React.FormEventHandler;
   children?: any;
 }
 

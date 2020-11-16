@@ -86,7 +86,7 @@ const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
         </div>
 
         <div className='button'>
-          <Button className='submit-button' onSubmit={handleSubmit}>
+          <Button className='submit-button' onClick={handleSubmit}>
             Sign In
           </Button>
         </div>

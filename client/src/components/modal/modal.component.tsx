@@ -9,8 +9,8 @@ interface Props {
   bodytext: string;
   show: boolean;
   onHide: () => void;
-  handleConfirm: () => void;
-  actionLabel: string;
+  handleconfirm: () => void;
+  actionlabel: string;
 }
 
 const CustomModal: React.FC<Props> = (props) => (
@@ -25,14 +25,14 @@ const CustomModal: React.FC<Props> = (props) => (
       <p>{props.bodytext}</p>
     </Modal.Body>
     <Modal.Footer>
-      <Button className='button modal-button' onSubmit={props.onHide}>
+      <Button className='button modal-button' onClick={props.onHide}>
         Cancel
       </Button>
       <Button
         className='button modal-button delete-button'
-        onSubmit={props.handleConfirm}
+        onClick={props.handleconfirm}
       >
-        {props.actionLabel}
+        {props.actionlabel}
       </Button>
     </Modal.Footer>
   </Modal>
