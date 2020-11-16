@@ -1,33 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: posts-depl
+  name: email-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: posts
+      app: email
   template:
     metadata:
       labels:
-        app: posts
+        app: email
     spec:
       containers:
-        - name: posts
-          image: ggabella91/posts
+        - name: email
+          image: ggabella91/email
           env:
             - name: MONGO_URI
-              value: 'mongodb://posts-mongo-srv:27017/posts'
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: aws-access-id
-                  key: AWS_ACCESS_KEY_ID
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: aws-secret-key
-                  key: AWS_SECRET_ACCESS_KEY
+              value: 'mongodb://email-mongo-srv:27017/email'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -41,16 +31,32 @@ spec:
               value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
               value: photo-share
+            - name: EMAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap-user
+                  key: EMAIL_USERNAME
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap-pass
+                  key: EMAIL_PASSWORD
+            - name: EMAIL_HOST
+              value: 'smtp.mailtrap.io'
+            - name: EMAIL_PORT
+              value: '2525'
+            - name: EMAIL_FROM
+              value: 'giuliano@photo-share.dev'
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: posts-srv
+  name: email-srv
 spec:
   selector:
-    app: posts
+    app: email
   ports:
-    - name: posts
+    - name: email
       protocol: TCP
       port: 3000
       targetPort: 3000

@@ -23,22 +23,14 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-            - name: EMAIL_USERNAME
+            - name: NATS_CLIENT_ID
               valueFrom:
-                secretKeyRef:
-                  name: mailtrap-user
-                  key: EMAIL_USERNAME
-            - name: EMAIL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mailtrap-pass
-                  key: EMAIL_PASSWORD
-            - name: EMAIL_HOST
-              value: 'smtp.mailtrap.io'
-            - name: EMAIL_PORT
-              value: 2525
-            - name: EMAIL_FROM
-              value: 'giuliano@photo-share.dev'
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: 'http://nats-srv:4222'
+            - name: NATS_CLUSTER_ID
+              value: photo-share
 ---
 apiVersion: v1
 kind: Service

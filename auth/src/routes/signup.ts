@@ -44,7 +44,6 @@ router.post(
     await user.save();
 
     const url = `${req.protocol}://photo-share.dev/me`;
-    await new Email(user, url).sendWelcome();
 
     // Generate JWT
     const userJwt = jwt.sign(
