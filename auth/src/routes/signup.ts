@@ -2,12 +2,10 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
-import {
-  validateRequest,
-  BadRequestError,
-  Email,
-} from '@ggabella-photo-share/common';
+import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
 import { User } from '../models/user';
+import { NewUserCreatedPublisher } from '../events/publishers/new-user-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -43,7 +41,11 @@ router.post(
     const user = User.build({ name, email, password, active: true });
     await user.save();
 
-    const url = `${req.protocol}://photo-share.dev/me`;
+    await new NewUserCreatedPublisher(natsWrapper.client).publish({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
 
     // Generate JWT
     const userJwt = jwt.sign(

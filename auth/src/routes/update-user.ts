@@ -32,7 +32,7 @@ router.patch(
   async (req: Request, res: Response) => {
     if (req.body.password) {
       throw new BadRequestError(
-        'This route is note for password updates. Please use /updatePassword.'
+        'This route is not for password updates. Please use /updatePassword.'
       );
     }
 
