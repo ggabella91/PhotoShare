@@ -6,8 +6,9 @@ import {
   validateRequest,
   NotFoundError,
   InternalServerError,
-  Email,
 } from '@ggabella-photo-share/common';
+import { PasswordResetRequestedPublisher } from '../events/publishers/password-reset-requested-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -26,13 +27,13 @@ router.post(
     await user.save({ validateBeforeSave: false });
 
     try {
-      const resetURL = `${req.protocol}://photo-share.dev/reset-password/${resetToken}`;
+      await new PasswordResetRequestedPublisher(natsWrapper.client).publish({
+        name: user.name,
+        email: user.email,
+        resetToken,
+      });
 
-      await new Email(user, resetURL).sendPasswordReset();
-
-      res
-        .status(200)
-        .send({ status: 'success', message: 'Token sent to email!' });
+      res.status(200).send({ status: 'success', message: 'Token generated!' });
     } catch (err) {
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;
