@@ -22,6 +22,8 @@ export class NewUserCreatedListener extends Listener<NewUserCreatedEvent> {
 
     try {
       await new Email(newUser, url).sendWelcome();
+
+      msg.ack();
     } catch (err) {
       console.log(err);
     }
