@@ -16,8 +16,6 @@ spec:
         - name: email
           image: ggabella91/email
           env:
-            - name: MONGO_URI
-              value: 'mongodb://email-mongo-srv:27017/email'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
