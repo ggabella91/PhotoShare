@@ -18,14 +18,15 @@ export class NewUserCreatedListener extends Listener<NewUserCreatedEvent> {
       email: data.email,
     };
 
+    console.log(data, newUser);
     const url = 'https://photo-share.dev/me';
 
     try {
       await new Email(newUser, url).sendWelcome();
-
-      msg.ack();
     } catch (err) {
       console.log(err);
     }
+
+    msg.ack();
   }
 }
