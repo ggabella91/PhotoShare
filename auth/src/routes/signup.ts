@@ -41,7 +41,9 @@ router.post(
     const user = User.build({ name, email, password, active: true });
     await user.save();
 
-    await new NewUserCreatedPublisher(natsWrapper.client).publish({
+    const promise = await new NewUserCreatedPublisher(
+      natsWrapper.client
+    ).publish({
       id: user.id,
       name: user.name,
       email: user.email,
