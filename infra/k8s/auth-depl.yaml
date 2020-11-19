@@ -16,13 +16,6 @@ spec:
         - name: auth
           image: ggabella91/auth
           env:
-            - name: MONGO_URI
-              value: 'mongodb://auth-mongo-srv:27017/auth'
-            - name: JWT_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: jwt-secret
-                  key: JWT_KEY
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:
@@ -31,6 +24,13 @@ spec:
               value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
               value: photo-share
+            - name: MONGO_URI
+              value: 'mongodb://auth-mongo-srv:27017/auth'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
 ---
 apiVersion: v1
 kind: Service
