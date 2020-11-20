@@ -18,7 +18,7 @@ export class NewUserCreatedListener extends Listener<NewUserCreatedEvent> {
       email: data.email,
     };
 
-    console.log(data, newUser);
+    console.log(data);
     const url = 'https://photo-share.dev/me';
 
     try {
