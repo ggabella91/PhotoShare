@@ -10,6 +10,21 @@ export enum UserActions {
   SIGN_OUT_START = 'SIGN_OUT_START',
   SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS',
   SIGN_OUT_FAILURE = 'SIGN_OUT_FAILURE',
+  CHANGE_INFO_START = 'CHANGE_INFO_START',
+  CHANGE_INFO_SUCCESS = 'CHANGE_INFO_SUCCESS',
+  CHANGE_INFO_FAILURE = 'CHANGE_INFO_FAILURE',
+  CHANGE_PASSWORD_START = 'CHANGE_PASSWORD_START',
+  CHANGE_PASSWORD_SUCCESS = 'CHANGE_PASSWORD_SUCCESS',
+  CHANGE_PASSWORD_FAILURE = 'CHANGE_PASSWORD_FAILURE',
+  FORGOT_PASSWORD_START = 'FORGOT_PASSWORD_START',
+  FORGOT_PASSWORD_SUCCESS = 'FORGOT_PASSWORD_SUCCESS',
+  FORGOT_PASSWORD_FAILURE = 'FORGOT_PASSWORD_FAILURE',
+  RESET_PASSWORD_START = 'RESET_PASSWORD_START',
+  RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS',
+  RESET_PASSWORD_FAILURE = 'RESET_PASSWORD_FAILURE',
+  DELETE_ACCOUNT_START = 'DELETE_ACCOUNT_START',
+  DELETE_ACCOUNT_SUCCESS = 'DELETE_ACCOUNT_SUCCESS',
+  DELETE_ACCOUNT_FAILURE = 'DELETE_ACCOUNT_FAILURE',
 }
 
 export interface UserSignUp {
@@ -29,17 +44,43 @@ export interface User {
   email: string;
 }
 
+export interface ChangePassword {
+  passwordCurrent: string;
+  password: string;
+  passwordConfirm: string;
+}
+
+export interface ResetPassword {
+  password: string;
+  passwordConfirm: string;
+  token: string;
+}
+
 export interface Error {
   statusCode: number;
   message: string;
 }
 
-export type UserPayload = UserSignUp | UserSignIn | User | Error | null;
+export type UserPayload =
+  | UserSignUp
+  | UserSignIn
+  | User
+  | ChangePassword
+  | ResetPassword
+  | Error
+  | null;
 
 export interface UserState {
   currentUser: { name: string; email: string } | null;
   signUpError: Error | null;
   signInOrOutError: Error | null;
+  changeInfoConfirm: null | string;
+  changeInfoError: null | Error;
+  changePasswordConfirm: null | string;
+  changePasswordError: null | Error;
+  forgotOrResetConfirm: null | string;
+  forgotOrResetError: null | Error;
+  deleteAccountError: null | Error;
 }
 
 export interface SignUpStart {
@@ -97,6 +138,81 @@ export interface SignOutFailure {
   payload: Error;
 }
 
+export interface ChangeInfoStart {
+  type: typeof UserActions.CHANGE_INFO_START;
+  payload: User;
+}
+
+export interface ChangeInfoSuccess {
+  type: typeof UserActions.CHANGE_INFO_SUCCESS;
+  payload: User;
+}
+
+export interface ChangeInfoFailure {
+  type: typeof UserActions.CHANGE_INFO_FAILURE;
+  payload: Error;
+}
+
+export interface ChangePasswordStart {
+  type: typeof UserActions.CHANGE_PASSWORD_START;
+  payload: ChangePassword;
+}
+
+export interface ChangePasswordSuccess {
+  type: typeof UserActions.CHANGE_PASSWORD_SUCCESS;
+  payload: string;
+}
+
+export interface ChangePasswordFailure {
+  type: typeof UserActions.CHANGE_PASSWORD_FAILURE;
+  payload: Error;
+}
+
+export interface ForgotPasswordStart {
+  type: typeof UserActions.FORGOT_PASSWORD_START;
+  payload: string;
+}
+
+export interface ForgotPasswordSuccess {
+  type: typeof UserActions.FORGOT_PASSWORD_SUCCESS;
+  payload: string;
+}
+
+export interface ForgotPasswordFailure {
+  type: typeof UserActions.FORGOT_PASSWORD_FAILURE;
+  payload: Error;
+}
+
+export interface ResetPasswordStart {
+  type: typeof UserActions.RESET_PASSWORD_START;
+  payload: ResetPassword;
+}
+
+export interface ResetPasswordSuccess {
+  type: typeof UserActions.RESET_PASSWORD_SUCCESS;
+  payload: string;
+}
+
+export interface ResetPasswordFailure {
+  type: typeof UserActions.RESET_PASSWORD_FAILURE;
+  payload: Error;
+}
+
+export interface DeleteAccountStart {
+  type: typeof UserActions.DELETE_ACCOUNT_START;
+  payload: null;
+}
+
+export interface DeleteAccountSuccess {
+  type: typeof UserActions.DELETE_ACCOUNT_SUCCESS;
+  payload: string;
+}
+
+export interface DeleteAccountFailure {
+  type: typeof UserActions.DELETE_ACCOUNT_FAILURE;
+  payload: Error;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -109,4 +225,19 @@ export type UserActionTypes =
   | SignOutFailure
   | SignOutFailure
   | CheckUserSession
-  | SetCurrentUser;
+  | SetCurrentUser
+  | ChangeInfoStart
+  | ChangeInfoSuccess
+  | ChangeInfoFailure
+  | ChangePasswordStart
+  | ChangePasswordSuccess
+  | ChangePasswordFailure
+  | ForgotPasswordStart
+  | ForgotPasswordSuccess
+  | ForgotPasswordFailure
+  | ResetPasswordStart
+  | ResetPasswordSuccess
+  | ResetPasswordFailure
+  | DeleteAccountStart
+  | DeleteAccountSuccess
+  | DeleteAccountFailure;
