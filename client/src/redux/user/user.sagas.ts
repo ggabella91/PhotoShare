@@ -2,7 +2,14 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
-import { UserSignUp, UserSignIn, User, UserActions } from './user.types';
+import {
+  UserSignUp,
+  UserSignIn,
+  User,
+  UserActions,
+  ChangePassword,
+  ResetPassword,
+} from './user.types';
 
 import {
   setCurrentUser,
@@ -12,6 +19,16 @@ import {
   signOutFailure,
   signUpSuccess,
   signUpFailure,
+  changeInfoSuccess,
+  changeInfoFailure,
+  changePasswordSuccess,
+  changePasswordFailure,
+  forgotPasswordSuccess,
+  forgotPasswordFailure,
+  resetPasswordSuccess,
+  resetPasswordFailure,
+  deleteAccountSuccess,
+  deleteAccountFailure,
 } from './user.actions';
 
 import axios from 'axios';
@@ -43,7 +60,7 @@ export function* signIn({
 }): SagaIterator {
   try {
     // @ts-ignore
-    const { data } = yield axios.post('/api/users/signin/', {
+    const { data } = yield axios.post('/api/users/signin', {
       email,
       password,
     });
@@ -73,6 +90,87 @@ export function* signOut(): SagaIterator {
     yield put(signOutSuccess());
   } catch (err) {
     yield put(signOutFailure(err));
+  }
+}
+
+export function* changeInfo({
+  payload: { name, email },
+}: {
+  payload: User;
+}): SagaIterator {
+  try {
+    // @ts-ignore
+    const { data } = yield axios.patch('/api/users/updateMe', {
+      name,
+      email,
+    });
+
+    yield put(changeInfoSuccess(data));
+  } catch (err) {
+    yield put(changeInfoFailure(err));
+  }
+}
+
+export function* changePassword({
+  payload: { passwordCurrent, password, passwordConfirm },
+}: {
+  payload: ChangePassword;
+}): SagaIterator {
+  try {
+    // @ts-ignore
+    const { data } = yield axios.patch('/api/users/updatePassword', {
+      passwordCurrent,
+      password,
+      passwordConfirm,
+    });
+
+    yield put(changePasswordSuccess(data));
+  } catch (err) {
+    yield put(changePasswordFailure(err));
+  }
+}
+
+export function* forgotPassword({
+  payload: email,
+}: {
+  payload: string;
+}): SagaIterator {
+  try {
+    // @ts-ignore
+    yield axios.post('/api/users/forgotPassword', { email });
+
+    yield put(forgotPasswordSuccess('Reset token generated!'));
+  } catch (err) {
+    yield put(forgotPasswordFailure(err));
+  }
+}
+
+export function* resetPassword({
+  payload: { password, passwordConfirm, token },
+}: {
+  payload: ResetPassword;
+}): SagaIterator {
+  try {
+    // @ts-ignore
+    yield axios.patch(`/api/users/resetPassword/${token}`, {
+      password,
+      passwordConfirm,
+    });
+
+    yield put(resetPasswordSuccess('Password reset successfully!'));
+  } catch (err) {
+    yield put(resetPasswordFailure(err));
+  }
+}
+
+export function* deleteAccount(): SagaIterator {
+  try {
+    // @ts-ignore
+    yield axios.patch(`${origin}api/v1/users/deleteMe`);
+
+    yield put(deleteAccountSuccess('Account deleted!'));
+  } catch (err) {
+    yield put(deleteAccountFailure(err));
   }
 }
 
@@ -110,6 +208,41 @@ export function* onSignOutStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(UserActions.SIGN_OUT_START, signOut);
 }
 
+export function* onChangeInfoStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.CHANGE_INFO_START,
+    changeInfo
+  );
+}
+
+export function* onChangePasswordStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.CHANGE_PASSWORD_START,
+    changePassword
+  );
+}
+
+export function* onForgotPasswordStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.FORGOT_PASSWORD_START,
+    forgotPassword
+  );
+}
+
+export function* onResetPasswordStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.RESET_PASSWORD_START,
+    resetPassword
+  );
+}
+
+export function* onDeleteAccountStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.DELETE_ACCOUNT_START,
+    deleteAccount
+  );
+}
+
 export function* userSagas(): SagaIterator {
   yield all([
     call(onSignUpStart),
@@ -117,5 +250,10 @@ export function* userSagas(): SagaIterator {
     call(onSignInStart),
     call(onCheckUserSession),
     call(onSignOutStart),
+    call(onChangeInfoStart),
+    call(onChangePasswordStart),
+    call(onForgotPasswordStart),
+    call(onResetPasswordStart),
+    call(onDeleteAccountStart),
   ]);
 }
