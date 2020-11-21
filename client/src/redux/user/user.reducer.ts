@@ -4,6 +4,13 @@ const INITIAL_STATE: UserState = {
   currentUser: null,
   signUpError: null,
   signInOrOutError: null,
+  changeInfoConfirm: null,
+  changeInfoError: null,
+  changePasswordConfirm: null,
+  changePasswordError: null,
+  forgotOrResetConfirm: null,
+  forgotOrResetError: null,
+  deleteAccountError: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {

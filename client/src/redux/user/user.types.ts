@@ -74,6 +74,13 @@ export interface UserState {
   currentUser: { name: string; email: string } | null;
   signUpError: Error | null;
   signInOrOutError: Error | null;
+  changeInfoConfirm: null | string;
+  changeInfoError: null | Error;
+  changePasswordConfirm: null | string;
+  changePasswordError: null | Error;
+  forgotOrResetConfirm: null | string;
+  forgotOrResetError: null | Error;
+  deleteAccountError: null | Error;
 }
 
 export interface SignUpStart {
