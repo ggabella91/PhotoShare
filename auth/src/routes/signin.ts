@@ -39,6 +39,7 @@ router.post(
     const userJwt = jwt.sign(
       {
         id: existingUser.id,
+        name: existingUser.name,
         email: existingUser.email,
       },
       process.env.JWT_KEY!

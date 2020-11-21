@@ -1,9 +1,12 @@
+import { EROFS } from 'constants';
 import {
   UserActions,
   UserActionTypes,
   UserSignUp,
   UserSignIn,
   User,
+  ChangePassword,
+  ResetPassword,
   Error,
 } from './user.types';
 
@@ -70,5 +73,88 @@ export const signOutSuccess = (): UserActionTypes => ({
 
 export const signOutFailure = (error: Error): UserActionTypes => ({
   type: UserActions.SIGN_OUT_FAILURE,
+  payload: error,
+});
+
+export const changeInfoStart = ({ name, email }: User): UserActionTypes => ({
+  type: UserActions.CHANGE_INFO_START,
+  payload: { name, email },
+});
+
+export const changeInfoSuccess = (user: User): UserActionTypes => ({
+  type: UserActions.CHANGE_INFO_SUCCESS,
+  payload: user,
+});
+
+export const changeInfoFailure = (error: Error): UserActionTypes => ({
+  type: UserActions.CHANGE_INFO_FAILURE,
+  payload: error,
+});
+
+export const changePasswordStart = ({
+  passwordCurrent,
+  password,
+  passwordConfirm,
+}: ChangePassword): UserActionTypes => ({
+  type: UserActions.CHANGE_PASSWORD_START,
+  payload: { passwordCurrent, password, passwordConfirm },
+});
+
+export const changePasswordSuccess = (message: string): UserActionTypes => ({
+  type: UserActions.CHANGE_PASSWORD_SUCCESS,
+  payload: message,
+});
+
+export const changePasswordFailure = (error: Error): UserActionTypes => ({
+  type: UserActions.CHANGE_PASSWORD_FAILURE,
+  payload: error,
+});
+
+export const forgotPasswordStart = (email: string): UserActionTypes => ({
+  type: UserActions.FORGOT_PASSWORD_START,
+  payload: email,
+});
+
+export const forgotPasswordSuccess = (message: string): UserActionTypes => ({
+  type: UserActions.FORGOT_PASSWORD_SUCCESS,
+  payload: message,
+});
+
+export const forgotPasswordFailure = (error: Error): UserActionTypes => ({
+  type: UserActions.FORGOT_PASSWORD_FAILURE,
+  payload: error,
+});
+
+export const resetPasswordStart = ({
+  password,
+  passwordConfirm,
+  token,
+}: ResetPassword): UserActionTypes => ({
+  type: UserActions.RESET_PASSWORD_START,
+  payload: { password, passwordConfirm, token },
+});
+
+export const resetPasswordSuccess = (message: string): UserActionTypes => ({
+  type: UserActions.RESET_PASSWORD_SUCCESS,
+  payload: message,
+});
+
+export const resetPasswordFailure = (error: Error): UserActionTypes => ({
+  type: UserActions.RESET_PASSWORD_FAILURE,
+  payload: error,
+});
+
+export const deleteAccountStart = (): UserActionTypes => ({
+  type: UserActions.DELETE_ACCOUNT_START,
+  payload: null,
+});
+
+export const deleteAccountSuccess = (message: string): UserActionTypes => ({
+  type: UserActions.DELETE_ACCOUNT_SUCCESS,
+  payload: message,
+});
+
+export const deleteAccountFailure = (error: Error): UserActionTypes => ({
+  type: UserActions.DELETE_ACCOUNT_FAILURE,
   payload: error,
 });

@@ -36,7 +36,7 @@ router.patch(
       );
     }
 
-    const { userId, name, email, photo } = req.body;
+    const { email } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -47,10 +47,14 @@ router.patch(
     // Filter out unwanted field names that are not allowed to be updated with this route handler (or at all)
     const filteredBody = filterObj(req.body, 'name', 'email', 'photo');
 
-    const updatedUser = await User.findByIdAndUpdate(userId, filteredBody, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedUser = await User.findByIdAndUpdate(
+      req.currentUser!.id,
+      filteredBody,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     res.status(200).send(updatedUser);
   }
