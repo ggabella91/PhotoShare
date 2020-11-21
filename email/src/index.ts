@@ -1,5 +1,6 @@
 import { natsWrapper } from './nats-wrapper';
 import { NewUserCreatedListener } from './events/listeners/new-user-created-listener';
+import { PasswordResetRequestedListener } from './events/listeners/password-reset-requested-listener';
 
 const start = async () => {
   console.log('Starting email service...');
@@ -31,6 +32,7 @@ const start = async () => {
   process.on('SIGTERM', () => natsWrapper.client.close());
 
   new NewUserCreatedListener(natsWrapper.client).listen();
+  new PasswordResetRequestedListener(natsWrapper.client).listen();
 };
 
 start();
