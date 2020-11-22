@@ -40,6 +40,31 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         currentUser: action.payload,
         signInOrOutError: null,
       };
+    case UserActions.CHANGE_INFO_SUCCESS:
+      return {
+        ...state,
+        changeInfoConfirm: action.payload,
+        changeInfoError: null,
+      };
+    case UserActions.CHANGE_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        changePasswordConfirm: action.payload,
+        changePasswordError: null,
+      };
+    case UserActions.FORGOT_PASSWORD_SUCCESS:
+    case UserActions.RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        forgotOrResetConfirm: action.payload,
+        forgotOrResetError: null,
+      };
+    case UserActions.DELETE_ACCOUNT_SUCCESS:
+      return {
+        ...state,
+        currentUser: null,
+        deleteAccountError: null,
+      };
     case UserActions.SIGN_UP_FAILURE:
       return {
         ...state,
@@ -50,6 +75,30 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
       return {
         ...state,
         signInOrOutError: action.payload,
+      };
+    case UserActions.CHANGE_INFO_FAILURE:
+      return {
+        ...state,
+        changeInfoConfirm: null,
+        changeInfoError: action.payload,
+      };
+    case UserActions.CHANGE_PASSWORD_FAILURE:
+      return {
+        ...state,
+        changePasswordConfirm: null,
+        changePasswordError: action.payload,
+      };
+    case UserActions.FORGOT_PASSWORD_FAILURE:
+    case UserActions.RESET_PASSWORD_FAILURE:
+      return {
+        ...state,
+        forgotOrResetConfirm: null,
+        forgotOrResetError: action.payload,
+      };
+    case UserActions.DELETE_ACCOUNT_FAILURE:
+      return {
+        ...state,
+        deleteAccountError: action.payload,
       };
     default:
       return state;
