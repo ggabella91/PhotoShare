@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
+
+import {
+  selectChangeInfoConfirm,
+  selectChangeInfoError,
+  selectChangePasswordConfirm,
+  selectChangePasswordError,
+} from '../../redux/user/user.selectors';
+import {
+  changeInfoStart,
+  changePasswordStart,
+  deleteAccountStart,
+} from '../../redux/user/user.actions';
+import { User, Error, ChangePassword } from '../../redux/user/user.types';
+import { AppState } from '../../redux/root-reducer';
 
 import { FormInput } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
@@ -10,7 +25,25 @@ import Alert from 'react-bootstrap/Alert';
 
 import './settings-page.styles.scss';
 
-const SettingsPage: React.FC = () => {
+interface SettingsPageProps {
+  changeInfoConfirm: string | null;
+  changeInfoError: Error | null;
+  changePassConfirm: string | null;
+  changePassError: Error | null;
+  changeInfoStart: typeof changeInfoStart;
+  changePasswordStart: typeof changePasswordStart;
+  deleteAccountStart: typeof deleteAccountStart;
+}
+
+const SettingsPage: React.FC<SettingsPageProps> = ({
+  changeInfoStart,
+  changePasswordStart,
+  changeInfoError,
+  changeInfoConfirm,
+  changePassError,
+  changePassConfirm,
+  deleteAccountStart,
+}) => {
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
@@ -20,6 +53,18 @@ const SettingsPage: React.FC = () => {
     passwordCurrent: '',
     password: '',
     passwordConfirm: '',
+  });
+
+  const [showInfoAlert, setShowInfoAlert] = useState(true);
+  const [statusInfo, setStatusInfo] = useState({
+    success: false,
+    error: false,
+  });
+
+  const [showPassAlert, setShowPassAlert] = useState(true);
+  const [statusPass, setStatusPass] = useState({
+    success: false,
+    error: false,
   });
 
   const [modalShow, setModalShow] = useState(false);
@@ -36,7 +81,7 @@ const SettingsPage: React.FC = () => {
   const handleSubmitInfo = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // changeInfoStart(name, email);
+    changeInfoStart({ name, email });
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +95,91 @@ const SettingsPage: React.FC = () => {
   ) => {
     event.preventDefault();
 
-    // changePasswordStart(passwordCurrent, password, passwordConfirm);
+    changePasswordStart({ passwordCurrent, password, passwordConfirm });
+  };
+
+  useEffect(() => {
+    if (changeInfoError) {
+      setStatusInfo({ ...statusInfo, error: true });
+    } else if (changeInfoConfirm) {
+      setStatusInfo({ ...statusInfo, success: true });
+    }
+  }, [changeInfoError, changeInfoConfirm]);
+
+  useEffect(() => {
+    if (changePassError) {
+      setStatusPass({ ...statusPass, error: true });
+    } else if (changePassConfirm) {
+      setStatusPass({ ...statusPass, success: true });
+    }
+  }, [changePassError, changePassConfirm]);
+
+  const handleRenderAlert = (type: string, message: string) => {
+    if (type === 'errorInfo' && showInfoAlert) {
+      setTimeout(() => {
+        setUserInfo({ name: '', email: '' });
+        setStatusInfo({ success: false, error: false });
+      }, 5000);
+      return (
+        <Alert
+          variant='danger'
+          onClose={() => setShowInfoAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
+    } else if (type === 'errorPass' && showPassAlert) {
+      setTimeout(() => {
+        setUserPassword({
+          passwordCurrent: '',
+          password: '',
+          passwordConfirm: '',
+        });
+        setStatusPass({ success: false, error: false });
+      }, 5000);
+      return (
+        <Alert
+          variant='danger'
+          onClose={() => setShowPassAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
+    } else if (type === 'successInfo' && showInfoAlert) {
+      setTimeout(() => {
+        setUserInfo({ name: '', email: '' });
+        setStatusInfo({ success: false, error: false });
+      }, 5000);
+      return (
+        <Alert
+          variant='success'
+          onClose={() => setShowInfoAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
+    } else if (type === 'successPass' && showPassAlert) {
+      setTimeout(() => {
+        setUserPassword({
+          passwordCurrent: '',
+          password: '',
+          passwordConfirm: '',
+        });
+        setStatusPass({ success: false, error: false });
+      }, 5000);
+      return (
+        <Alert
+          variant='success'
+          onClose={() => setShowPassAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
+    }
   };
 
   return (
@@ -81,6 +210,14 @@ const SettingsPage: React.FC = () => {
           </Button>
         </div>
       </form>
+      <div className='settings-alert'>
+        {statusInfo.error
+          ? handleRenderAlert('errorInfo', 'Error updating info.')
+          : null}
+        {statusInfo.success
+          ? handleRenderAlert('successInfo', 'Info updated successfully!')
+          : null}
+      </div>
       <form className='change-info' onSubmit={handleSubmitPassword}>
         <span>Change your password</span>
         <FormInput
@@ -113,6 +250,14 @@ const SettingsPage: React.FC = () => {
           </Button>
         </div>
       </form>
+      <div className='settings-alert'>
+        {statusPass.error
+          ? handleRenderAlert('errorPass', 'Error changing password.')
+          : null}
+        {statusPass.success
+          ? handleRenderAlert('successPass', 'Password changed successfully!')
+          : null}
+      </div>
       <div>
         <Button
           className='submit-button settings-button'
@@ -136,8 +281,32 @@ const SettingsPage: React.FC = () => {
   );
 };
 
-const mapStateToProps = createStructuredSelector({});
+interface LinkStateProps {
+  changeInfoConfirm: string | null;
+  changeInfoError: Error | null;
+  changePassConfirm: string | null;
+  changePassError: Error | null;
+}
 
-const mapDispatchProps = () => ({});
+const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
+  changeInfoConfirm: selectChangeInfoConfirm,
+  changeInfoError: selectChangeInfoError,
+  changePassConfirm: selectChangePasswordConfirm,
+  changePassError: selectChangePasswordError,
+});
+
+const mapDispatchProps = (dispatch: Dispatch) => ({
+  changeInfoStart: ({ name, email }: User) =>
+    dispatch(changeInfoStart({ name, email })),
+  changePasswordStart: ({
+    passwordCurrent,
+    password,
+    passwordConfirm,
+  }: ChangePassword) =>
+    dispatch(
+      changePasswordStart({ passwordCurrent, password, passwordConfirm })
+    ),
+  deleteAccountStart: () => dispatch(deleteAccountStart()),
+});
 
 export default connect(mapStateToProps, mapDispatchProps)(SettingsPage);
