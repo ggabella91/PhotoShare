@@ -9,7 +9,7 @@ import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
 const router = express.Router();
 
 router.patch(
-  '/api/users/resetPassword',
+  '/api/users/resetPassword/:token',
   [
     body('password')
       .trim()

@@ -8,8 +8,10 @@ const INITIAL_STATE: UserState = {
   changeInfoError: null,
   changePasswordConfirm: null,
   changePasswordError: null,
-  forgotOrResetConfirm: null,
-  forgotOrResetError: null,
+  forgotConfirm: null,
+  forgotError: null,
+  resetConfirm: null,
+  resetError: null,
   deleteAccountError: null,
 };
 
@@ -53,11 +55,16 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         changePasswordError: null,
       };
     case UserActions.FORGOT_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        forgotConfirm: action.payload,
+        forgotError: null,
+      };
     case UserActions.RESET_PASSWORD_SUCCESS:
       return {
         ...state,
-        forgotOrResetConfirm: action.payload,
-        forgotOrResetError: null,
+        resetConfirm: action.payload,
+        resetError: null,
       };
     case UserActions.DELETE_ACCOUNT_SUCCESS:
       return {
@@ -89,11 +96,16 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         changePasswordError: action.payload,
       };
     case UserActions.FORGOT_PASSWORD_FAILURE:
+      return {
+        ...state,
+        forgotConfirm: null,
+        forgotError: action.payload,
+      };
     case UserActions.RESET_PASSWORD_FAILURE:
       return {
         ...state,
-        forgotOrResetConfirm: null,
-        forgotOrResetError: action.payload,
+        resetConfirm: null,
+        resetError: action.payload,
       };
     case UserActions.DELETE_ACCOUNT_FAILURE:
       return {

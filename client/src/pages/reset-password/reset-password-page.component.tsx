@@ -10,15 +10,15 @@ import Button from '../../components/button/button.component';
 
 import Alert from 'react-bootstrap/Alert';
 
-import { User, Error, ResetPassword } from '../../redux/user/user.types';
+import { Error, ResetPassword } from '../../redux/user/user.types';
 import { AppState } from '../../redux/root-reducer';
 import {
-  selectForgotOrResetError,
-  selectForgotOrResetConfirm,
+  selectResetError,
+  selectResetConfirm,
 } from '../../redux/user/user.selectors';
 import { resetPasswordStart } from '../../redux/user/user.actions';
 
-import './reset-password.styles.scss';
+import './reset-password-page.styles.scss';
 
 interface ResetPasswordPageProps {
   resetError: Error | null;
@@ -51,6 +51,8 @@ const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    console.log(token);
 
     resetPasswordStart({ password, passwordConfirm, token });
   };
@@ -134,8 +136,8 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  resetError: selectForgotOrResetError,
-  resetConfirm: selectForgotOrResetConfirm,
+  resetError: selectResetError,
+  resetConfirm: selectResetConfirm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

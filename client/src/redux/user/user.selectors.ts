@@ -40,12 +40,22 @@ export const selectChangePasswordError = createSelector(
   (user: UserState) => user.changePasswordError
 );
 
-export const selectForgotOrResetError = createSelector(
+export const selectForgotError = createSelector(
   [selectUser],
-  (user: UserState) => user.forgotOrResetError
+  (user: UserState) => user.forgotError
 );
 
-export const selectForgotOrResetConfirm = createSelector(
+export const selectForgotConfirm = createSelector(
   [selectUser],
-  (user: UserState) => user.forgotOrResetConfirm
+  (user: UserState) => user.forgotConfirm
+);
+
+export const selectResetError = createSelector(
+  [selectUser],
+  (user: UserState) => user.resetError
+);
+
+export const selectResetConfirm = createSelector(
+  [selectUser],
+  (user: UserState) => user.resetConfirm
 );
