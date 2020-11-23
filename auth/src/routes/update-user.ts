@@ -2,7 +2,11 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 
 import { User } from '../models/user';
-import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
+import {
+  currentUser,
+  validateRequest,
+  BadRequestError,
+} from '@ggabella-photo-share/common';
 
 const router = express.Router();
 
@@ -29,6 +33,7 @@ router.patch(
     body('email').isEmail().withMessage('Email must be valid'),
   ],
   validateRequest,
+  currentUser,
   async (req: Request, res: Response) => {
     if (req.body.password) {
       throw new BadRequestError(
