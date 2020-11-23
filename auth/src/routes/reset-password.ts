@@ -38,6 +38,8 @@ router.patch(
       passwordResetExpires: { $gt: Date.now() },
     });
 
+    console.log(user);
+
     // 2) If token has not expired, and there is a user, set the new password
     if (!user) {
       throw new BadRequestError('Token is invalid or has expired');

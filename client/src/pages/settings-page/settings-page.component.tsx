@@ -274,7 +274,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         bodytext='This action cannot be undone.'
         actionlabel='Delete Account'
         handleconfirm={() => {
-          /*deleteAccountStart();*/
+          deleteAccountStart();
         }}
       />
     </div>

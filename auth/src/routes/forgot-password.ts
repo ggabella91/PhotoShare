@@ -24,6 +24,8 @@ router.post(
     }
 
     const resetToken = user.schema.methods.createPasswordResetToken();
+    user.passwordResetToken = resetToken;
+    user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
     await user.save({ validateBeforeSave: false });
 
     try {
@@ -33,7 +35,9 @@ router.post(
         resetToken,
       });
 
-      res.status(200).send({ status: 'success', message: 'Token generated!' });
+      console.log(user);
+
+      res.status(200).send(user);
     } catch (err) {
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;
