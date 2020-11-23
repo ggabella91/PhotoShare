@@ -7,7 +7,7 @@ interface UserAttrs {
   email: string;
   password: string;
   photo?: string;
-  passwordChangedAt?: Date;
+  passwordChangedAt?: number;
   passwordResetToken?: string;
   passwordResetExpires?: number;
   active: boolean;
@@ -48,10 +48,16 @@ export const userSchema = new mongoose.Schema(
     },
     passwordChangedAt: {
       type: Number,
-      default: null,
+      default: undefined,
     },
-    passwordResetToken: String,
-    passwordResetExpires: Number,
+    passwordResetToken: {
+      type: String,
+      default: undefined,
+    },
+    passwordResetExpires: {
+      type: Number,
+      default: undefined,
+    },
     active: {
       type: Boolean,
       default: true,

@@ -11,12 +11,12 @@ import Alert from 'react-bootstrap/Alert';
 import { User, Error } from '../../redux/user/user.types';
 import { AppState } from '../../redux/root-reducer';
 import {
-  selectForgotOrResetError,
-  selectForgotOrResetConfirm,
+  selectForgotError,
+  selectForgotConfirm,
 } from '../../redux/user/user.selectors';
 import { forgotPasswordStart } from '../../redux/user/user.actions';
 
-import './forgot-password.styles.scss';
+import './forgot-password-page.styles.scss';
 
 interface ForgotPasswordPageProps {
   forgotConfirm: string | null;
@@ -121,8 +121,8 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  forgotError: selectForgotOrResetError,
-  forgotConfirm: selectForgotOrResetConfirm,
+  forgotError: selectForgotError,
+  forgotConfirm: selectForgotConfirm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

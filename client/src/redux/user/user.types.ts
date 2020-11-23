@@ -78,8 +78,10 @@ export interface UserState {
   changeInfoError: null | Error;
   changePasswordConfirm: null | string;
   changePasswordError: null | Error;
-  forgotOrResetConfirm: null | string;
-  forgotOrResetError: null | Error;
+  forgotConfirm: null | string;
+  forgotError: null | Error;
+  resetConfirm: null | string;
+  resetError: null | Error;
   deleteAccountError: null | Error;
 }
 

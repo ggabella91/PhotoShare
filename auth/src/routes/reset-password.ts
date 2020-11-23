@@ -9,7 +9,7 @@ import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
 const router = express.Router();
 
 router.patch(
-  '/api/users/resetPassword',
+  '/api/users/resetPassword/:token',
   [
     body('password')
       .trim()
@@ -37,6 +37,8 @@ router.patch(
       passwordResetToken: hashedToken,
       passwordResetExpires: { $gt: Date.now() },
     });
+
+    console.log(user);
 
     // 2) If token has not expired, and there is a user, set the new password
     if (!user) {

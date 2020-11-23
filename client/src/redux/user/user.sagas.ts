@@ -166,7 +166,7 @@ export function* resetPassword({
 export function* deleteAccount(): SagaIterator {
   try {
     // @ts-ignore
-    yield axios.patch(`${origin}api/v1/users/deleteMe`);
+    yield axios.patch('/api/users/deleteMe');
 
     yield put(deleteAccountSuccess('Account deleted!'));
   } catch (err) {
