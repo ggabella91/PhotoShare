@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
+import crypto from 'crypto';
 
 import { User } from '../models/user';
 import {
@@ -23,8 +24,14 @@ router.post(
       throw new NotFoundError();
     }
 
-    const resetToken = user.schema.methods.createPasswordResetToken();
-    user.passwordResetToken = resetToken;
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    const passwordResetToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    user.passwordResetToken = passwordResetToken;
     user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
     await user.save({ validateBeforeSave: false });
 
@@ -34,8 +41,6 @@ router.post(
         email: user.email,
         resetToken,
       });
-
-      console.log(user);
 
       res.status(200).send(user);
     } catch (err) {
