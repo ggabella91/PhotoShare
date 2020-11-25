@@ -13,6 +13,7 @@ import {
   changeInfoStart,
   changePasswordStart,
   deleteAccountStart,
+  checkUserSession,
 } from '../../redux/user/user.actions';
 import { User, Error, ChangePassword } from '../../redux/user/user.types';
 import { AppState } from '../../redux/root-reducer';
@@ -33,6 +34,7 @@ interface SettingsPageProps {
   changeInfoStart: typeof changeInfoStart;
   changePasswordStart: typeof changePasswordStart;
   deleteAccountStart: typeof deleteAccountStart;
+  checkUserSession: typeof checkUserSession;
 }
 
 const SettingsPage: React.FC<SettingsPageProps> = ({
@@ -43,6 +45,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   changePassError,
   changePassConfirm,
   deleteAccountStart,
+  checkUserSession,
 }) => {
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -103,7 +106,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       setStatusInfo({ ...statusInfo, error: true });
     } else if (changeInfoConfirm) {
       setStatusInfo({ ...statusInfo, success: true });
+      checkUserSession();
     }
+
+    return setStatusInfo({ success: false, error: false });
   }, [changeInfoError, changeInfoConfirm]);
 
   useEffect(() => {
@@ -112,6 +118,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     } else if (changePassConfirm) {
       setStatusPass({ ...statusPass, success: true });
     }
+
+    return setStatusPass({ success: false, error: false });
   }, [changePassError, changePassConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
@@ -307,6 +315,7 @@ const mapDispatchProps = (dispatch: Dispatch) => ({
       changePasswordStart({ passwordCurrent, password, passwordConfirm })
     ),
   deleteAccountStart: () => dispatch(deleteAccountStart()),
+  checkUserSession: () => dispatch(checkUserSession()),
 });
 
 export default connect(mapStateToProps, mapDispatchProps)(SettingsPage);

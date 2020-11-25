@@ -21,10 +21,12 @@ router.post(
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email }).select('+active');
     if (!existingUser || !existingUser.active) {
       throw new BadRequestError('Invalid credentials');
     }
+
+    console.log(existingUser.active);
 
     const passwordsMatch = await Password.compare(
       existingUser.password,
