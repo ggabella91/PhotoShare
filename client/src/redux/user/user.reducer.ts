@@ -45,13 +45,13 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
     case UserActions.CHANGE_INFO_SUCCESS:
       return {
         ...state,
-        changeInfoConfirm: action.payload,
+        changeInfoConfirm: 'Info changed succesfully!',
         changeInfoError: null,
       };
     case UserActions.CHANGE_PASSWORD_SUCCESS:
       return {
         ...state,
-        changePasswordConfirm: action.payload,
+        changePasswordConfirm: 'Password changed successfully!',
         changePasswordError: null,
       };
     case UserActions.FORGOT_PASSWORD_SUCCESS:

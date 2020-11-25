@@ -45,7 +45,7 @@ router.patch(
 
     const existingUser = await User.findOne({ email });
 
-    if (existingUser) {
+    if (existingUser && existingUser.email !== req.currentUser!.email) {
       throw new BadRequestError('Email in use');
     }
 
