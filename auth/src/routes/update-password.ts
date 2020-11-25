@@ -4,7 +4,11 @@ import jwt from 'jsonwebtoken';
 
 import { Password } from '../services/password';
 import { User } from '../models/user';
-import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
+import {
+  currentUser,
+  validateRequest,
+  BadRequestError,
+} from '@ggabella-photo-share/common';
 
 const router = express.Router();
 
@@ -30,25 +34,28 @@ router.patch(
       }),
   ],
   validateRequest,
+  currentUser,
   async (req: Request, res: Response) => {
-    const { password, email } = req.body;
+    const { passwordCurrent, password } = req.body;
+    const email = req.currentUser!.email;
 
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
+      console.log('No user found');
       throw new BadRequestError('Invalid credentials');
     }
 
     const passwordsMatch = await Password.compare(
       existingUser.password,
-      password
+      passwordCurrent
     );
 
     if (!passwordsMatch) {
       throw new BadRequestError('Invalid credentials');
     }
 
-    existingUser.password = req.body.password;
+    existingUser.password = password;
     await existingUser.save();
 
     // Generate JWT

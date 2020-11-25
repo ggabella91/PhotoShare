@@ -63,7 +63,7 @@ const HomePage: React.FC<HomePageProps> = ({
     if (currentUser) {
       setName(currentUser.name);
     }
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     if (postError) {
