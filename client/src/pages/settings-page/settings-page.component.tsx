@@ -106,7 +106,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       setStatusInfo({ ...statusInfo, error: true });
     } else if (changeInfoConfirm) {
       setStatusInfo({ ...statusInfo, success: true });
-      checkUserSession();
     }
 
     return setStatusInfo({ success: false, error: false });

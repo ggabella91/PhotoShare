@@ -105,7 +105,7 @@ export function* changeInfo({
       email,
     });
 
-    yield put(changeInfoSuccess(data));
+    yield all([put(changeInfoSuccess(data)), put(setCurrentUser(data))]);
   } catch (err) {
     yield put(changeInfoFailure(err));
   }

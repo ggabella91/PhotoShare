@@ -27,7 +27,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ggabella-photo-share/common": "^1.0.14",
+    "@ggabella-photo-share/common": "^1.0.15",
     "@types/express": "^4.17.8",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "^5.7.36",
