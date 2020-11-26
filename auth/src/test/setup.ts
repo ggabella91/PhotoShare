@@ -11,6 +11,8 @@ declare global {
   }
 }
 
+jest.mock('../nats-wrapper.ts');
+
 let mongo: any;
 beforeAll(async () => {
   process.env.JWT_KEY = 'asdfasdf';
@@ -38,14 +40,18 @@ afterAll(async () => {
 });
 
 global.signin = async () => {
+  const name = 'Test Dude';
   const email = 'test@test.com';
   const password = 'password';
+  const passwordConfirm = 'password';
 
   const response = await request(app)
     .post('/api/users/signup')
     .send({
+      name,
       email,
       password,
+      passwordConfirm,
     })
     .expect(201);
 

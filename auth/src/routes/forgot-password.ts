@@ -42,7 +42,12 @@ router.post(
         resetToken,
       });
 
-      res.status(200).send(user);
+      res
+        .status(200)
+        .send({
+          message: 'Reset token generated!',
+          passwordResetExpires: user.passwordResetExpires,
+        });
     } catch (err) {
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;
