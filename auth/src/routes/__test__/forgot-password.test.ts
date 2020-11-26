@@ -13,7 +13,7 @@ it('Creates a password reset token', async () => {
     .expect(201);
 
   const { body: user } = await request(app)
-    .post('/api/users/forgot-password')
+    .post('/api/users/forgotPassword')
     .send({
       email: 'test@test.com',
     });
