@@ -7,8 +7,8 @@ import {
   NotFoundError,
   currentUser,
 } from '@ggabella-photo-share/common';
-import { indexBucketsRouter } from './routes/index';
 import { createPostRouter } from './routes/new';
+import { getPostsRouter } from './routes/get-posts';
 
 const app = express();
 app.set('trust proxy', true);
@@ -22,8 +22,8 @@ app.use(
 
 app.use(currentUser);
 
-app.use(indexBucketsRouter);
 app.use(createPostRouter);
+app.use(getPostsRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
