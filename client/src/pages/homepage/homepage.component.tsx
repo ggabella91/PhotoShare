@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -59,6 +59,8 @@ const HomePage: React.FC<HomePageProps> = ({
     error: false,
   });
 
+  const fileRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => {
     if (currentUser) {
       setName(currentUser.name);
@@ -102,6 +104,7 @@ const HomePage: React.FC<HomePageProps> = ({
     setPostStatus({ success: false, error: false });
 
     if (post) {
+      setShowAlert(true);
       console.log(post.get('photo'));
       console.log(caption);
 
@@ -109,7 +112,13 @@ const HomePage: React.FC<HomePageProps> = ({
         post.append('caption', caption);
       }
       createPostStart(post);
-      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000);
+    }
+
+    console.log(fileRef);
+
+    if (fileRef.current && fileRef.current.files) {
+      fileRef.current.files[0] = null as any;
     }
     setPost(null);
     setImgPreview(null);
@@ -156,7 +165,7 @@ const HomePage: React.FC<HomePageProps> = ({
               </div>
             </div>
           )}
-          {showAlert ? (
+          {!imgPreview && showAlert ? (
             <div className='alert'>
               {postStatus.error
                 ? handleRenderAlert(
@@ -184,6 +193,7 @@ const HomePage: React.FC<HomePageProps> = ({
             label='Select photo'
             accept='image/*'
             onChange={handleFileChange}
+            ref={fileRef}
           />
           <FormInput
             name='caption'
