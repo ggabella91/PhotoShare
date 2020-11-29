@@ -7,7 +7,7 @@ import {
 import { Post } from '../models/post';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
-import { buffToBase64 } from '../utils/buffToBase64';
+import { encode } from '../utils/encode';
 import { Writable } from 'stream';
 
 const router = express.Router();
@@ -37,7 +37,7 @@ router.get(
 
     const s3 = new AWS.S3();
 
-    const postFiles: Writable[] = [];
+    const postFiles: string[] = [];
 
     for (let key of postKeys) {
       const fetchParams: S3.Types.GetObjectRequest = {
@@ -54,15 +54,14 @@ router.get(
           console.log(data);
           const buffer = data.Body;
 
-          const convertedFile = buffToBase64(buffer as Buffer);
-          convertedFile.end();
+          const convertedFile = encode(buffer as Buffer);
 
-          postFiles.push(convertedFile);
+          const image = `<img src='data:image/jpeg;base64,${convertedFile}'/>`;
+
+          res.send(image);
         }
       });
     }
-
-    res.send({ postKeys, postFiles });
   }
 );
 
