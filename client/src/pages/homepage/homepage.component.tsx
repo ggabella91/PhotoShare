@@ -52,6 +52,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
+  const [fileList, setFileList] = useState<FileList | null>(null);
 
   const [showAlert, setShowAlert] = useState(false);
   const [postStatus, setPostStatus] = useState<PostStatus>({
@@ -89,6 +90,8 @@ const HomePage: React.FC<HomePageProps> = ({
 
       formData.append('photo', file, file.name);
 
+      setFileList(event.target.files);
+      console.log(fileList);
       setPost(formData);
 
       setImgPreview({ src: URL.createObjectURL(file), alt: file.name });
@@ -119,8 +122,9 @@ const HomePage: React.FC<HomePageProps> = ({
       setTimeout(() => setShowAlert(false), 5000);
     }
 
-    document.getElementById('file-input')!.nodeValue = '';
+    // document.getElementById('file-input')!.nodeValue = '';
 
+    setFileList(null);
     setPost(null);
     setImgPreview(null);
     setCaption('');
