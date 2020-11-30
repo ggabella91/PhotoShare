@@ -12,7 +12,7 @@ export interface FormInputProps {
 
 export interface FormFileInputType {
   onChange: React.ChangeEventHandler;
-  ref: React.MutableRefObject<HTMLInputElement | null>;
+  ref: () => void;
   id: string;
   name: string;
   type: string;

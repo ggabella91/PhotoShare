@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -59,7 +59,7 @@ const HomePage: React.FC<HomePageProps> = ({
     error: false,
   });
 
-  const fileRef = useRef<HTMLInputElement | null>(null);
+  // const fileRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -74,6 +74,12 @@ const HomePage: React.FC<HomePageProps> = ({
       setPostStatus({ ...postStatus, success: true });
     }
   }, [postError, postConfirm]);
+
+  const handleClearFileInput = () => {
+    if (post) {
+      console.log(post);
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
@@ -105,8 +111,6 @@ const HomePage: React.FC<HomePageProps> = ({
 
     if (post) {
       setShowAlert(true);
-      console.log(post.get('photo'));
-      console.log(caption);
 
       if (caption) {
         post.append('caption', caption);
@@ -115,12 +119,8 @@ const HomePage: React.FC<HomePageProps> = ({
       setTimeout(() => setShowAlert(false), 5000);
     }
 
-    console.log(fileRef);
-    document!.getElementById('file-input')!.innerHTML = '';
+    document.getElementById('file-input')!.nodeValue = '';
 
-    if (fileRef.current) {
-      fileRef.current.textContent = null;
-    }
     setPost(null);
     setImgPreview(null);
     setCaption('');
@@ -194,7 +194,7 @@ const HomePage: React.FC<HomePageProps> = ({
             label='Select photo'
             accept='image/*'
             onChange={handleFileChange}
-            ref={fileRef}
+            ref={handleClearFileInput}
             id='file-input'
           />
           <FormInput
