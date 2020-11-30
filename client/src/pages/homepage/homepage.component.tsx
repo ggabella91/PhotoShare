@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -116,9 +116,10 @@ const HomePage: React.FC<HomePageProps> = ({
     }
 
     console.log(fileRef);
+    document!.getElementById('file-input')!.innerHTML = '';
 
-    if (fileRef.current && fileRef.current.files) {
-      fileRef.current.files[0] = null as any;
+    if (fileRef.current) {
+      fileRef.current.textContent = null;
     }
     setPost(null);
     setImgPreview(null);
@@ -194,6 +195,7 @@ const HomePage: React.FC<HomePageProps> = ({
             accept='image/*'
             onChange={handleFileChange}
             ref={fileRef}
+            id='file-input'
           />
           <FormInput
             name='caption'
