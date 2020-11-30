@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 
 import './form-input.styles.scss';
 
@@ -12,6 +12,7 @@ export interface FormInputProps {
 
 export interface FormFileInputType {
   onChange: React.ChangeEventHandler;
+  ref: React.MutableRefObject<HTMLInputElement | null>;
   name: string;
   type: string;
   label: string;
