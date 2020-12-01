@@ -8,7 +8,8 @@ import {
   currentUser,
 } from '@ggabella-photo-share/common';
 import { createPostRouter } from './routes/new';
-import { getPostsRouter } from './routes/get-posts';
+import { getPostDataRouter } from './routes/data';
+import { getPostFilesRouter } from './routes/get-post-files';
 
 const app = express();
 app.set('trust proxy', true);
@@ -23,7 +24,8 @@ app.use(
 app.use(currentUser);
 
 app.use(createPostRouter);
-app.use(getPostsRouter);
+app.use(getPostDataRouter);
+app.use(getPostFilesRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
