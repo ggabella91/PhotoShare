@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -52,15 +52,13 @@ const HomePage: React.FC<HomePageProps> = ({
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
-  const [fileList, setFileList] = useState<FileList | null>(null);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
 
   const [showAlert, setShowAlert] = useState(false);
   const [postStatus, setPostStatus] = useState<PostStatus>({
     success: false,
     error: false,
   });
-
-  // const fileRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -76,12 +74,6 @@ const HomePage: React.FC<HomePageProps> = ({
     }
   }, [postError, postConfirm]);
 
-  const handleClearFileInput = () => {
-    if (post) {
-      console.log(post);
-    }
-  };
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
       const file = event.target.files[0];
@@ -90,10 +82,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
       formData.append('photo', file, file.name);
 
-      setFileList(event.target.files);
-      console.log(fileList);
       setPost(formData);
-
       setImgPreview({ src: URL.createObjectURL(file), alt: file.name });
     } else {
       setPost(null);
@@ -122,9 +111,8 @@ const HomePage: React.FC<HomePageProps> = ({
       setTimeout(() => setShowAlert(false), 5000);
     }
 
-    // document.getElementById('file-input')!.nodeValue = '';
+    setFileInputKey(Date.now());
 
-    setFileList(null);
     setPost(null);
     setImgPreview(null);
     setCaption('');
@@ -198,8 +186,7 @@ const HomePage: React.FC<HomePageProps> = ({
             label='Select photo'
             accept='image/*'
             onChange={handleFileChange}
-            ref={handleClearFileInput}
-            id='file-input'
+            key={fileInputKey}
           />
           <FormInput
             name='caption'
