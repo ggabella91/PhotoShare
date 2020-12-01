@@ -12,12 +12,11 @@ export interface FormInputProps {
 
 export interface FormFileInputType {
   onChange: React.ChangeEventHandler;
-  ref: () => void;
-  id: string;
   name: string;
   type: string;
   label: string;
   accept: string;
+  key: number;
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
