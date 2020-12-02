@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
+import { resizePhoto } from '../utils/resize';
 import { Post } from '../models/post';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
-import { generateKey } from '../utils/generateKey';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 
@@ -29,15 +29,16 @@ router.post(
   '/api/posts',
   requireAuth,
   upload.single('photo'),
+  resizePhoto,
   async (req: Request, res: Response) => {
     const caption = req.body.caption || '';
 
-    const key = generateKey(req.file.originalname);
+    const key = req.file.filename;
 
     const s3 = new AWS.S3();
 
     const uploadParams: S3.Types.PutObjectRequest = {
-      Bucket: 'photo-share-app',
+      Bucket: 'photo-share-app-profile-photos',
       Key: key,
       Body: '',
     };
@@ -58,18 +59,18 @@ router.post(
         location = data.Location;
         console.log('Upload success!', location);
 
-        const post = Post.build({
-          fileName: req.file.originalname,
-          caption,
-          createdAt: new Date(),
-          userId: req.currentUser!.id,
-          s3Key: key,
-          s3ObjectURL: location,
-        });
+        // const post = Post.build({
+        //   fileName: req.file.originalname,
+        //   caption,
+        //   createdAt: new Date(),
+        //   userId: req.currentUser!.id,
+        //   s3Key: key,
+        //   s3ObjectURL: location,
+        // });
 
-        await post.save();
+        // await post.save();
 
-        res.status(201).send(post);
+        // res.status(201).send(post);
       }
     });
   }

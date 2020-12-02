@@ -21,7 +21,9 @@ router.get(
       );
     }
 
-    const posts = await Post.find({ userId: user.id });
+    let posts = await Post.find({ userId: user.id });
+
+    posts = posts.reverse();
 
     console.log(posts);
 
