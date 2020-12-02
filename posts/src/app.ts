@@ -8,6 +8,7 @@ import {
   currentUser,
 } from '@ggabella-photo-share/common';
 import { createPostRouter } from './routes/new';
+import { profilePhotoRouter } from './routes/profile-photo';
 import { getPostDataRouter } from './routes/data';
 import { getPostFilesRouter } from './routes/get-post-files';
 
@@ -24,6 +25,7 @@ app.use(
 app.use(currentUser);
 
 app.use(createPostRouter);
+app.use(profilePhotoRouter);
 app.use(getPostDataRouter);
 app.use(getPostFilesRouter);
 

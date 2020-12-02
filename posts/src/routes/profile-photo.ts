@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
 import { resizePhoto } from '../utils/resize';
-import { Post } from '../models/post';
+import { ProfilePhoto } from '../models/profile-photo';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
 import { AWS } from '../index';
@@ -26,13 +26,11 @@ const imageFilter = (
 const upload = multer({ storage: fileStorage, fileFilter: imageFilter });
 
 router.post(
-  '/api/posts',
+  '/api/profilePhoto',
   requireAuth,
   upload.single('photo'),
   resizePhoto,
   async (req: Request, res: Response) => {
-    const caption = req.body.caption || '';
-
     const key = req.file.filename;
 
     const s3 = new AWS.S3();
@@ -59,21 +57,22 @@ router.post(
         location = data.Location;
         console.log('Upload success!', location);
 
-        // const post = Post.build({
-        //   fileName: req.file.originalname,
-        //   caption,
-        //   createdAt: new Date(),
-        //   userId: req.currentUser!.id,
-        //   s3Key: key,
-        //   s3ObjectURL: location,
-        // });
+        const post = ProfilePhoto.build({
+          fileName: req.file.originalname,
+          createdAt: new Date(),
+          userId: req.currentUser!.id,
+          s3Key: key,
+          s3ObjectURL: location,
+        });
 
-        // await post.save();
+        await post.save();
 
-        // res.status(201).send(post);
+        // Need to create publisher and publish profile photo save event for auth service to listen to
+
+        res.status(201).send(post);
       }
     });
   }
 );
 
-export { router as createPostRouter };
+export { router as profilePhotoRouter };
