@@ -6,6 +6,8 @@ import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
+import { natsWrapper } from '../nats-wrapper';
+import { ProfilePhotoUpdatedPublisher } from '../events/publishers/profile-photo-update-publisher';
 
 const router = express.Router();
 
@@ -33,7 +35,25 @@ router.post(
   async (req: Request, res: Response) => {
     const key = req.file.filename;
 
+    const existingPhotoKey = req.currentUser!.photo || '';
+
     const s3 = new AWS.S3();
+
+    if (existingPhotoKey) {
+      const deleteParams: S3.Types.DeleteObjectRequest = {
+        Bucket: 'photo-share-app-profile-photos',
+        Key: existingPhotoKey,
+      };
+
+      s3.deleteObject(deleteParams, async (err, data) => {
+        if (err) {
+          throw new Error('Error deleting existing profile photo.');
+        }
+        if (data) {
+          console.log('Existing profile photo deleted successfully!', data);
+        }
+      });
+    }
 
     const uploadParams: S3.Types.PutObjectRequest = {
       Bucket: 'photo-share-app-profile-photos',
@@ -68,6 +88,10 @@ router.post(
         await post.save();
 
         // Need to create publisher and publish profile photo save event for auth service to listen to
+        await new ProfilePhotoUpdatedPublisher(natsWrapper.client).publish({
+          userId: req.currentUser!.id,
+          s3Key: key,
+        });
 
         res.status(201).send(post);
       }

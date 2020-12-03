@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
+import { ProfilePhotoUpdatedListener } from './events/listeners/profile-photo-updated-listener';
 
 const start = async () => {
   console.log('Starting up...');
@@ -34,6 +35,8 @@ const start = async () => {
   });
   process.on('SIGINT', () => natsWrapper.client.close());
   process.on('SIGTERM', () => natsWrapper.client.close());
+
+  new ProfilePhotoUpdatedListener(natsWrapper.client).listen();
 
   await mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
