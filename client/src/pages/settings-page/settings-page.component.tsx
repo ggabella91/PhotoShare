@@ -18,7 +18,10 @@ import {
 import { User, Error, ChangePassword } from '../../redux/user/user.types';
 import { AppState } from '../../redux/root-reducer';
 
-import { FormInput } from '../../components/form-input/form-input.component';
+import {
+  FormFileInput,
+  FormInput,
+} from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
 import CustomModal from '../../components/modal/modal.component';
 
@@ -37,6 +40,16 @@ interface SettingsPageProps {
   checkUserSession: typeof checkUserSession;
 }
 
+interface ImgPreview {
+  src: string;
+  alt: string;
+}
+
+interface PostStatus {
+  success: boolean;
+  error: boolean;
+}
+
 const SettingsPage: React.FC<SettingsPageProps> = ({
   changeInfoStart,
   changePasswordStart,
@@ -45,8 +58,16 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   changePassError,
   changePassConfirm,
   deleteAccountStart,
-  checkUserSession,
 }) => {
+  const [profilePhoto, setProfilePhoto] = useState<FormData | null>();
+  const [imgPreview, setImgPreview] = useState<ImgPreview | null>();
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const [profilePhotoStatus, setProfilePhotoStatus] = useState<PostStatus>({
+    success: false,
+    error: false,
+  });
+  const [showAlert, setShowAlert] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
@@ -74,6 +95,39 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
   const { name, email } = userInfo;
   const { passwordCurrent, password, passwordConfirm } = userPassword;
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files?.length) {
+      const file = event.target.files[0];
+
+      const formData = new FormData();
+
+      formData.append('photo', file, file.name);
+
+      setProfilePhoto(formData);
+      setImgPreview({ src: URL.createObjectURL(file), alt: file.name });
+    } else {
+      setProfilePhoto(null);
+      setImgPreview(null);
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setProfilePhotoStatus({ success: false, error: false });
+
+    if (profilePhoto) {
+      setShowAlert(true);
+
+      // createPostStart(profilePhoto);
+      setTimeout(() => setShowAlert(false), 5000);
+    }
+
+    setFileInputKey(Date.now());
+
+    setProfilePhoto(null);
+    setImgPreview(null);
+  };
 
   const handleInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -192,6 +246,26 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   return (
     <div className='settings'>
       <h2>Settings</h2>
+      <div className='update-profile-photo'>
+        <span>Update your profile photo</span>
+        <div className='profile-photo-container'></div>
+        <form encType='multipart/form-data' onSubmit={handleSubmit}>
+          <FormFileInput
+            name='photo'
+            type='file'
+            label='Select photo'
+            accept='image/*'
+            onChange={handleFileChange}
+            key={fileInputKey}
+          />
+
+          <div className='button'>
+            <Button className='submit-button' onClick={handleSubmit}>
+              Upload photo
+            </Button>
+          </div>
+        </form>
+      </div>
       <form className='change-info' onSubmit={handleSubmitInfo}>
         <span>Update your info</span>
         <FormInput
