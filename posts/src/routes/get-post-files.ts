@@ -17,7 +17,7 @@ router.get(
   async (req: Request, res: Response) => {
     const user = req.currentUser;
 
-    const { postKey } = req.body;
+    const { bucket, postKey } = req.body;
 
     if (!user) {
       throw new BadRequestError(
@@ -28,7 +28,7 @@ router.get(
     const s3 = new AWS.S3();
 
     const fetchParams: S3.Types.GetObjectRequest = {
-      Bucket: 'photo-share-app',
+      Bucket: bucket,
       Key: postKey,
     };
 
