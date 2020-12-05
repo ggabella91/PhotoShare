@@ -1,6 +1,6 @@
 .settings {
   width: 850px;
-  height: 1000px;
+  height: 1600px;
   display: flex;
   flex-direction: column;
   justify-items: center;
@@ -23,6 +23,17 @@
       height: 300px;
       border: solid 2px;
       border-radius: 150px;
+
+      .placeholder-text-container {
+        position: relative;
+        margin-top: 50%;
+        margin-left: 50%;
+        transform: translate(-50%, -50%);
+
+        .placeholder-text {
+          font-weight: 420;
+        }
+      }
     }
 
     span {
@@ -30,6 +41,16 @@
       margin: 0px;
       width: 300px;
       line-height: 1.5;
+    }
+
+    .img-preview {
+      margin-top: 50%;
+      transform: translateY(-50%);
+      max-width: 300px;
+      max-height: 300px;
+      height: auto;
+      border: solid 2px;
+      border-radius: 150px;
     }
   }
 
