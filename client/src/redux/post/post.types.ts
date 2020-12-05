@@ -23,9 +23,12 @@ export interface Post {
 }
 
 export interface PostState {
-  posts: Post[];
+  posts: Post[] | null;
   postError: PostError | null;
   postConfirm: string | null;
+  profilePhoto: Post | null;
+  profilePhotoError: PostError | null;
+  profilePhotoConfirm: string | null;
 }
 
 export interface CreatePostStart {
