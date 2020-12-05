@@ -4,7 +4,12 @@ import { ActionPattern, Saga } from '@redux-saga/types';
 
 import { PostActions } from './post.types';
 
-import { createPostSuccess, createPostFailure } from './post.actions';
+import {
+  createPostSuccess,
+  createPostFailure,
+  updateProfilePhotoSuccess,
+  updateProfilePhotoFailure,
+} from './post.actions';
 
 import axios from 'axios';
 
@@ -23,6 +28,21 @@ export function* createPost({
   }
 }
 
+export function* updateProfilePhoto({
+  payload: post,
+}: {
+  payload: FormData;
+}): SagaIterator {
+  try {
+    // @ts-ignore
+    const { data } = yield axios.post('/api/profilePhoto', post);
+
+    yield put(updateProfilePhotoSuccess(data));
+  } catch (err) {
+    yield put(updateProfilePhotoFailure(err));
+  }
+}
+
 export function* onCreatePostStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(
     PostActions.CREATE_POST_START,
@@ -30,6 +50,13 @@ export function* onCreatePostStart(): SagaIterator {
   );
 }
 
+export function* onUpdateProfilePhotoStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    PostActions.UPDATE_PROFILE_PHOTO_START,
+    updateProfilePhoto
+  );
+}
+
 export function* postSagas(): SagaIterator {
-  yield all([call(onCreatePostStart)]);
+  yield all([call(onCreatePostStart), call(onUpdateProfilePhotoStart)]);
 }

@@ -5,6 +5,12 @@ export enum PostActions {
   UPDATE_PROFILE_PHOTO_START = 'UPDATE_PROFILE_PHOTO_START',
   UPDATE_PROFILE_PHOTO_SUCCESS = 'UPDATE_PROFILE_PHOTO_SUCCESS',
   UPDATE_PROFILE_PHOTO_FAILURE = 'UPDATE_PROFILE_PHOTO_FAILURE',
+  GET_POST_DATA_START = 'GET_POST_DATA_START',
+  GET_POST_DATA_SUCCESS = 'GET_POST_DATA_SUCCESS',
+  GET_POST_DATA_FAILURE = 'GET_POST_DATA_FAILURE',
+  GET_POST_FILE_START = 'GET_POST_FILE_START',
+  GET_POST_FILE_SUCCESS = 'GET_POST_FILE_SUCCESS',
+  GET_POST_FILE_FAILURE = 'GET_POST_FILE_FAILURE',
 }
 
 export interface PostError {
@@ -22,8 +28,23 @@ export interface Post {
   userId: string;
 }
 
+export interface PostFileReq {
+  s3Key: string;
+  bucket: string;
+}
+
+export interface PostFile {
+  s3Key: string;
+  fileString: string;
+}
+
 export interface PostState {
-  posts: Post[] | null;
+  postData: Post[] | null;
+  postFiles: PostFile[];
+  getPostDataError: PostError | null;
+  getPostDataConfirm: string | null;
+  getPostFileError: PostError | null;
+  getPostFileConfirm: string | null;
   postError: PostError | null;
   postConfirm: string | null;
   profilePhoto: Post | null;
@@ -61,10 +82,46 @@ export interface UpdateProfilePhotoFailure {
   payload: PostError;
 }
 
+export interface GetPostDataStart {
+  type: typeof PostActions.GET_POST_DATA_START;
+  payload: null;
+}
+
+export interface GetPostDataSuccess {
+  type: typeof PostActions.GET_POST_DATA_SUCCESS;
+  payload: Post[];
+}
+
+export interface GetPostDataFailure {
+  type: typeof PostActions.GET_POST_DATA_FAILURE;
+  payload: PostError;
+}
+
+export interface GetPostFileStart {
+  type: typeof PostActions.GET_POST_FILE_START;
+  payload: PostFileReq;
+}
+
+export interface GetPostFileSuccess {
+  type: typeof PostActions.GET_POST_FILE_SUCCESS;
+  payload: PostFile;
+}
+
+export interface GetPostFileFailure {
+  type: typeof PostActions.GET_POST_FILE_FAILURE;
+  payload: PostError;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
   | CreatePostFailure
   | UpdateProfilePhotoStart
   | UpdateProfilePhotoSuccess
-  | UpdateProfilePhotoFailure;
+  | UpdateProfilePhotoFailure
+  | GetPostDataStart
+  | GetPostDataSuccess
+  | GetPostDataFailure
+  | GetPostFileStart
+  | GetPostFileSuccess
+  | GetPostFileFailure;
