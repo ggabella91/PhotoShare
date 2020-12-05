@@ -59,14 +59,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   changePassConfirm,
   deleteAccountStart,
 }) => {
-  const [profilePhoto, setProfilePhoto] = useState<FormData | null>();
-  const [imgPreview, setImgPreview] = useState<ImgPreview | null>();
+  const [profilePhoto, setProfilePhoto] = useState<FormData | null>(null);
+  const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
   const [profilePhotoStatus, setProfilePhotoStatus] = useState<PostStatus>({
     success: false,
     error: false,
   });
-  const [showAlert, setShowAlert] = useState(false);
+  const [showProfilePhotoAlert, setShowProfilePhotoAlert] = useState(false);
 
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -102,7 +102,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
       const formData = new FormData();
 
-      formData.append('photo', file, file.name);
+      formData.append('profile-photo', file, file.name);
 
       setProfilePhoto(formData);
       setImgPreview({ src: URL.createObjectURL(file), alt: file.name });
@@ -117,10 +117,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     setProfilePhotoStatus({ success: false, error: false });
 
     if (profilePhoto) {
-      setShowAlert(true);
+      setShowProfilePhotoAlert(true);
 
       // createPostStart(profilePhoto);
-      setTimeout(() => setShowAlert(false), 5000);
+      setTimeout(() => setShowProfilePhotoAlert(false), 5000);
     }
 
     setFileInputKey(Date.now());
@@ -248,10 +248,25 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       <h2>Settings</h2>
       <div className='update-profile-photo'>
         <span>Update your profile photo</span>
-        <div className='profile-photo-container'></div>
+        <div className='profile-photo-container'>
+          {imgPreview || showProfilePhotoAlert ? null : (
+            <div className='img-preview-placeholder'>
+              <div className='placeholder-text-container'>
+                <span className='placeholder-text'>No current photo</span>
+              </div>
+            </div>
+          )}
+          {imgPreview ? (
+            <img
+              className='img-preview'
+              src={imgPreview ? imgPreview.src : ''}
+              alt={imgPreview ? imgPreview.alt : ''}
+            />
+          ) : null}
+        </div>
         <form encType='multipart/form-data' onSubmit={handleSubmit}>
           <FormFileInput
-            name='photo'
+            name='profile-photo'
             type='file'
             label='Select photo'
             accept='image/*'
