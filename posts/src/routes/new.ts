@@ -26,7 +26,7 @@ const imageFilter = (
 const upload = multer({ storage: fileStorage, fileFilter: imageFilter });
 
 router.post(
-  '/api/posts',
+  '/api/posts/new',
   requireAuth,
   upload.single('photo'),
   async (req: Request, res: Response) => {

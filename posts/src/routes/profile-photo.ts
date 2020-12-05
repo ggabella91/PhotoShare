@@ -28,7 +28,7 @@ const imageFilter = (
 const upload = multer({ storage: fileStorage, fileFilter: imageFilter });
 
 router.post(
-  '/api/profilePhoto',
+  '/api/posts/profilePhoto',
   requireAuth,
   upload.single('photo'),
   resizePhoto,

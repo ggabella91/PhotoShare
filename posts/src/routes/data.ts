@@ -9,7 +9,7 @@ import { Post } from '../models/post';
 const router = express.Router();
 
 router.get(
-  '/api/postData',
+  '/api/posts/data',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {
