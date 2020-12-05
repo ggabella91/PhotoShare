@@ -19,10 +19,10 @@
 
     .profile-photo-container {
       margin-top: 15px;
-      width: 300px;
-      height: 300px;
+      width: 310px;
+      height: 310px;
       border: solid 2px;
-      border-radius: 150px;
+      position: relative;
 
       .placeholder-text-container {
         position: relative;
@@ -34,6 +34,15 @@
           font-weight: 420;
         }
       }
+
+      .img-preview {
+        margin-top: 50%;
+        transform: translateY(-50%);
+        position: relative;
+        max-width: 300px;
+        max-height: 300px;
+        height: auto;
+      }
     }
 
     span {
@@ -41,16 +50,6 @@
       margin: 0px;
       width: 300px;
       line-height: 1.5;
-    }
-
-    .img-preview {
-      margin-top: 50%;
-      transform: translateY(-50%);
-      max-width: 300px;
-      max-height: 300px;
-      height: auto;
-      border: solid 2px;
-      border-radius: 150px;
     }
   }
 
