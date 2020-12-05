@@ -11,7 +11,7 @@ import { encode } from '../utils/encode';
 const router = express.Router();
 
 router.get(
-  '/api/postFiles',
+  '/api/posts/files',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {

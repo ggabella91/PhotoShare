@@ -1,7 +1,12 @@
 import { PostActions, PostActionTypes, PostState } from './post.types';
 
 const INITIAL_STATE: PostState = {
-  posts: null,
+  postData: null,
+  postFiles: [],
+  getPostDataError: null,
+  getPostDataConfirm: null,
+  getPostFileError: null,
+  getPostFileConfirm: null,
   postError: null,
   postConfirm: null,
   profilePhoto: null,
@@ -23,6 +28,20 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         postError: null,
         postConfirm: 'Post uploaded!',
       };
+    case PostActions.GET_POST_DATA_SUCCESS:
+      return {
+        ...state,
+        postData: action.payload,
+        getPostDataError: null,
+        getPostDataConfirm: 'Post data fetched!',
+      };
+    case PostActions.GET_POST_FILE_SUCCESS:
+      return {
+        ...state,
+        postFiles: [...state.postFiles, action.payload],
+        getPostFileError: null,
+        getPostFileConfirm: 'Post file fetched!',
+      };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
         ...state,
@@ -34,6 +53,18 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         postError: action.payload,
         postConfirm: null,
+      };
+    case PostActions.GET_POST_DATA_FAILURE:
+      return {
+        ...state,
+        getPostDataError: action.payload,
+        getPostDataConfirm: null,
+      };
+    case PostActions.GET_POST_FILE_FAILURE:
+      return {
+        ...state,
+        getPostFileError: action.payload,
+        getPostFileConfirm: null,
       };
     default:
       return state;
