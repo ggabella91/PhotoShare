@@ -10,14 +10,14 @@ import { encode } from '../utils/encode';
 
 const router = express.Router();
 
-router.get(
+router.post(
   '/api/posts/files',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {
     const user = req.currentUser;
 
-    const { bucket, postKey } = req.body;
+    const { bucket, s3Key } = req.body;
 
     if (!user) {
       throw new BadRequestError(
@@ -29,7 +29,7 @@ router.get(
 
     const fetchParams: S3.Types.GetObjectRequest = {
       Bucket: bucket,
-      Key: postKey,
+      Key: s3Key,
     };
 
     s3.getObject(fetchParams, async (err, data) => {

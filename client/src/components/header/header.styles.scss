@@ -29,6 +29,23 @@
     }
   }
 
+  .avatar {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: calc(6vh + 1px);
+    height: calc(6vh + 1px);
+    border: solid 1px;
+    border-color: white;
+    border-radius: 50%;
+
+    .profile-photo {
+      position: inherit;
+      width: 6vh;
+      height: 6vh;
+    }
+  }
+
   .header-menu {
     position: absolute;
     right: 5px;

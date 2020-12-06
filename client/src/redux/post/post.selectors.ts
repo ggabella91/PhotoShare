@@ -45,9 +45,9 @@ export const selectPostConfirm = createSelector(
   (postState: PostState) => postState.postConfirm
 );
 
-export const selectProfilePhoto = createSelector(
+export const selectProfilePhotoFile = createSelector(
   [selectPostState],
-  (postState: PostState) => postState.profilePhoto
+  (postState: PostState) => postState.profilePhotoFile
 );
 
 export const selectUpdateProfilePhotoError = createSelector(

@@ -9,7 +9,7 @@ const INITIAL_STATE: PostState = {
   getPostFileConfirm: null,
   postError: null,
   postConfirm: null,
-  profilePhoto: null,
+  profilePhotoFile: null,
   profilePhotoError: null,
   profilePhotoConfirm: null,
 };
@@ -41,6 +41,13 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         postFiles: [...state.postFiles, action.payload],
         getPostFileError: null,
         getPostFileConfirm: 'Post file fetched!',
+      };
+    case PostActions.GET_PROFILE_PHOTO_FILE_SUCCESS:
+      return {
+        ...state,
+        profilePhotoFile: action.payload,
+        getPostFileError: null,
+        getPostFileConfirm: 'Profile photo file fetched!',
       };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
