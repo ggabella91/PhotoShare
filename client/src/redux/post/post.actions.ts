@@ -23,14 +23,14 @@ export const createPostFailure = (error: PostError): PostActionTypes => ({
   payload: error,
 });
 
-export const updateProfilePhotoStart = (post: FormData): PostActionTypes => ({
+export const updateProfilePhotoStart = (photo: FormData): PostActionTypes => ({
   type: PostActions.UPDATE_PROFILE_PHOTO_START,
-  payload: post,
+  payload: photo,
 });
 
-export const updateProfilePhotoSuccess = (post: Post): PostActionTypes => ({
+export const updateProfilePhotoSuccess = (photo: Post): PostActionTypes => ({
   type: PostActions.UPDATE_PROFILE_PHOTO_SUCCESS,
-  payload: post,
+  payload: photo,
 });
 
 export const updateProfilePhotoFailure = (

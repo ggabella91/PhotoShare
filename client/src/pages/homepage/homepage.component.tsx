@@ -8,7 +8,6 @@ import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { Post, PostError } from '../../redux/post/post.types';
 import {
-  selectPosts,
   selectPostError,
   selectPostConfirm,
 } from '../../redux/post/post.selectors';
@@ -31,7 +30,6 @@ interface PostStatus {
 interface HomePageProps {
   currentUser: User | null;
   createPostStart: typeof createPostStart;
-  posts: Post[] | null;
   postConfirm: string | null;
   postError: PostError | null;
 }
@@ -44,7 +42,6 @@ interface ImgPreview {
 const HomePage: React.FC<HomePageProps> = ({
   currentUser,
   createPostStart,
-  posts,
   postConfirm,
   postError,
 }) => {
@@ -208,14 +205,12 @@ const HomePage: React.FC<HomePageProps> = ({
 
 interface LinkStateProps {
   currentUser: User | null;
-  posts: Post[] | null;
   postConfirm: string | null;
   postError: PostError | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
-  posts: selectPosts,
   postConfirm: selectPostConfirm,
   postError: selectPostError,
 });
