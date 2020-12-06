@@ -33,13 +33,13 @@ export function* createPost({
 }
 
 export function* updateProfilePhoto({
-  payload: post,
+  payload: photo,
 }: {
   payload: FormData;
 }): SagaIterator {
   try {
     // @ts-ignore
-    const { data } = yield axios.post('/api//posts/profilePhoto', post);
+    const { data } = yield axios.post('/api/posts/profilePhoto', photo);
 
     yield put(updateProfilePhotoSuccess(data));
   } catch (err) {

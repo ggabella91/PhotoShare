@@ -1,4 +1,3 @@
-import { EROFS } from 'constants';
 import {
   UserActions,
   UserActionTypes,

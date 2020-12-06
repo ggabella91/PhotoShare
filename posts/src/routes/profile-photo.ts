@@ -30,7 +30,7 @@ const upload = multer({ storage: fileStorage, fileFilter: imageFilter });
 router.post(
   '/api/posts/profilePhoto',
   requireAuth,
-  upload.single('photo'),
+  upload.single('profile-photo'),
   resizePhoto,
   async (req: Request, res: Response) => {
     const key = req.file.filename;
@@ -87,7 +87,6 @@ router.post(
 
         await post.save();
 
-        // Need to create publisher and publish profile photo save event for auth service to listen to
         await new ProfilePhotoUpdatedPublisher(natsWrapper.client).publish({
           userId: req.currentUser!.id,
           s3Key: key,

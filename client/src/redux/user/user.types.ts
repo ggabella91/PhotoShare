@@ -42,6 +42,7 @@ export interface UserSignIn {
 export interface User {
   name: string;
   email: string;
+  photo?: string;
 }
 
 export interface ChangePassword {
@@ -71,7 +72,7 @@ export type UserPayload =
   | null;
 
 export interface UserState {
-  currentUser: { name: string; email: string } | null;
+  currentUser: User | null;
   signUpError: Error | null;
   signInOrOutError: Error | null;
   changeInfoConfirm: null | string;

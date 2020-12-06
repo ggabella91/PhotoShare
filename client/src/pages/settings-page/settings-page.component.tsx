@@ -16,6 +16,11 @@ import {
   checkUserSession,
 } from '../../redux/user/user.actions';
 import { User, Error, ChangePassword } from '../../redux/user/user.types';
+import {
+  selectUpdateProfilePhotoError,
+  selectUpdateProfilePhotoConfirm,
+} from '../../redux/post/post.selectors';
+import { updateProfilePhotoStart } from '../../redux/post/post.actions';
 import { AppState } from '../../redux/root-reducer';
 
 import {
@@ -30,10 +35,13 @@ import Alert from 'react-bootstrap/Alert';
 import './settings-page.styles.scss';
 
 interface SettingsPageProps {
+  updateProfilePhotoConfirm: string | null;
+  updateProfilePhotoError: Error | null;
   changeInfoConfirm: string | null;
   changeInfoError: Error | null;
   changePassConfirm: string | null;
   changePassError: Error | null;
+  updateProfilePhotoStart: typeof updateProfilePhotoStart;
   changeInfoStart: typeof changeInfoStart;
   changePasswordStart: typeof changePasswordStart;
   deleteAccountStart: typeof deleteAccountStart;
@@ -51,6 +59,9 @@ interface PostStatus {
 }
 
 const SettingsPage: React.FC<SettingsPageProps> = ({
+  updateProfilePhotoStart,
+  updateProfilePhotoError,
+  updateProfilePhotoConfirm,
   changeInfoStart,
   changePasswordStart,
   changeInfoError,
@@ -112,14 +123,16 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitProfilePhoto = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
     setProfilePhotoStatus({ success: false, error: false });
 
     if (profilePhoto) {
       setShowProfilePhotoAlert(true);
 
-      // createPostStart(profilePhoto);
+      updateProfilePhotoStart(profilePhoto);
       setTimeout(() => setShowProfilePhotoAlert(false), 5000);
     }
 
@@ -154,6 +167,16 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
     changePasswordStart({ passwordCurrent, password, passwordConfirm });
   };
+
+  useEffect(() => {
+    if (changeInfoError) {
+      setStatusInfo({ ...statusInfo, error: true });
+    } else if (changeInfoConfirm) {
+      setStatusInfo({ ...statusInfo, success: true });
+    }
+
+    return setStatusInfo({ success: false, error: false });
+  }, [changeInfoError, changeInfoConfirm]);
 
   useEffect(() => {
     if (changeInfoError) {
@@ -208,6 +231,20 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           {message}
         </Alert>
       );
+    } else if (type === 'errorProfilePhoto' && showProfilePhotoAlert) {
+      setTimeout(() => {
+        setProfilePhotoStatus({ success: false, error: false });
+        setShowProfilePhotoAlert(false);
+      }, 5000);
+      return (
+        <Alert
+          variant='danger'
+          onClose={() => setShowProfilePhotoAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
     } else if (type === 'successInfo' && showInfoAlert) {
       setTimeout(() => {
         setUserInfo({ name: '', email: '' });
@@ -240,6 +277,20 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           {message}
         </Alert>
       );
+    } else if (type === 'successProfilePhoto' && showProfilePhotoAlert) {
+      setTimeout(() => {
+        setProfilePhotoStatus({ success: false, error: false });
+        setShowProfilePhotoAlert(false);
+      }, 5000);
+      return (
+        <Alert
+          variant='success'
+          onClose={() => setShowProfilePhotoAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
     }
   };
 
@@ -256,6 +307,22 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               </div>
             </div>
           )}
+          {!imgPreview && showProfilePhotoAlert ? (
+            <div className='settings-alert'>
+              {profilePhotoStatus.error
+                ? handleRenderAlert(
+                    'errorProfilePhoto',
+                    'Error updating profile picture.'
+                  )
+                : null}
+              {profilePhotoStatus.success
+                ? handleRenderAlert(
+                    'successProfilePhoto',
+                    'Profile picture changed successfully!'
+                  )
+                : null}
+            </div>
+          ) : null}
           {imgPreview ? (
             <img
               className='img-preview'
@@ -264,7 +331,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             />
           ) : null}
         </div>
-        <form encType='multipart/form-data' onSubmit={handleSubmit}>
+        <form encType='multipart/form-data' onSubmit={handleSubmitProfilePhoto}>
           <FormFileInput
             name='profile-photo'
             type='file'
@@ -275,7 +342,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           />
 
           <div className='button'>
-            <Button className='submit-button' onClick={handleSubmit}>
+            <Button
+              className='submit-button'
+              onClick={handleSubmitProfilePhoto}
+            >
               Upload photo
             </Button>
           </div>
@@ -378,6 +448,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 };
 
 interface LinkStateProps {
+  updateProfilePhotoConfirm: string | null;
+  updateProfilePhotoError: Error | null;
   changeInfoConfirm: string | null;
   changeInfoError: Error | null;
   changePassConfirm: string | null;
@@ -385,6 +457,8 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
+  updateProfilePhotoConfirm: selectUpdateProfilePhotoConfirm,
+  updateProfilePhotoError: selectUpdateProfilePhotoError,
   changeInfoConfirm: selectChangeInfoConfirm,
   changeInfoError: selectChangeInfoError,
   changePassConfirm: selectChangePasswordConfirm,
@@ -392,6 +466,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchProps = (dispatch: Dispatch) => ({
+  updateProfilePhotoStart: (photo: FormData) =>
+    dispatch(updateProfilePhotoStart(photo)),
   changeInfoStart: ({ name, email }: User) =>
     dispatch(changeInfoStart({ name, email })),
   changePasswordStart: ({
