@@ -7,14 +7,18 @@ import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { signOutStart } from '../../redux/user/user.actions';
-import { PostFile, PostFileReq } from '../../redux/post/post.types';
-import { selectProfilePhotoFile } from '../../redux/post/post.selectors';
+import { PostFileReq } from '../../redux/post/post.types';
+import {
+  selectProfilePhotoKey,
+  selectProfilePhotoFile,
+} from '../../redux/post/post.selectors';
 import { getPostFileStart } from '../../redux/post/post.actions';
 
 import './header.styles.scss';
 
 interface HeaderProps {
   currentUser: User | null;
+  profilePhotoKey: string | null;
   profilePhotoFile: string | null;
   getPostFileStart: typeof getPostFileStart;
   signOutStart: typeof signOutStart;
@@ -22,6 +26,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({
   currentUser,
+  profilePhotoKey,
   profilePhotoFile,
   getPostFileStart,
   signOutStart,
@@ -29,13 +34,18 @@ const Header: React.FC<HeaderProps> = ({
   const [photoFile, setPhotoFile] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!profilePhotoFile && currentUser && currentUser.photo) {
+    if (profilePhotoKey) {
+      getPostFileStart({
+        s3Key: profilePhotoKey,
+        bucket: 'photo-share-app-profile-photos',
+      });
+    } else if (!profilePhotoFile && currentUser && currentUser.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket: 'photo-share-app-profile-photos',
       });
     }
-  }, []);
+  }, [profilePhotoKey]);
 
   useEffect(() => {
     if (profilePhotoFile) {
@@ -80,11 +90,13 @@ const Header: React.FC<HeaderProps> = ({
 
 interface LinkStateProps {
   currentUser: User | null;
+  profilePhotoKey: string | null;
   profilePhotoFile: string | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
+  profilePhotoKey: selectProfilePhotoKey,
   profilePhotoFile: selectProfilePhotoFile,
 });
 

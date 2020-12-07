@@ -48,6 +48,7 @@ export interface PostState {
   getPostFileConfirm: string | null;
   postError: PostError | null;
   postConfirm: string | null;
+  profilePhotoKey: string | null;
   profilePhotoFile: string | null;
   profilePhotoError: PostError | null;
   profilePhotoConfirm: string | null;

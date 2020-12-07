@@ -38,12 +38,9 @@ router.post(
         throw new Error('Error fetching the photo');
       }
       if (data) {
-        console.log(data);
         const buffer = data.Body;
 
         const convertedFileString = encode(buffer as Buffer);
-
-        // const image = `<img src='data:image/jpeg;base64,${convertedFileString}'/>`;
 
         res.send(convertedFileString);
       }

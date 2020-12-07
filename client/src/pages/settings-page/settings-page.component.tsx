@@ -303,7 +303,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           {imgPreview || showProfilePhotoAlert ? null : (
             <div className='img-preview-placeholder'>
               <div className='placeholder-text-container'>
-                <span className='placeholder-text'>No current photo</span>
+                <span className='placeholder-text'>
+                  Select a photo to preview it here
+                </span>
               </div>
             </div>
           )}
