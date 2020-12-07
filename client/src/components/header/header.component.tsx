@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({
 
   useEffect(() => {
     if (profilePhotoFile) {
-      setPhotoFile(profilePhotoFile);
+      setPhotoFile(null);
     }
   }, [profilePhotoFile]);
 
@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({
       </NavLink>
       {currentUser ? (
         <div>
-          <div className='avatar'>
+          <NavLink to='/my-profile' className='avatar'>
             {photoFile ? (
               <img
                 className='profile-photo'
@@ -73,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({
                 <span className='photo-placeholder-text'>No photo</span>
               </div>
             ) : null}
-          </div>
+          </NavLink>
           <nav className='header-menu'>
             <NavLink className='link' to='/settings'>
               Settings
