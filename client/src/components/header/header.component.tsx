@@ -29,17 +29,17 @@ const Header: React.FC<HeaderProps> = ({
   const [photoFile, setPhotoFile] = useState<string | null>(null);
 
   useEffect(() => {
-    if (currentUser && currentUser.photo) {
+    if (!profilePhotoFile && currentUser && currentUser.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket: 'photo-share-app-profile-photos',
       });
     }
-  }, [currentUser]);
+  }, []);
 
   useEffect(() => {
     if (profilePhotoFile) {
-      setPhotoFile(profilePhotoFile);
+      setPhotoFile(null);
     }
   }, [profilePhotoFile]);
 
@@ -57,6 +57,11 @@ const Header: React.FC<HeaderProps> = ({
                 src={`data:image/jpeg;base64,${photoFile}`}
                 alt='profile-pic'
               />
+            ) : null}
+            {!photoFile ? (
+              <div className='photo-placeholder'>
+                <span className='photo-placeholder-text'>No photo</span>
+              </div>
             ) : null}
           </div>
           <nav className='header-menu'>
