@@ -39,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({
 
   useEffect(() => {
     if (profilePhotoFile) {
-      setPhotoFile(null);
+      setPhotoFile(profilePhotoFile);
     }
   }, [profilePhotoFile]);
 
