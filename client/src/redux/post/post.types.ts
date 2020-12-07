@@ -10,6 +10,7 @@ export enum PostActions {
   GET_POST_DATA_FAILURE = 'GET_POST_DATA_FAILURE',
   GET_POST_FILE_START = 'GET_POST_FILE_START',
   GET_POST_FILE_SUCCESS = 'GET_POST_FILE_SUCCESS',
+  GET_PROFILE_PHOTO_FILE_SUCCESS = 'GET_PROFILE_PHOTO_FILE_SUCCESS',
   GET_POST_FILE_FAILURE = 'GET_POST_FILE_FAILURE',
 }
 
@@ -47,7 +48,7 @@ export interface PostState {
   getPostFileConfirm: string | null;
   postError: PostError | null;
   postConfirm: string | null;
-  profilePhoto: Post | null;
+  profilePhotoFile: string | null;
   profilePhotoError: PostError | null;
   profilePhotoConfirm: string | null;
 }
@@ -107,6 +108,11 @@ export interface GetPostFileSuccess {
   payload: PostFile;
 }
 
+export interface GetProfilePhotoFileSuccess {
+  type: typeof PostActions.GET_PROFILE_PHOTO_FILE_SUCCESS;
+  payload: PostFile;
+}
+
 export interface GetPostFileFailure {
   type: typeof PostActions.GET_POST_FILE_FAILURE;
   payload: PostError;
@@ -124,4 +130,5 @@ export type PostActionTypes =
   | GetPostDataFailure
   | GetPostFileStart
   | GetPostFileSuccess
+  | GetProfilePhotoFileSuccess
   | GetPostFileFailure;

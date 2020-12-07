@@ -29,6 +29,44 @@
     }
   }
 
+  .avatar {
+    position: absolute;
+    right: 25px;
+    top: 15px;
+    width: 6vh;
+    height: 6vh;
+    border-radius: 50%;
+
+    .profile-photo {
+      position: relative;
+      width: 6vh;
+      height: 6vh;
+      border-radius: 50%;
+    }
+
+    .photo-placeholder {
+      position: relative;
+      width: 6vh;
+      height: 6vh;
+      border-radius: 50%;
+      border: solid 1px;
+      border-color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      align-content: center;
+
+      .photo-placeholder-text {
+        position: relative;
+        font-size: 1.5vh;
+        color: white;
+        margin: 0;
+        margin-top: 50%;
+        transform: translateY(-55%);
+      }
+    }
+  }
+
   .header-menu {
     position: absolute;
     right: 5px;

@@ -50,7 +50,7 @@ router.post(
           throw new Error('Error deleting existing profile photo.');
         }
         if (data) {
-          console.log('Existing profile photo deleted successfully!', data);
+          console.log('Existing profile photo deleted successfully!');
         }
       });
     }

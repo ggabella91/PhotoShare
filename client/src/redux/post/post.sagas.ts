@@ -2,7 +2,7 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
-import { PostActions } from './post.types';
+import { PostFileReq, PostFile, PostActions } from './post.types';
 
 import {
   createPostSuccess,
@@ -12,6 +12,7 @@ import {
   getPostDataSuccess,
   getPostDataFailure,
   getPostFileSuccess,
+  getProfilePhotoFileSuccess,
   getPostFileFailure,
 } from './post.actions';
 
@@ -50,7 +51,7 @@ export function* updateProfilePhoto({
 export function* getPostData(): SagaIterator {
   try {
     // @ts-ignore
-    const { data } = yield axios.post('/api/posts/data');
+    const { data } = yield axios.get('/api/posts/data');
 
     yield put(getPostDataSuccess(data));
   } catch (err) {
@@ -58,12 +59,20 @@ export function* getPostData(): SagaIterator {
   }
 }
 
-export function* getPostFile(): SagaIterator {
+export function* getPostFile({
+  payload: { s3Key, bucket },
+}: {
+  payload: PostFileReq;
+}): SagaIterator {
   try {
     // @ts-ignore
-    const { data } = yield axios.post('/api/posts/files');
+    const { data } = yield axios.post('/api/posts/files', { s3Key, bucket });
 
-    yield put(getPostFileSuccess(data));
+    if (bucket === 'photo-share-app') {
+      yield put(getPostFileSuccess(data));
+    } else if (bucket === 'photo-share-app-profile-photos') {
+      yield put(getProfilePhotoFileSuccess(data));
+    }
   } catch (err) {
     yield put(getPostFileFailure(err));
   }

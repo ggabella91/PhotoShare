@@ -1,4 +1,3 @@
-import { fireEvent } from '@testing-library/react';
 import {
   Post,
   PostFileReq,
@@ -62,6 +61,13 @@ export const getPostFileStart = (fileReq: PostFileReq): PostActionTypes => ({
 
 export const getPostFileSuccess = (file: PostFile): PostActionTypes => ({
   type: PostActions.GET_POST_FILE_SUCCESS,
+  payload: file,
+});
+
+export const getProfilePhotoFileSuccess = (
+  file: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_PROFILE_PHOTO_FILE_SUCCESS,
   payload: file,
 });
 
