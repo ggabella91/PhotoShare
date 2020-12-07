@@ -9,6 +9,7 @@ const INITIAL_STATE: PostState = {
   getPostFileConfirm: null,
   postError: null,
   postConfirm: null,
+  profilePhotoKey: null,
   profilePhotoFile: null,
   profilePhotoError: null,
   profilePhotoConfirm: null,
@@ -19,6 +20,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.UPDATE_PROFILE_PHOTO_SUCCESS:
       return {
         ...state,
+        profilePhotoKey: action.payload.s3Key,
         profilePhotoError: null,
         profilePhotoConfirm: 'Profile photo updated!',
       };
