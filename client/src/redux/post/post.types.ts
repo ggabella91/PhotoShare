@@ -5,6 +5,7 @@ export enum PostActions {
   UPDATE_PROFILE_PHOTO_START = 'UPDATE_PROFILE_PHOTO_START',
   UPDATE_PROFILE_PHOTO_SUCCESS = 'UPDATE_PROFILE_PHOTO_SUCCESS',
   UPDATE_PROFILE_PHOTO_FAILURE = 'UPDATE_PROFILE_PHOTO_FAILURE',
+  CLEAR_PROFILE_PHOTO_STATUSES = 'CLEAR_PHOTO_STATUSES',
   GET_POST_DATA_START = 'GET_POST_DATA_START',
   GET_POST_DATA_SUCCESS = 'GET_POST_DATA_SUCCESS',
   GET_POST_DATA_FAILURE = 'GET_POST_DATA_FAILURE',
@@ -84,6 +85,11 @@ export interface UpdateProfilePhotoFailure {
   payload: PostError;
 }
 
+export interface ClearProfilePhotoStatuses {
+  type: typeof PostActions.CLEAR_PROFILE_PHOTO_STATUSES;
+  payload: null;
+}
+
 export interface GetPostDataStart {
   type: typeof PostActions.GET_POST_DATA_START;
   payload: null;
@@ -126,6 +132,7 @@ export type PostActionTypes =
   | UpdateProfilePhotoStart
   | UpdateProfilePhotoSuccess
   | UpdateProfilePhotoFailure
+  | ClearProfilePhotoStatuses
   | GetPostDataStart
   | GetPostDataSuccess
   | GetPostDataFailure

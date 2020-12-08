@@ -39,6 +39,11 @@ export const updateProfilePhotoFailure = (
   payload: error,
 });
 
+export const clearProfilePhotoStatuses = (): PostActionTypes => ({
+  type: PostActions.CLEAR_PROFILE_PHOTO_STATUSES,
+  payload: null,
+});
+
 export const getPostDataStart = (): PostActionTypes => ({
   type: PostActions.GET_POST_DATA_START,
   payload: null,
