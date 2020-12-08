@@ -14,13 +14,18 @@ import {
   changePasswordStart,
   deleteAccountStart,
   checkUserSession,
+  clearInfoStatuses,
+  clearPasswordStatuses,
 } from '../../redux/user/user.actions';
 import { User, Error, ChangePassword } from '../../redux/user/user.types';
 import {
   selectUpdateProfilePhotoError,
   selectUpdateProfilePhotoConfirm,
 } from '../../redux/post/post.selectors';
-import { updateProfilePhotoStart } from '../../redux/post/post.actions';
+import {
+  updateProfilePhotoStart,
+  clearProfilePhotoStatuses,
+} from '../../redux/post/post.actions';
 import { AppState } from '../../redux/root-reducer';
 
 import {
@@ -46,16 +51,14 @@ interface SettingsPageProps {
   changePasswordStart: typeof changePasswordStart;
   deleteAccountStart: typeof deleteAccountStart;
   checkUserSession: typeof checkUserSession;
+  clearProfilePhotoStatuses: typeof clearProfilePhotoStatuses;
+  clearInfoStatuses: typeof clearInfoStatuses;
+  clearPasswordStatuses: typeof clearPasswordStatuses;
 }
 
 interface ImgPreview {
   src: string;
   alt: string;
-}
-
-interface PostStatus {
-  success: boolean;
-  error: boolean;
 }
 
 const SettingsPage: React.FC<SettingsPageProps> = ({
@@ -69,11 +72,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   changePassError,
   changePassConfirm,
   deleteAccountStart,
+  clearProfilePhotoStatuses,
+  clearInfoStatuses,
+  clearPasswordStatuses,
 }) => {
   const [profilePhoto, setProfilePhoto] = useState<FormData | null>(null);
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
-  const [profilePhotoStatus, setProfilePhotoStatus] = useState<PostStatus>({
+  const [profilePhotoStatus, setProfilePhotoStatus] = useState({
     success: false,
     error: false,
   });
@@ -131,6 +137,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
     if (profilePhoto) {
       setShowProfilePhotoAlert(true);
+      console.log('Got here baby!');
 
       updateProfilePhotoStart(profilePhoto);
       setTimeout(() => setShowProfilePhotoAlert(false), 5000);
@@ -169,14 +176,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   };
 
   useEffect(() => {
-    if (changeInfoError) {
-      setStatusInfo({ ...statusInfo, error: true });
-    } else if (changeInfoConfirm) {
-      setStatusInfo({ ...statusInfo, success: true });
+    if (updateProfilePhotoError) {
+      setProfilePhotoStatus({ ...profilePhotoStatus, error: true });
+    } else if (updateProfilePhotoConfirm) {
+      setProfilePhotoStatus({ ...profilePhotoStatus, success: true });
     }
-
-    return setStatusInfo({ success: false, error: false });
-  }, [changeInfoError, changeInfoConfirm]);
+  }, [updateProfilePhotoError, updateProfilePhotoConfirm]);
 
   useEffect(() => {
     if (changeInfoError) {
@@ -184,8 +189,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     } else if (changeInfoConfirm) {
       setStatusInfo({ ...statusInfo, success: true });
     }
-
-    return setStatusInfo({ success: false, error: false });
   }, [changeInfoError, changeInfoConfirm]);
 
   useEffect(() => {
@@ -194,8 +197,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     } else if (changePassConfirm) {
       setStatusPass({ ...statusPass, success: true });
     }
-
-    return setStatusPass({ success: false, error: false });
   }, [changePassError, changePassConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
@@ -203,6 +204,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       setTimeout(() => {
         setUserInfo({ name: '', email: '' });
         setStatusInfo({ success: false, error: false });
+        clearInfoStatuses();
       }, 5000);
       return (
         <Alert
@@ -221,6 +223,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           passwordConfirm: '',
         });
         setStatusPass({ success: false, error: false });
+        clearPasswordStatuses();
       }, 5000);
       return (
         <Alert
@@ -235,10 +238,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       setTimeout(() => {
         setProfilePhotoStatus({ success: false, error: false });
         setShowProfilePhotoAlert(false);
+        clearProfilePhotoStatuses();
       }, 5000);
       return (
         <Alert
           variant='danger'
+          className='photo-alert'
           onClose={() => setShowProfilePhotoAlert(false)}
           dismissible
         >
@@ -249,6 +254,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       setTimeout(() => {
         setUserInfo({ name: '', email: '' });
         setStatusInfo({ success: false, error: false });
+        clearInfoStatuses();
       }, 5000);
       return (
         <Alert
@@ -267,6 +273,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           passwordConfirm: '',
         });
         setStatusPass({ success: false, error: false });
+        clearPasswordStatuses();
       }, 5000);
       return (
         <Alert
@@ -281,10 +288,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       setTimeout(() => {
         setProfilePhotoStatus({ success: false, error: false });
         setShowProfilePhotoAlert(false);
+        clearProfilePhotoStatuses();
       }, 5000);
       return (
         <Alert
           variant='success'
+          className='photo-alert'
           onClose={() => setShowProfilePhotoAlert(false)}
           dismissible
         >
@@ -482,6 +491,9 @@ const mapDispatchProps = (dispatch: Dispatch) => ({
     ),
   deleteAccountStart: () => dispatch(deleteAccountStart()),
   checkUserSession: () => dispatch(checkUserSession()),
+  clearProfilePhotoStatuses: () => dispatch(clearProfilePhotoStatuses()),
+  clearInfoStatuses: () => dispatch(clearInfoStatuses()),
+  clearPasswordStatuses: () => dispatch(clearPasswordStatuses()),
 });
 
 export default connect(mapStateToProps, mapDispatchProps)(SettingsPage);

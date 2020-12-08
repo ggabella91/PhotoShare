@@ -43,6 +43,14 @@
         max-height: 300px;
         height: auto;
       }
+
+      .photo-alert {
+        position: relative;
+        max-width: 260px;
+        margin-top: 50%;
+        margin-left: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
 
     span {

@@ -112,6 +112,18 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         ...state,
         deleteAccountError: action.payload,
       };
+    case UserActions.CLEAR_INFO_STATUSES:
+      return {
+        ...state,
+        changeInfoError: null,
+        changeInfoConfirm: null,
+      };
+    case UserActions.CLEAR_PASSWORD_STATUSES:
+      return {
+        ...state,
+        changePasswordError: null,
+        changePasswordConfirm: null,
+      };
     default:
       return state;
   }

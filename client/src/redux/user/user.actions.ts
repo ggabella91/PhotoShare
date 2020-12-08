@@ -1,3 +1,4 @@
+import { PostActionTypes } from '../post/post.types';
 import {
   UserActions,
   UserActionTypes,
@@ -156,4 +157,14 @@ export const deleteAccountSuccess = (message: string): UserActionTypes => ({
 export const deleteAccountFailure = (error: Error): UserActionTypes => ({
   type: UserActions.DELETE_ACCOUNT_FAILURE,
   payload: error,
+});
+
+export const clearInfoStatuses = (): UserActionTypes => ({
+  type: UserActions.CLEAR_INFO_STATUSES,
+  payload: null,
+});
+
+export const clearPasswordStatuses = (): UserActionTypes => ({
+  type: UserActions.CLEAR_PASSWORD_STATUSES,
+  payload: null,
 });
