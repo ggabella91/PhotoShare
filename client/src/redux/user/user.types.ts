@@ -25,6 +25,8 @@ export enum UserActions {
   DELETE_ACCOUNT_START = 'DELETE_ACCOUNT_START',
   DELETE_ACCOUNT_SUCCESS = 'DELETE_ACCOUNT_SUCCESS',
   DELETE_ACCOUNT_FAILURE = 'DELETE_ACCOUNT_FAILURE',
+  CLEAR_INFO_STATUSES = 'CLEAR_INFO_STATUSES',
+  CLEAR_PASSWORD_STATUSES = 'CLEAR_PASSWORD_STATUSES',
 }
 
 export interface UserSignUp {
@@ -216,6 +218,16 @@ export interface DeleteAccountFailure {
   payload: Error;
 }
 
+export interface ClearInfoStatuses {
+  type: typeof UserActions.CLEAR_INFO_STATUSES;
+  payload: null;
+}
+
+export interface ClearPasswordStatuses {
+  type: typeof UserActions.CLEAR_PASSWORD_STATUSES;
+  payload: null;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -243,4 +255,6 @@ export type UserActionTypes =
   | ResetPasswordFailure
   | DeleteAccountStart
   | DeleteAccountSuccess
-  | DeleteAccountFailure;
+  | DeleteAccountFailure
+  | ClearInfoStatuses
+  | ClearPasswordStatuses;
