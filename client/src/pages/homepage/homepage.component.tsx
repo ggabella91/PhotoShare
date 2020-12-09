@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { Post, PostError } from '../../redux/post/post.types';
+import { PostError } from '../../redux/post/post.types';
 import {
   selectPostError,
   selectPostConfirm,

@@ -69,14 +69,14 @@ export const getPostFileSuccess = (file: PostFile): PostActionTypes => ({
   payload: file,
 });
 
+export const getPostFileFailure = (error: PostError): PostActionTypes => ({
+  type: PostActions.GET_POST_FILE_FAILURE,
+  payload: error,
+});
+
 export const getProfilePhotoFileSuccess = (
   file: PostFile
 ): PostActionTypes => ({
   type: PostActions.GET_PROFILE_PHOTO_FILE_SUCCESS,
   payload: file,
-});
-
-export const getPostFileFailure = (error: PostError): PostActionTypes => ({
-  type: PostActions.GET_POST_FILE_FAILURE,
-  payload: error,
 });

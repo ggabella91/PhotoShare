@@ -16,6 +16,7 @@ import SignUpAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-sign-up.com
 import HomePage from './pages/homepage/homepage.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SettingsPage from './pages/settings-page/settings-page.component';
+import MyProfilePage from './pages/my-profile/my-profile-page.component';
 import ForgotPasswordPage from './pages/forgot-password/forgot-password-page.component';
 import ResetPasswordPage from './pages/reset-password/reset-password-page.component';
 
@@ -42,6 +43,13 @@ const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           exact
           path='/settings'
           render={() => (!currentUser ? <Redirect to='/' /> : <SettingsPage />)}
+        />
+        <Route
+          exact
+          path='/my-profile'
+          render={() =>
+            !currentUser ? <Redirect to='/' /> : <MyProfilePage />
+          }
         />
         <Route
           exact
