@@ -1,2 +1,53 @@
 .my-profile-page {
+  min-height: 800px;
+  max-width: 975px;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .user-bio {
+    position: relative;
+
+    .avatar {
+      position: absolute;
+      left: 15px;
+      top: 15px;
+      width: 12vh;
+      height: 12vh;
+      border-radius: 50%;
+
+      .profile-photo {
+        position: relative;
+        width: 12vh;
+        height: 12vh;
+        border-radius: 50%;
+      }
+
+      .photo-placeholder {
+        position: relative;
+        width: 12vh;
+        height: 12vh;
+        border-radius: 50%;
+        border: solid 2px;
+        border-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+
+        .photo-placeholder-text {
+          position: relative;
+          font-size: 3vh;
+          color: white;
+          margin: 0;
+          margin-top: 50%;
+          transform: translateY(-55%);
+        }
+      }
+    }
+  }
+
+  .posts-grid {
+  }
 }
