@@ -1,33 +1,64 @@
 .my-profile-page {
   min-height: 800px;
+  min-width: 450px;
   max-width: 975px;
   padding: 40px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: 50%;
+  transform: translate(-50%);
 
   .user-bio {
+    min-width: 450px;
+    max-width: 975px;
+    padding: 10px 20px;
+    min-height: 150px;
     position: relative;
 
     .avatar {
       position: absolute;
       left: 15px;
       top: 15px;
-      width: 12vh;
-      height: 12vh;
+      width: 14vw;
+      max-width: 150px;
+      max-height: 150px;
+      min-width: 75px;
+      min-height: 75px;
+      height: 14vw;
+      max-width: 150px;
+      max-height: 150px;
+      min-width: 75px;
+      min-height: 75px;
       border-radius: 50%;
 
       .profile-photo {
         position: relative;
-        width: 12vh;
-        height: 12vh;
+        width: 14vw;
+        max-width: 150px;
+        max-height: 150px;
+        min-width: 75px;
+        min-height: 75px;
+        height: 14vw;
+        max-width: 150px;
+        max-height: 150px;
+        min-width: 75px;
+        min-height: 75px;
         border-radius: 50%;
       }
 
       .photo-placeholder {
         position: relative;
-        width: 12vh;
-        height: 12vh;
+        width: 14vw;
+        max-width: 150px;
+        max-height: 150px;
+        min-width: 75px;
+        min-height: 75px;
+        height: 14vw;
+        max-width: 150px;
+        max-height: 150px;
+        min-width: 75px;
+        min-height: 75px;
         border-radius: 50%;
         border: solid 2px;
         border-color: white;
@@ -38,7 +69,7 @@
 
         .photo-placeholder-text {
           position: relative;
-          font-size: 3vh;
+          font-size: 3vw;
           color: white;
           margin: 0;
           margin-top: 50%;
