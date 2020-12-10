@@ -103,10 +103,13 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
             />
           ) : null}
           {!photoFile ? (
-            <div className='photo-placeholder'>
-              <span className='photo-placeholder-text'>No photo</span>
+            <div className='user-bio-photo-placeholder'>
+              <span className='user-bio-photo-placeholder-text'>No photo</span>
             </div>
           ) : null}
+        </div>
+        <div className='user-details'>
+          <span className='user-name'>{name}</span>
         </div>
       </div>
       <div className='posts-grid'></div>
