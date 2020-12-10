@@ -33,21 +33,21 @@
     position: absolute;
     right: 25px;
     top: 15px;
-    width: 4vh;
-    height: 4vh;
+    width: 5vh;
+    height: 5vh;
     border-radius: 50%;
 
     .profile-photo {
       position: relative;
-      width: 4vh;
-      height: 4vh;
+      width: 5vh;
+      height: 5vh;
       border-radius: 50%;
     }
 
     .photo-placeholder {
       position: relative;
-      width: 4vh;
-      height: 4vh;
+      width: 5vh;
+      height: 5vh;
       border-radius: 50%;
       border: solid 1px;
       border-color: white;
@@ -58,7 +58,7 @@
 
       .photo-placeholder-text {
         position: relative;
-        font-size: 1.5vh;
+        font-size: 1.25vh;
         color: white;
         margin: 0;
         margin-top: 50%;

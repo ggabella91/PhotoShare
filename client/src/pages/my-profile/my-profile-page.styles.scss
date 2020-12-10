@@ -1,3 +1,18 @@
+@mixin avatar-dimensions {
+  position: relative;
+  width: 14vw;
+  max-width: 150px;
+  max-height: 150px;
+  min-width: 75px;
+  min-height: 75px;
+  height: 14vw;
+  max-width: 150px;
+  max-height: 150px;
+  min-width: 75px;
+  min-height: 75px;
+  border-radius: 50%;
+}
+
 .my-profile-page {
   min-height: 800px;
   min-width: 450px;
@@ -13,53 +28,23 @@
     min-width: 450px;
     max-width: 975px;
     padding: 10px 20px;
-    min-height: 150px;
+    min-height: 200px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     .avatar {
-      position: absolute;
-      left: 15px;
-      top: 15px;
-      width: 14vw;
-      max-width: 150px;
-      max-height: 150px;
-      min-width: 75px;
-      min-height: 75px;
-      height: 14vw;
-      max-width: 150px;
-      max-height: 150px;
-      min-width: 75px;
-      min-height: 75px;
-      border-radius: 50%;
+      margin-left: 2vw;
+      margin-top: 2vh;
+      @include avatar-dimensions();
 
       .profile-photo {
-        position: relative;
-        width: 14vw;
-        max-width: 150px;
-        max-height: 150px;
-        min-width: 75px;
-        min-height: 75px;
-        height: 14vw;
-        max-width: 150px;
-        max-height: 150px;
-        min-width: 75px;
-        min-height: 75px;
-        border-radius: 50%;
+        @include avatar-dimensions();
       }
 
-      .photo-placeholder {
-        position: relative;
-        width: 14vw;
-        max-width: 150px;
-        max-height: 150px;
-        min-width: 75px;
-        min-height: 75px;
-        height: 14vw;
-        max-width: 150px;
-        max-height: 150px;
-        min-width: 75px;
-        min-height: 75px;
-        border-radius: 50%;
+      .user-bio-photo-placeholder {
+        @include avatar-dimensions();
         border: solid 2px;
         border-color: white;
         display: flex;
@@ -67,7 +52,7 @@
         align-items: center;
         align-content: center;
 
-        .photo-placeholder-text {
+        .user-bio-photo-placeholder-text {
           position: relative;
           font-size: 3vw;
           color: white;
@@ -75,6 +60,17 @@
           margin-top: 50%;
           transform: translateY(-55%);
         }
+      }
+    }
+
+    .user-details {
+      position: absolute;
+      top: 4vh;
+      right: 50%;
+
+      .user-name {
+        font-size: 22px;
+        font-weight: 460;
       }
     }
   }
