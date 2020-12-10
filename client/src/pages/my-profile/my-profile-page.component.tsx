@@ -65,6 +65,8 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [name, setName] = useState('');
   const [photoFile, setPhotoFile] = useState<string | null>(null);
 
+  const [postDataArray, setPostDataArray] = useState<Post[]>([]);
+
   useEffect(() => {
     if (currentUser) {
       setName(currentUser.name);
@@ -89,6 +91,10 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
     if (profilePhotoFile) {
       setPhotoFile(profilePhotoFile);
     }
+
+    if (postData) {
+      setPostDataArray(postData);
+    }
   }, [profilePhotoFile]);
 
   return (
@@ -110,6 +116,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         </div>
         <div className='user-details'>
           <span className='user-name'>{name}</span>
+          <span className='user-posts'>{postDataArray.length} Posts</span>
         </div>
       </div>
       <div className='posts-grid'></div>
