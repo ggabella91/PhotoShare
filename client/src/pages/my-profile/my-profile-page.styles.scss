@@ -16,7 +16,6 @@
 .my-profile-page {
   min-height: 800px;
   width: 70vw;
-  // max-width: 975px;
   padding: 40px 0;
   display: flex;
   flex-direction: column;
@@ -26,9 +25,9 @@
 
   .user-bio {
     width: 56vw;
-    // max-width: 975px;
+    min-width: 400px;
     padding: 10px 20px;
-    min-height: 200px;
+    height: 22vh;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -36,7 +35,7 @@
 
     .avatar {
       margin-left: 2vw;
-      margin-top: 2vh;
+      margin-top: 3.5vh;
       @include avatar-dimensions();
 
       .profile-photo {
@@ -65,25 +64,38 @@
 
     .user-details {
       position: absolute;
+      width: 30vw;
+      height: 18vh;
       top: 4vh;
       right: 50%;
       transform: translate(75%);
       margin-left: 8vw;
 
       .user-name {
+        width: 16vw;
+        min-width: 180px;
+        position: absolute;
         font-size: 22px;
         font-weight: 460;
-        top: 4vh;
+        text-align: start;
+        top: 1vh;
+        margin-bottom: 40px;
       }
 
       .user-posts {
+        width: 12vw;
+        position: absolute;
         font-size: 18px;
-        font-weight: 400;
-        top: 16vh;
+        font-weight: 420;
+        bottom: 9vh;
+        text-align: start;
       }
     }
   }
 
   .posts-grid {
+    margin-top: 4vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
