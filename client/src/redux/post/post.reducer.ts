@@ -40,7 +40,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.GET_POST_FILE_SUCCESS:
       return {
         ...state,
-        postFiles: [...state.postFiles, action.payload],
+        postFiles: [action.payload, ...state.postFiles],
         getPostFileError: null,
         getPostFileConfirm: 'Post file fetched!',
       };

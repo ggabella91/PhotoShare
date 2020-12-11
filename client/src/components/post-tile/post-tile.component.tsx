@@ -3,18 +3,16 @@ import React from 'react';
 import './post-tile.styles.scss';
 
 interface PostTileProps {
-  postFile: string;
+  fileString: string;
 }
 
-const PostTile: React.FC<PostTileProps> = (children) => {
-  const { postFile } = children;
-
+const PostTile: React.FC<PostTileProps> = ({ fileString }) => {
   return (
     <div className='post-tile'>
       <img
         className='post-image'
-        src={`data:image/jpeg;base64,${postFile}`}
-        alt='profile-pic'
+        src={`data:image/jpeg;base64,${fileString}`}
+        alt='post-pic'
       />
     </div>
   );

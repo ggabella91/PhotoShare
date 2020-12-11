@@ -29,6 +29,8 @@ import {
   getPostFileStart,
 } from '../../redux/post/post.actions';
 
+import PostTile from '../../components/post-tile/post-tile.component';
+
 import './my-profile-page.styles.scss';
 
 interface MyProfilePageProps {
@@ -36,7 +38,7 @@ interface MyProfilePageProps {
   profilePhotoKey: string | null;
   profilePhotoFile: string | null;
   postData: Post[] | null;
-  postFiles: PostFile[] | null;
+  postFiles: PostFile[];
   postConfirm: string | null;
   postError: PostError | null;
   getPostDataConfirm: string | null;
@@ -53,23 +55,19 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   profilePhotoFile,
   postData,
   postFiles,
-  postConfirm,
-  postError,
-  getPostDataConfirm,
-  getPostDataError,
-  getPostFileConfirm,
-  getPostFileError,
   getPostDataStart,
   getPostFileStart,
 }) => {
   const [name, setName] = useState('');
-  const [photoFile, setPhotoFile] = useState<string | null>(null);
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
+  const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && !name) {
       setName(currentUser.name);
+      getPostDataStart();
     }
   }, [currentUser]);
 
@@ -89,26 +87,41 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (profilePhotoFile) {
-      setPhotoFile(profilePhotoFile);
+      setProfilePhoto(profilePhotoFile);
     }
 
-    if (postData) {
+    if (postData && postData.length) {
       setPostDataArray(postData);
     }
   }, [profilePhotoFile]);
+
+  useEffect(() => {
+    if (postDataArray.length) {
+      console.log(postDataArray);
+      for (let post of postDataArray) {
+        getPostFileStart({ s3Key: post.s3Key, bucket: 'photo-share-app' });
+      }
+    }
+  }, [postDataArray]);
+
+  useEffect(() => {
+    if (postFiles.length) {
+      setPostFileArray(postFiles);
+    }
+  }, [postFiles]);
 
   return (
     <div className='my-profile-page'>
       <div className='user-bio'>
         <div className='avatar'>
-          {photoFile ? (
+          {profilePhoto ? (
             <img
               className='profile-photo'
-              src={`data:image/jpeg;base64,${photoFile}`}
+              src={`data:image/jpeg;base64,${profilePhoto}`}
               alt='profile-pic'
             />
           ) : null}
-          {!photoFile ? (
+          {!profilePhoto ? (
             <div className='user-bio-photo-placeholder'>
               <span className='user-bio-photo-placeholder-text'>No photo</span>
             </div>
@@ -119,7 +132,13 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
           <span className='user-posts'>{postDataArray.length} Posts</span>
         </div>
       </div>
-      <div className='posts-grid'></div>
+      <div className='posts-grid'>
+        {postFileArray
+          ? postFileArray.map((file) => (
+              <PostTile fileString={file.fileString} />
+            ))
+          : null}
+      </div>
     </div>
   );
 };
@@ -127,7 +146,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
 interface LinkStateProps {
   currentUser: User | null;
   postData: Post[] | null;
-  postFiles: PostFile[] | null;
+  postFiles: PostFile[];
   profilePhotoKey: string | null;
   profilePhotoFile: string | null;
   postConfirm: string | null;

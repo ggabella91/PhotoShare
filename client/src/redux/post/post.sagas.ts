@@ -69,7 +69,7 @@ export function* getPostFile({
     const { data } = yield axios.post('/api/posts/files', { s3Key, bucket });
 
     if (bucket === 'photo-share-app') {
-      yield put(getPostFileSuccess(data));
+      yield put(getPostFileSuccess({ s3Key, fileString: data }));
     } else if (bucket === 'photo-share-app-profile-photos') {
       yield put(getProfilePhotoFileSuccess(data));
     }
