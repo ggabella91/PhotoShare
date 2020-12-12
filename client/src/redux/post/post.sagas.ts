@@ -1,4 +1,4 @@
-import { takeLatest, put, all, call } from 'redux-saga/effects';
+import { takeLatest, takeEvery, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
@@ -53,7 +53,7 @@ export function* getPostData(): SagaIterator {
     // @ts-ignore
     const { data } = yield axios.get('/api/posts/data');
 
-    yield put(getPostDataSuccess(data));
+    yield put(getPostDataSuccess(data.posts));
   } catch (err) {
     yield put(getPostDataFailure(err));
   }
@@ -100,7 +100,7 @@ export function* onGetPostDataStart(): SagaIterator {
 }
 
 export function* onGetPostFileStart(): SagaIterator {
-  yield takeLatest<ActionPattern, Saga>(
+  yield takeEvery<ActionPattern, Saga>(
     PostActions.GET_POST_FILE_START,
     getPostFile
   );

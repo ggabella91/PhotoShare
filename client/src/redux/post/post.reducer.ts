@@ -1,4 +1,5 @@
 import { PostActions, PostActionTypes, PostState } from './post.types';
+import { addPostFileToArray } from './post.utils';
 
 const INITIAL_STATE: PostState = {
   postData: null,
@@ -40,7 +41,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.GET_POST_FILE_SUCCESS:
       return {
         ...state,
-        postFiles: [action.payload, ...state.postFiles.slice()],
+        postFiles: addPostFileToArray(state.postFiles, action.payload),
         getPostFileError: null,
         getPostFileConfirm: 'Post file fetched!',
       };
