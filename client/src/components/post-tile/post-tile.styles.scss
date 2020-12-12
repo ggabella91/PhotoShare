@@ -1,10 +1,15 @@
 .post-tile {
-  width: 20vw;
-  height: auto;
-  margin: 2vw;
+  width: 30vw;
+  height: 30vw;
+  max-width: 293px;
+  max-height: 293px;
+  margin: 0.5vw;
 
   .post-image {
-    width: 20vw;
-    height: auto;
+    width: 30vw;
+    height: 30vw;
+    max-width: 293px;
+    max-height: 293px;
+    object-fit: cover;
   }
 }
