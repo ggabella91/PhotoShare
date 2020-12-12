@@ -97,8 +97,6 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (postDataArray.length) {
-      console.log(postDataArray);
-
       for (let post of postDataArray) {
         getPostFileStart({
           s3Key: post.s3Key,
@@ -110,8 +108,17 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (postFiles.length) {
-      console.log(postFiles);
-      setPostFileArray(postFiles);
+      const orderedFiles: PostFile[] = [];
+
+      for (let post of postDataArray) {
+        const fileMatch = postFiles.find((el) => post.s3Key === el.s3Key);
+
+        if (fileMatch) {
+          orderedFiles.push(fileMatch);
+        }
+      }
+
+      setPostFileArray(orderedFiles);
     }
   }, [postFiles.length]);
 
