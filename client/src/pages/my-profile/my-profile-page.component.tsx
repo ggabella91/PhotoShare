@@ -98,17 +98,22 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   useEffect(() => {
     if (postDataArray.length) {
       console.log(postDataArray);
+
       for (let post of postDataArray) {
-        getPostFileStart({ s3Key: post.s3Key, bucket: 'photo-share-app' });
+        getPostFileStart({
+          s3Key: post.s3Key,
+          bucket: 'photo-share-app',
+        });
       }
     }
   }, [postDataArray]);
 
   useEffect(() => {
     if (postFiles.length) {
+      console.log(postFiles);
       setPostFileArray(postFiles);
     }
-  }, [postFiles]);
+  }, [postFiles.length]);
 
   return (
     <div className='my-profile-page'>
