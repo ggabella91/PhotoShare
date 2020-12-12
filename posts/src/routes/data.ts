@@ -27,7 +27,7 @@ router.get(
 
     console.log(posts);
 
-    res.status(200).send(posts);
+    res.status(200).send({ message: 'success', posts });
   }
 );
 
