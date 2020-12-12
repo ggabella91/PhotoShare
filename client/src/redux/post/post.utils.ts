@@ -1,5 +1,11 @@
 import { PostFile } from './post.types';
 
 export const addPostFileToArray = (fileArray: PostFile[], file: PostFile) => {
-  return [...fileArray, file];
+  for (let el of fileArray) {
+    if (el.s3Key === file.s3Key) {
+      return [...fileArray];
+    }
+  }
+
+  return [file, ...fileArray];
 };
