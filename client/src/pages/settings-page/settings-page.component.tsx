@@ -199,8 +199,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     }
   }, [changePassError, changePassConfirm]);
 
-  const handleRenderAlert = (type: string, message: string) => {
-    if (type === 'errorInfo' && showInfoAlert) {
+  const handleRenderAlert = (
+    type: string,
+    element: string,
+    message: string
+  ) => {
+    if (element === 'info' && showInfoAlert) {
       setTimeout(() => {
         setUserInfo({ name: '', email: '' });
         setStatusInfo({ success: false, error: false });
@@ -208,14 +212,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       }, 5000);
       return (
         <Alert
-          variant='danger'
+          variant={type}
           onClose={() => setShowInfoAlert(false)}
           dismissible
         >
           {message}
         </Alert>
       );
-    } else if (type === 'errorPass' && showPassAlert) {
+    } else if (element === 'pass' && showPassAlert) {
       setTimeout(() => {
         setUserPassword({
           passwordCurrent: '',
@@ -227,14 +231,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       }, 5000);
       return (
         <Alert
-          variant='danger'
+          variant={type}
           onClose={() => setShowPassAlert(false)}
           dismissible
         >
           {message}
         </Alert>
       );
-    } else if (type === 'errorProfilePhoto' && showProfilePhotoAlert) {
+    } else if (element === 'profilePhoto' && showProfilePhotoAlert) {
       setTimeout(() => {
         setProfilePhotoStatus({ success: false, error: false });
         setShowProfilePhotoAlert(false);
@@ -242,57 +246,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       }, 5000);
       return (
         <Alert
-          variant='danger'
-          className='photo-alert'
-          onClose={() => setShowProfilePhotoAlert(false)}
-          dismissible
-        >
-          {message}
-        </Alert>
-      );
-    } else if (type === 'successInfo' && showInfoAlert) {
-      setTimeout(() => {
-        setUserInfo({ name: '', email: '' });
-        setStatusInfo({ success: false, error: false });
-        clearInfoStatuses();
-      }, 5000);
-      return (
-        <Alert
-          variant='success'
-          onClose={() => setShowInfoAlert(false)}
-          dismissible
-        >
-          {message}
-        </Alert>
-      );
-    } else if (type === 'successPass' && showPassAlert) {
-      setTimeout(() => {
-        setUserPassword({
-          passwordCurrent: '',
-          password: '',
-          passwordConfirm: '',
-        });
-        setStatusPass({ success: false, error: false });
-        clearPasswordStatuses();
-      }, 5000);
-      return (
-        <Alert
-          variant='success'
-          onClose={() => setShowPassAlert(false)}
-          dismissible
-        >
-          {message}
-        </Alert>
-      );
-    } else if (type === 'successProfilePhoto' && showProfilePhotoAlert) {
-      setTimeout(() => {
-        setProfilePhotoStatus({ success: false, error: false });
-        setShowProfilePhotoAlert(false);
-        clearProfilePhotoStatuses();
-      }, 5000);
-      return (
-        <Alert
-          variant='success'
+          variant={type}
           className='photo-alert'
           onClose={() => setShowProfilePhotoAlert(false)}
           dismissible
@@ -322,13 +276,15 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             <div className='settings-alert'>
               {profilePhotoStatus.error
                 ? handleRenderAlert(
-                    'errorProfilePhoto',
+                    'danger',
+                    'profilePhoto',
                     'Error updating profile picture.'
                   )
                 : null}
               {profilePhotoStatus.success
                 ? handleRenderAlert(
-                    'successProfilePhoto',
+                    'success',
+                    'profilePhoto',
                     'Profile picture changed successfully!'
                   )
                 : null}
@@ -389,10 +345,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       </form>
       <div className='settings-alert'>
         {statusInfo.error
-          ? handleRenderAlert('errorInfo', 'Error updating info.')
+          ? handleRenderAlert('danger', 'info', 'Error updating info.')
           : null}
         {statusInfo.success
-          ? handleRenderAlert('successInfo', 'Info updated successfully!')
+          ? handleRenderAlert('success', 'info', 'Info updated successfully!')
           : null}
       </div>
       <form className='change-info' onSubmit={handleSubmitPassword}>
@@ -429,10 +385,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       </form>
       <div className='settings-alert'>
         {statusPass.error
-          ? handleRenderAlert('errorPass', 'Error changing password.')
+          ? handleRenderAlert('danger', 'pass', 'Error changing password.')
           : null}
         {statusPass.success
-          ? handleRenderAlert('successPass', 'Password changed successfully!')
+          ? handleRenderAlert(
+              'success',
+              'pass',
+              'Password changed successfully!'
+            )
           : null}
       </div>
       <div>
