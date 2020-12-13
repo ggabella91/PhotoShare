@@ -89,11 +89,13 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
     if (profilePhotoFile) {
       setProfilePhoto(profilePhotoFile);
     }
+  }, [profilePhotoFile]);
 
+  useEffect(() => {
     if (postData && postData.length) {
       setPostDataArray(postData);
     }
-  }, [profilePhotoFile]);
+  }, [postData]);
 
   useEffect(() => {
     if (postDataArray.length) {
@@ -104,7 +106,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         });
       }
     }
-  }, [postDataArray]);
+  }, [postDataArray.length]);
 
   useEffect(() => {
     if (postFiles.length) {
@@ -119,8 +121,9 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
       }
 
       setPostFileArray(orderedFiles);
+      console.log(postFileArray);
     }
-  }, [postFiles.length]);
+  }, [postFiles]);
 
   return (
     <div className='my-profile-page'>
@@ -145,7 +148,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         </div>
       </div>
       <div className='posts-grid'>
-        {postFileArray
+        {postFileArray.length
           ? postFileArray.map((file) => (
               <PostTile fileString={file.fileString} />
             ))

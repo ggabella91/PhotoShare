@@ -36,16 +36,15 @@
 
   @include respond-wide() {
     width: 70vw;
+    padding: 3vh 0;
   }
 
   @include respond-medium() {
     width: 95vw;
-    padding: 3vh 0;
   }
 
   .user-bio {
     width: 56vw;
-    // min-width: 400px;
     padding: 1vh 2vw;
     height: 22vh;
     position: relative;
@@ -92,20 +91,19 @@
       margin-left: 8vw;
 
       .user-name {
-        width: 16vw;
+        width: 18vw;
         min-width: 180px;
         position: absolute;
-        font-size: 2vh;
+        font-size: 2.5vh;
         font-weight: 460;
         text-align: start;
         top: 1vh;
-        // margin-bottom: 40px;
       }
 
       .user-posts {
         width: 12vw;
         position: absolute;
-        font-size: 1.6vh;
+        font-size: 2vh;
         font-weight: 420;
         bottom: 9vh;
         text-align: start;
