@@ -6,6 +6,7 @@ import {
 } from '@ggabella-photo-share/common';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
+import { redisClient } from '../index';
 import { encode } from '../utils/encode';
 
 const router = express.Router();
@@ -25,24 +26,32 @@ router.post(
       );
     }
 
-    const s3 = new AWS.S3();
+    redisClient.GET(s3Key, async (err, cachedFile) => {
+      if (!cachedFile) {
+        const s3 = new AWS.S3();
 
-    const fetchParams: S3.Types.GetObjectRequest = {
-      Bucket: bucket,
-      Key: s3Key,
-    };
+        const fetchParams: S3.Types.GetObjectRequest = {
+          Bucket: bucket,
+          Key: s3Key,
+        };
 
-    s3.getObject(fetchParams, async (err, data) => {
-      if (err) {
-        console.log(err);
-        throw new Error('Error fetching the photo');
-      }
-      if (data) {
-        const buffer = data.Body;
+        s3.getObject(fetchParams, async (err, data) => {
+          if (err) {
+            console.log(err);
+            throw new Error('Error fetching the photo');
+          }
+          if (data) {
+            const buffer = data.Body;
 
-        const convertedFileString = encode(buffer as Buffer);
+            const convertedFileString = encode(buffer as Buffer);
 
-        res.send(convertedFileString);
+            redisClient.SET(s3Key, convertedFileString);
+
+            res.send(convertedFileString);
+          }
+        });
+      } else {
+        res.send(cachedFile);
       }
     });
   }
