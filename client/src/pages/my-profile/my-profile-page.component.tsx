@@ -98,7 +98,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }, [postData]);
 
   useEffect(() => {
-    if (postDataArray.length) {
+    if (postData && postDataArray.length === postData.length) {
       for (let post of postDataArray) {
         getPostFileStart({
           s3Key: post.s3Key,
@@ -106,10 +106,10 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         });
       }
     }
-  }, [postDataArray.length]);
+  }, [postDataArray]);
 
   useEffect(() => {
-    if (postFiles.length) {
+    if (postData && postFiles.length === postData.length) {
       const orderedFiles: PostFile[] = [];
 
       for (let post of postDataArray) {
@@ -121,7 +121,6 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
       }
 
       setPostFileArray(orderedFiles);
-      console.log(postFileArray);
     }
   }, [postFiles]);
 
@@ -149,8 +148,8 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
       </div>
       <div className='posts-grid'>
         {postFileArray.length
-          ? postFileArray.map((file) => (
-              <PostTile fileString={file.fileString} />
+          ? postFileArray.map((file, idx) => (
+              <PostTile fileString={file.fileString} key={idx} />
             ))
           : null}
       </div>

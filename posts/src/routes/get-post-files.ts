@@ -51,6 +51,7 @@ router.post(
           }
         });
       } else {
+        console.log('Sending cached file!');
         res.send(cachedFile);
       }
     });
