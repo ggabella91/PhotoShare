@@ -76,6 +76,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         getPostFileError: action.payload,
         getPostFileConfirm: null,
       };
+    case PostActions.CLEAR_POST_STATUSES:
+      return {
+        ...state,
+        postConfirm: null,
+        postError: null,
+      };
     case PostActions.CLEAR_PROFILE_PHOTO_STATUSES:
       return {
         ...state,

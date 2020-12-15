@@ -22,6 +22,11 @@ export const createPostFailure = (error: PostError): PostActionTypes => ({
   payload: error,
 });
 
+export const clearPostStatuses = (): PostActionTypes => ({
+  type: PostActions.CLEAR_POST_STATUSES,
+  payload: null,
+});
+
 export const updateProfilePhotoStart = (photo: FormData): PostActionTypes => ({
   type: PostActions.UPDATE_PROFILE_PHOTO_START,
   payload: photo,

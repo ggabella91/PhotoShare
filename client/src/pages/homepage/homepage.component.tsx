@@ -11,7 +11,10 @@ import {
   selectPostError,
   selectPostConfirm,
 } from '../../redux/post/post.selectors';
-import { createPostStart } from '../../redux/post/post.actions';
+import {
+  createPostStart,
+  clearPostStatuses,
+} from '../../redux/post/post.actions';
 
 import {
   FormInput,
@@ -32,6 +35,7 @@ interface HomePageProps {
   createPostStart: typeof createPostStart;
   postConfirm: string | null;
   postError: PostError | null;
+  clearPostStatuses: typeof clearPostStatuses;
 }
 
 interface ImgPreview {
@@ -44,6 +48,7 @@ const HomePage: React.FC<HomePageProps> = ({
   createPostStart,
   postConfirm,
   postError,
+  clearPostStatuses,
 }) => {
   const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
@@ -116,27 +121,14 @@ const HomePage: React.FC<HomePageProps> = ({
   };
 
   const handleRenderAlert = (type: string, message: string) => {
-    if (type === 'error' && showAlert) {
+    if (showAlert) {
       setTimeout(() => {
         setPostStatus({ success: false, error: false });
         setShowAlert(false);
+        clearPostStatuses();
       }, 5000);
       return (
-        <Alert variant='danger' onClose={() => setShowAlert(false)} dismissible>
-          {message}
-        </Alert>
-      );
-    } else if (type === 'success' && showAlert) {
-      setTimeout(() => {
-        setPostStatus({ success: false, error: false });
-        setShowAlert(false);
-      }, 5000);
-      return (
-        <Alert
-          variant='success'
-          onClose={() => setShowAlert(false)}
-          dismissible
-        >
+        <Alert variant={type} onClose={() => setShowAlert(false)} dismissible>
           {message}
         </Alert>
       );
@@ -159,7 +151,7 @@ const HomePage: React.FC<HomePageProps> = ({
             <div className='alert'>
               {postStatus.error
                 ? handleRenderAlert(
-                    'error',
+                    'danger',
                     'Error uploading post. Please try again.'
                   )
                 : null}
@@ -217,6 +209,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostStart: (post: FormData) => dispatch(createPostStart(post)),
+  clearPostStatuses: () => dispatch(clearPostStatuses()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
