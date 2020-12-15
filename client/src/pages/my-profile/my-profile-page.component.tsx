@@ -30,6 +30,7 @@ import {
 } from '../../redux/post/post.actions';
 
 import PostTile from '../../components/post-tile/post-tile.component';
+import PostModal from '../../components/post-modal/post-modal.component';
 
 import './my-profile-page.styles.scss';
 
@@ -63,6 +64,14 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
   const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
+
+  const [postModalShow, setPostModalShow] = useState(false);
+  const [postModalProps, setPostModalProps] = useState({
+    caption: '',
+    location: '',
+    createdAt: 0,
+    fileString: '',
+  });
 
   useEffect(() => {
     if (currentUser && !name) {
@@ -124,6 +133,10 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   }, [postFiles]);
 
+  const handleRenderPostModal = (s3Key: string) => {
+    const postData = postDataArray.find((el) => el.s3Key === s3Key);
+  };
+
   return (
     <div className='my-profile-page'>
       <div className='user-bio'>
@@ -149,10 +162,22 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
       <div className='posts-grid'>
         {postFileArray.length
           ? postFileArray.map((file, idx) => (
-              <PostTile fileString={file.fileString} key={idx} />
+              <PostTile
+                fileString={file.fileString}
+                key={idx}
+                onClick={() => handleRenderPostModal(file.s3Key)}
+              />
             ))
           : null}
       </div>
+      <PostModal
+        show={postModalShow}
+        fileString={postModalProps.fileString}
+        caption={postModalProps.caption}
+        createdAt={postModalProps.createdAt}
+        location={postModalProps.location}
+        onHide={() => setPostModalShow(false)}
+      />
     </div>
   );
 };
