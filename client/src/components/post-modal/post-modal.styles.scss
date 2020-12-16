@@ -10,7 +10,7 @@
     height: 2vh;
 
     .close {
-      transform: translateY(-50%);
+      transform: translateY(-25%);
     }
   }
 
@@ -28,11 +28,10 @@
     }
 
     .post-modal-details {
-      margin-left: 1vw;
+      margin-left: 2vw;
       min-width: 30vw;
       display: flex;
       flex-direction: column;
-      text-align: left;
 
       .post-user {
         margin: 0;
@@ -48,6 +47,10 @@
       .post-date {
         margin: 0;
         font-size: 12px;
+      }
+
+      span {
+        text-align: left;
       }
     }
   }
