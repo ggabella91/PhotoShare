@@ -68,8 +68,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [postModalShow, setPostModalShow] = useState(false);
   const [postModalProps, setPostModalProps] = useState({
     caption: '',
-    location: '',
-    createdAt: 0,
+    createdAt: new Date(Date.now()),
     fileString: '',
   });
 
@@ -133,8 +132,16 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   }, [postFiles]);
 
-  const handleRenderPostModal = (s3Key: string) => {
-    const postData = postDataArray.find((el) => el.s3Key === s3Key);
+  const handleRenderPostModal = (file: PostFile) => {
+    const postData = postDataArray.find((el) => el.s3Key === file.s3Key);
+
+    if (postData) {
+      const caption = postData.caption || '';
+      const { createdAt } = postData;
+
+      setPostModalProps({ caption, createdAt, fileString: file.fileString });
+      setPostModalShow(true);
+    }
   };
 
   return (
@@ -165,7 +172,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
               <PostTile
                 fileString={file.fileString}
                 key={idx}
-                onClick={() => handleRenderPostModal(file.s3Key)}
+                onClick={() => handleRenderPostModal(file)}
               />
             ))
           : null}
@@ -175,8 +182,8 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         fileString={postModalProps.fileString}
         caption={postModalProps.caption}
         createdAt={postModalProps.createdAt}
-        location={postModalProps.location}
         onHide={() => setPostModalShow(false)}
+        userName={name}
       />
     </div>
   );
