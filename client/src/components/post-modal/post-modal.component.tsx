@@ -6,8 +6,8 @@ import './post-modal.styles.scss';
 
 interface Props {
   caption: string;
-  createdAt: number;
-  location: string;
+  createdAt: Date;
+  // location: string;
   show: boolean;
   onHide: () => void;
   fileString: string;
