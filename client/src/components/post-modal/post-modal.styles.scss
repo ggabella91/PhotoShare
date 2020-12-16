@@ -1,9 +1,54 @@
-.post-modal-body {
-  width: 90vw;
-  height: 60vh;
+.post-modal {
+  font-family: 'Lato', sans-serif;
+  min-width: 90vw;
+  max-width: 600px;
+  height: 55vh;
 
-  .post-modal-image {
-    max-width: 65vw;
-    max-height: 60vh;
+  .post-modal-header {
+    background-color: transparent;
+    border: none;
+    height: 2vh;
+
+    .close {
+      transform: translateY(-50%);
+    }
+  }
+
+  .post-modal-body {
+    max-width: inherit;
+    width: 90vw;
+    max-height: 50vh;
+    display: flex;
+
+    .post-modal-image {
+      width: auto;
+      max-width: 480px;
+      max-height: 600px;
+      height: 45vh;
+    }
+
+    .post-modal-details {
+      margin-left: 1vw;
+      min-width: 30vw;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+
+      .post-user {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 460;
+        margin-bottom: 1vh;
+      }
+
+      .post-caption {
+        margin: 0;
+        font-size: 12px;
+      }
+      .post-date {
+        margin: 0;
+        font-size: 12px;
+      }
+    }
   }
 }

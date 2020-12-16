@@ -183,6 +183,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         caption={postModalProps.caption}
         createdAt={postModalProps.createdAt}
         onHide={() => setPostModalShow(false)}
+        userName={name}
       />
     </div>
   );
