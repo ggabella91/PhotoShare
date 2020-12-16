@@ -1,7 +1,13 @@
+@mixin respond-wide {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
 .post-modal {
   font-family: 'Lato', sans-serif;
-  min-width: 90vw;
-  max-width: 600px;
+  width: 90vw;
+  max-width: 935px;
   height: 55vh;
 
   .post-modal-header {
@@ -22,7 +28,7 @@
 
     .post-modal-image {
       width: auto;
-      max-width: 480px;
+      max-width: 600px;
       max-height: 600px;
       height: 45vh;
     }
