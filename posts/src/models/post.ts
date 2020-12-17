@@ -9,6 +9,7 @@ interface PostAttrs {
   userId: string;
   s3Key: string;
   s3ObjectURL: string;
+  archived?: boolean;
 }
 
 export interface PostDoc extends mongoose.Document {
@@ -19,6 +20,7 @@ export interface PostDoc extends mongoose.Document {
   userId: string;
   s3Key: string;
   s3ObjectURL: string;
+  archived?: boolean;
 }
 
 interface PostModel extends mongoose.Model<PostDoc> {

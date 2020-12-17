@@ -11,6 +11,7 @@ import { createPostRouter } from './routes/new';
 import { profilePhotoRouter } from './routes/profile-photo';
 import { getPostDataRouter } from './routes/data';
 import { getPostFilesRouter } from './routes/get-post-files';
+import { archivePostRouter } from './routes/archive';
 
 const app = express();
 app.set('trust proxy', true);
@@ -28,6 +29,7 @@ app.use(createPostRouter);
 app.use(profilePhotoRouter);
 app.use(getPostDataRouter);
 app.use(getPostFilesRouter);
+app.use(archivePostRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
