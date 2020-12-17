@@ -21,8 +21,7 @@ const PostModal: React.FC<Props> = ({
   userName,
   ...props
 }) => {
-  const postDate = createdAt;
-  console.log(postDate);
+  const postDate = new Date(createdAt).toDateString();
 
   return (
     <Modal {...props} dialogClassName='post-modal' centered>
