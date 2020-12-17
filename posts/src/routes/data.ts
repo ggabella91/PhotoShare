@@ -21,7 +21,7 @@ router.get(
       );
     }
 
-    let posts = await Post.find({ userId: user.id });
+    let posts = await Post.find({ userId: user.id, archived: { $ne: true } });
 
     posts = posts.reverse();
 
