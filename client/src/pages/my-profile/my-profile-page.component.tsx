@@ -68,6 +68,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [postModalShow, setPostModalShow] = useState(false);
   const [postModalProps, setPostModalProps] = useState({
     caption: '',
+    location: '',
     createdAt: new Date(Date.now()),
     fileString: '',
   });
@@ -137,9 +138,15 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
     if (postData) {
       const caption = postData.caption || '';
+      const location = postData.postLocation || '';
       const { createdAt } = postData;
 
-      setPostModalProps({ caption, createdAt, fileString: file.fileString });
+      setPostModalProps({
+        caption,
+        location,
+        createdAt,
+        fileString: file.fileString,
+      });
       setPostModalShow(true);
     }
   };
@@ -181,6 +188,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         show={postModalShow}
         fileString={postModalProps.fileString}
         caption={postModalProps.caption}
+        location={postModalProps.location}
         createdAt={postModalProps.createdAt}
         onHide={() => setPostModalShow(false)}
         userName={name}

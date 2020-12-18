@@ -4,7 +4,7 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 interface PostAttrs {
   fileName: string;
   caption?: string;
-  location?: string;
+  postLocation?: string;
   createdAt: Date;
   userId: string;
   s3Key: string;
@@ -15,7 +15,7 @@ interface PostAttrs {
 export interface PostDoc extends mongoose.Document {
   fileName: string;
   caption?: string;
-  location?: string;
+  postLocation?: string;
   createdAt: Date;
   userId: string;
   s3Key: string;
@@ -36,7 +36,7 @@ const postSchema = new mongoose.Schema(
     caption: {
       type: String,
     },
-    location: {
+    postLocation: {
       type: String,
     },
     createdAt: {
