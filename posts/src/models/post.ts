@@ -36,7 +36,7 @@ const postSchema = new mongoose.Schema(
     caption: {
       type: String,
     },
-    location: {
+    postLocation: {
       type: String,
     },
     createdAt: {
