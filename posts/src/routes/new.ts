@@ -31,6 +31,7 @@ router.post(
   upload.single('photo'),
   async (req: Request, res: Response) => {
     const caption = req.body.caption || '';
+    const postLocation = req.body.location || '';
 
     const key = generateKey(req.file.originalname);
 
@@ -61,6 +62,7 @@ router.post(
         const post = Post.build({
           fileName: req.file.originalname,
           caption,
+          postLocation,
           createdAt: new Date(),
           userId: req.currentUser!.id,
           s3Key: key,

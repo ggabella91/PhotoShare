@@ -24,6 +24,7 @@ export interface PostError {
 export interface Post {
   fileName: string;
   caption?: string;
+  postLocation?: string;
   createdAt: Date;
   id: string;
   s3Key: string;

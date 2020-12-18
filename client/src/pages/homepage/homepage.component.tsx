@@ -53,6 +53,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
+  const [location, setLocation] = useState('');
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
 
@@ -90,6 +91,7 @@ const HomePage: React.FC<HomePageProps> = ({
       setPost(null);
       setImgPreview(null);
       setCaption('');
+      setLocation('');
     }
   };
 
@@ -97,6 +99,12 @@ const HomePage: React.FC<HomePageProps> = ({
     const { value } = event.target;
 
     setCaption(value);
+  };
+
+  const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setLocation(value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -108,6 +116,9 @@ const HomePage: React.FC<HomePageProps> = ({
 
       if (caption) {
         post.append('caption', caption);
+      }
+      if (location) {
+        post.append('location', location);
       }
       createPostStart(post);
       setTimeout(() => setShowAlert(false), 5000);
@@ -183,6 +194,13 @@ const HomePage: React.FC<HomePageProps> = ({
             label='Add a caption'
             value={caption}
             onChange={handleCaptionChange}
+          />
+          <FormInput
+            name='location'
+            type='text'
+            label='Where was this taken?'
+            value={location}
+            onChange={handleLocationChange}
           />
           <div className='button'>
             <Button className='submit-button' onClick={handleSubmit}>
