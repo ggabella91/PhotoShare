@@ -129,6 +129,7 @@ const HomePage: React.FC<HomePageProps> = ({
     setPost(null);
     setImgPreview(null);
     setCaption('');
+    setLocation('');
   };
 
   const handleRenderAlert = (type: string, message: string) => {
