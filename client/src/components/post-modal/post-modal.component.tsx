@@ -25,7 +25,7 @@ const PostModal: React.FC<Props> = ({
   const postDate = new Date(createdAt).toDateString();
 
   return (
-    <Modal {...props} dialogClassName='post-modal' centered>
+    <Modal {...props} dialogClassName='post-modal' animation={false} centered>
       <Modal.Header className='post-modal-header' closeButton />
       <Modal.Body className='post-modal-body'>
         <img
