@@ -7,7 +7,7 @@ import './post-modal.styles.scss';
 interface Props {
   caption: string;
   createdAt: Date;
-  // location: string;
+  location: string;
   show: boolean;
   onHide: () => void;
   fileString: string;
@@ -17,6 +17,7 @@ interface Props {
 const PostModal: React.FC<Props> = ({
   fileString,
   caption,
+  location,
   createdAt,
   userName,
   ...props
@@ -34,6 +35,7 @@ const PostModal: React.FC<Props> = ({
         />
         <div className='post-modal-details'>
           <span className='post-user'>{userName}</span>
+          <span className='post-location'>{location}</span>
           <span className='post-caption'>{caption}</span>
           <span className='post-date'>{postDate}</span>
         </div>
