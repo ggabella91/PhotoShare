@@ -191,6 +191,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         location={postModalProps.location}
         createdAt={postModalProps.createdAt}
         onHide={() => setPostModalShow(false)}
+        userProfilePhotoFile={profilePhoto || ''}
         userName={name}
       />
     </div>
