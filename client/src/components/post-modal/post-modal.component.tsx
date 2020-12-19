@@ -12,6 +12,7 @@ interface Props {
   onHide: () => void;
   fileString: string;
   userName: string;
+  userProfilePhotoFile: string;
 }
 
 const PostModal: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const PostModal: React.FC<Props> = ({
   location,
   createdAt,
   userName,
+  userProfilePhotoFile,
   ...props
 }) => {
   const postDate = new Date(createdAt).toDateString();
@@ -34,8 +36,17 @@ const PostModal: React.FC<Props> = ({
           alt='post-pic'
         />
         <div className='post-modal-details'>
-          <span className='post-user'>{userName}</span>
-          <span className='post-location'>{location}</span>
+          <div className='post-user-and-location'>
+            <img
+              className='user-photo'
+              src={`data:image/jpeg;base64,${userProfilePhotoFile}`}
+              alt='user'
+            />
+            <div className='user-and-location'>
+              <span className='user-name'>{userName}</span>
+              <span className='post-location'>{location}</span>
+            </div>
+          </div>
           <span className='post-caption'>{caption}</span>
           <span className='post-date'>{postDate}</span>
         </div>
