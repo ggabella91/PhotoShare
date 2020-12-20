@@ -4,14 +4,25 @@
   height: 35vh;
   width: 20vw;
   max-width: 200px;
+  min-width: 120px;
   margin-top: 45vh;
+  margin-left: 50%;
+  transform: translate(-50%);
+
+  .modal-content {
+    width: 20vw;
+    max-width: inherit;
+    min-width: inherit;
+  }
 
   .post-options-modal-body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: solid 1.5px;
+    border: solid 1px;
     width: 20vw;
+    max-width: inherit;
+    min-width: inherit;
 
     &:hover {
       cursor: pointer;
@@ -21,12 +32,14 @@
       border-bottom: solid 1px;
       border-color: rgba(0, 0, 0, 0.2);
       width: 20vw;
+      max-width: inherit;
       text-align: center;
       padding-bottom: 1vh;
     }
 
     .cancel {
       width: 20vw;
+      max-width: inherit;
       text-align: center;
       padding-top: 1vh;
     }

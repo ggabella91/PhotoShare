@@ -13,9 +13,8 @@ const PostOptionsModal: React.FC<Props> = ({ archive, onHide, ...props }) => (
   <Modal
     {...props}
     dialogClassName='post-options-modal'
-    backdropClassName='post-options-backdrop'
     animation={false}
-    backdrop={true}
+    onHide={onHide}
     centered
   >
     <Modal.Body className='post-options-modal-body'>

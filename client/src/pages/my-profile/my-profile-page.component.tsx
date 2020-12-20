@@ -23,10 +23,13 @@ import {
   selectGetPostDataError,
   selectGetPostFileConfirm,
   selectGetPostFileError,
+  selectArchivePostConfirm,
+  selectArchivePostError,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
   getPostFileStart,
+  archivePostStart,
 } from '../../redux/post/post.actions';
 
 import PostTile from '../../components/post-tile/post-tile.component';
@@ -47,8 +50,11 @@ interface MyProfilePageProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
+  archivePostConfirm: string | null;
+  archivePostError: PostError | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
+  archivePostStart: typeof archivePostStart;
 }
 
 const MyProfilePage: React.FC<MyProfilePageProps> = ({
@@ -59,6 +65,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   postFiles,
   getPostDataStart,
   getPostFileStart,
+  archivePostStart,
 }) => {
   const [name, setName] = useState('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -68,6 +75,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const [postModalShow, setPostModalShow] = useState(false);
   const [postModalProps, setPostModalProps] = useState({
+    id: '',
     caption: '',
     location: '',
     createdAt: new Date(Date.now()),
@@ -145,16 +153,16 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
       const { createdAt } = postData;
 
       setPostModalProps({
+        id: postData.id,
         caption,
         location,
         createdAt,
         fileString: file.fileString,
       });
+      console.log(postModalProps);
       setPostModalShow(true);
     }
   };
-
-  const archivePostStart = () => console.log('Starting to archive...not!');
 
   return (
     <div className='my-profile-page'>
@@ -203,7 +211,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
       <PostOptionsModal
         show={postOptionsModalShow}
         onHide={() => setPostOptionsModalShow(false)}
-        archive={archivePostStart}
+        archive={() => archivePostStart(postModalProps.id)}
       />
     </div>
   );
@@ -221,6 +229,8 @@ interface LinkStateProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
+  archivePostConfirm: string | null;
+  archivePostError: PostError | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -235,12 +245,15 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostDataError: selectGetPostDataError,
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
+  archivePostConfirm: selectArchivePostConfirm,
+  archivePostError: selectArchivePostError,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostDataStart: () => dispatch(getPostDataStart()),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
+  archivePostStart: (postId: string) => dispatch(archivePostStart(postId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);

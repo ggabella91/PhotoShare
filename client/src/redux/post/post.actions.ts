@@ -85,3 +85,18 @@ export const getProfilePhotoFileSuccess = (
   type: PostActions.GET_PROFILE_PHOTO_FILE_SUCCESS,
   payload: file,
 });
+
+export const archivePostStart = (postId: string) => ({
+  type: PostActions.ARCHIVE_POST_START,
+  payload: postId,
+});
+
+export const archivePostSuccess = (message: string) => ({
+  type: PostActions.ARCHIVE_POST_SUCCESS,
+  payload: message,
+});
+
+export const archivePostFailure = (error: Error) => ({
+  type: PostActions.ARCHIVE_POST_FAILURE,
+  payload: error,
+});

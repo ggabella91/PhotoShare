@@ -55,6 +55,9 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    archived: {
+      type: Boolean,
+    },
   },
   {
     toJSON: {
