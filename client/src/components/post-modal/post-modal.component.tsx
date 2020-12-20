@@ -42,9 +42,19 @@ const PostModal: React.FC<Props> = ({
               src={`data:image/jpeg;base64,${userProfilePhotoFile}`}
               alt='user'
             />
-            <div className='user-and-location'>
-              <span className='user-name'>{userName}</span>
-              <span className='post-location'>{location}</span>
+            <div className='text-and-options'>
+              <div className='user-and-location'>
+                <span className='user-name'>{userName}</span>
+                <span className='post-location'>{location}</span>
+              </div>
+              <div>
+                <span
+                  className='post-options'
+                  onClick={() => console.log('Ellipsis was clicked')}
+                >
+                  ...
+                </span>
+              </div>
             </div>
           </div>
           <span className='post-caption'>{caption}</span>
