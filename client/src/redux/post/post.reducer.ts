@@ -14,6 +14,8 @@ const INITIAL_STATE: PostState = {
   profilePhotoFile: null,
   profilePhotoError: null,
   profilePhotoConfirm: null,
+  archivePostConfirm: null,
+  archivePostError: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -52,6 +54,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         getPostFileError: null,
         getPostFileConfirm: 'Profile photo file fetched!',
       };
+    case PostActions.ARCHIVE_POST_SUCCESS:
+      return {
+        ...state,
+        archivePostConfirm: action.payload,
+        archivePostError: null,
+      };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
         ...state,
@@ -75,6 +83,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         getPostFileError: action.payload,
         getPostFileConfirm: null,
+      };
+    case PostActions.ARCHIVE_POST_FAILURE:
+      return {
+        ...state,
+        archivePostConfirm: null,
+        archivePostError: action.payload,
       };
     case PostActions.CLEAR_POST_STATUSES:
       return {

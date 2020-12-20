@@ -31,6 +31,7 @@ import {
 
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
+import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
 
 import './my-profile-page.styles.scss';
 
@@ -72,6 +73,8 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
     createdAt: new Date(Date.now()),
     fileString: '',
   });
+
+  const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
 
   useEffect(() => {
     if (currentUser && !name) {
@@ -151,6 +154,8 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   };
 
+  const archivePostStart = () => console.log('Starting to archive...not!');
+
   return (
     <div className='my-profile-page'>
       <div className='user-bio'>
@@ -191,8 +196,14 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         location={postModalProps.location}
         createdAt={postModalProps.createdAt}
         onHide={() => setPostModalShow(false)}
+        onOptionsClick={() => setPostOptionsModalShow(true)}
         userProfilePhotoFile={profilePhoto || ''}
         userName={name}
+      />
+      <PostOptionsModal
+        show={postOptionsModalShow}
+        onHide={() => setPostOptionsModalShow(false)}
+        archive={archivePostStart}
       />
     </div>
   );
