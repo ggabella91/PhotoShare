@@ -59,21 +59,36 @@
           border-radius: 50%;
         }
 
-        .user-and-location {
-          display: flex;
-          flex-direction: column;
+        .text-and-options {
           margin-left: 2vw;
+          display: flex;
+          flex-direction: row;
+          justify-content: stretch;
 
-          .user-name {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 520;
+          .user-and-location {
+            display: flex;
+            flex-direction: column;
+
+            .user-name {
+              margin: 0;
+              font-size: 14px;
+              font-weight: 520;
+            }
+
+            .post-location {
+              margin: 0;
+              font-size: 12px;
+              font-weight: 420;
+            }
           }
 
-          .post-location {
-            margin: 0;
-            font-size: 12px;
-            font-weight: 420;
+          .post-options {
+            font-size: 30px;
+            transform: translate(45%, -48%);
+
+            &:hover {
+              cursor: pointer;
+            }
           }
         }
       }
