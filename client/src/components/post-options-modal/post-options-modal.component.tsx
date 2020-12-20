@@ -9,7 +9,7 @@ interface Props {
   archive: () => void;
 }
 
-const PostOptionsModal: React.FC<Props> = ({ archive, ...props }) => (
+const PostOptionsModal: React.FC<Props> = ({ archive, onHide, ...props }) => (
   <Modal
     {...props}
     dialogClassName='post-options-modal'
@@ -17,8 +17,12 @@ const PostOptionsModal: React.FC<Props> = ({ archive, ...props }) => (
     centered
   >
     <Modal.Body className='post-options-modal-body'>
-      <span onClick={archive}>Archive</span>
-      <span>Cancel</span>
+      <div className='archive'>
+        <span onClick={archive}>Archive</span>
+      </div>
+      <div className='cancel'>
+        <span onClick={onHide}>Cancel</span>
+      </div>
     </Modal.Body>
   </Modal>
 );
