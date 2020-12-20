@@ -1,4 +1,43 @@
-.options {
+.post-options-modal {
+  z-index: 2;
   display: flex;
   flex-direction: column;
+  height: 35vh;
+  width: 20vw;
+  margin-top: 45vh;
+
+  .post-options-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: solid 1.5px;
+    width: 20vw;
+
+    .archive {
+      border-bottom: solid 1px;
+      border-color: rgba(0, 0, 0, 0.2);
+      width: 20vw;
+
+      :hover {
+        cursor: pointer;
+      }
+    }
+
+    .cancel {
+      width: 20vw;
+
+      :hover {
+        cursor: pointer;
+      }
+    }
+
+    span {
+      margin-left: 50%;
+      font-family: 'Lato', sans-serif;
+      font-size: 18px;
+      font-weight: 420;
+      text-align: center;
+      overflow: hidden;
+    }
+  }
 }

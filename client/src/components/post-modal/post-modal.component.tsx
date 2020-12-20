@@ -12,6 +12,7 @@ interface Props {
   onHide: () => void;
   fileString: string;
   userName: string;
+  onOptionsClick: () => void;
   userProfilePhotoFile: string;
 }
 
@@ -21,6 +22,7 @@ const PostModal: React.FC<Props> = ({
   location,
   createdAt,
   userName,
+  onOptionsClick,
   userProfilePhotoFile,
   ...props
 }) => {
@@ -48,10 +50,7 @@ const PostModal: React.FC<Props> = ({
                 <span className='post-location'>{location}</span>
               </div>
               <div>
-                <span
-                  className='post-options'
-                  onClick={() => console.log('Ellipsis was clicked')}
-                >
+                <span className='post-options' onClick={onOptionsClick}>
                   ...
                 </span>
               </div>

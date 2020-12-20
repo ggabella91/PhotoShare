@@ -11,6 +11,7 @@
 }
 
 .post-modal {
+  z-index: 1;
   font-family: 'Lato', sans-serif;
   width: 90vmin;
   max-width: 935px;
@@ -84,7 +85,7 @@
 
           .post-options {
             font-size: 30px;
-            transform: translate(45%, -48%);
+            transform: translate(60%, -52%);
 
             &:hover {
               cursor: pointer;
