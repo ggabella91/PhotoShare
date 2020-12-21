@@ -19,7 +19,7 @@ router.delete(
     post.archived = true;
     await post.save();
 
-    res.status(204).send({ message: 'Post archived!' });
+    res.status(200).send({ message: 'Post archived!' });
   }
 );
 

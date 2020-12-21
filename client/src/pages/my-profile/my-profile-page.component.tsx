@@ -57,6 +57,15 @@ interface MyProfilePageProps {
   archivePostStart: typeof archivePostStart;
 }
 
+interface PostModalProps {
+  id: string;
+  s3Key: string;
+  caption: string;
+  location: string;
+  createdAt: Date | null;
+  fileString: string;
+}
+
 const MyProfilePage: React.FC<MyProfilePageProps> = ({
   currentUser,
   profilePhotoKey,
@@ -66,6 +75,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
+  archivePostConfirm,
 }) => {
   const [name, setName] = useState('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -74,11 +84,12 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
 
   const [postModalShow, setPostModalShow] = useState(false);
-  const [postModalProps, setPostModalProps] = useState({
+  const [postModalProps, setPostModalProps] = useState<PostModalProps>({
     id: '',
+    s3Key: '',
     caption: '',
     location: '',
-    createdAt: new Date(Date.now()),
+    createdAt: null,
     fileString: '',
   });
 
@@ -144,6 +155,23 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   }, [postFiles]);
 
+  useEffect(() => {
+    if (archivePostConfirm) {
+      setPostOptionsModalShow(false);
+      setPostModalShow(false);
+
+      const newDataArray = postDataArray.filter(
+        (el) => el.id !== postModalProps.id
+      );
+      setPostDataArray(newDataArray);
+
+      const newFileArray = postFileArray.filter(
+        (el) => el.s3Key !== postModalProps.s3Key
+      );
+      setPostFileArray(newFileArray);
+    }
+  }, [archivePostConfirm]);
+
   const handleRenderPostModal = (file: PostFile) => {
     const postData = postDataArray.find((el) => el.s3Key === file.s3Key);
 
@@ -155,6 +183,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
       setPostModalProps({
         id: postData.id,
         caption,
+        s3Key: postData.s3Key,
         location,
         createdAt,
         fileString: file.fileString,
@@ -202,7 +231,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         fileString={postModalProps.fileString}
         caption={postModalProps.caption}
         location={postModalProps.location}
-        createdAt={postModalProps.createdAt}
+        createdAt={postModalProps.createdAt || new Date(Date.now())}
         onHide={() => setPostModalShow(false)}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         userProfilePhotoFile={profilePhoto || ''}
