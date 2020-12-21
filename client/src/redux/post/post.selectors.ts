@@ -64,3 +64,13 @@ export const selectUpdateProfilePhotoConfirm = createSelector(
   [selectPostState],
   (postState: PostState) => postState.profilePhotoConfirm
 );
+
+export const selectArchivePostError = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.archivePostError
+);
+
+export const selectArchivePostConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.archivePostConfirm
+);

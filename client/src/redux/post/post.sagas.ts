@@ -1,4 +1,11 @@
-import { takeLatest, takeEvery, put, all, call } from 'redux-saga/effects';
+import {
+  takeLatest,
+  takeEvery,
+  put,
+  all,
+  call,
+  StrictEffect,
+} from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
@@ -14,6 +21,8 @@ import {
   getPostFileSuccess,
   getProfilePhotoFileSuccess,
   getPostFileFailure,
+  archivePostSuccess,
+  archivePostFailure,
 } from './post.actions';
 
 import axios from 'axios';
@@ -78,6 +87,21 @@ export function* getPostFile({
   }
 }
 
+export function* archivePost({
+  payload: postId,
+}: {
+  payload: string;
+}): SagaIterator {
+  try {
+    // @ts-ignore
+    const { data } = yield axios.delete(`/api/posts/${postId}`);
+
+    yield put(archivePostSuccess(data.message));
+  } catch (err) {
+    yield put(archivePostFailure(err));
+  }
+}
+
 export function* onCreatePostStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(
     PostActions.CREATE_POST_START,
@@ -106,11 +130,19 @@ export function* onGetPostFileStart(): SagaIterator {
   );
 }
 
+export function* onArchivePostStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    PostActions.ARCHIVE_POST_START,
+    archivePost
+  );
+}
+
 export function* postSagas(): SagaIterator {
   yield all([
     call(onCreatePostStart),
     call(onUpdateProfilePhotoStart),
     call(onGetPostDataStart),
     call(onGetPostFileStart),
+    call(onArchivePostStart),
   ]);
 }

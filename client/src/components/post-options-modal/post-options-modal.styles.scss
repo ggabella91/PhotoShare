@@ -1,43 +1,58 @@
 .post-options-modal {
-  z-index: 2;
   display: flex;
   flex-direction: column;
   height: 35vh;
   width: 20vw;
+  max-width: 200px;
+  min-width: 120px;
   margin-top: 45vh;
+  margin-left: 50%;
+  transform: translate(-50%);
+
+  .modal-content {
+    width: 20vw;
+    max-width: inherit;
+    min-width: inherit;
+  }
 
   .post-options-modal-body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: solid 1.5px;
+    border: solid 1px;
     width: 20vw;
+    max-width: inherit;
+    min-width: inherit;
+
+    &:hover {
+      cursor: pointer;
+    }
 
     .archive {
       border-bottom: solid 1px;
       border-color: rgba(0, 0, 0, 0.2);
       width: 20vw;
-
-      :hover {
-        cursor: pointer;
-      }
+      max-width: inherit;
+      text-align: center;
+      padding-bottom: 1vh;
     }
 
     .cancel {
       width: 20vw;
-
-      :hover {
-        cursor: pointer;
-      }
+      max-width: inherit;
+      text-align: center;
+      padding-top: 1vh;
     }
 
     span {
-      margin-left: 50%;
       font-family: 'Lato', sans-serif;
-      font-size: 18px;
-      font-weight: 420;
-      text-align: center;
+      font-size: 16px;
+      font-weight: 400;
       overflow: hidden;
     }
   }
+}
+
+.modal-backdrop {
+  z-index: 1050;
 }

@@ -17,6 +17,15 @@
   text-decoration: none;
   border-radius: 15px;
   font-size: 20px;
+
+  span {
+    font-size: 20px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    margin: auto;
+    font-family: 'Lato', sans-serif;
+  }
 }
 
 .modal-button {
@@ -47,13 +56,4 @@
 
 .submit-button:hover {
   opacity: 0.9;
-}
-
-span {
-  font-size: 20px;
-  text-align: center;
-  display: table-cell;
-  vertical-align: middle;
-  margin: auto;
-  font-family: 'Lato', sans-serif;
 }

@@ -4,15 +4,22 @@ import { Post } from '../models/post';
 
 const router = express.Router();
 
-router.patch(
+router.delete(
   '/api/posts/:postId',
   requireAuth,
   async (req: Request, res: Response) => {
     const { postId } = req.params;
 
-    await Post.findByIdAndUpdate(postId, { archived: true });
+    const post = await Post.findById(postId);
 
-    res.status(204).send({ message: 'Post archived!' });
+    if (!post) {
+      throw new BadRequestError('Post not found');
+    }
+
+    post.archived = true;
+    await post.save();
+
+    res.status(200).send({ message: 'Post archived!' });
   }
 );
 

@@ -49,8 +49,8 @@ const PostModal: React.FC<Props> = ({
                 <span className='user-name'>{userName}</span>
                 <span className='post-location'>{location}</span>
               </div>
-              <div>
-                <span className='post-options' onClick={onOptionsClick}>
+              <div className='post-options'>
+                <span className='ellipsis' onClick={onOptionsClick}>
                   ...
                 </span>
               </div>

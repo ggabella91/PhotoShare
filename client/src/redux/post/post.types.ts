@@ -59,7 +59,7 @@ export interface PostState {
   profilePhotoError: PostError | null;
   profilePhotoConfirm: string | null;
   archivePostConfirm: string | null;
-  archivePostError: Error | null;
+  archivePostError: PostError | null;
 }
 
 export interface CreatePostStart {

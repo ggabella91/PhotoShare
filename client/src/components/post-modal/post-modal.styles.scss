@@ -11,7 +11,6 @@
 }
 
 .post-modal {
-  z-index: 1;
   font-family: 'Lato', sans-serif;
   width: 90vmin;
   max-width: 935px;
@@ -23,7 +22,7 @@
     height: 2vmin;
 
     .close {
-      transform: translateY(-25%);
+      transform: translateY(-20%);
     }
   }
 
@@ -85,10 +84,12 @@
 
           .post-options {
             font-size: 30px;
-            transform: translate(60%, -52%);
+            transform: translate(75%, -55%);
 
-            &:hover {
-              cursor: pointer;
+            .ellipsis {
+              &:hover {
+                cursor: pointer;
+              }
             }
           }
         }
