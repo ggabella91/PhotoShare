@@ -17,8 +17,12 @@
 }
 
 .modal-content {
-  flex-direction: row;
   border-radius: 0;
+  // background-color: white;
+
+  @include respond-medium() {
+    height: 30vh;
+  }
 }
 
 .post-modal {
@@ -28,7 +32,12 @@
   width: 335px;
   height: 600px;
   position: relative;
-  margin-left: 50%;
+  margin-left: 56%;
+
+  @include respond-medium() {
+    flex-direction: column;
+    margin-top: 50%;
+  }
 
   .large-image-adjustments {
     display: flex;
@@ -47,7 +56,6 @@
 
     @include respond-medium() {
       display: none;
-      background-color: none;
     }
 
     .post-modal-image-large {
@@ -62,20 +70,21 @@
   }
 
   .post-modal-header {
-    background-color: transparent;
     border: none;
     width: 335px;
     height: 32px;
     position: absolute;
+    padding-top: 8px;
 
     .close {
-      transform: translateY(-20%);
+      // transform: translateY(-20%);
     }
   }
 
   .post-modal-body {
     width: 335px;
     height: 568px;
+    margin-top: 28px;
     display: flex;
     position: absolute;
 
@@ -94,7 +103,6 @@
       max-width: 655px;
       width: 90vw;
       height: 30vh;
-      -webkit-tap-highlight-color: white;
     }
 
     .post-modal-details {
@@ -141,7 +149,7 @@
 
           .post-options {
             font-size: 30px;
-            transform: translate(75%, -55%);
+            transform: translate(120%, -55%);
 
             .ellipsis {
               &:hover {
