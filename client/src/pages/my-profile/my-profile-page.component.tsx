@@ -188,7 +188,6 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         createdAt,
         fileString: file.fileString,
       });
-      console.log(postModalProps);
       setPostModalShow(true);
     }
   };

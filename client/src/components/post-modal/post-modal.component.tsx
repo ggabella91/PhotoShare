@@ -30,10 +30,17 @@ const PostModal: React.FC<Props> = ({
 
   return (
     <Modal {...props} dialogClassName='post-modal' animation={false} centered>
+      <div className='large-image-adjustments'>
+        <img
+          className='post-modal-image-large'
+          src={`data:image/jpeg;base64,${fileString}`}
+          alt='user'
+        />
+      </div>
       <Modal.Header className='post-modal-header' closeButton />
       <Modal.Body className='post-modal-body'>
         <img
-          className='post-modal-image'
+          className='post-modal-image-embedded'
           src={`data:image/jpeg;base64,${fileString}`}
           alt='post-pic'
         />

@@ -4,22 +4,69 @@
   }
 }
 
-@mixin respond-medium {
-  @media (max-width: 768px) {
+@mixin respond-medium-wide {
+  @media (max-width: 895px) {
     @content;
   }
 }
 
+@mixin respond-medium {
+  @media (max-width: 736px) {
+    @content;
+  }
+}
+
+.modal-content {
+  flex-direction: row;
+  border-radius: 0;
+}
+
 .post-modal {
   font-family: 'Lato', sans-serif;
-  width: 90vmin;
-  max-width: 935px;
-  height: 62vmin;
+  display: flex;
+  flex-direction: row;
+  width: 335px;
+  height: 600px;
+  position: relative;
+  margin-left: 50%;
+
+  .large-image-adjustments {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: black;
+    width: 480px;
+    height: 600px;
+    transform: translate(-480px);
+
+    @include respond-medium-wide() {
+      width: 40vw;
+      height: auto;
+      transform: translate(-40vw);
+    }
+
+    @include respond-medium() {
+      display: none;
+      background-color: none;
+    }
+
+    .post-modal-image-large {
+      height: auto;
+      width: 480px;
+      position: relative;
+
+      @include respond-medium-wide() {
+        width: 40vw;
+      }
+    }
+  }
 
   .post-modal-header {
     background-color: transparent;
     border: none;
-    height: 2vmin;
+    width: 335px;
+    height: 32px;
+    position: absolute;
 
     .close {
       transform: translateY(-20%);
@@ -27,21 +74,31 @@
   }
 
   .post-modal-body {
-    max-width: inherit;
-    width: 90vmin;
-    height: 55vmin;
+    width: 335px;
+    height: 568px;
     display: flex;
+    position: absolute;
 
-    .post-modal-image {
+    .post-modal-image-embedded {
+      height: 20vh;
+      max-height: 262px;
       width: auto;
-      max-height: 600px;
-      height: 50vmin;
+      display: none;
+
+      @include respond-medium() {
+        display: block;
+      }
+    }
+
+    @include respond-medium() {
+      max-width: 655px;
+      width: 90vw;
+      height: 30vh;
+      -webkit-tap-highlight-color: white;
     }
 
     .post-modal-details {
-      margin-left: 2vw;
-      width: 40vmin;
-      max-width: 400px;
+      width: 320px;
       display: flex;
       flex-direction: column;
 
@@ -60,7 +117,7 @@
         }
 
         .text-and-options {
-          margin-left: 2vw;
+          margin-left: 12px;
           display: flex;
           flex-direction: row;
           justify-content: stretch;
