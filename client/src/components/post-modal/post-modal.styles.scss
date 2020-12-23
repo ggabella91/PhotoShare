@@ -18,9 +18,14 @@
 
 .modal-content {
   border-radius: 0;
-  // background-color: white;
+  // height: 600px;
+
+  @include respond-medium-wide() {
+    height: 62.5vw;
+  }
 
   @include respond-medium() {
+    flex-direction: column;
     height: 30vh;
   }
 }
@@ -32,11 +37,20 @@
   width: 335px;
   height: 600px;
   position: relative;
-  margin-left: 56%;
+  margin-left: 54%;
+
+  @include respond-medium-wide() {
+    width: 40vw;
+    height: 62.5vw;
+    height: auto;
+  }
 
   @include respond-medium() {
     flex-direction: column;
+    justify-content: space-between;
     margin-top: 50%;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .large-image-adjustments {
@@ -49,9 +63,9 @@
     transform: translate(-480px);
 
     @include respond-medium-wide() {
-      width: 40vw;
-      height: auto;
-      transform: translate(-40vw);
+      width: 50vw;
+      height: 62.5vw;
+      transform: translate(-50vw);
     }
 
     @include respond-medium() {
@@ -64,7 +78,7 @@
       position: relative;
 
       @include respond-medium-wide() {
-        width: 40vw;
+        width: 50vw;
       }
     }
   }
@@ -78,6 +92,10 @@
 
     .close {
       // transform: translateY(-20%);
+    }
+
+    @include respond-medium-wide() {
+      width: 40vw;
     }
   }
 
@@ -93,22 +111,30 @@
       max-height: 262px;
       width: auto;
       display: none;
+      position: relative;
 
       @include respond-medium() {
-        display: block;
+        display: flex;
       }
     }
 
+    @include respond-medium-wide() {
+      width: 40vw;
+    }
+
     @include respond-medium() {
-      max-width: 655px;
-      width: 90vw;
-      height: 30vh;
+      // width: 90vw;
+      height: 50vh;
     }
 
     .post-modal-details {
       width: 320px;
       display: flex;
       flex-direction: column;
+
+      @include respond-medium-wide() {
+        width: 35vw;
+      }
 
       .post-user-and-location {
         display: flex;
@@ -126,6 +152,7 @@
 
         .text-and-options {
           margin-left: 12px;
+          min-width: 250px;
           display: flex;
           flex-direction: row;
           justify-content: stretch;
@@ -149,7 +176,7 @@
 
           .post-options {
             font-size: 30px;
-            transform: translate(120%, -55%);
+            transform: translate(350%, -50%);
 
             .ellipsis {
               &:hover {
