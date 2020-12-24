@@ -18,15 +18,13 @@
 
 .modal-content {
   border-radius: 0;
-  // height: 600px;
 
   @include respond-medium-wide() {
-    height: 62.5vw;
+    height: 65vh;
   }
 
   @include respond-medium() {
     flex-direction: column;
-    height: 30vh;
   }
 }
 
@@ -41,13 +39,14 @@
 
   @include respond-medium-wide() {
     width: 40vw;
-    height: 62.5vw;
+    height: 65vh;
     height: auto;
   }
 
   @include respond-medium() {
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     margin-top: 50%;
     margin-left: 50%;
     transform: translate(-50%, -50%);
@@ -107,11 +106,11 @@
     position: absolute;
 
     .post-modal-image-embedded {
-      height: 20vh;
-      max-height: 262px;
-      width: auto;
+      width: 35vw;
+      height: auto;
       display: none;
       position: relative;
+      margin-bottom: 2vh;
 
       @include respond-medium() {
         display: flex;
@@ -123,8 +122,9 @@
     }
 
     @include respond-medium() {
-      // width: 90vw;
+      flex-direction: column;
       height: 50vh;
+      align-items: center;
     }
 
     .post-modal-details {
@@ -177,6 +177,10 @@
           .post-options {
             font-size: 30px;
             transform: translate(350%, -50%);
+
+            @include respond-medium() {
+              transform: translate(0, -50%);
+            }
 
             .ellipsis {
               &:hover {

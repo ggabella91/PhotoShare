@@ -37,8 +37,16 @@ router.post(
 
     const s3 = new AWS.S3();
 
+    let bucket: string;
+
+    if (process.env.NODE_ENV === 'production') {
+      bucket = 'photo-share-app';
+    } else {
+      bucket = 'photo-share-app-dev';
+    }
+
     const uploadParams: S3.Types.PutObjectRequest = {
-      Bucket: 'photo-share-app',
+      Bucket: bucket,
       Key: key,
       Body: '',
     };
