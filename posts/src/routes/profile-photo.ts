@@ -64,7 +64,7 @@ router.post(
     }
 
     const uploadParams: S3.Types.PutObjectRequest = {
-      Bucket: 'photo-share-app-profile-photos',
+      Bucket: bucket,
       Key: key,
       Body: '',
     };
