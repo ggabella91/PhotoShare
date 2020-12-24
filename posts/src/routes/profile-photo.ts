@@ -39,9 +39,17 @@ router.post(
 
     const s3 = new AWS.S3();
 
+    let bucket: string;
+
+    if (process.env.NODE_ENV === 'production') {
+      bucket = 'photo-share-app-profile-photos';
+    } else {
+      bucket = 'photo-share-app-profile-photos-dev';
+    }
+
     if (existingPhotoKey) {
       const deleteParams: S3.Types.DeleteObjectRequest = {
-        Bucket: 'photo-share-app-profile-photos',
+        Bucket: bucket,
         Key: existingPhotoKey,
       };
 

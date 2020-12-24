@@ -45,6 +45,11 @@ spec:
               value: '2525'
             - name: EMAIL_FROM
               value: 'giuliano@photo-share.dev'
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: node-env
+                  key: NODE_ENV
 ---
 apiVersion: v1
 kind: Service

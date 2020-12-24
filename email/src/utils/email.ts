@@ -21,16 +21,17 @@ export class Email {
   }
 
   newTransport() {
-    // if (process.env.NODE_ENV === 'production') {
-    //   // Sendgrid - NEED TO SET UP BEFORE DEPLOYING TO PRODUCTION
-    //   return nodemailer.createTransport({
-    //     service: 'SendGrid',
-    //     auth: {
-    //       user: `${process.env.SENDGRID_USERNAME}`,
-    //       pass: `${process.env.SENDGRID_PASSWORD}`,
-    //     },
-    //   });
-    // }
+    console.log(process.env.NODE_ENV);
+    if (process.env.NODE_ENV === 'production') {
+      // Sendgrid - NEED TO SET UP BEFORE DEPLOYING TO PRODUCTION
+      return nodemailer.createTransport({
+        service: 'SendGrid',
+        auth: {
+          user: `${process.env.SENDGRID_USERNAME}`,
+          pass: `${process.env.SENDGRID_PASSWORD}`,
+        },
+      });
+    }
 
     return nodemailer.createTransport({
       //@ts-ignore
@@ -46,11 +47,14 @@ export class Email {
   // Send the actual email
   async send(template: string, subject: string) {
     // 1) Render the HTML based on a pug template
-    const html = pug.renderFile(`${__dirname}/../../views/email/${template}.pug`, {
-      firstName: this.firstName,
-      url: this.url,
-      subject,
-    });
+    const html = pug.renderFile(
+      `${__dirname}/../../views/email/${template}.pug`,
+      {
+        firstName: this.firstName,
+        url: this.url,
+        subject,
+      }
+    );
 
     // 2) Define the email options
     const mailOptions = {
