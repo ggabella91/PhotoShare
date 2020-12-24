@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`expect to render a post modal component 1`] = `
+<Modal
+  animation={false}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  dialogClassName="post-modal"
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+>
+  <div
+    className="large-image-adjustments"
+  >
+    <img
+      alt="user"
+      className="post-modal-image-large"
+      src="data:image/jpeg;base64,string"
+    />
+  </div>
+  <ModalHeader
+    className="post-modal-header"
+    closeButton={true}
+    closeLabel="Close"
+  />
+  <ModalBody
+    className="post-modal-body"
+  >
+    <img
+      alt="post-pic"
+      className="post-modal-image-embedded"
+      src="data:image/jpeg;base64,string"
+    />
+    <div
+      className="post-modal-details"
+    >
+      <div
+        className="post-user-and-location"
+      >
+        <img
+          alt="user"
+          className="user-photo"
+          src="data:image/jpeg;base64,userFile"
+        />
+        <div
+          className="text-and-options"
+        >
+          <div
+            className="user-and-location"
+          >
+            <span
+              className="user-name"
+            >
+              Giuliano
+            </span>
+            <span
+              className="post-location"
+            >
+              here
+            </span>
+          </div>
+          <div
+            className="post-options"
+          >
+            <span
+              className="ellipsis"
+              onClick={[Function]}
+            >
+              ...
+            </span>
+          </div>
+        </div>
+      </div>
+      <span
+        className="post-caption"
+      >
+        hi
+      </span>
+      <span
+        className="post-date"
+      >
+        Thu Dec 24 2020
+      </span>
+    </div>
+  </ModalBody>
+</Modal>
+`;
