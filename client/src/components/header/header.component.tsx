@@ -33,16 +33,24 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const [photoFile, setPhotoFile] = useState<string | null>(null);
 
+  let bucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    bucket = 'photo-share-app-profile-photos';
+  } else {
+    bucket = 'photo-share-app-profile-photos-dev';
+  }
+
   useEffect(() => {
     if (profilePhotoKey) {
       getPostFileStart({
         s3Key: profilePhotoKey,
-        bucket: 'photo-share-app-profile-photos',
+        bucket,
       });
     } else if (!profilePhotoFile && currentUser && currentUser.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
-        bucket: 'photo-share-app-profile-photos',
+        bucket,
       });
     }
   }, [profilePhotoKey]);

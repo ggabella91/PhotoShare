@@ -95,6 +95,16 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
 
+  let postsBucket: string, profileBucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    postsBucket = 'photo-share-app';
+    profileBucket = 'photo-share-app-profile-photos';
+  } else {
+    postsBucket = 'photo-share-app-dev';
+    profileBucket = 'photo-share-app-profile-photos-dev';
+  }
+
   useEffect(() => {
     if (currentUser && !name) {
       setName(currentUser.name);
@@ -106,12 +116,12 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
     if (profilePhotoKey) {
       getPostFileStart({
         s3Key: profilePhotoKey,
-        bucket: 'photo-share-app-profile-photos',
+        bucket: profileBucket,
       });
     } else if (!profilePhotoFile && currentUser && currentUser.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
-        bucket: 'photo-share-app-profile-photos',
+        bucket: profileBucket,
       });
     }
   }, [profilePhotoKey]);
@@ -133,7 +143,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
       for (let post of postDataArray) {
         getPostFileStart({
           s3Key: post.s3Key,
-          bucket: 'photo-share-app',
+          bucket: postsBucket,
         });
       }
     }
