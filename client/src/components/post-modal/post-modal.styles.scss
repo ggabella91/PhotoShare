@@ -18,9 +18,11 @@
 
 .modal-content {
   border-radius: 0;
+  min-height: 435px;
+  min-width: 225px;
 
   @include respond-medium-wide() {
-    height: 65vh;
+    height: 75vh;
   }
 
   @include respond-medium() {
@@ -39,7 +41,7 @@
 
   @include respond-medium-wide() {
     width: 40vw;
-    height: 65vh;
+    height: 75vh;
     height: auto;
   }
 
@@ -49,7 +51,8 @@
     align-items: center;
     margin-top: 50%;
     margin-left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -25%);
+    min-height: 435px;
   }
 
   .large-image-adjustments {
@@ -89,10 +92,6 @@
     position: absolute;
     padding-top: 8px;
 
-    .close {
-      // transform: translateY(-20%);
-    }
-
     @include respond-medium-wide() {
       width: 40vw;
     }
@@ -104,6 +103,7 @@
     margin-top: 28px;
     display: flex;
     position: absolute;
+    min-width: inherit;
 
     .post-modal-image-embedded {
       width: 35vw;
@@ -114,11 +114,13 @@
 
       @include respond-medium() {
         display: flex;
+        min-width: 180px;
       }
     }
 
     @include respond-medium-wide() {
       width: 40vw;
+      height: 70vh;
     }
 
     @include respond-medium() {
@@ -179,7 +181,7 @@
             transform: translate(350%, -50%);
 
             @include respond-medium() {
-              transform: translate(0, -50%);
+              transform: translate(20%, -50%);
             }
 
             .ellipsis {

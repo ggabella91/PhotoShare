@@ -24,7 +24,7 @@ interface HeaderProps {
   signOutStart: typeof signOutStart;
 }
 
-const Header: React.FC<HeaderProps> = ({
+export const Header: React.FC<HeaderProps> = ({
   currentUser,
   profilePhotoKey,
   profilePhotoFile,
