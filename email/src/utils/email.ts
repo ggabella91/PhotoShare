@@ -21,7 +21,6 @@ export class Email {
   }
 
   newTransport() {
-    console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'production') {
       // Sendgrid - NEED TO SET UP BEFORE DEPLOYING TO PRODUCTION
       return nodemailer.createTransport({
