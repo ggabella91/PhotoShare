@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a post options modal 1`] = `
+<Modal
+  animation={false}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  dialogClassName="post-options-modal"
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+>
+  <ModalBody
+    className="post-options-modal-body"
+  >
+    <div
+      className="archive"
+      onClick={[Function]}
+    >
+      <span>
+        Archive
+      </span>
+    </div>
+    <div
+      className="cancel"
+      onClick={[Function]}
+    >
+      <span>
+        Cancel
+      </span>
+    </div>
+  </ModalBody>
+</Modal>
+`;

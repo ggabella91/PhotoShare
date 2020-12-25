@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a sign-in component 1`] = `
+<div
+  className="sign-in"
+>
+  <h4>
+    Existing user?
+  </h4>
+  <div
+    className="sub-text"
+  >
+    <span>
+      Sign in
+    </span>
+  </div>
+  <form
+    onSubmit={[Function]}
+  >
+    <FormInput
+      label="email"
+      name="email"
+      onChange={[Function]}
+      type="email"
+      value=""
+    />
+    <FormInput
+      label="password"
+      name="password"
+      onChange={[Function]}
+      type="password"
+      value=""
+    />
+    <div />
+    <div
+      className="button"
+    >
+      <Button
+        className="submit-button"
+        onClick={[Function]}
+      >
+        Sign In
+      </Button>
+    </div>
+    <div
+      className="link-container"
+    >
+      <NavLink
+        className="link"
+        to="/forgot-password"
+      >
+        Forgot your password?
+      </NavLink>
+    </div>
+  </form>
+</div>
+`;
