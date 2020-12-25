@@ -19,7 +19,7 @@ interface SignUpProps {
   signUpError: UserPayload;
 }
 
-const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
+export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
   const [userCredentials, setUserCredentials] = useState({
     name: '',
     email: '',

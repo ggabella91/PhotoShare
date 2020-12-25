@@ -18,7 +18,7 @@ interface SignInProps {
   signInError: UserPayload;
 }
 
-const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
+export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
   const [userCredentials, setCredentials] = useState({
     email: '',
     password: '',
