@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const memoryStorage = jest.fn();
+const memoryStorage = jest.fn();
 
 class Multer {
   constructor() {}
@@ -22,4 +22,5 @@ const multer = () => {
   return new Multer();
 };
 
-export default multer;
+module.exports = multer;
+module.exports.memoryStorage = memoryStorage;
