@@ -12,6 +12,8 @@ declare global {
 }
 
 jest.mock('../nats-wrapper.ts');
+jest.mock('../index.ts');
+jest.mock('multer');
 
 let mongo: any;
 beforeAll(async () => {
