@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "ts-node-dev --poll src/index.ts",
     "start": "node build/index.js",
-    "test": "jest --watchAll --no-cache"
+    "test": "jest --watchAll --no-cache",
+    "test:ci": "jest"
   },
   "jest": {
     "preset": "ts-jest",
