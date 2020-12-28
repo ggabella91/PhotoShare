@@ -4,7 +4,7 @@ import { natsWrapper } from './nats-wrapper';
 import { ProfilePhotoUpdatedListener } from './events/listeners/profile-photo-updated-listener';
 
 const start = async () => {
-  console.log('Starting up...');
+  console.log('Starting up....');
 
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
