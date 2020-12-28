@@ -62,8 +62,6 @@ it('Name and email are changed successfully', async () => {
     });
 
   expect(response.status).toEqual(200);
-  //@ts-ignore
   expect(response.body.name).toEqual(name);
-  //@ts-ignore
   expect(response.body.email).toEqual(email);
 });
