@@ -41,28 +41,21 @@ it('Throws 400 error if email is already in use by another user', async () => {
   expect(response.status).toEqual(400);
 });
 
-// it('Name and email are changed successfully', async () => {
-//   const cookie = await global.signin();
+it('Name and email are changed successfully', async () => {
+  const cookie = await global.signin();
 
-//   await request(app)
-//     .get('/api/users/currentuser')
-//     .set('Cookie', cookie)
-//     .send()
-//     .expect(200);
+  const name = 'Test Dude 2';
+  const email = 'test2@test.com';
 
-//   const name = 'Test Dude 2';
-//   const email = 'test2@test.com';
+  const response = await request(app)
+    .patch('/api/users/updateMe')
+    .set('Cookie', cookie)
+    .send({
+      name,
+      email,
+    });
 
-//   const response = await request(app).patch('/api/users/updateMe').send({
-//     name,
-//     email,
-//   });
-
-//   console.log(response);
-
-//   expect(response.status).toEqual(200);
-//   //@ts-ignore
-//   expect(response.name).toEqual(name);
-//   //@ts-ignore
-//   expect(response.email).toEqual(email);
-// });
+  expect(response.status).toEqual(200);
+  expect(response.body.name).toEqual(name);
+  expect(response.body.email).toEqual(email);
+});
