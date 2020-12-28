@@ -9,7 +9,7 @@ const setupFormData = () => {
   return buffer;
 };
 
-it('returns 201 after successful post upload', async () => {
+it('returns 201 status after successful post upload', async () => {
   const post = setupFormData();
 
   return request(app).post('/api/posts/new').send(post).expect(201);
