@@ -44,12 +44,6 @@ it('Throws 400 error if email is already in use by another user', async () => {
 it('Name and email are changed successfully', async () => {
   const cookie = await global.signin();
 
-  // await request(app)
-  //   .get('/api/users/currentuser')
-  //   .set('Cookie', cookie)
-  //   .send()
-  //   .expect(200);
-
   const name = 'Test Dude 2';
   const email = 'test2@test.com';
 
