@@ -7,7 +7,7 @@ import { natsWrapper } from './nats-wrapper';
 let redisClient: redis.RedisClient;
 
 const start = async () => {
-  console.log('Starting up...');
+  console.log('Starting up posts service...');
 
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
