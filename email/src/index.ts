@@ -3,7 +3,7 @@ import { NewUserCreatedListener } from './events/listeners/new-user-created-list
 import { PasswordResetRequestedListener } from './events/listeners/password-reset-requested-listener';
 
 const start = async () => {
-  console.log('Starting up email service...');
+  console.log('Starting up email service....');
 
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
