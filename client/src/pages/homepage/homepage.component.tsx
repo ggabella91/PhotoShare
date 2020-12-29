@@ -149,7 +149,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className='homepage'>
-      <div>{name ? <h2>Welcome, {name.split(' ')[0]}!</h2> : null}</div>
+      <div>{name ? <h2>Welcome, {name.split(' ')[0]}</h2> : null}</div>
       <div className='upload'>
         <div className='img-preview-container'>
           {imgPreview || showAlert ? null : (
