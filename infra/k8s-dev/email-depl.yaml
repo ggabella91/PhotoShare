@@ -32,12 +32,12 @@ spec:
             - name: EMAIL_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mailtrap-user
+                  name: email-user
                   key: EMAIL_USERNAME
             - name: EMAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mailtrap-pass
+                  name: email-pass
                   key: EMAIL_PASSWORD
             - name: EMAIL_HOST
               value: 'smtp.mailtrap.io'

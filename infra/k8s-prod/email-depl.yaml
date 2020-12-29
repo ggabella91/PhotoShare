@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: email-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: email
+  template:
+    metadata:
+      labels:
+        app: email
+    spec:
+      containers:
+        - name: email
+          image: ggabella91/email
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: 'http://nats-srv:4222'
+            - name: NATS_CLUSTER_ID
+              value: photo-share
+            - name: EMAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: email-user
+                  key: EMAIL_USERNAME
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-pass
+                  key: EMAIL_PASSWORD
+            - name: EMAIL_FROM
+              value: 'giuliano@photo-share.CHANGE_THIS'
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: node-env
+                  key: NODE_ENV
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: email-srv
+spec:
+  selector:
+    app: email
+  ports:
+    - name: email
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
