@@ -29,7 +29,6 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: 'true'
-    service.beta.kubernetes.io/do-loadbalancer-protocol: 'http'
     service.beta.kubernetes.io/do-loadbalancer-algorithm: 'round_robin'
     service.beta.kubernetes.io/do-loadbalancer-tls-ports: '443'
     service.beta.kubernetes.io/do-loadbalancer-hostname: 'www.photo-share.us'
