@@ -64,7 +64,7 @@
       .user-bio-photo-placeholder {
         @include avatar-dimensions();
         border: solid 2px;
-        border-color: white;
+        border-color: black;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -72,11 +72,15 @@
 
         .user-bio-photo-placeholder-text {
           position: relative;
-          font-size: 3vw;
-          color: white;
+          font-size: 32px;
+          color: black;
           margin: 0;
           margin-top: 50%;
           transform: translateY(-55%);
+
+          @include respond-wide() {
+            font-size: 3vw;
+          }
         }
       }
     }
