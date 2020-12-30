@@ -29,7 +29,12 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: 'true'
+    service.beta.kubernetes.io/do-loadbalancer-protocol: 'http'
+    service.beta.kubernetes.io/do-loadbalancer-algorithm: 'round_robin'
+    service.beta.kubernetes.io/do-loadbalancer-tls-ports: '443'
     service.beta.kubernetes.io/do-loadbalancer-hostname: 'www.photo-share.us'
+    service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https: 'true'
+    service.beta.kubernetes.io/do-loadbalancer-certificate-id: '0d12e3a3-3674-45d3-8ab1-d2c977434352'
   labels:
     helm.sh/chart: ingress-nginx-2.0.3
     app.kubernetes.io/name: ingress-nginx
