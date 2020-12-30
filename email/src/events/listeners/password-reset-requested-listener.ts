@@ -7,9 +7,7 @@ import {
 import { queueGroupName } from './queue-group-name';
 import { Email } from '../../utils/email';
 
-export class PasswordResetRequestedListener extends Listener<
-  PasswordResetRequestedEvent
-> {
+export class PasswordResetRequestedListener extends Listener<PasswordResetRequestedEvent> {
   readonly subject = Subjects.PasswordResetRequested;
 
   queueGroupName = queueGroupName;
@@ -23,7 +21,13 @@ export class PasswordResetRequestedListener extends Listener<
 
     console.log(data);
 
-    const url = `https://photo-share.dev/reset-password/${resetPassUser.resetToken}`;
+    let url;
+
+    if (process.env.NODE_ENV === 'development') {
+      url = `https://photo-share.dev/reset-password/${resetPassUser.resetToken}`;
+    } else {
+      url = `www.photo-share.us/${resetPassUser.resetToken}`;
+    }
 
     await new Email(resetPassUser, url).sendPasswordReset();
 

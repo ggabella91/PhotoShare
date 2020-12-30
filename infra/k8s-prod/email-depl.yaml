@@ -40,7 +40,7 @@ spec:
                   name: sendgrid-pass
                   key: SENDGRID_PASSWORD
             - name: EMAIL_FROM
-              value: 'giuliano@photo-share.us'
+              value: 'ggabella91@gmail.com'
             - name: NODE_ENV
               valueFrom:
                 secretKeyRef:
