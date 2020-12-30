@@ -89,7 +89,7 @@ exports[`expect to render a post modal component 1`] = `
       <span
         className="post-date"
       >
-        Tue Dec 29 2020
+        Wed Dec 30 2020
       </span>
     </div>
   </ModalBody>
