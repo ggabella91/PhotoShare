@@ -5,6 +5,10 @@ import { PasswordResetRequestedListener } from './events/listeners/password-rese
 const start = async () => {
   console.log('Starting up email service....');
 
+  if (!process.env.NODE_ENV) {
+    throw new Error('NODE_ENV must be defined');
+  }
+
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
   }

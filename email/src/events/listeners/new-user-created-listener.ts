@@ -19,7 +19,14 @@ export class NewUserCreatedListener extends Listener<NewUserCreatedEvent> {
     };
 
     console.log(data);
-    const url = 'https://photo-share.dev/me';
+
+    let url;
+
+    if (process.env.NODE_ENV === 'development') {
+      url = 'https://photo-share.dev/me';
+    } else {
+      url = 'www.photo-share.us/me';
+    }
 
     try {
       await new Email(newUser, url).sendWelcome();
