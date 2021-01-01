@@ -30,7 +30,6 @@ it('acks the message', async () => {
   await listener.onMessage(data, msg);
 
   expect(msg.ack).toHaveBeenCalled();
-  expect;
 });
 
 it('sends the new user an email', async () => {
