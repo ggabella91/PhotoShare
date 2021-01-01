@@ -7,9 +7,7 @@ const {
   ProfilePhotoUpdatedEvent,
 } = jest.requireActual('@ggabella-photo-share/common');
 
-export const requireAuth = jest
-  .fn()
-  .mockImplementation((req: Request, res: Response, next: NextFunction) =>
-    next()
-  );
+export const requireAuth = jest.fn(
+  (req: Request, res: Response, next: NextFunction) => next()
+);
 export { BadRequestError, Publisher, Subjects, ProfilePhotoUpdatedEvent };

@@ -1,8 +1,6 @@
 import request from 'supertest';
 import { app } from '../../app';
 
-jest.mock('@ggabella-photo-share/common');
-
 const setupFormData = () => {
   const buffer = Buffer.from('1234'.repeat(1000));
 
