@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 jest.mock('../nats-wrapper.ts');
 jest.mock('../index.ts');
 jest.mock('multer');
+jest.mock('@ggabella-photo-share/common');
 
 let mongo: any;
 beforeAll(async () => {

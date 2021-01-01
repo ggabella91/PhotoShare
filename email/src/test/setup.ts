@@ -11,3 +11,4 @@ declare global {
 }
 
 jest.mock('../nats-wrapper.ts');
+jest.mock('../utils/email.ts');

@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --poll src/index.ts",
     "start": "node build/index.js",
     "build": "tsc",
-    "test": "jest --watchAll --no-cache"
+    "test": "jest --watchAll --no-cache",
+    "test:ci": "jest"
   },
   "jest": {
     "preset": "ts-jest",
