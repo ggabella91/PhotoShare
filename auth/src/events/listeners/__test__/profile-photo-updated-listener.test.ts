@@ -33,7 +33,7 @@ const setup = async () => {
 };
 
 it('acks the message', async () => {
-  const { listener, user, data, msg } = await setup();
+  const { listener, data, msg } = await setup();
 
   await listener.onMessage(data, msg);
 
@@ -45,7 +45,7 @@ it('updates the users profile photo', async () => {
 
   await listener.onMessage(data, msg);
 
-  const updatedUser = await User.find(user.id);
+  const updatedUser = await User.findById(user.id);
 
-  expect(updatedUser[0].photo).toEqual(data.s3Key);
+  expect(updatedUser!.photo).toEqual(data.s3Key);
 });
