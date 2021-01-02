@@ -220,7 +220,10 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
           ) : null}
         </div>
         <div className='user-details'>
-          <span className='user-name'>{name}</span>
+          <div className='name-and-edit'>
+            <span className='user-name'>{name}</span>
+            <span className='edit-profile'>Edit profile</span>
+          </div>
           <span className='user-posts'>{postDataArray.length} Posts</span>
         </div>
       </div>

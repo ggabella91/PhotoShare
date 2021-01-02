@@ -47,14 +47,16 @@
     width: 56vw;
     padding: 1vh 2vw;
     height: 22vh;
+    margin-top: 4vh;
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
 
     .avatar {
       margin-left: 2vw;
       margin-top: 3.5vh;
+      margin-right: 4vw;
       @include avatar-dimensions();
 
       .profile-photo {
@@ -86,30 +88,50 @@
     }
 
     .user-details {
-      position: absolute;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
       width: 30vw;
       height: 18vh;
-      top: 4vh;
-      right: 50%;
-      transform: translate(75%);
-      margin-left: 8vw;
+      margin-top: 3.5vh;
+      justify-content: flex-start;
+      // top: 4vh;
+      // right: 50%;
+      // transform: translate(25%);
+      // margin-left: 8vw;
 
-      .user-name {
-        width: 18vw;
-        min-width: 180px;
-        position: absolute;
-        font-size: 2.5vh;
-        font-weight: 460;
-        text-align: start;
-        top: 1vh;
+      .name-and-edit {
+        position: relative;
+        margin-left: inherit;
+        display: flex;
+        justify-content: stretch;
+        margin-bottom: 2vh;
+        // top: 1vh;
+
+        .user-name {
+          width: 18vw;
+          min-width: 180px;
+          font-size: 2.5vh;
+          font-weight: 460;
+          text-align: start;
+        }
+
+        .edit-profile {
+          border: 1px solid rgba(122, 122, 122, 0.2);
+          position: relative;
+          font-size: 14px;
+          min-width: 100px;
+          padding: 0.5vh 0.5vw;
+        }
       }
 
       .user-posts {
         width: 12vw;
-        position: absolute;
+        position: relative;
         font-size: 2vh;
         font-weight: 420;
-        bottom: 9vh;
+        // bottom: 9vh;
         text-align: start;
       }
     }
