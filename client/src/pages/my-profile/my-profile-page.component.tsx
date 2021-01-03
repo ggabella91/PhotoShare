@@ -205,23 +205,35 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   return (
     <div className='my-profile-page'>
       <div className='user-bio'>
-        <div className='avatar'>
-          {profilePhoto ? (
-            <img
-              className='profile-photo'
-              src={`data:image/jpeg;base64,${profilePhoto}`}
-              alt='profile-pic'
-            />
-          ) : null}
-          {!profilePhoto ? (
-            <div className='user-bio-photo-placeholder'>
-              <span className='user-bio-photo-placeholder-text'>No photo</span>
+        <div className='avatar-and-details'>
+          <div className='avatar'>
+            {profilePhoto ? (
+              <img
+                className='profile-photo'
+                src={`data:image/jpeg;base64,${profilePhoto}`}
+                alt='profile-pic'
+              />
+            ) : null}
+            {!profilePhoto ? (
+              <div className='user-bio-photo-placeholder'>
+                <span className='user-bio-photo-placeholder-text'>
+                  No photo
+                </span>
+              </div>
+            ) : null}
+          </div>
+          <div className='user-details'>
+            <div className='name-and-edit'>
+              <span className='user-name'>{name}</span>
+              <span className='edit-profile'>Edit profile</span>
             </div>
-          ) : null}
+            <span className='user-posts'>{postDataArray.length} Posts</span>
+          </div>
         </div>
-        <div className='user-details'>
-          <span className='user-name'>{name}</span>
-          <span className='user-posts'>{postDataArray.length} Posts</span>
+        <div className='user-posts-narrow-screen'>
+          <ul className='stats-list'>
+            <li className='stats-item'>{postDataArray.length} Posts</li>
+          </ul>
         </div>
       </div>
       <div className='posts-grid'>
