@@ -44,95 +44,127 @@
   }
 
   .user-bio {
-    width: 56vw;
-    padding: 1vh 2vw;
-    height: 22vh;
-    margin-top: 4vh;
     position: relative;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-start;
 
-    .avatar {
-      margin-left: 2vw;
-      margin-top: 3.5vh;
-      margin-right: 4vw;
-      @include avatar-dimensions();
+    .avatar-and-details {
+      width: 56vw;
+      padding: 1vh 2vw;
+      height: 22vh;
+      margin-top: 4vh;
+      margin-bottom: 2vh;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
 
-      .profile-photo {
+      .avatar {
+        margin-left: 2vw;
+        margin-top: 3.5vh;
+        margin-right: 4vw;
         @include avatar-dimensions();
+
+        .profile-photo {
+          @include avatar-dimensions();
+        }
+
+        .user-bio-photo-placeholder {
+          @include avatar-dimensions();
+          border: solid 2px;
+          border-color: black;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          align-content: center;
+
+          .user-bio-photo-placeholder-text {
+            position: relative;
+            font-size: 32px;
+            color: black;
+            margin: 0;
+            margin-top: 50%;
+            transform: translateY(-55%);
+
+            @include respond-wide() {
+              font-size: 3vw;
+            }
+          }
+        }
       }
 
-      .user-bio-photo-placeholder {
-        @include avatar-dimensions();
-        border: solid 2px;
-        border-color: black;
+      .user-details {
+        position: relative;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        align-content: center;
+        align-items: flex-start;
+        width: 30vw;
+        height: 18vh;
+        margin-top: 3.5vh;
+        justify-content: flex-start;
 
-        .user-bio-photo-placeholder-text {
+        .name-and-edit {
           position: relative;
-          font-size: 32px;
-          color: black;
-          margin: 0;
-          margin-top: 50%;
-          transform: translateY(-55%);
+          margin-left: inherit;
+          display: flex;
+          justify-content: stretch;
+          margin-bottom: 2vh;
 
-          @include respond-wide() {
-            font-size: 3vw;
+          .user-name {
+            width: 180px;
+            font-size: 2.5vh;
+            font-weight: 460;
+            text-align: start;
+            margin-right: 20px;
+          }
+
+          .edit-profile {
+            border: 1px solid rgba(122, 122, 122, 0.2);
+            position: relative;
+            font-size: 14px;
+            min-width: 100px;
+            padding: 0.5vh 0.5vw;
+            border-radius: 4px;
+
+            @include respond-medium() {
+              display: none;
+            }
+          }
+        }
+
+        .user-posts {
+          width: 12vw;
+          position: relative;
+          font-size: 2vh;
+          font-weight: 420;
+          text-align: start;
+
+          @include respond-medium() {
+            display: none;
           }
         }
       }
     }
 
-    .user-details {
+    .user-posts-narrow-screen {
       position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: 30vw;
-      height: 18vh;
-      margin-top: 3.5vh;
-      justify-content: flex-start;
-      // top: 4vh;
-      // right: 50%;
-      // transform: translate(25%);
-      // margin-left: 8vw;
+      display: none;
 
-      .name-and-edit {
-        position: relative;
-        margin-left: inherit;
+      @include respond-medium() {
         display: flex;
-        justify-content: stretch;
-        margin-bottom: 2vh;
-        // top: 1vh;
-
-        .user-name {
-          width: 18vw;
-          min-width: 180px;
-          font-size: 2.5vh;
-          font-weight: 460;
-          text-align: start;
-        }
-
-        .edit-profile {
-          border: 1px solid rgba(122, 122, 122, 0.2);
-          position: relative;
-          font-size: 14px;
-          min-width: 100px;
-          padding: 0.5vh 0.5vw;
-        }
       }
 
-      .user-posts {
-        width: 12vw;
+      .stats-list {
         position: relative;
-        font-size: 2vh;
-        font-weight: 420;
-        // bottom: 9vh;
-        text-align: start;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        list-style-type: none;
+
+        .stats-item {
+          font-size: 20px;
+        }
       }
     }
   }
