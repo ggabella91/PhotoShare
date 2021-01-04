@@ -27,7 +27,7 @@ interface UpdatePasswordProps {
   clearPasswordStatuses: typeof clearPasswordStatuses;
 }
 
-const UpdatePassword: React.FC<UpdatePasswordProps> = ({
+export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   changePasswordStart,
   changePassError,
   changePassConfirm,

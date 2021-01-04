@@ -30,7 +30,7 @@ interface UpdateInfoProps {
   deleteAccountStart: typeof deleteAccountStart;
 }
 
-const UpdateInfo: React.FC<UpdateInfoProps> = ({
+export const UpdateInfo: React.FC<UpdateInfoProps> = ({
   changeInfoStart,
   changeInfoError,
   changeInfoConfirm,

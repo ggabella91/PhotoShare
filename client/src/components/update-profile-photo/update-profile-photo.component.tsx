@@ -42,7 +42,7 @@ interface ImgPreview {
   alt: string;
 }
 
-const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
+export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   updateProfilePhotoStart,
   updateProfilePhotoError,
   updateProfilePhotoConfirm,
