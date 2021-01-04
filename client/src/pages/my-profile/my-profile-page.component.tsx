@@ -227,6 +227,9 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
               <span className='user-name'>{name}</span>
               <span className='edit-profile'>Edit profile</span>
             </div>
+            <div className='edit-profile-narrow-screen'>
+              <span className='edit-narrow-text'>Edit profile</span>
+            </div>
             <span className='user-posts'>{postDataArray.length} Posts</span>
           </div>
         </div>

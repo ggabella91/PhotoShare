@@ -9,57 +9,7 @@
   margin-left: 50%;
   transform: translate(-50%);
 
-  .update-profile-photo {
-    position: relative;
-    margin: 20px 0;
-    display: flex;
-    flex-direction: column;
-    justify-items: center;
-    align-items: center;
-
-    .profile-photo-container {
-      margin-top: 15px;
-      width: 310px;
-      height: 310px;
-      border: solid 2px;
-      position: relative;
-
-      .placeholder-text-container {
-        position: relative;
-        margin-top: 50%;
-        margin-left: 50%;
-        transform: translate(-50%, -50%);
-
-        .placeholder-text {
-          font-weight: 420;
-        }
-      }
-
-      .img-preview {
-        margin-top: 50%;
-        transform: translateY(-50%);
-        position: relative;
-        max-width: 300px;
-        max-height: 300px;
-        height: auto;
-      }
-
-      .photo-alert {
-        position: relative;
-        max-width: 260px;
-        margin-top: 50%;
-        margin-left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    span {
-      font-weight: 400;
-      margin: 0px;
-      width: 300px;
-      line-height: 1.5;
-    }
-  }
+  
 
   .group {
     margin: 10px;

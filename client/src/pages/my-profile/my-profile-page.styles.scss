@@ -133,6 +133,26 @@
           }
         }
 
+        .edit-profile-narrow-screen {
+          border: 1px solid rgba(122, 122, 122, 0.2);
+          position: relative;
+          font-size: 14px;
+          font-weight: 420;
+          padding: 0.5vh 0.5vw;
+          border-radius: 4px;
+          width: 100%;
+          display: none;
+
+          @include respond-medium() {
+            display: flex;
+          }
+
+          .edit-narrow-text {
+            margin-left: 50%;
+            transform: translate(-50%);
+          }
+        }
+
         .user-posts {
           width: 12vw;
           position: relative;
