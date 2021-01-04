@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -225,8 +226,13 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
           <div className='user-details'>
             <div className='name-and-edit'>
               <span className='user-name'>{name}</span>
-              <span className='edit-profile'>Edit profile</span>
+              <NavLink className='edit-profile' to='/settings'>
+                <span className='edit-text'>Edit profile</span>
+              </NavLink>
             </div>
+            <NavLink to='/settings' className='edit-profile-narrow-screen'>
+              <span className='edit-narrow-text'>Edit profile</span>
+            </NavLink>
             <span className='user-posts'>{postDataArray.length} Posts</span>
           </div>
         </div>

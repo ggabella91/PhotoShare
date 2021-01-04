@@ -7,7 +7,7 @@ it('expect to render a post modal component', () => {
     <PostModal
       caption='hi'
       location='here'
-      createdAt={new Date(Date.now())}
+      createdAt={new Date('Sat Jan 02 2021')}
       show={true}
       fileString='string'
       userName='Giuliano'

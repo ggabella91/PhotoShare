@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders an update-password component 1`] = `
+<div
+  className="settings"
+>
+  <div
+    className="update-profile-photo"
+  >
+    <span>
+      Update your profile photo
+    </span>
+    <div
+      className="profile-photo-container"
+    >
+      <div
+        className="img-preview-placeholder"
+      >
+        <div
+          className="placeholder-text-container"
+        >
+          <span
+            className="placeholder-text"
+          >
+            Select a photo to preview it here
+          </span>
+        </div>
+      </div>
+    </div>
+    <form
+      encType="multipart/form-data"
+      onSubmit={[Function]}
+    >
+      <FormFileInput
+        accept="image/*"
+        key="1609729180192"
+        label="Select photo"
+        name="profile-photo"
+        onChange={[Function]}
+        type="file"
+      />
+      <div
+        className="button"
+      >
+        <Button
+          className="submit-button"
+          onClick={[Function]}
+        >
+          Upload photo
+        </Button>
+      </div>
+    </form>
+  </div>
+</div>
+`;

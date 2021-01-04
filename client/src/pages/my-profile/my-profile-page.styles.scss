@@ -122,14 +122,48 @@
           .edit-profile {
             border: 1px solid rgba(122, 122, 122, 0.2);
             position: relative;
-            font-size: 14px;
             min-width: 100px;
             padding: 0.5vh 0.5vw;
             border-radius: 4px;
 
+            &:hover {
+              text-decoration: none;
+            }
+
             @include respond-medium() {
               display: none;
             }
+
+            .edit-text {
+              font-size: 14px;
+              font-weight: 420;
+              color: black;
+            }
+          }
+        }
+
+        .edit-profile-narrow-screen {
+          border: 1px solid rgba(122, 122, 122, 0.2);
+          position: relative;
+          font-size: 14px;
+          color: black;
+          padding: 0.5vh 0.5vw;
+          border-radius: 4px;
+          width: 100%;
+          display: none;
+
+          &:hover {
+            text-decoration: none;
+          }
+
+          @include respond-medium() {
+            display: flex;
+          }
+
+          .edit-narrow-text {
+            margin-left: 50%;
+            transform: translate(-50%);
+            font-weight: 420;
           }
         }
 
