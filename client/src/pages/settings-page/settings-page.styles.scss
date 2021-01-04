@@ -1,15 +1,9 @@
 .settings {
-  width: 850px;
-  height: 1600px;
   display: flex;
   flex-direction: column;
-  justify-items: center;
+  justify-content: center;
   align-items: center;
   margin-top: 30px;
-  margin-left: 50%;
-  transform: translate(-50%);
-
-  
 
   .group {
     margin: 10px;
@@ -55,4 +49,12 @@
       font-weight: 400;
     }
   }
+
+  .delete {
+    margin-bottom: 40px;
+  }
+}
+
+a {
+  color: #3b5ab1;
 }

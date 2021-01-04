@@ -20,8 +20,6 @@ import Button from '../../components/button/button.component';
 
 import Alert from 'react-bootstrap/Alert';
 
-import './update-password.styles.scss';
-
 interface UpdatePasswordProps {
   changePassConfirm: string | null;
   changePassError: Error | null;
@@ -89,7 +87,7 @@ const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   };
 
   return (
-    <div>
+    <div className='settings'>
       <form className='change-info' onSubmit={handleSubmitPassword}>
         <span>Change your password</span>
         <FormInput

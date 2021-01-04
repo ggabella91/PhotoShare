@@ -22,8 +22,6 @@ import CustomModal from '../modal/modal.component';
 
 import Alert from 'react-bootstrap/Alert';
 
-import './update-info.styles.scss';
-
 interface UpdateInfoProps {
   changeInfoConfirm: string | null;
   changeInfoError: Error | null;
@@ -88,7 +86,7 @@ const UpdateInfo: React.FC<UpdateInfoProps> = ({
   };
 
   return (
-    <div>
+    <div className='settings'>
       <form className='change-info' onSubmit={handleSubmitInfo}>
         <span>Update your info</span>
         <FormInput
@@ -124,7 +122,7 @@ const UpdateInfo: React.FC<UpdateInfoProps> = ({
       </div>
       <div>
         <Button
-          className='submit-button settings-button'
+          className='submit-button settings-button delete'
           onClick={() => setModalShow(true)}
         >
           <span>Delete Account</span>

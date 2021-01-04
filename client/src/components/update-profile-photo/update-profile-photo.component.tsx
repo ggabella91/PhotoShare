@@ -126,55 +126,60 @@ const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   };
 
   return (
-    <div className='update-profile-photo'>
-      <span>Update your profile photo</span>
-      <div className='profile-photo-container'>
-        {imgPreview || showProfilePhotoAlert ? null : (
-          <div className='img-preview-placeholder'>
-            <div className='placeholder-text-container'>
-              <span className='placeholder-text'>
-                Select a photo to preview it here
-              </span>
+    <div className='settings'>
+      <div className='update-profile-photo'>
+        <span>Update your profile photo</span>
+        <div className='profile-photo-container'>
+          {imgPreview || showProfilePhotoAlert ? null : (
+            <div className='img-preview-placeholder'>
+              <div className='placeholder-text-container'>
+                <span className='placeholder-text'>
+                  Select a photo to preview it here
+                </span>
+              </div>
             </div>
-          </div>
-        )}
-        {!imgPreview && showProfilePhotoAlert ? (
-          <div className='settings-alert'>
-            {profilePhotoStatus.error
-              ? handleRenderAlert('danger', 'Error updating profile picture.')
-              : null}
-            {profilePhotoStatus.success
-              ? handleRenderAlert(
-                  'success',
-                  'Profile picture changed successfully!'
-                )
-              : null}
-          </div>
-        ) : null}
-        {imgPreview ? (
-          <img
-            className='img-preview'
-            src={imgPreview ? imgPreview.src : ''}
-            alt={imgPreview ? imgPreview.alt : ''}
-          />
-        ) : null}
-      </div>
-      <form encType='multipart/form-data' onSubmit={handleSubmitProfilePhoto}>
-        <FormFileInput
-          name='profile-photo'
-          type='file'
-          label='Select photo'
-          accept='image/*'
-          onChange={handleFileChange}
-          key={fileInputKey}
-        />
-
-        <div className='button'>
-          <Button className='submit-button' onClick={handleSubmitProfilePhoto}>
-            Upload photo
-          </Button>
+          )}
+          {!imgPreview && showProfilePhotoAlert ? (
+            <div className='settings-alert'>
+              {profilePhotoStatus.error
+                ? handleRenderAlert('danger', 'Error updating profile picture.')
+                : null}
+              {profilePhotoStatus.success
+                ? handleRenderAlert(
+                    'success',
+                    'Profile picture changed successfully!'
+                  )
+                : null}
+            </div>
+          ) : null}
+          {imgPreview ? (
+            <img
+              className='img-preview'
+              src={imgPreview ? imgPreview.src : ''}
+              alt={imgPreview ? imgPreview.alt : ''}
+            />
+          ) : null}
         </div>
-      </form>
+        <form encType='multipart/form-data' onSubmit={handleSubmitProfilePhoto}>
+          <FormFileInput
+            name='profile-photo'
+            type='file'
+            label='Select photo'
+            accept='image/*'
+            onChange={handleFileChange}
+            key={fileInputKey}
+          />
+
+          <div className='button'>
+            <Button
+              className='submit-button'
+              onClick={handleSubmitProfilePhoto}
+            >
+              Upload photo
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
