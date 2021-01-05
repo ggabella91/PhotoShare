@@ -7,6 +7,7 @@ import {
   UserSignIn,
   User,
   UserActions,
+  FieldsToUpdate,
   ChangePassword,
   ResetPassword,
 } from './user.types';
@@ -94,16 +95,13 @@ export function* signOut(): SagaIterator {
 }
 
 export function* changeInfo({
-  payload: { name, email },
+  payload: fieldsToUpdate,
 }: {
-  payload: User;
+  payload: FieldsToUpdate;
 }): SagaIterator {
   try {
     // @ts-ignore
-    const { data } = yield axios.patch('/api/users/updateMe', {
-      name,
-      email,
-    });
+    const { data } = yield axios.patch('/api/users/updateMe', fieldsToUpdate);
 
     yield all([put(changeInfoSuccess(data)), put(setCurrentUser(data))]);
   } catch (err) {

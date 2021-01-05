@@ -14,9 +14,10 @@ interface FilteredObject {
   name?: string;
   email?: string;
   photo?: string;
+  username?: string;
 }
 
-type Element = 'name' | 'email' | 'photo';
+type Element = 'name' | 'email' | 'photo' | 'username';
 
 const filterObj = (obj: FilteredObject, ...allowedFields: string[]) => {
   const newObj: FilteredObject = {};
@@ -29,8 +30,10 @@ const filterObj = (obj: FilteredObject, ...allowedFields: string[]) => {
 router.patch(
   '/api/users/updateMe',
   [
-    body('name').trim().not().isEmpty().withMessage('A name must be provided'),
     body('email').isEmail().withMessage('Email must be valid'),
+    body()
+      .notEmpty()
+      .withMessage('You must update at least one field to submit this request'),
   ],
   validateRequest,
   currentUser,
@@ -54,7 +57,13 @@ router.patch(
     }
 
     // Filter out unwanted field names that are not allowed to be updated with this route handler (or at all)
-    const filteredBody = filterObj(req.body, 'name', 'email', 'photo');
+    const filteredBody = filterObj(
+      req.body,
+      'name',
+      'email',
+      'username',
+      'photo'
+    );
 
     const updatedUser = await User.findByIdAndUpdate(
       req.currentUser!.id,

@@ -14,7 +14,7 @@ import {
   deleteAccountStart,
   clearInfoStatuses,
 } from '../../redux/user/user.actions';
-import { User, Error } from '../../redux/user/user.types';
+import { User, FieldsToUpdate, Error } from '../../redux/user/user.types';
 
 import { FormInput } from '../form-input/form-input.component';
 import Button from '../button/button.component';
@@ -40,6 +40,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
+    username: '',
   });
 
   const [showInfoAlert, setShowInfoAlert] = useState(true);
@@ -50,7 +51,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 
   const [modalShow, setModalShow] = useState(false);
 
-  const { name, email } = userInfo;
+  const { name, email, username } = userInfo;
 
   const handleInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -61,7 +62,19 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
   const handleSubmitInfo = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    changeInfoStart({ name, email });
+    const fieldsToUpdate: FieldsToUpdate = {};
+
+    if (name) {
+      fieldsToUpdate.name = name;
+    }
+    if (email) {
+      fieldsToUpdate.email = email;
+    }
+    if (username) {
+      fieldsToUpdate.username = username;
+    }
+
+    changeInfoStart(fieldsToUpdate);
   };
 
   useEffect(() => {
@@ -74,7 +87,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 
   const handleRenderAlert = (type: string, message: string) => {
     setTimeout(() => {
-      setUserInfo({ name: '', email: '' });
+      setUserInfo({ name: '', email: '', username: '' });
       setStatusInfo({ success: false, error: false });
       clearInfoStatuses();
     }, 5000);
@@ -102,6 +115,13 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
           value={email}
           onChange={handleInfoChange}
           label='email'
+        />
+        <FormInput
+          type='text'
+          name='username'
+          value={username}
+          onChange={handleInfoChange}
+          label='username'
         />
         <div className='button'>
           <Button
@@ -154,8 +174,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchProps = (dispatch: Dispatch) => ({
-  changeInfoStart: ({ name, email }: User) =>
-    dispatch(changeInfoStart({ name, email })),
+  changeInfoStart: (fieldsToUpdate: FieldsToUpdate) =>
+    dispatch(changeInfoStart(fieldsToUpdate)),
 
   deleteAccountStart: () => dispatch(deleteAccountStart()),
   clearInfoStatuses: () => dispatch(clearInfoStatuses()),
