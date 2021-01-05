@@ -13,6 +13,7 @@ const setup = async () => {
   const user = User.build({
     name: 'Test Dude',
     email: 'test@testdude.com',
+    username: 'testdude365',
     password: 'password',
     active: true,
   });

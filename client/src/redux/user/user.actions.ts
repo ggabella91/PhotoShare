@@ -1,10 +1,10 @@
-import { PostActionTypes } from '../post/post.types';
 import {
   UserActions,
   UserActionTypes,
   UserSignUp,
   UserSignIn,
   User,
+  FieldsToUpdate,
   ChangePassword,
   ResetPassword,
   Error,
@@ -76,9 +76,11 @@ export const signOutFailure = (error: Error): UserActionTypes => ({
   payload: error,
 });
 
-export const changeInfoStart = ({ name, email }: User): UserActionTypes => ({
+export const changeInfoStart = (
+  fieldsToUpdate: FieldsToUpdate
+): UserActionTypes => ({
   type: UserActions.CHANGE_INFO_START,
-  payload: { name, email },
+  payload: fieldsToUpdate,
 });
 
 export const changeInfoSuccess = (user: User): UserActionTypes => ({

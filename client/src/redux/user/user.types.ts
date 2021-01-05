@@ -44,7 +44,14 @@ export interface UserSignIn {
 export interface User {
   name: string;
   email: string;
+  username: string;
   photo?: string;
+}
+
+export interface FieldsToUpdate {
+  name?: string;
+  email?: string;
+  username?: string;
 }
 
 export interface ChangePassword {
@@ -145,7 +152,7 @@ export interface SignOutFailure {
 
 export interface ChangeInfoStart {
   type: typeof UserActions.CHANGE_INFO_START;
-  payload: User;
+  payload: FieldsToUpdate;
 }
 
 export interface ChangeInfoSuccess {
