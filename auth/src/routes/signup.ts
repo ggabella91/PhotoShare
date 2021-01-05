@@ -32,6 +32,8 @@ router.post(
   async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
+    const username = name.join(' ') + Math.floor(Math.random() * 100);
+
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -41,6 +43,7 @@ router.post(
     const user = User.build({
       name,
       email,
+      username,
       password,
       active: true,
     });
@@ -50,6 +53,7 @@ router.post(
       id: user.id,
       name: user.name,
       email: user.email,
+      username: user.username,
     });
 
     // Generate JWT
