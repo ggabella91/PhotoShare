@@ -6,6 +6,7 @@ import {
   currentUser,
   validateRequest,
   BadRequestError,
+  requireAuth,
 } from '@ggabella-photo-share/common';
 
 const router = express.Router();
@@ -29,13 +30,9 @@ const filterObj = (obj: FilteredObject, ...allowedFields: string[]) => {
 
 router.patch(
   '/api/users/updateMe',
-  [
-    body('email').isEmail().withMessage('Email must be valid'),
-    body()
-      .notEmpty()
-      .withMessage('You must update at least one field to submit this request'),
-  ],
+  [body('email').isEmail().withMessage('Email must be valid')],
   validateRequest,
+  requireAuth,
   currentUser,
   async (req: Request, res: Response) => {
     if (req.body.password) {

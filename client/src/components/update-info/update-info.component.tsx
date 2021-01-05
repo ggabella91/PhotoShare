@@ -6,6 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 
 import {
+  selectCurrentUser,
   selectChangeInfoConfirm,
   selectChangeInfoError,
 } from '../../redux/user/user.selectors';
@@ -23,6 +24,7 @@ import CustomModal from '../modal/modal.component';
 import Alert from 'react-bootstrap/Alert';
 
 interface UpdateInfoProps {
+  currentUser: User | null;
   changeInfoConfirm: string | null;
   changeInfoError: Error | null;
   changeInfoStart: typeof changeInfoStart;
@@ -31,6 +33,7 @@ interface UpdateInfoProps {
 }
 
 export const UpdateInfo: React.FC<UpdateInfoProps> = ({
+  currentUser,
   changeInfoStart,
   changeInfoError,
   changeInfoConfirm,
@@ -64,15 +67,9 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 
     const fieldsToUpdate: FieldsToUpdate = {};
 
-    if (name) {
-      fieldsToUpdate.name = name;
-    }
-    if (email) {
-      fieldsToUpdate.email = email;
-    }
-    if (username) {
-      fieldsToUpdate.username = username;
-    }
+    fieldsToUpdate.name = name ? name : currentUser!.name;
+    fieldsToUpdate.email = email ? email : currentUser!.email;
+    fieldsToUpdate.username = username ? username : currentUser!.username;
 
     changeInfoStart(fieldsToUpdate);
   };
@@ -164,11 +161,13 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 };
 
 interface LinkStateProps {
+  currentUser: User | null;
   changeInfoConfirm: string | null;
   changeInfoError: Error | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
+  currentUser: selectCurrentUser,
   changeInfoConfirm: selectChangeInfoConfirm,
   changeInfoError: selectChangeInfoError,
 });
