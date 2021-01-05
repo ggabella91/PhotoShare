@@ -14,6 +14,7 @@ const setup = () => {
     id: mongoose.Types.ObjectId().toHexString(),
     name: 'Test Dude',
     email: 'testdude@testemail.com',
+    username: 'testdude365',
   };
 
   //@ts-ignore
