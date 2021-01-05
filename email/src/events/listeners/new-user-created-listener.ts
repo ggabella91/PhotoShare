@@ -16,6 +16,7 @@ export class NewUserCreatedListener extends Listener<NewUserCreatedEvent> {
     const newUser = {
       name: data.name,
       email: data.email,
+      username: data.username,
     };
 
     console.log(data);
