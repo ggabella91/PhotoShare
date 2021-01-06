@@ -3,10 +3,10 @@ import { body } from 'express-validator';
 
 import { User } from '../models/user';
 import {
-  currentUser,
   validateRequest,
   BadRequestError,
   requireAuth,
+  currentUser,
 } from '@ggabella-photo-share/common';
 
 const router = express.Router();
@@ -32,8 +32,8 @@ router.patch(
   '/api/users/updateMe',
   [body('email').isEmail().withMessage('Email must be valid')],
   validateRequest,
-  requireAuth,
   currentUser,
+  requireAuth,
   async (req: Request, res: Response) => {
     if (req.body.password) {
       throw new BadRequestError(

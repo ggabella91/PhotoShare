@@ -57,6 +57,8 @@ it('Name, email, and username are changed successfully', async () => {
       username,
     });
 
+  console.log(response);
+
   expect(response.status).toEqual(200);
   expect(response.body.name).toEqual(name);
   expect(response.body.email).toEqual(email);

@@ -32,7 +32,8 @@ router.post(
   async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
-    const username = name.join(' ') + Math.floor(Math.random() * 100);
+    const username: string =
+      name.split(' ').join('') + Math.floor(Math.random() * 100);
 
     const existingUser = await User.findOne({ email });
 
@@ -62,6 +63,7 @@ router.post(
         id: user.id,
         name: user.name,
         email: user.email,
+        username: user.username,
       },
       process.env.JWT_KEY!
     );
