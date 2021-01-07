@@ -25,6 +25,20 @@ exports[`renders an update-info component 1`] = `
       type="email"
       value=""
     />
+    <FormInput
+      label="username"
+      name="username"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+    <FormInput
+      label="bio"
+      name="bio"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
     <div
       className="button"
     >

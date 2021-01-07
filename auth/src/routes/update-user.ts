@@ -16,9 +16,10 @@ interface FilteredObject {
   email?: string;
   photo?: string;
   username?: string;
+  bio?: string;
 }
 
-type Element = 'name' | 'email' | 'photo' | 'username';
+type Element = 'name' | 'email' | 'photo' | 'username' | 'bio';
 
 const filterObj = (obj: FilteredObject, ...allowedFields: string[]) => {
   const newObj: FilteredObject = {};
@@ -59,7 +60,8 @@ router.patch(
       'name',
       'email',
       'username',
-      'photo'
+      'photo',
+      'bio'
     );
 
     const updatedUser = await User.findByIdAndUpdate(

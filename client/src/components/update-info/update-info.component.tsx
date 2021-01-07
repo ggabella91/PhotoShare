@@ -44,6 +44,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
     name: '',
     email: '',
     username: '',
+    bio: '',
   });
 
   const [showInfoAlert, setShowInfoAlert] = useState(true);
@@ -54,7 +55,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 
   const [modalShow, setModalShow] = useState(false);
 
-  const { name, email, username } = userInfo;
+  const { name, email, username, bio } = userInfo;
 
   const handleInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -70,6 +71,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
     fieldsToUpdate.name = name ? name : currentUser!.name;
     fieldsToUpdate.email = email ? email : currentUser!.email;
     fieldsToUpdate.username = username ? username : currentUser!.username;
+    fieldsToUpdate.bio = bio ? bio : currentUser!.bio;
 
     changeInfoStart(fieldsToUpdate);
   };
@@ -84,7 +86,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 
   const handleRenderAlert = (type: string, message: string) => {
     setTimeout(() => {
-      setUserInfo({ name: '', email: '', username: '' });
+      setUserInfo({ name: '', email: '', username: '', bio: '' });
       setStatusInfo({ success: false, error: false });
       clearInfoStatuses();
     }, 5000);
@@ -119,6 +121,13 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
           value={username}
           onChange={handleInfoChange}
           label='username'
+        />
+        <FormInput
+          type='text'
+          name='bio'
+          value={bio}
+          onChange={handleInfoChange}
+          label='bio'
         />
         <div className='button'>
           <Button
