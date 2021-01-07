@@ -2,43 +2,46 @@ import request from 'supertest';
 import { app } from '../../app';
 
 it('Throws 400 error if password is sent in the request', async () => {
-  await request(app).post('/api/users/signup').send({
+  const signUp = await request(app).post('/api/users/signup').send({
     name: 'Test Dude',
     email: 'test@test.com',
     password: 'password',
     passwordConfirm: 'password',
   });
 
-  const response = await request(app).patch('/api/users/updateMe').send({
-    name: 'Test Dude 2',
-    email: 'test2@test.com',
-    password: 'sneaky-sneaky',
-  });
+  const response = await request(app)
+    .patch('/api/users/updateMe')
+    .set('Set-Cookie', signUp.get('Cookie'))
+    .send({
+      name: 'Test Dude 2',
+      email: 'test2@test.com',
+      password: 'sneaky-sneaky',
+    });
 
   expect(response.status).toEqual(400);
 });
 
 it('Throws 400 error if email is already in use by another user', async () => {
-  await request(app).post('/api/users/signup').send({
-    name: 'Test Dude',
-    email: 'test@test.com',
-    password: 'password',
-    passwordConfirm: 'password',
-  });
+  await global.signin();
 
-  await request(app).post('/api/users/signup').send({
+  const newUser = await request(app).post('/api/users/signup').send({
     name: 'Test Dude 1',
     email: 'test1@test.com',
     password: 'password',
     passwordConfirm: 'password',
   });
 
-  const response = await request(app).patch('/api/users/updateMe').send({
-    name: 'Test Dude 2',
-    email: 'test@test.com',
-  });
+  const updateResponse = await request(app)
+    .patch('/api/users/updateMe')
+    .set('Cookie', newUser.get('Cookie'))
+    .send({
+      name: 'Test Dude 2',
+      email: 'test@test.com',
+      username: 'denied404',
+      bio: 'Watch this error',
+    });
 
-  expect(response.status).toEqual(400);
+  expect(updateResponse.status).toEqual(400);
 });
 
 it('Name, email, username, and bio are updated successfully', async () => {
