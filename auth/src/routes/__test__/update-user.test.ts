@@ -41,12 +41,14 @@ it('Throws 400 error if email is already in use by another user', async () => {
   expect(response.status).toEqual(400);
 });
 
-it('Name, email, and username are changed successfully', async () => {
+it('Name, email, username, and bio are updated successfully', async () => {
   const cookie = await global.signin();
 
   const name = 'Test Dude 2';
   const email = 'test2@test.com';
   const username = 'testdude720';
+  const bio =
+    'This is the story all about how my life got flipped, turned upside down';
 
   const response = await request(app)
     .patch('/api/users/updateMe')
@@ -55,6 +57,7 @@ it('Name, email, and username are changed successfully', async () => {
       name,
       email,
       username,
+      bio,
     });
 
   console.log(response);
@@ -63,4 +66,5 @@ it('Name, email, and username are changed successfully', async () => {
   expect(response.body.name).toEqual(name);
   expect(response.body.email).toEqual(email);
   expect(response.body.username).toEqual(username);
+  expect(response.body.bio).toEqual(bio);
 });

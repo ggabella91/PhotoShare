@@ -53,7 +53,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
 }) => {
   const [profilePhoto, setProfilePhoto] = useState<FormData | null>(null);
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
-  const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const [fileInputKey, setFileInputKey] = useState(1609996842790);
   const [profilePhotoStatus, setProfilePhotoStatus] = useState({
     success: false,
     error: false,

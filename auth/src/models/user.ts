@@ -8,6 +8,7 @@ interface UserAttrs {
   password: string;
   username: string;
   photo?: string;
+  bio?: string;
   passwordChangedAt?: number;
   passwordResetToken?: string;
   passwordResetExpires?: number;
@@ -20,6 +21,7 @@ interface UserDoc extends mongoose.Document {
   password: string;
   username: string;
   photo?: string;
+  bio?: string;
   passwordChangedAt?: number;
   passwordResetToken?: string;
   passwordResetExpires?: number;
@@ -45,6 +47,10 @@ export const userSchema = new mongoose.Schema(
       required: true,
     },
     photo: {
+      type: String,
+      default: '',
+    },
+    bio: {
       type: String,
       default: '',
     },

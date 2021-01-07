@@ -33,7 +33,7 @@ exports[`renders an update-password component 1`] = `
     >
       <FormFileInput
         accept="image/*"
-        key="1609729180192"
+        key="1609996842790"
         label="Select photo"
         name="profile-photo"
         onChange={[Function]}

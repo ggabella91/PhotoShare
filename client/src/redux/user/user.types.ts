@@ -46,12 +46,14 @@ export interface User {
   email: string;
   username: string;
   photo?: string;
+  bio?: string;
 }
 
 export interface FieldsToUpdate {
   name?: string;
   email?: string;
   username?: string;
+  bio?: string;
 }
 
 export interface ChangePassword {
