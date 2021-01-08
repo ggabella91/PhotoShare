@@ -45,6 +45,11 @@ export interface PostFile {
   fileString: string;
 }
 
+export interface ArchivePostReq {
+  postId: string;
+  s3Key: string;
+}
+
 export interface PostState {
   postData: Post[] | null;
   postFiles: PostFile[];

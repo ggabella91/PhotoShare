@@ -43,6 +43,7 @@ router.post(
         email: existingUser.email,
         username: existingUser.username,
         photo: existingUser.photo,
+        bio: existingUser.bio,
       },
       process.env.JWT_KEY!
     );
