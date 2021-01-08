@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
+import { compressPhoto } from '../utils/photoManipulation';
 import { Post } from '../models/post';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
@@ -29,6 +30,7 @@ router.post(
   '/api/posts/new',
   requireAuth,
   upload.single('photo'),
+  compressPhoto,
   async (req: Request, res: Response) => {
     const caption = req.body.caption || '';
     const postLocation = req.body.location || '';

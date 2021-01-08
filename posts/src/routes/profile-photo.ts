@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
-import { resizePhoto } from '../utils/resize';
+import { resizePhoto } from '../utils/photoManipulation';
 import { ProfilePhoto } from '../models/profile-photo';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
