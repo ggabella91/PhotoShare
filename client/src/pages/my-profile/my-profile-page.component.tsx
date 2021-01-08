@@ -10,6 +10,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import {
   Post,
   PostFileReq,
+  ArchivePostReq,
   PostFile,
   PostError,
 } from '../../redux/post/post.types';
@@ -78,7 +79,7 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   archivePostStart,
   archivePostConfirm,
 }) => {
-  const [name, setName] = useState('');
+  const [user, setName] = useState({ name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
@@ -107,8 +108,12 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }
 
   useEffect(() => {
-    if (currentUser && !name) {
-      setName(currentUser.name);
+    if (currentUser && !user.name) {
+      setName({
+        name: currentUser.name,
+        username: currentUser.username,
+        bio: currentUser.bio || '',
+      });
       getPostDataStart();
     }
   }, [currentUser]);
@@ -224,8 +229,8 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
             ) : null}
           </div>
           <div className='user-details'>
-            <div className='name-and-edit'>
-              <span className='user-name'>{name}</span>
+            <div className='username-and-edit'>
+              <span className='user-username'>{user.username}</span>
               <NavLink className='edit-profile' to='/settings'>
                 <span className='edit-text'>Edit profile</span>
               </NavLink>
@@ -234,7 +239,15 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
               <span className='edit-narrow-text'>Edit profile</span>
             </NavLink>
             <span className='user-posts'>{postDataArray.length} Posts</span>
+            <div className='name-and-bio'>
+              <span className='user-name'>{user.name}</span>
+              <span className='user-bio'>{user.bio}</span>
+            </div>
           </div>
+        </div>
+        <div className='name-and-bio-narrow-screen'>
+          <span className='user-name-narrow'>{user.name}</span>
+          <span className='user-bio-narrow'>{user.bio}</span>
         </div>
         <div className='user-posts-narrow-screen'>
           <ul className='stats-list'>
@@ -262,12 +275,17 @@ const MyProfilePage: React.FC<MyProfilePageProps> = ({
         onHide={() => setPostModalShow(false)}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         userProfilePhotoFile={profilePhoto || ''}
-        userName={name}
+        userName={user.username}
       />
       <PostOptionsModal
         show={postOptionsModalShow}
         onHide={() => setPostOptionsModalShow(false)}
-        archive={() => archivePostStart(postModalProps.id)}
+        archive={() =>
+          archivePostStart({
+            postId: postModalProps.id,
+            s3Key: postModalProps.s3Key,
+          })
+        }
       />
     </div>
   );
@@ -309,7 +327,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostDataStart: () => dispatch(getPostDataStart()),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
-  archivePostStart: (postId: string) => dispatch(archivePostStart(postId)),
+  archivePostStart: (archiveReq: ArchivePostReq) =>
+    dispatch(archivePostStart(archiveReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);

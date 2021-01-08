@@ -1,6 +1,7 @@
 import {
   Post,
   PostFileReq,
+  ArchivePostReq,
   PostFile,
   PostError,
   PostActions,
@@ -86,9 +87,9 @@ export const getProfilePhotoFileSuccess = (
   payload: file,
 });
 
-export const archivePostStart = (postId: string) => ({
+export const archivePostStart = (archiveReq: ArchivePostReq) => ({
   type: PostActions.ARCHIVE_POST_START,
-  payload: postId,
+  payload: archiveReq,
 });
 
 export const archivePostSuccess = (message: string) => ({

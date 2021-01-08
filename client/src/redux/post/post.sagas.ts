@@ -1,15 +1,8 @@
-import {
-  takeLatest,
-  takeEvery,
-  put,
-  all,
-  call,
-  StrictEffect,
-} from 'redux-saga/effects';
+import { takeLatest, takeEvery, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
-import { PostFileReq, PostActions } from './post.types';
+import { PostFileReq, ArchivePostReq, PostActions } from './post.types';
 
 import {
   createPostSuccess,
@@ -91,13 +84,13 @@ export function* getPostFile({
 }
 
 export function* archivePost({
-  payload: postId,
+  payload: { postId, s3Key },
 }: {
-  payload: string;
+  payload: ArchivePostReq;
 }): SagaIterator {
   try {
     // @ts-ignore
-    const { data } = yield axios.delete(`/api/posts/${postId}`);
+    const { data } = yield axios.delete(`/api/posts/${postId}`, { s3Key });
 
     yield put(archivePostSuccess(data.message));
   } catch (err) {
