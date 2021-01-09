@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from './redux/root-reducer';
-import { User, UserPayload } from './redux/user/user.types';
+import { User } from './redux/user/user.types';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { checkUserSession } from './redux/user/user.actions';
 
@@ -22,13 +22,23 @@ import ResetPasswordPage from './pages/reset-password/reset-password-page.compon
 
 interface AppProps {
   checkUserSession: typeof checkUserSession;
-  currentUser: UserPayload;
+  currentUser: User | null;
 }
 
-const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
+export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
+  const [userProfilePath, setUserProfilePath] = useState('my-profile');
+
   useEffect(() => {
     checkUserSession();
   }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      setUserProfilePath(currentUser.username);
+    } else {
+      setUserProfilePath('my-profile');
+    }
+  }, [currentUser]);
 
   return (
     <div className='App'>
@@ -46,7 +56,7 @@ const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
         />
         <Route
           exact
-          path='/my-profile'
+          path={`/${userProfilePath}`}
           render={() =>
             !currentUser ? <Redirect to='/' /> : <MyProfilePage />
           }

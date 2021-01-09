@@ -271,7 +271,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         fileString={postModalProps.fileString}
         caption={postModalProps.caption}
         location={postModalProps.location}
-        createdAt={postModalProps.createdAt || new Date(Date.now())}
+        createdAt={
+          postModalProps.createdAt || new Date('2021-01-09T22:39:39.945Z')
+        }
         onHide={() => setPostModalShow(false)}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         userProfilePhotoFile={profilePhoto || ''}

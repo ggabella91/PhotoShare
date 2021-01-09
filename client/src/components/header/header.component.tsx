@@ -68,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
       </NavLink>
       {currentUser ? (
         <div>
-          <NavLink to='/my-profile' className='avatar'>
+          <NavLink to={`/${currentUser.username}`} className='avatar'>
             {photoFile ? (
               <img
                 className='profile-photo'
