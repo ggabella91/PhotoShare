@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders app component 1`] = `
+<div
+  className="App"
+>
+  <Connect(Header) />
+  <Switch>
+    <Route
+      exact={true}
+      path="/me"
+      render={[Function]}
+    />
+    <Route
+      exact={true}
+      path="/settings"
+      render={[Function]}
+    />
+    <Route
+      exact={true}
+      path="/my-profile"
+      render={[Function]}
+    />
+    <Route
+      exact={true}
+      path="/forgot-password"
+      render={[Function]}
+    />
+    <Route
+      path="/reset-password/:token"
+      render={[Function]}
+    />
+    <Route
+      exact={true}
+      path="/"
+      render={[Function]}
+    />
+  </Switch>
+  <Footer />
+</div>
+`;

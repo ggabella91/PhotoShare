@@ -101,7 +101,7 @@ exports[`renders a my-profile-page component 1`] = `
   />
   <PostModal
     caption=""
-    createdAt={2021-01-09T04:05:42.361Z}
+    createdAt={2021-01-09T22:39:39.945Z}
     fileString=""
     location=""
     onHide={[Function]}
