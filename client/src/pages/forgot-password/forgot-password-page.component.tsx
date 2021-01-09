@@ -8,7 +8,7 @@ import Button from '../../components/button/button.component';
 
 import Alert from 'react-bootstrap/Alert';
 
-import { User, Error } from '../../redux/user/user.types';
+import { Error } from '../../redux/user/user.types';
 import { AppState } from '../../redux/root-reducer';
 import {
   selectForgotError,
@@ -56,27 +56,13 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   }, [forgotError, forgotConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
-    if (type === 'error' && showAlert) {
+    if (showAlert) {
       setTimeout(() => {
         setUserEmail('');
         setStatus({ success: false, error: false });
       }, 5000);
       return (
-        <Alert variant='danger' onClose={() => setShowAlert(false)} dismissible>
-          {message}
-        </Alert>
-      );
-    } else if (type === 'success' && showAlert) {
-      setTimeout(() => {
-        setUserEmail('');
-        setStatus({ success: false, error: false });
-      }, 5000);
-      return (
-        <Alert
-          variant='success'
-          onClose={() => setShowAlert(false)}
-          dismissible
-        >
+        <Alert variant={type} onClose={() => setShowAlert(false)} dismissible>
           {message}
         </Alert>
       );

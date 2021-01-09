@@ -42,9 +42,9 @@ export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
   }, [signInError]);
 
   const handleRenderAlert = (type: string, message: string) => {
-    if (type === 'error' && show) {
+    if (show) {
       return (
-        <Alert variant='danger' onClose={() => setShow(false)} dismissible>
+        <Alert variant={type} onClose={() => setShow(false)} dismissible>
           {message}
         </Alert>
       );
@@ -81,7 +81,7 @@ export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
         />
         <div>
           {error
-            ? handleRenderAlert('error', 'Incorrect email or password.')
+            ? handleRenderAlert('danger', 'Incorrect email or password.')
             : null}
         </div>
 

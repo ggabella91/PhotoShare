@@ -46,9 +46,9 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
   }, [signUpError]);
 
   const handleRenderAlert = (type: string, message: string) => {
-    if (type === 'error' && show) {
+    if (show) {
       return (
-        <Alert variant='danger' onClose={() => setShow(false)} dismissible>
+        <Alert variant={type} onClose={() => setShow(false)} dismissible>
           {message}
         </Alert>
       );
@@ -98,7 +98,7 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
         />
         <div>
           {error
-            ? handleRenderAlert('error', 'Error signing up. Please try again.')
+            ? handleRenderAlert('danger', 'Error signing up. Please try again.')
             : null}
         </div>
         <div className='button'>
