@@ -24,7 +24,7 @@ interface ForgotPasswordPageProps {
   forgotPasswordStart: typeof forgotPasswordStart;
 }
 
-const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
+export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   forgotError,
   forgotConfirm,
   forgotPasswordStart,

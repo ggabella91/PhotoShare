@@ -9,7 +9,7 @@ import Tab from 'react-bootstrap/Tab';
 
 import './settings-page.styles.scss';
 
-const SettingsPage: React.FC = () => {
+export const SettingsPage: React.FC = () => {
   return (
     <Tabs id='settings-page' transition={false}>
       <Tab eventKey='update-profile-photo' title='Update Profile Photo'>

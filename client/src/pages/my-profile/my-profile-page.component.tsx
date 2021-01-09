@@ -68,7 +68,7 @@ interface PostModalProps {
   fileString: string;
 }
 
-const MyProfilePage: React.FC<MyProfilePageProps> = ({
+export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   currentUser,
   profilePhotoKey,
   profilePhotoFile,
