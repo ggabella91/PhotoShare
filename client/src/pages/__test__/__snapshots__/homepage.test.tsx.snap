@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a homepage component 1`] = `
+<div
+  className="homepage"
+>
+  <div />
+  <div
+    className="upload"
+  >
+    <div
+      className="img-preview-container"
+    >
+      <div
+        className="img-preview-placeholder"
+      >
+        <div
+          className="placeholder-text-container"
+        >
+          <span
+            className="placeholder-text"
+          >
+            Upload an image
+          </span>
+        </div>
+      </div>
+    </div>
+    <form
+      encType="multipart/form-data"
+      onSubmit={[Function]}
+    >
+      <FormFileInput
+        accept="image/*"
+        key="1610162520423"
+        label="Select photo"
+        name="photo"
+        onChange={[Function]}
+        type="file"
+      />
+      <FormInput
+        label="Add a caption"
+        name="caption"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+      <FormInput
+        label="Where was this taken?"
+        name="location"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+      <div
+        className="button"
+      >
+        <Button
+          className="submit-button"
+          onClick={[Function]}
+        >
+          Upload photo
+        </Button>
+      </div>
+    </form>
+  </div>
+</div>
+`;

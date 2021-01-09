@@ -15,6 +15,7 @@ it('renders an update-info component', () => {
       changeInfoConfirm={null}
       deleteAccountStart={() => deleteAccountStart()}
       clearInfoStatuses={() => clearInfoStatuses()}
+      currentUser={null}
     />
   );
 

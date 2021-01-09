@@ -43,7 +43,7 @@ interface ImgPreview {
   alt: string;
 }
 
-const HomePage: React.FC<HomePageProps> = ({
+export const HomePage: React.FC<HomePageProps> = ({
   currentUser,
   createPostStart,
   postConfirm,
@@ -55,7 +55,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [caption, setCaption] = useState('');
   const [location, setLocation] = useState('');
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
-  const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const [fileInputKey, setFileInputKey] = useState(1610162520423);
 
   const [showAlert, setShowAlert] = useState(false);
   const [postStatus, setPostStatus] = useState<PostStatus>({

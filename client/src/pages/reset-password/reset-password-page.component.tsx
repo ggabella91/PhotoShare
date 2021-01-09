@@ -26,7 +26,7 @@ interface ResetPasswordPageProps {
   resetPasswordStart: typeof resetPasswordStart;
 }
 
-const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
+export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
   resetError,
   resetConfirm,
   resetPasswordStart,
