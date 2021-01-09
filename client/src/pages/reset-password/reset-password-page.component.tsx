@@ -66,28 +66,16 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
   }, [resetError, resetConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
-    if (type === 'error' && showAlert) {
+    if (showAlert) {
       setTimeout(() => {
         setUserPassword({ password: '', passwordConfirm: '' });
         setStatus({ success: false, error: false });
-      }, 5000);
-      return (
-        <Alert variant='danger' onClose={() => setShowAlert(false)} dismissible>
-          {message}
-        </Alert>
-      );
-    } else if (type === 'success' && showAlert) {
-      setTimeout(() => {
-        setUserPassword({ password: '', passwordConfirm: '' });
-        setStatus({ success: false, error: false });
-        history.push('/');
+        if (type === 'success') {
+          history.push('/');
+        }
       }, 3000);
       return (
-        <Alert
-          variant='success'
-          onClose={() => setShowAlert(false)}
-          dismissible
-        >
+        <Alert variant={type} onClose={() => setShowAlert(false)} dismissible>
           {message}
         </Alert>
       );
@@ -120,7 +108,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
       </form>
       <div className='alert'>
         {status.error
-          ? handleRenderAlert('error', 'Token is incorrect or has expired.')
+          ? handleRenderAlert('danger', 'Token is incorrect or has expired.')
           : null}
         {status.success
           ? handleRenderAlert('success', 'Password reset successfully!')
