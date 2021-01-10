@@ -5,9 +5,9 @@ import { createStructuredSelector } from 'reselect';
 
 import { PostError } from '../../redux/post/post.types';
 
-import { User } from '../../redux/user/user.types';
+import { User, FieldsToUpdate } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { setCurrentUser } from '../../redux/user/user.actions';
+import { changeInfoStart } from '../../redux/user/user.actions';
 
 import {
   selectUpdateProfilePhotoError,
@@ -34,7 +34,7 @@ interface UpdateProfilePhotoProps {
   profilePhotoKey: string | null;
   clearProfilePhotoStatuses: typeof clearProfilePhotoStatuses;
   currentUser: User | null;
-  setCurrentUser: typeof setCurrentUser;
+  changeInfoStart: typeof changeInfoStart;
 }
 
 interface ImgPreview {
@@ -48,7 +48,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   updateProfilePhotoConfirm,
   clearProfilePhotoStatuses,
   profilePhotoKey,
-  setCurrentUser,
+  changeInfoStart,
   currentUser,
 }) => {
   const [profilePhoto, setProfilePhoto] = useState<FormData | null>(null);
@@ -102,7 +102,15 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
     } else if (updateProfilePhotoConfirm) {
       setProfilePhotoStatus({ ...profilePhotoStatus, success: true });
       if (profilePhotoKey && currentUser) {
-        setCurrentUser({ ...currentUser, photo: profilePhotoKey });
+        const fieldsToUpdate: FieldsToUpdate = {
+          name: currentUser.name,
+          email: currentUser.email,
+          username: currentUser.username,
+          bio: currentUser.bio,
+          photo: profilePhotoKey,
+        };
+
+        changeInfoStart(fieldsToUpdate);
       }
     }
   }, [updateProfilePhotoError, updateProfilePhotoConfirm]);
@@ -203,7 +211,8 @@ const mapDispatchProps = (dispatch: Dispatch) => ({
     dispatch(updateProfilePhotoStart(photo)),
 
   clearProfilePhotoStatuses: () => dispatch(clearProfilePhotoStatuses()),
-  setCurrentUser: (user: User | null) => dispatch(setCurrentUser(user)),
+  changeInfoStart: (fieldsToUpdate: FieldsToUpdate) =>
+    dispatch(changeInfoStart(fieldsToUpdate)),
 });
 
 export default connect(mapStateToProps, mapDispatchProps)(UpdateProfilePhoto);

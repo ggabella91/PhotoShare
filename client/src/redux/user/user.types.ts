@@ -54,6 +54,7 @@ export interface FieldsToUpdate {
   email?: string;
   username?: string;
   bio?: string;
+  photo?: string;
 }
 
 export interface ChangePassword {
