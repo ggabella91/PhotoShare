@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import UpdateProfilePhoto from '../../components/update-profile-photo/update-profile-photo.component';
 import UpdateInfo from '../../components/update-info/update-info.component';

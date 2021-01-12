@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import crypto from 'crypto';
-import { Password } from '../services/password';
+import { Password } from '../utils/password';
 
 interface UserAttrs {
   name: string;

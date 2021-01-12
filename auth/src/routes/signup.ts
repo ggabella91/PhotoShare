@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
 import { User } from '../models/user';
+import { generateDefaultUsername } from '../utils/generateDefaultUsername';
 import { NewUserCreatedPublisher } from '../events/publishers/new-user-created-publisher';
 import { natsWrapper } from '../nats-wrapper';
 
@@ -32,14 +33,13 @@ router.post(
   async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
-    const username: string =
-      name.split(' ').join('') + Math.floor(Math.random() * 100);
+    const existingUserEmail = await User.findOne({ email });
 
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
+    if (existingUserEmail) {
       throw new BadRequestError('Email in use');
     }
+
+    const username = await generateDefaultUsername(name);
 
     const user = User.build({
       name,

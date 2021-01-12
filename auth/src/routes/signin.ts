@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
-import { Password } from '../services/password';
+import { Password } from '../utils/password';
 import { User } from '../models/user';
 import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
 

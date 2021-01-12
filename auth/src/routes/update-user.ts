@@ -9,6 +9,7 @@ import {
   requireAuth,
   currentUser,
 } from '@ggabella-photo-share/common';
+import { resetPasswordRouter } from './reset-password';
 
 const router = express.Router();
 
@@ -43,16 +44,23 @@ router.patch(
       );
     }
 
-    const { email } = req.body;
+    const { email, username } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUserEmail = await User.findOne({ email });
+    const existingUserUsername = await User.findOne({ username });
 
     if (
-      existingUser &&
+      existingUserEmail &&
       req.currentUser &&
-      existingUser.email !== req.currentUser!.email
+      existingUserEmail.email !== req.currentUser!.email
     ) {
       throw new BadRequestError('Email in use');
+    } else if (
+      existingUserUsername &&
+      req.currentUser &&
+      existingUserUsername.email !== req.currentUser!.email
+    ) {
+      throw new BadRequestError('Username in use');
     }
 
     // Filter out unwanted field names that are not allowed to be updated with this route handler (or at all)
