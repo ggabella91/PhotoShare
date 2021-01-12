@@ -2,7 +2,7 @@
 
 exports[`renders a my-profile-page component 1`] = `
 <div
-  className="my-profile-page"
+  className="profile-page"
 >
   <div
     className="user-bio"
