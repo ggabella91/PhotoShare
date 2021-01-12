@@ -38,7 +38,7 @@ import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
 
-import './my-profile-page.styles.scss';
+import './profile-page.styles.scss';
 
 interface MyProfilePageProps {
   currentUser: User | null;
@@ -209,7 +209,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   };
 
   return (
-    <div className='my-profile-page'>
+    <div className='profile-page'>
       <div className='user-bio'>
         <div className='avatar-and-details'>
           <div className='avatar'>
