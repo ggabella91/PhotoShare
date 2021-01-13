@@ -10,6 +10,16 @@ export const selectCurrentUser = createSelector(
   (user: UserState) => user.currentUser
 );
 
+export const selectOtherUser = createSelector(
+  [selectUser],
+  (user: UserState) => user.otherUser
+);
+
+export const selectOtherUserError = createSelector(
+  [selectUser],
+  (user: UserState) => user.otherUserError
+);
+
 export const selectUserSignUpError = createSelector(
   [selectUser],
   (user: UserState) => user.signUpError
