@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
-import { User } from '../../redux/user/user.types';
-import { selectOtherUser } from '../../redux/user/user.selectors';
+import { User, Error } from '../../redux/user/user.types';
+import {
+  selectOtherUser,
+  selectOtherUserError,
+} from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
@@ -42,6 +45,7 @@ import '../my-profile/profile-page.styles.scss';
 interface UserProfilePageProps {
   username: string;
   otherUser: User | null;
+  otherUserError: Error | null;
   profilePhotoFile: string | null;
   postData: Post[] | null;
   postFiles: PostFile[];
@@ -51,8 +55,6 @@ interface UserProfilePageProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
-  archivePostConfirm: string | null;
-  archivePostError: PostError | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -70,6 +72,7 @@ interface PostModalProps {
 const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
   otherUser,
+  otherUserError,
   profilePhotoFile,
   postData,
   postFiles,
@@ -107,6 +110,14 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     if (username) {
       getOtherUserStart(username);
+    }
+  });
+
+  let history = useHistory();
+
+  useEffect(() => {
+    if (otherUserError) {
+      history.push('/me');
     }
   });
 
@@ -284,6 +295,7 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
 interface LinkStateProps {
   otherUser: User | null;
+  otherUserError: Error | null;
   postData: Post[] | null;
   postFiles: PostFile[];
   profilePhotoFile: string | null;
@@ -297,6 +309,7 @@ interface LinkStateProps {
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   otherUser: selectOtherUser,
+  otherUserError: selectOtherUserError,
   postData: selectPostData,
   postFiles: selectPostFiles,
   profilePhotoFile: selectOtherUserProfilePhotoFile,

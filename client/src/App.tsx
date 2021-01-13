@@ -66,10 +66,8 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           render={({ match }) => {
             if (currentUser && match.params.username === currentUser.username) {
               return <MyProfilePage />;
-            } else if (currentUser) {
-              return <UserProfilePage username={match.params.username} />;
             } else {
-              <Redirect to='/' />;
+              return <UserProfilePage username={match.params.username} />;
             }
           }}
         />
