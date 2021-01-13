@@ -17,6 +17,7 @@ export enum PostActions {
   ARCHIVE_POST_START = 'ARCHIVE_POST_START',
   ARCHIVE_POST_SUCCESS = 'ARCHIVE_POST_SUCCESS',
   ARCHIVE_POST_FAILURE = 'ARCHIVE_POST_FAILURE',
+  GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
 }
 
 export interface PostError {
@@ -35,9 +36,15 @@ export interface Post {
   userId: string;
 }
 
+export enum UserType {
+  self = 'self',
+  other = 'other',
+}
+
 export interface PostFileReq {
   s3Key: string;
   bucket: string;
+  user: UserType;
 }
 
 export interface PostFile {
@@ -65,6 +72,7 @@ export interface PostState {
   profilePhotoConfirm: string | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
+  otherUserProfilePhotoFile: string | null;
 }
 
 export interface CreatePostStart {
@@ -157,6 +165,11 @@ export interface ArchivePostFailure {
   payload: Error;
 }
 
+export interface GetOtherUserProfilePhotoFileSuccess {
+  type: typeof PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS;
+  payload: string;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -175,4 +188,5 @@ export type PostActionTypes =
   | GetPostFileFailure
   | ArchivePostStart
   | ArchivePostSuccess
-  | ArchivePostFailure;
+  | ArchivePostFailure
+  | GetOtherUserProfilePhotoFileSuccess;

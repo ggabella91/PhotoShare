@@ -2,7 +2,12 @@ import { takeLatest, takeEvery, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
-import { PostFileReq, ArchivePostReq, PostActions } from './post.types';
+import {
+  PostFileReq,
+  ArchivePostReq,
+  PostActions,
+  UserType,
+} from './post.types';
 
 import {
   createPostSuccess,
@@ -16,6 +21,7 @@ import {
   getPostFileFailure,
   archivePostSuccess,
   archivePostFailure,
+  getOtherUserProfilePhotoFileSuccess,
 } from './post.actions';
 
 import axios from 'axios';
@@ -62,7 +68,7 @@ export function* getPostData(): SagaIterator {
 }
 
 export function* getPostFile({
-  payload: { s3Key, bucket },
+  payload: { s3Key, bucket, user },
 }: {
   payload: PostFileReq;
 }): SagaIterator {
@@ -76,7 +82,11 @@ export function* getPostFile({
       bucket === 'photo-share-app-profile-photos' ||
       bucket === 'photo-share-app-profile-photos-dev'
     ) {
-      yield put(getProfilePhotoFileSuccess(data));
+      if (user === UserType.self) {
+        yield put(getProfilePhotoFileSuccess(data));
+      } else {
+        yield put(getOtherUserProfilePhotoFileSuccess(data));
+      }
     }
   } catch (err) {
     yield put(getPostFileFailure(err));

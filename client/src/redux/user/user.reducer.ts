@@ -2,6 +2,8 @@ import { UserActions, UserActionTypes, UserState } from './user.types';
 
 const INITIAL_STATE: UserState = {
   currentUser: null,
+  otherUser: null,
+  otherUserError: null,
   signUpError: null,
   signInOrOutError: null,
   changeInfoConfirm: null,
@@ -23,6 +25,12 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         currentUser: action.payload,
         signInOrOutError: null,
         signUpError: null,
+      };
+    case UserActions.GET_OTHER_USER_SUCCESS:
+      return {
+        ...state,
+        otherUser: action.payload,
+        otherUserError: null,
       };
     case UserActions.SIGN_UP_SUCCESS:
       return {
@@ -82,6 +90,12 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
       return {
         ...state,
         signInOrOutError: action.payload,
+      };
+    case UserActions.GET_OTHER_USER_FAILURE:
+      return {
+        ...state,
+        otherUser: null,
+        otherUserError: action.payload,
       };
     case UserActions.CHANGE_INFO_FAILURE:
       return {

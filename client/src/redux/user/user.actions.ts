@@ -170,3 +170,18 @@ export const clearPasswordStatuses = (): UserActionTypes => ({
   type: UserActions.CLEAR_PASSWORD_STATUSES,
   payload: null,
 });
+
+export const getOtherUserStart = (username: string): UserActionTypes => ({
+  type: UserActions.GET_OTHER_USER_START,
+  payload: username,
+});
+
+export const getOtherUserSuccess = (user: User): UserActionTypes => ({
+  type: UserActions.GET_OTHER_USER_SUCCESS,
+  payload: user,
+});
+
+export const getOtherUserFailure = (error: Error): UserActionTypes => ({
+  type: UserActions.GET_OTHER_USER_FAILURE,
+  payload: error,
+});

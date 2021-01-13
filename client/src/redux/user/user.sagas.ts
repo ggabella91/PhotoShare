@@ -30,6 +30,8 @@ import {
   resetPasswordFailure,
   deleteAccountSuccess,
   deleteAccountFailure,
+  getOtherUserSuccess,
+  getOtherUserFailure,
 } from './user.actions';
 
 import axios from 'axios';
@@ -81,6 +83,16 @@ export function* isLoggedIn(): SagaIterator {
     yield put(setCurrentUser(userLoggedIn.data.currentUser));
   } catch (err) {
     yield put(setCurrentUser(null));
+  }
+}
+
+export function* getOtherUser(username: string): SagaIterator {
+  try {
+    //@ts-ignore
+    const otherUser = yield axios.get(`/api/users/${username}`);
+    yield put(getOtherUserSuccess(otherUser));
+  } catch (err) {
+    yield put(getOtherUserFailure(err));
   }
 }
 
@@ -202,6 +214,13 @@ export function* onCheckUserSession(): SagaIterator {
   );
 }
 
+export function* onGetOtherUserStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.GET_OTHER_USER_START,
+    getOtherUser
+  );
+}
+
 export function* onSignOutStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(UserActions.SIGN_OUT_START, signOut);
 }
@@ -247,6 +266,7 @@ export function* userSagas(): SagaIterator {
     call(onSignUpSuccess),
     call(onSignInStart),
     call(onCheckUserSession),
+    call(onGetOtherUserStart),
     call(onSignOutStart),
     call(onChangeInfoStart),
     call(onChangePasswordStart),
