@@ -7,17 +7,16 @@ import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectOtherUser } from '../../redux/user/user.selectors';
+import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
   Post,
   PostFileReq,
-  ArchivePostReq,
   PostFile,
   PostError,
+  UserType,
 } from '../../redux/post/post.types';
 import {
-  selectProfilePhotoKey,
-  selectProfilePhotoFile,
   selectPostData,
   selectPostFiles,
   selectPostError,
@@ -26,8 +25,7 @@ import {
   selectGetPostDataError,
   selectGetPostFileConfirm,
   selectGetPostFileError,
-  selectArchivePostConfirm,
-  selectArchivePostError,
+  selectOtherUserProfilePhotoFile,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -44,7 +42,6 @@ import '../my-profile/profile-page.styles.scss';
 interface UserProfilePageProps {
   username: string;
   otherUser: User | null;
-  profilePhotoKey: string | null;
   profilePhotoFile: string | null;
   postData: Post[] | null;
   postFiles: PostFile[];
@@ -58,7 +55,7 @@ interface UserProfilePageProps {
   archivePostError: PostError | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
-  archivePostStart: typeof archivePostStart;
+  getOtherUserStart: typeof getOtherUserStart;
 }
 
 interface PostModalProps {
@@ -73,7 +70,6 @@ interface PostModalProps {
 const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
   otherUser,
-  profilePhotoKey,
   profilePhotoFile,
   postData,
   postFiles,
@@ -109,18 +105,37 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }
 
   useEffect(() => {
-    if (profilePhotoKey) {
+    if (username) {
+      getOtherUserStart(username);
+    }
+  });
+
+  useEffect(() => {
+    if (otherUser && !user.name) {
+      setName({
+        name: otherUser.name,
+        username: otherUser.username,
+        bio: otherUser.bio || '',
+      });
+      getPostDataStart();
+    }
+  }, [otherUser]);
+
+  useEffect(() => {
+    if (otherUser && otherUser.photo) {
       getPostFileStart({
-        s3Key: profilePhotoKey,
+        s3Key: otherUser.photo,
         bucket: profileBucket,
+        user: UserType.other,
       });
     } else if (!profilePhotoFile && otherUser && otherUser.photo) {
       getPostFileStart({
         s3Key: otherUser.photo,
         bucket: profileBucket,
+        user: UserType.other,
       });
     }
-  }, [profilePhotoKey]);
+  }, [otherUser]);
 
   useEffect(() => {
     if (profilePhotoFile) {
@@ -140,6 +155,7 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
         getPostFileStart({
           s3Key: post.s3Key,
           bucket: postsBucket,
+          user: UserType.other,
         });
       }
     }
@@ -270,7 +286,6 @@ interface LinkStateProps {
   otherUser: User | null;
   postData: Post[] | null;
   postFiles: PostFile[];
-  profilePhotoKey: string | null;
   profilePhotoFile: string | null;
   postConfirm: string | null;
   postError: PostError | null;
@@ -278,32 +293,27 @@ interface LinkStateProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
-  archivePostConfirm: string | null;
-  archivePostError: PostError | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   otherUser: selectOtherUser,
   postData: selectPostData,
   postFiles: selectPostFiles,
-  profilePhotoKey: selectProfilePhotoKey,
-  profilePhotoFile: selectProfilePhotoFile,
+  profilePhotoFile: selectOtherUserProfilePhotoFile,
   postConfirm: selectPostConfirm,
   postError: selectPostError,
   getPostDataConfirm: selectGetPostDataConfirm,
   getPostDataError: selectGetPostDataError,
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
-  archivePostConfirm: selectArchivePostConfirm,
-  archivePostError: selectArchivePostError,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  getOtherUserStart: (username: string) =>
+    dispatch(getOtherUserStart(username)),
   getPostDataStart: () => dispatch(getPostDataStart()),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
-  archivePostStart: (archiveReq: ArchivePostReq) =>
-    dispatch(archivePostStart(archiveReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

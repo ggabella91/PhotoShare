@@ -101,3 +101,8 @@ export const archivePostFailure = (error: Error) => ({
   type: PostActions.ARCHIVE_POST_FAILURE,
   payload: error,
 });
+
+export const getOtherUserProfilePhotoFileSuccess = (file: string) => ({
+  type: PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS,
+  payload: file,
+});

@@ -176,7 +176,7 @@ export const getOtherUserStart = (username: string): UserActionTypes => ({
   payload: username,
 });
 
-export const getOtherSuccess = (user: User): UserActionTypes => ({
+export const getOtherUserSuccess = (user: User): UserActionTypes => ({
   type: UserActions.GET_OTHER_USER_SUCCESS,
   payload: user,
 });

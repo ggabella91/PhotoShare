@@ -16,6 +16,7 @@ const INITIAL_STATE: PostState = {
   profilePhotoConfirm: null,
   archivePostConfirm: null,
   archivePostError: null,
+  otherUserProfilePhotoFile: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -53,6 +54,13 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         profilePhotoFile: action.payload,
         getPostFileError: null,
         getPostFileConfirm: 'Profile photo file fetched!',
+      };
+    case PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS:
+      return {
+        ...state,
+        otherUserProfilePhotoFile: action.payload,
+        getPostFileError: null,
+        getPostFileConfirm: 'Profile photo of other user fetched!',
       };
     case PostActions.ARCHIVE_POST_SUCCESS:
       return {

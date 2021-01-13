@@ -13,6 +13,7 @@ import {
   ArchivePostReq,
   PostFile,
   PostError,
+  UserType,
 } from '../../redux/post/post.types';
 import {
   selectProfilePhotoKey,
@@ -123,11 +124,13 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       getPostFileStart({
         s3Key: profilePhotoKey,
         bucket: profileBucket,
+        user: UserType.self,
       });
     } else if (!profilePhotoFile && currentUser && currentUser.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket: profileBucket,
+        user: UserType.self,
       });
     }
   }, [profilePhotoKey]);
@@ -150,6 +153,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         getPostFileStart({
           s3Key: post.s3Key,
           bucket: postsBucket,
+          user: UserType.self,
         });
       }
     }

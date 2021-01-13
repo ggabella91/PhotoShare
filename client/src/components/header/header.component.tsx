@@ -7,7 +7,7 @@ import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { signOutStart } from '../../redux/user/user.actions';
-import { PostFileReq } from '../../redux/post/post.types';
+import { PostFileReq, UserType } from '../../redux/post/post.types';
 import {
   selectProfilePhotoKey,
   selectProfilePhotoFile,
@@ -46,11 +46,13 @@ export const Header: React.FC<HeaderProps> = ({
       getPostFileStart({
         s3Key: profilePhotoKey,
         bucket,
+        user: UserType.self,
       });
     } else if (!profilePhotoFile && currentUser && currentUser.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket,
+        user: UserType.self,
       });
     }
   }, [profilePhotoKey]);
@@ -109,8 +111,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getPostFileStart: ({ s3Key, bucket }: PostFileReq) =>
-    dispatch(getPostFileStart({ s3Key, bucket })),
+  getPostFileStart: (fileReq: PostFileReq) =>
+    dispatch(getPostFileStart(fileReq)),
   signOutStart: () => dispatch(signOutStart()),
 });
 
