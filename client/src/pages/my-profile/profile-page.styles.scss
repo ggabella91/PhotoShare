@@ -76,7 +76,7 @@
 
         .user-bio-photo-placeholder {
           @include avatar-dimensions();
-          border: solid 2px;
+          border: solid 1.5px;
           border-color: black;
           display: flex;
           flex-direction: column;

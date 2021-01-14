@@ -79,7 +79,7 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
   getPostDataStart,
   getPostFileStart,
 }) => {
-  const [user, setName] = useState({ name: '', username: '', bio: '' });
+  const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
@@ -123,12 +123,13 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (otherUser && !user.name) {
-      setName({
+      setUser({
+        id: otherUser.id,
         name: otherUser.name,
         username: otherUser.username,
         bio: otherUser.bio || '',
       });
-      getPostDataStart();
+      getPostDataStart(user.id);
     }
   }, [otherUser]);
 
@@ -324,7 +325,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getOtherUserStart: (username: string) =>
     dispatch(getOtherUserStart(username)),
-  getPostDataStart: () => dispatch(getPostDataStart()),
+  getPostDataStart: (userId: string) => dispatch(getPostDataStart(userId)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
 });

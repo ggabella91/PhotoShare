@@ -3,6 +3,7 @@ import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
 import {
+  Post,
   PostFileReq,
   ArchivePostReq,
   PostActions,
@@ -26,13 +27,8 @@ import {
 
 import axios from 'axios';
 
-export function* createPost({
-  payload: post,
-}: {
-  payload: FormData;
-}): SagaIterator {
+export function* createPost({ payload: post }: { payload: FormData }): any {
   try {
-    // @ts-ignore
     const { data } = yield axios.post('/api/posts/new', post);
 
     yield put(createPostSuccess(data));
@@ -45,9 +41,8 @@ export function* updateProfilePhoto({
   payload: photo,
 }: {
   payload: FormData;
-}): SagaIterator {
+}): any {
   try {
-    // @ts-ignore
     const { data } = yield axios.post('/api/posts/profilePhoto', photo);
 
     yield put(updateProfilePhotoSuccess(data));
@@ -56,12 +51,13 @@ export function* updateProfilePhoto({
   }
 }
 
-export function* getPostData(): SagaIterator {
+export function* getPostData({ payload: userId }: { payload: string }): any {
   try {
-    // @ts-ignore
-    const { data } = yield axios.get('/api/posts/data');
+    const { data }: { data: Post[] } = yield axios.post('/api/posts/data', {
+      userId,
+    });
 
-    yield put(getPostDataSuccess(data.posts));
+    yield put(getPostDataSuccess(data));
   } catch (err) {
     yield put(getPostDataFailure(err));
   }
@@ -71,10 +67,12 @@ export function* getPostFile({
   payload: { s3Key, bucket, user },
 }: {
   payload: PostFileReq;
-}): SagaIterator {
+}): any {
   try {
-    // @ts-ignore
-    const { data } = yield axios.post('/api/posts/files', { s3Key, bucket });
+    const { data } = yield axios.post('/api/posts/files', {
+      s3Key,
+      bucket,
+    });
 
     if (bucket === 'photo-share-app' || bucket === 'photo-share-app-dev') {
       yield put(getPostFileSuccess({ s3Key, fileString: data }));
@@ -97,10 +95,13 @@ export function* archivePost({
   payload: { postId, s3Key },
 }: {
   payload: ArchivePostReq;
-}): SagaIterator {
+}): any {
   try {
-    // @ts-ignore
-    const { data } = yield axios.delete(`/api/posts/${postId}`, { s3Key });
+    const { data } = yield axios.delete<string>(`/api/posts/${postId}`, {
+      data: {
+        s3Key,
+      },
+    });
 
     yield put(archivePostSuccess(data.message));
   } catch (err) {

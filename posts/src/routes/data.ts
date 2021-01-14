@@ -8,26 +8,24 @@ import { Post } from '../models/post';
 
 const router = express.Router();
 
-router.get(
+router.post(
   '/api/posts/data',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {
-    const user = req.currentUser;
+    const userId: string = req.body.userId;
 
-    if (!user) {
-      throw new BadRequestError(
-        'No user signed in. Please sign in to access this route.'
-      );
+    if (!userId) {
+      throw new BadRequestError('No user ID was provided.');
     }
 
-    let posts = await Post.find({ userId: user.id, archived: { $ne: true } });
+    let posts = await Post.find({ userId, archived: { $ne: true } });
 
     posts = posts.reverse();
 
     console.log(posts);
 
-    res.status(200).send({ message: 'success', posts });
+    res.status(200).send(posts);
   }
 );
 
