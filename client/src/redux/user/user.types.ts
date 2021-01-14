@@ -45,6 +45,7 @@ export interface UserSignIn {
 }
 
 export interface User {
+  id: string;
   name: string;
   email: string;
   username: string;

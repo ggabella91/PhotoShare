@@ -40,9 +40,8 @@ export function* signUp({
   payload: { name, email, password, passwordConfirm },
 }: {
   payload: UserSignUp;
-}): SagaIterator {
+}): any {
   try {
-    // @ts-ignore
     const { data } = yield axios.post('/api/users/signup', {
       name,
       email,
@@ -60,9 +59,8 @@ export function* signIn({
   payload: { email, password },
 }: {
   payload: UserSignIn;
-}): SagaIterator {
+}): any {
   try {
-    // @ts-ignore
     const { data } = yield axios.post('/api/users/signin', {
       email,
       password,
@@ -74,9 +72,8 @@ export function* signIn({
   }
 }
 
-export function* isLoggedIn(): SagaIterator {
+export function* isLoggedIn(): any {
   try {
-    //@ts-ignore
     const userLoggedIn = yield axios.get('/api/users/currentuser');
 
     if (!userLoggedIn.data.currentUser) return;
@@ -86,9 +83,8 @@ export function* isLoggedIn(): SagaIterator {
   }
 }
 
-export function* getOtherUser(username: string): SagaIterator {
+export function* getOtherUser(username: string): any {
   try {
-    //@ts-ignore
     const otherUser = yield axios.get(`/api/users/${username}`);
     yield put(getOtherUserSuccess(otherUser));
   } catch (err) {
@@ -96,9 +92,8 @@ export function* getOtherUser(username: string): SagaIterator {
   }
 }
 
-export function* signOut(): SagaIterator {
+export function* signOut(): any {
   try {
-    //@ts-ignore
     yield axios.post('/api/users/signout');
     yield put(signOutSuccess());
   } catch (err) {
@@ -110,9 +105,8 @@ export function* changeInfo({
   payload: fieldsToUpdate,
 }: {
   payload: FieldsToUpdate;
-}): SagaIterator {
+}): any {
   try {
-    // @ts-ignore
     const { data } = yield axios.patch('/api/users/updateMe', fieldsToUpdate);
 
     yield all([put(changeInfoSuccess(data)), put(setCurrentUser(data))]);
@@ -125,9 +119,8 @@ export function* changePassword({
   payload: { passwordCurrent, password, passwordConfirm },
 }: {
   payload: ChangePassword;
-}): SagaIterator {
+}): any {
   try {
-    // @ts-ignore
     const { data } = yield axios.patch('/api/users/updatePassword', {
       passwordCurrent,
       password,
@@ -140,13 +133,8 @@ export function* changePassword({
   }
 }
 
-export function* forgotPassword({
-  payload: email,
-}: {
-  payload: string;
-}): SagaIterator {
+export function* forgotPassword({ payload: email }: { payload: string }): any {
   try {
-    // @ts-ignore
     yield axios.post('/api/users/forgotPassword', { email });
 
     yield put(forgotPasswordSuccess('Reset token generated!'));
@@ -159,9 +147,8 @@ export function* resetPassword({
   payload: { password, passwordConfirm, token },
 }: {
   payload: ResetPassword;
-}): SagaIterator {
+}): any {
   try {
-    // @ts-ignore
     yield axios.patch(`/api/users/resetPassword/${token}`, {
       password,
       passwordConfirm,
@@ -173,9 +160,8 @@ export function* resetPassword({
   }
 }
 
-export function* deleteAccount(): SagaIterator {
+export function* deleteAccount(): any {
   try {
-    // @ts-ignore
     yield axios.patch('/api/users/deleteMe');
 
     yield put(deleteAccountSuccess('Account deleted!'));

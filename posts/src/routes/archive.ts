@@ -11,7 +11,7 @@ router.delete(
   async (req: Request, res: Response) => {
     const { postId } = req.params;
 
-    const { s3Key }: { s3Key: string } = req.body;
+    const s3Key: string = req.body.s3Key;
 
     const post = await Post.findById(postId);
 

@@ -50,9 +50,9 @@ export const clearProfilePhotoStatuses = (): PostActionTypes => ({
   payload: null,
 });
 
-export const getPostDataStart = (): PostActionTypes => ({
+export const getPostDataStart = (userId: string): PostActionTypes => ({
   type: PostActions.GET_POST_DATA_START,
-  payload: null,
+  payload: userId,
 });
 
 export const getPostDataSuccess = (postDataArray: Post[]): PostActionTypes => ({

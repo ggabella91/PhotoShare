@@ -117,7 +117,7 @@ export interface ClearProfilePhotoStatuses {
 
 export interface GetPostDataStart {
   type: typeof PostActions.GET_POST_DATA_START;
-  payload: null;
+  payload: string;
 }
 
 export interface GetPostDataSuccess {
