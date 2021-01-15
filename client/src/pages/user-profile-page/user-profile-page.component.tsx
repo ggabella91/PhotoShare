@@ -69,13 +69,14 @@ interface PostModalProps {
   fileString: string;
 }
 
-const UserProfilePage: React.FC<UserProfilePageProps> = ({
+export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
   otherUser,
   otherUserError,
   profilePhotoFile,
   postData,
   postFiles,
+  getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
 }) => {
@@ -106,12 +107,9 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
     postsBucket = 'photo-share-app-dev';
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
-
   useEffect(() => {
-    if (username) {
-      getOtherUserStart(username);
-    }
-  });
+    getOtherUserStart('chasechronicles');
+  }, [username]);
 
   let history = useHistory();
 
@@ -129,9 +127,15 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
         username: otherUser.username,
         bio: otherUser.bio || '',
       });
-      getPostDataStart(user.id);
     }
   }, [otherUser]);
+
+  useEffect(() => {
+    if (user.id) {
+      console.log(user);
+      getPostDataStart(user.id);
+    }
+  }, [user.id]);
 
   useEffect(() => {
     if (otherUser && otherUser.photo) {

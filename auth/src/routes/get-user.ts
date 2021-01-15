@@ -9,8 +9,6 @@ router.get('/api/users/:username', async (req: Request, res: Response) => {
 
   const existingUser = await User.findOne({ username });
 
-  console.log(existingUser);
-
   if (!existingUser) {
     throw new BadRequestError('User not found');
   }
