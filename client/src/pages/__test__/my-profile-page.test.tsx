@@ -18,7 +18,7 @@ it('renders a my-profile-page component', () => {
       postFiles={[]}
       postConfirm={null}
       postError={null}
-      getPostDataStart={() => getPostDataStart()}
+      getPostDataStart={(userId) => getPostDataStart(userId)}
       getPostDataConfirm={null}
       getPostDataError={null}
       getPostFileStart={(fileReq) => getPostFileStart(fileReq)}

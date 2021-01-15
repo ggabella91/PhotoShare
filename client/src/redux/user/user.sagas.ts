@@ -61,7 +61,7 @@ export function* signIn({
   payload: UserSignIn;
 }): any {
   try {
-    const { data } = yield axios.post('/api/users/signin', {
+    const { data }: { data: User } = yield axios.post('/api/users/signin', {
       email,
       password,
     });
@@ -83,10 +83,10 @@ export function* isLoggedIn(): any {
   }
 }
 
-export function* getOtherUser(username: string): any {
+export function* getOtherUser({ payload: username }: { payload: string }): any {
   try {
-    const otherUser = yield axios.get(`/api/users/${username}`);
-    yield put(getOtherUserSuccess(otherUser));
+    const { data }: { data: User } = yield axios.get(`/api/users/${username}`);
+    yield put(getOtherUserSuccess(data));
   } catch (err) {
     yield put(getOtherUserFailure(err));
   }
