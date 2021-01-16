@@ -185,3 +185,8 @@ export const getOtherUserFailure = (error: Error): UserActionTypes => ({
   type: UserActions.GET_OTHER_USER_FAILURE,
   payload: error,
 });
+
+export const clearOtherUserInfo = (): UserActionTypes => ({
+  type: UserActions.CLEAR_OTHER_USER_INFO,
+  payload: null,
+});

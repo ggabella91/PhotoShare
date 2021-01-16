@@ -32,6 +32,7 @@ import {
   deleteAccountFailure,
   getOtherUserSuccess,
   getOtherUserFailure,
+  clearOtherUserInfo,
 } from './user.actions';
 
 import axios from 'axios';
@@ -95,7 +96,7 @@ export function* getOtherUser({ payload: username }: { payload: string }): any {
 export function* signOut(): any {
   try {
     yield axios.post('/api/users/signout');
-    yield put(signOutSuccess());
+    yield all([put(signOutSuccess()), put(clearOtherUserInfo())]);
   } catch (err) {
     yield put(signOutFailure(err));
   }

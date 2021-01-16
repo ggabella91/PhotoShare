@@ -236,13 +236,13 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           <div className='user-details'>
             <div className='username-and-edit'>
               <span className='user-username'>{user.username}</span>
-              <NavLink className='edit-profile' to='/settings'>
-                <span className='edit-text'>Edit profile</span>
-              </NavLink>
+              <div className='edit-profile'>
+                <span className='edit-text'>Follow</span>
+              </div>
             </div>
-            <NavLink to='/settings' className='edit-profile-narrow-screen'>
-              <span className='edit-narrow-text'>Edit profile</span>
-            </NavLink>
+            <div className='edit-profile-narrow-screen'>
+              <span className='edit-narrow-text'>Follow</span>
+            </div>
             <span className='user-posts'>{postDataArray.length} Posts</span>
             <div className='name-and-bio'>
               <span className='user-name'>{user.name}</span>

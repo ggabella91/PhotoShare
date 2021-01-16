@@ -30,6 +30,7 @@ export enum UserActions {
   GET_OTHER_USER_START = 'GET_OTHER_USER_START',
   GET_OTHER_USER_SUCCESS = 'GET_OTHER_USER_SUCCESS',
   GET_OTHER_USER_FAILURE = 'GET_OTHER_USER_FAILURE',
+  CLEAR_OTHER_USER_INFO = 'CLEAR_OTHER_USER_INFO',
 }
 
 export interface UserSignUp {
@@ -259,6 +260,11 @@ export interface GetOtherUserFailure {
   payload: Error;
 }
 
+export interface ClearOtherUserInfo {
+  type: typeof UserActions.CLEAR_OTHER_USER_INFO;
+  payload: null;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -291,4 +297,5 @@ export type UserActionTypes =
   | ClearPasswordStatuses
   | GetOtherUserStart
   | GetOtherUserSuccess
-  | GetOtherUserFailure;
+  | GetOtherUserFailure
+  | ClearOtherUserInfo;
