@@ -136,12 +136,6 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         changePasswordError: null,
         changePasswordConfirm: null,
       };
-    case UserActions.CLEAR_OTHER_USER_INFO:
-      return {
-        ...state,
-        otherUser: null,
-        otherUserError: null,
-      };
     default:
       return state;
   }
