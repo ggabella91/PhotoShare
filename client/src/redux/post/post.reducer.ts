@@ -110,6 +110,10 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         profilePhotoConfirm: null,
         profilePhotoError: null,
       };
+    case PostActions.CLEAR_POST_STATE:
+      return {
+        ...INITIAL_STATE,
+      };
     default:
       return state;
   }

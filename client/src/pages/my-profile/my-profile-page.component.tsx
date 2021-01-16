@@ -174,7 +174,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
       setPostFileArray(orderedFiles);
     }
-  }, [postFiles]);
+  }, [postFiles, postDataArray]);
 
   useEffect(() => {
     if (archivePostConfirm) {

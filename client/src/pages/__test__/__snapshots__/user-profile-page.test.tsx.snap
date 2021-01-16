@@ -32,27 +32,25 @@ exports[`renders a my-profile-page component 1`] = `
           <span
             className="user-username"
           />
-          <NavLink
+          <div
             className="edit-profile"
-            to="/settings"
           >
             <span
               className="edit-text"
             >
-              Edit profile
+              Follow
             </span>
-          </NavLink>
+          </div>
         </div>
-        <NavLink
+        <div
           className="edit-profile-narrow-screen"
-          to="/settings"
         >
           <span
             className="edit-narrow-text"
           >
-            Edit profile
+            Follow
           </span>
-        </NavLink>
+        </div>
         <span
           className="user-posts"
         >

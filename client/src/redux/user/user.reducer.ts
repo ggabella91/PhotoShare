@@ -46,9 +46,7 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
       };
     case UserActions.SIGN_OUT_SUCCESS:
       return {
-        ...state,
-        currentUser: action.payload,
-        signInOrOutError: null,
+        ...INITIAL_STATE,
       };
     case UserActions.CHANGE_INFO_SUCCESS:
       return {

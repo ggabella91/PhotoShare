@@ -106,3 +106,8 @@ export const getOtherUserProfilePhotoFileSuccess = (file: string) => ({
   type: PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS,
   payload: file,
 });
+
+export const clearPostState = () => ({
+  type: PostActions.CLEAR_POST_STATE,
+  payload: null,
+});

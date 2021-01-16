@@ -1,3 +1,5 @@
+import { type } from 'os';
+
 export enum PostActions {
   CREATE_POST_START = 'CREATE_POST_START',
   CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS',
@@ -18,6 +20,7 @@ export enum PostActions {
   ARCHIVE_POST_SUCCESS = 'ARCHIVE_POST_SUCCESS',
   ARCHIVE_POST_FAILURE = 'ARCHIVE_POST_FAILURE',
   GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
+  CLEAR_POST_STATE = 'CLEAR_POST_STATE',
 }
 
 export interface PostError {
@@ -170,6 +173,11 @@ export interface GetOtherUserProfilePhotoFileSuccess {
   payload: string;
 }
 
+export interface ClearPostState {
+  type: typeof PostActions.CLEAR_POST_STATE;
+  payload: null;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -189,4 +197,5 @@ export type PostActionTypes =
   | ArchivePostStart
   | ArchivePostSuccess
   | ArchivePostFailure
-  | GetOtherUserProfilePhotoFileSuccess;
+  | GetOtherUserProfilePhotoFileSuccess
+  | ClearPostState;
