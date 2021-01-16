@@ -178,12 +178,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
       setPostFileArray(orderedFiles);
     }
-  }, [postFiles, postDataArray]);
-
-  useEffect(() => {
-    if (postFiles.length) {
-      console.log(postFileArray);
-    }
   }, [postFiles]);
 
   useEffect(() => {

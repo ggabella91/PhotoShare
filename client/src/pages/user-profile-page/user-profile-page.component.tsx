@@ -39,6 +39,7 @@ import {
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
+import NotFoundPage from '../../pages/not-found/not-found-page.component';
 
 import '../my-profile/profile-page.styles.scss';
 
@@ -110,14 +111,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     getOtherUserStart(username);
   }, [username]);
-
-  let history = useHistory();
-
-  useEffect(() => {
-    if (otherUserError) {
-      history.push('/me');
-    }
-  });
 
   useEffect(() => {
     if (otherUser && !user.name) {
@@ -212,6 +205,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       setPostModalShow(true);
     }
   };
+
+  if (otherUserError) {
+    return <NotFoundPage />;
+  }
 
   return (
     <div className='profile-page'>
