@@ -33,6 +33,7 @@ import {
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
+  clearPostState,
 } from '../../redux/post/post.actions';
 
 import PostTile from '../../components/post-tile/post-tile.component';
@@ -58,6 +59,7 @@ interface MyProfilePageProps {
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
+  clearPostState: typeof clearPostState;
 }
 
 interface PostModalProps {
@@ -79,6 +81,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   getPostFileStart,
   archivePostStart,
   archivePostConfirm,
+  clearPostState,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -110,6 +113,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (currentUser && !user.name) {
+      clearPostState();
       setUser({
         id: currentUser.id,
         name: currentUser.name,
@@ -175,6 +179,12 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       setPostFileArray(orderedFiles);
     }
   }, [postFiles, postDataArray]);
+
+  useEffect(() => {
+    if (postFiles.length) {
+      console.log(postFileArray);
+    }
+  }, [postFiles]);
 
   useEffect(() => {
     if (archivePostConfirm) {
@@ -336,6 +346,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostFileStart(fileReq)),
   archivePostStart: (archiveReq: ArchivePostReq) =>
     dispatch(archivePostStart(archiveReq)),
+  clearPostState: () => dispatch(clearPostState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);
