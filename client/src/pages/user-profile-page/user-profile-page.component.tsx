@@ -108,7 +108,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
   useEffect(() => {
-    getOtherUserStart('chasechronicles');
+    getOtherUserStart(username);
   }, [username]);
 
   let history = useHistory();
