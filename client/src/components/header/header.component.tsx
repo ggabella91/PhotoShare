@@ -14,6 +14,8 @@ import {
 } from '../../redux/post/post.selectors';
 import { getPostFileStart } from '../../redux/post/post.actions';
 
+import SearchBar from '../search-bar/search-bar.component';
+
 import './header.styles.scss';
 
 interface HeaderProps {
@@ -68,8 +70,16 @@ export const Header: React.FC<HeaderProps> = ({
       <NavLink className='app-name' to='/'>
         <h1 className='title'>PhotoShare</h1>
       </NavLink>
+
       {currentUser ? (
         <div>
+          <SearchBar
+            onChange={() => {}}
+            name='search'
+            type='text'
+            label='Search'
+            value={''}
+          />
           <NavLink to={`/${currentUser.username}`} className='avatar'>
             {photoFile ? (
               <img

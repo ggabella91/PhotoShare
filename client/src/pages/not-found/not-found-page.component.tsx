@@ -11,7 +11,10 @@ const NotFoundPage: React.FC = () => {
         <span className='not-found-body-text'>
           The link you followed may be broken, or the page may have been
           removed.
-          <NavLink to='/me'> Go back to PhotoShare.</NavLink>
+          <NavLink className='link-text' to='/me'>
+            {' '}
+            Go back to PhotoShare.
+          </NavLink>
         </span>
       </div>
     </div>
