@@ -19,6 +19,7 @@ export enum PostActions {
   ARCHIVE_POST_START = 'ARCHIVE_POST_START',
   ARCHIVE_POST_SUCCESS = 'ARCHIVE_POST_SUCCESS',
   ARCHIVE_POST_FAILURE = 'ARCHIVE_POST_FAILURE',
+  CLEAR_ARCHIVE_POST_STATUSES = 'CLEAR_ARCHIVE_POST_STATUSES',
   GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
   CLEAR_POST_STATE = 'CLEAR_POST_STATE',
 }
@@ -168,6 +169,11 @@ export interface ArchivePostFailure {
   payload: Error;
 }
 
+export interface ClearArchivePostStatuses {
+  type: typeof PostActions.CLEAR_ARCHIVE_POST_STATUSES;
+  payload: null;
+}
+
 export interface GetOtherUserProfilePhotoFileSuccess {
   type: typeof PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS;
   payload: string;
@@ -198,4 +204,5 @@ export type PostActionTypes =
   | ArchivePostSuccess
   | ArchivePostFailure
   | GetOtherUserProfilePhotoFileSuccess
-  | ClearPostState;
+  | ClearPostState
+  | ClearArchivePostStatuses;
