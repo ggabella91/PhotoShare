@@ -33,6 +33,7 @@ import {
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
+  clearArchivePostStatuses,
   clearPostState,
 } from '../../redux/post/post.actions';
 
@@ -59,6 +60,7 @@ interface MyProfilePageProps {
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
+  clearArchivePostStatuses: typeof clearArchivePostStatuses;
   clearPostState: typeof clearPostState;
 }
 
@@ -81,6 +83,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   getPostFileStart,
   archivePostStart,
   archivePostConfirm,
+  clearArchivePostStatuses,
   clearPostState,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
@@ -182,6 +185,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (archivePostConfirm) {
+      clearArchivePostStatuses();
       setPostOptionsModalShow(false);
       setPostModalShow(false);
 
@@ -340,6 +344,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostFileStart(fileReq)),
   archivePostStart: (archiveReq: ArchivePostReq) =>
     dispatch(archivePostStart(archiveReq)),
+  clearArchivePostStatuses: () => dispatch(clearArchivePostStatuses()),
   clearPostState: () => dispatch(clearPostState()),
 });
 
