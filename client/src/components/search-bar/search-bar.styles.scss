@@ -1,0 +1,60 @@
+@mixin hideLabel {
+  display: none;
+}
+
+@mixin respond-medium {
+  @media (max-width: 724px) {
+    @content;
+  }
+}
+
+.group {
+  position: relative;
+  margin-left: 50%;
+
+  @include respond-medium() {
+    transform: translateY(-4vh);
+  }
+
+  .search-bar {
+    background: none;
+    background-color: #7087c8;
+    color: white;
+    font-size: 14px;
+    padding: 0;
+    display: block;
+    width: 100%;
+    min-width: 200px;
+    height: 30px;
+    border: 1px solid white;
+    border-radius: 6px;
+    margin: 0;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus ~ .search-bar-label {
+      @include hideLabel();
+    }
+  }
+
+  input[type='text'] {
+    text-indent: 5px;
+  }
+
+  .search-bar-label {
+    color: white;
+    font-size: 14px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 5px;
+    transition: 300ms ease all;
+
+    &.hide {
+      @include hideLabel();
+    }
+  }
+}

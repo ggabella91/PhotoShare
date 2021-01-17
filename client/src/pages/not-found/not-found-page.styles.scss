@@ -15,6 +15,10 @@
     .not-found-body-text {
       font-size: 20px;
       font-weight: 400;
+
+      .link-text {
+        text-decoration: none;
+      }
     }
   }
 }

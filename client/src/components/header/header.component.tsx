@@ -14,6 +14,8 @@ import {
 } from '../../redux/post/post.selectors';
 import { getPostFileStart } from '../../redux/post/post.actions';
 
+import SearchBar from '../search-bar/search-bar.component';
+
 import './header.styles.scss';
 
 interface HeaderProps {
@@ -32,6 +34,16 @@ export const Header: React.FC<HeaderProps> = ({
   signOutStart,
 }) => {
   const [photoFile, setPhotoFile] = useState<string | null>(null);
+
+  const [searchString, setSearchString] = useState('');
+
+  const handleSearchStringChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+
+    setSearchString(value);
+  };
 
   let bucket: string;
 
@@ -70,6 +82,13 @@ export const Header: React.FC<HeaderProps> = ({
       </NavLink>
       {currentUser ? (
         <div>
+          <SearchBar
+            onChange={handleSearchStringChange}
+            name='search'
+            type='text'
+            label='Search'
+            value={searchString}
+          />
           <NavLink to={`/${currentUser.username}`} className='avatar'>
             {photoFile ? (
               <img
