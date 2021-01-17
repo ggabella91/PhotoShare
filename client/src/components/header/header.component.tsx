@@ -35,6 +35,16 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [photoFile, setPhotoFile] = useState<string | null>(null);
 
+  const [searchString, setSearchString] = useState('');
+
+  const handleSearchStringChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+
+    setSearchString(value);
+  };
+
   let bucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -70,15 +80,14 @@ export const Header: React.FC<HeaderProps> = ({
       <NavLink className='app-name' to='/'>
         <h1 className='title'>PhotoShare</h1>
       </NavLink>
-
       {currentUser ? (
         <div>
           <SearchBar
-            onChange={() => {}}
+            onChange={handleSearchStringChange}
             name='search'
             type='text'
             label='Search'
-            value={''}
+            value={searchString}
           />
           <NavLink to={`/${currentUser.username}`} className='avatar'>
             {photoFile ? (

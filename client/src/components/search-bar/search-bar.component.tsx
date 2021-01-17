@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './search-bar.styles.scss';
 
@@ -15,13 +15,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
   label,
   ...otherProps
 }) => {
+  
+
   return (
-    <div className='search-bar-group'>
-      <label
-        className={`${otherProps.value.length ? 'hide' : ''} search-bar-label`}
-      >
-        {label}
-      </label>
+    <div className='group'>
+      {label ? (
+        <label
+          className={`${
+            otherProps.value.length ? 'hide' : ''
+          } search-bar-label`}
+        >
+          {label}
+        </label>
+      ) : null}
       <input className='search-bar' {...otherProps} />
     </div>
   );
