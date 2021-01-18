@@ -23,6 +23,7 @@ import {
   archivePostSuccess,
   archivePostFailure,
   getOtherUserProfilePhotoFileSuccess,
+  getUserSuggestionProfilePhotoFileSuccess,
 } from './post.actions';
 
 import axios from 'axios';
@@ -82,8 +83,10 @@ export function* getPostFile({
     ) {
       if (user === UserType.self) {
         yield put(getProfilePhotoFileSuccess(data));
-      } else {
+      } else if (user === UserType.other) {
         yield put(getOtherUserProfilePhotoFileSuccess(data));
+      } else if (user === UserType.searchSuggestion) {
+        yield put(getUserSuggestionProfilePhotoFileSuccess(data));
       }
     }
   } catch (err) {

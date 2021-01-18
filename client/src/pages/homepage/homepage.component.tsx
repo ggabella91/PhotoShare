@@ -134,11 +134,11 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   const handleRenderAlert = (type: string, message: string) => {
     if (showAlert) {
+      clearPostStatuses();
       setTimeout(() => {
         setPostStatus({ success: false, error: false });
         setShowAlert(false);
-        clearPostStatuses();
-      }, 5000);
+      }, 3000);
       return (
         <Alert variant={type} onClose={() => setShowAlert(false)} dismissible>
           {message}

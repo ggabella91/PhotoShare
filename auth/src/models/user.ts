@@ -14,7 +14,7 @@ interface UserAttrs {
   active: boolean;
 }
 
-interface UserDoc extends mongoose.Document {
+export interface UserDoc extends mongoose.Document {
   name: string;
   email: string;
   password: string;

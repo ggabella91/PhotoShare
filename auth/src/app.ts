@@ -14,6 +14,7 @@ import { updatePasswordRouter } from './routes/update-password';
 import { updateUserRouter } from './routes/update-user';
 import { deleteUserRouter } from './routes/delete';
 import { getUserRouter } from './routes/get-user';
+import { getSuggestedUsersRouter } from './routes/get-suggested-users';
 
 const app = express();
 app.set('trust proxy', true);
@@ -35,6 +36,7 @@ app.use(updatePasswordRouter);
 app.use(updateUserRouter);
 app.use(deleteUserRouter);
 app.use(getUserRouter);
+app.use(getSuggestedUsersRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
