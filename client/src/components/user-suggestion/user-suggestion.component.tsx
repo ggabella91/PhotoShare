@@ -2,8 +2,23 @@ import React from 'react';
 
 import './user-suggestion.styles.scss';
 
-const UserSuggestion: React.FC = () => {
-  return <div></div>;
+interface UserSuggestionProps {
+  username: string;
+  name?: string;
+  profilePhotoFileString?: string;
+}
+
+const UserSuggestion: React.FC<UserSuggestionProps> = ({
+  username,
+  ...otherProps
+}) => {
+  return (
+    <div className='user-suggestion'>
+      <div className='username-and-name'>
+        <span>{username}</span>
+      </div>
+    </div>
+  );
 };
 
 export default UserSuggestion;

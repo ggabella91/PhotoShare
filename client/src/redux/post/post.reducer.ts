@@ -1,5 +1,8 @@
 import { PostActions, PostActionTypes, PostState } from './post.types';
-import { addPostFileToArray } from './post.utils';
+import {
+  addPostFileToArray,
+  addSuggestedUserPhotoFileToArray,
+} from './post.utils';
 
 const INITIAL_STATE: PostState = {
   postData: null,
@@ -17,6 +20,7 @@ const INITIAL_STATE: PostState = {
   archivePostConfirm: null,
   archivePostError: null,
   otherUserProfilePhotoFile: null,
+  userSuggestionsProfilePhotoFiles: [],
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -61,6 +65,16 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         otherUserProfilePhotoFile: action.payload,
         getPostFileError: null,
         getPostFileConfirm: 'Profile photo of other user fetched!',
+      };
+    case PostActions.GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS:
+      return {
+        ...state,
+        userSuggestionsProfilePhotoFiles: addSuggestedUserPhotoFileToArray(
+          state.userSuggestionsProfilePhotoFiles,
+          action.payload
+        ),
+        getPostFileError: null,
+        getPostFileConfirm: 'Suggested user photo added to array!',
       };
     case PostActions.ARCHIVE_POST_SUCCESS:
       return {
@@ -115,6 +129,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         archivePostConfirm: null,
         archivePostError: null,
+      };
+    case PostActions.CLEAR_USER_SUGGESTION_PHOTO_FILES:
+      return {
+        ...state,
+        userSuggestionsProfilePhotoFiles: [],
       };
     case PostActions.CLEAR_POST_STATE:
       return {

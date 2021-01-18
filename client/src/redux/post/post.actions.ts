@@ -87,32 +87,48 @@ export const getProfilePhotoFileSuccess = (
   payload: file,
 });
 
-export const archivePostStart = (archiveReq: ArchivePostReq) => ({
+export const archivePostStart = (
+  archiveReq: ArchivePostReq
+): PostActionTypes => ({
   type: PostActions.ARCHIVE_POST_START,
   payload: archiveReq,
 });
 
-export const archivePostSuccess = (message: string) => ({
+export const archivePostSuccess = (message: string): PostActionTypes => ({
   type: PostActions.ARCHIVE_POST_SUCCESS,
   payload: message,
 });
 
-export const archivePostFailure = (error: Error) => ({
+export const archivePostFailure = (error: Error): PostActionTypes => ({
   type: PostActions.ARCHIVE_POST_FAILURE,
   payload: error,
 });
 
-export const clearArchivePostStatuses = () => ({
-  type: PostActions.CLEAR_ARCHIVE_POST_STATUSES,
-  payload: null,
-});
-
-export const getOtherUserProfilePhotoFileSuccess = (file: string) => ({
+export const getOtherUserProfilePhotoFileSuccess = (
+  file: string
+): PostActionTypes => ({
   type: PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS,
   payload: file,
 });
 
-export const clearPostState = () => ({
+export const getUserSuggestionProfilePhotoFileSuccess = (
+  postFile: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS,
+  payload: postFile,
+});
+
+export const clearArchivePostStatuses = (): PostActionTypes => ({
+  type: PostActions.CLEAR_ARCHIVE_POST_STATUSES,
+  payload: null,
+});
+
+export const clearUserSuggestionPhotoFiles = (): PostActionTypes => ({
+  type: PostActions.CLEAR_USER_SUGGESTION_PHOTO_FILES,
+  payload: null,
+});
+
+export const clearPostState = (): PostActionTypes => ({
   type: PostActions.CLEAR_POST_STATE,
   payload: null,
 });

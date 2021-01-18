@@ -32,6 +32,8 @@ import {
   deleteAccountFailure,
   getOtherUserSuccess,
   getOtherUserFailure,
+  getUserSuggestionsSuccess,
+  getUserSuggestionsFailure,
 } from './user.actions';
 
 import { clearPostState } from '../post/post.actions';
@@ -91,6 +93,21 @@ export function* getOtherUser({ payload: username }: { payload: string }): any {
     yield put(getOtherUserSuccess(data));
   } catch (err) {
     yield put(getOtherUserFailure(err));
+  }
+}
+
+export function* getUserSuggestions({
+  payload: match,
+}: {
+  payload: string;
+}): any {
+  try {
+    const { data }: { data: User[] } = yield axios.get(
+      `/api/users/suggestions/${match}`
+    );
+    yield put(getUserSuggestionsSuccess(data));
+  } catch (err) {
+    yield put(getUserSuggestionsFailure(err));
   }
 }
 
@@ -209,6 +226,13 @@ export function* onGetOtherUserStart(): SagaIterator {
   );
 }
 
+export function* onGetUserSuggestionsStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    UserActions.GET_USER_SUGGESTIONS_START,
+    getUserSuggestions
+  );
+}
+
 export function* onSignOutStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(UserActions.SIGN_OUT_START, signOut);
 }
@@ -255,6 +279,7 @@ export function* userSagas(): SagaIterator {
     call(onSignInStart),
     call(onCheckUserSession),
     call(onGetOtherUserStart),
+    call(onGetUserSuggestionsStart),
     call(onSignOutStart),
     call(onChangeInfoStart),
     call(onChangePasswordStart),

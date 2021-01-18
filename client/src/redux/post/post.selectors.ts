@@ -60,6 +60,11 @@ export const selectOtherUserProfilePhotoFile = createSelector(
   (postState: PostState) => postState.otherUserProfilePhotoFile
 );
 
+export const selectUserSuggestionProfilePhotoFiles = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.userSuggestionsProfilePhotoFiles
+);
+
 export const selectUpdateProfilePhotoError = createSelector(
   [selectPostState],
   (postState: PostState) => postState.profilePhotoError

@@ -1,5 +1,3 @@
-import { type } from 'os';
-
 export enum PostActions {
   CREATE_POST_START = 'CREATE_POST_START',
   CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS',
@@ -21,6 +19,8 @@ export enum PostActions {
   ARCHIVE_POST_FAILURE = 'ARCHIVE_POST_FAILURE',
   CLEAR_ARCHIVE_POST_STATUSES = 'CLEAR_ARCHIVE_POST_STATUSES',
   GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
+  GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS = 'GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS',
+  CLEAR_USER_SUGGESTION_PHOTO_FILES = 'CLEAR_USER_SUGGESTION_PHOTO_FILES',
   CLEAR_POST_STATE = 'CLEAR_POST_STATE',
 }
 
@@ -43,6 +43,7 @@ export interface Post {
 export enum UserType {
   self = 'self',
   other = 'other',
+  searchSuggestion = 'searchSuggestion',
 }
 
 export interface PostFileReq {
@@ -77,6 +78,7 @@ export interface PostState {
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
   otherUserProfilePhotoFile: string | null;
+  userSuggestionsProfilePhotoFiles: PostFile[];
 }
 
 export interface CreatePostStart {
@@ -156,7 +158,7 @@ export interface GetPostFileFailure {
 
 export interface ArchivePostStart {
   type: typeof PostActions.ARCHIVE_POST_START;
-  payload: string;
+  payload: ArchivePostReq;
 }
 
 export interface ArchivePostSuccess {
@@ -177,6 +179,16 @@ export interface ClearArchivePostStatuses {
 export interface GetOtherUserProfilePhotoFileSuccess {
   type: typeof PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS;
   payload: string;
+}
+
+export interface GetUserSuggestionProfilePhotoFileSuccess {
+  type: typeof PostActions.GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS;
+  payload: PostFile;
+}
+
+export interface ClearUserSuggestionPhotoFiles {
+  type: typeof PostActions.CLEAR_USER_SUGGESTION_PHOTO_FILES;
+  payload: null;
 }
 
 export interface ClearPostState {
@@ -204,5 +216,7 @@ export type PostActionTypes =
   | ArchivePostSuccess
   | ArchivePostFailure
   | GetOtherUserProfilePhotoFileSuccess
-  | ClearPostState
-  | ClearArchivePostStatuses;
+  | GetUserSuggestionProfilePhotoFileSuccess
+  | ClearArchivePostStatuses
+  | ClearUserSuggestionPhotoFiles
+  | ClearPostState;
