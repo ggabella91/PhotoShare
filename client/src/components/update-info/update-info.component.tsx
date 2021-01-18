@@ -85,11 +85,11 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
   }, [changeInfoError, changeInfoConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
+    clearInfoStatuses();
     setTimeout(() => {
       setUserInfo({ name: '', email: '', username: '', bio: '' });
       setStatusInfo({ success: false, error: false });
-      clearInfoStatuses();
-    }, 5000);
+    }, 3000);
     return (
       <Alert variant={type} onClose={() => setShowInfoAlert(false)} dismissible>
         {message}

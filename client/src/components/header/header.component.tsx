@@ -45,6 +45,16 @@ export const Header: React.FC<HeaderProps> = ({
     setSearchString(value);
   };
 
+  useEffect(() => {
+    if (searchString.length >= 3) {
+      console.log(searchString);
+    }
+  });
+
+  const handleSearchSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {};
+
   let bucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -84,6 +94,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div>
           <SearchBar
             onChange={handleSearchStringChange}
+            onSubmit={handleSearchSubmit}
             name='search'
             type='text'
             label='Search'

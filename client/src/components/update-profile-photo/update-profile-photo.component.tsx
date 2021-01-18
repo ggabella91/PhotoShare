@@ -84,7 +84,6 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
 
     if (profilePhoto) {
       setShowProfilePhotoAlert(true);
-      console.log('Got here baby!');
 
       updateProfilePhotoStart(profilePhoto);
       setTimeout(() => setShowProfilePhotoAlert(false), 5000);
@@ -116,11 +115,11 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   }, [updateProfilePhotoError, updateProfilePhotoConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
+    clearProfilePhotoStatuses();
     setTimeout(() => {
       setProfilePhotoStatus({ success: false, error: false });
       setShowProfilePhotoAlert(false);
-      clearProfilePhotoStatuses();
-    }, 5000);
+    }, 3000);
     return (
       <Alert
         variant={type}
