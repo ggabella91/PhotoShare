@@ -185,3 +185,18 @@ export const getOtherUserFailure = (error: Error): UserActionTypes => ({
   type: UserActions.GET_OTHER_USER_FAILURE,
   payload: error,
 });
+
+export const getUserSuggestionsStart = (match: string): UserActionTypes => ({
+  type: UserActions.GET_USER_SUGGESTIONS_START,
+  payload: match,
+});
+
+export const getUserSuggestionsSuccess = (users: User[]): UserActionTypes => ({
+  type: UserActions.GET_USER_SUGGESTIONS_SUCCESS,
+  payload: users,
+});
+
+export const getUserSuggestionsFailure = (error: Error): UserActionTypes => ({
+  type: UserActions.GET_USER_SUGGESTIONS_FAILURE,
+  payload: error,
+});

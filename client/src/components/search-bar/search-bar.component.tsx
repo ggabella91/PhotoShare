@@ -1,50 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { User } from '../../redux/user/user.types';
+
+import UserSuggestion from '../user-suggestion/user-suggestion.component';
 
 import './search-bar.styles.scss';
 
-export interface SearchBarProps {
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => {};
-  name: string;
-  type: string;
-  value: string;
-  label: string;
-}
+export interface SearchBarProps {}
 
-interface SuggestionsData {
+interface UserSuggestionsData {
   profilePhotoFileString: string;
   username: string;
   name: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
-  children,
-  onSubmit,
-  label,
-  ...otherProps
-}) => {
-  const [suggestionsArray, setSuggestionsArray] = useState<SuggestionsData[]>(
-    []
-  );
+const SearchBar: React.FC<SearchBarProps> = ({}) => {
+  const [searchString, setSearchString] = useState('');
+  const [userSuggestionsArray, setUserSuggestionsArray] = useState<
+    UserSuggestionsData[]
+  >([]);
+
+  const handleSearchStringChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+
+    setSearchString(value);
+  };
+
+  useEffect(() => {
+    if (searchString.length >= 3) {
+      console.log(searchString);
+    }
+  });
+
+  const handleSearchSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {};
 
   const handleRenderSuggestions = () => {
-    suggestionsArray.map((el) => <div></div>);
+    return (
+      <div className='user-suggestions-element'>
+        {userSuggestionsArray.map((el: UserSuggestionsData) => (
+          <UserSuggestion />
+        ))}
+      </div>
+    );
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSearchSubmit}>
       <div className='group'>
-        {label ? (
-          <label
-            className={`${
-              otherProps.value.length ? 'hide' : ''
-            } search-bar-label`}
-          >
-            {label}
-          </label>
-        ) : null}
-        <input className='search-bar' {...otherProps} />
+        <label
+          className={`${searchString.length ? 'hide' : ''} search-bar-label`}
+        >
+          Search
+        </label>
+        <input
+          onChange={handleSearchStringChange}
+          className='search-bar'
+          name='search'
+          type='text'
+          value={searchString}
+        />
       </div>
+      {handleRenderSuggestions}
     </form>
   );
 };

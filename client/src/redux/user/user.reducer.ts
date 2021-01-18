@@ -4,6 +4,8 @@ const INITIAL_STATE: UserState = {
   currentUser: null,
   otherUser: null,
   otherUserError: null,
+  userSuggestions: [],
+  userSuggestionsError: null,
   signUpError: null,
   signInOrOutError: null,
   changeInfoConfirm: null,
@@ -31,6 +33,12 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         ...state,
         otherUser: action.payload,
         otherUserError: null,
+      };
+    case UserActions.GET_USER_SUGGESTIONS_SUCCESS:
+      return {
+        ...state,
+        userSuggestions: action.payload,
+        userSuggestionsError: null,
       };
     case UserActions.SIGN_UP_SUCCESS:
       return {
@@ -123,6 +131,12 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
       return {
         ...state,
         deleteAccountError: action.payload,
+      };
+    case UserActions.GET_USER_SUGGESTIONS_FAILURE:
+      return {
+        ...state,
+        userSuggestions: [],
+        userSuggestionsError: action.payload,
       };
     case UserActions.CLEAR_INFO_STATUSES:
       return {

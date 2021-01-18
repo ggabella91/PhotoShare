@@ -20,6 +20,16 @@ export const selectOtherUserError = createSelector(
   (user: UserState) => user.otherUserError
 );
 
+export const selectUserSuggestions = createSelector(
+  [selectUser],
+  (user: UserState) => user.userSuggestions
+);
+
+export const selectUserSuggestionsError = createSelector(
+  [selectUser],
+  (user: UserState) => user.userSuggestionsError
+);
+
 export const selectUserSignUpError = createSelector(
   [selectUser],
   (user: UserState) => user.signUpError

@@ -30,6 +30,9 @@ export enum UserActions {
   GET_OTHER_USER_START = 'GET_OTHER_USER_START',
   GET_OTHER_USER_SUCCESS = 'GET_OTHER_USER_SUCCESS',
   GET_OTHER_USER_FAILURE = 'GET_OTHER_USER_FAILURE',
+  GET_USER_SUGGESTIONS_START = 'GET_USER_SUGGESTIONS_START',
+  GET_USER_SUGGESTIONS_SUCCESS = 'GET_USER_SUGGESTIONS_SUCCESS',
+  GET_USER_SUGGESTIONS_FAILURE = 'GET_USER_SUGGESTIONS_FAILURE',
 }
 
 export interface UserSignUp {
@@ -91,6 +94,8 @@ export interface UserState {
   currentUser: User | null;
   otherUser: User | null;
   otherUserError: Error | null;
+  userSuggestions: User[];
+  userSuggestionsError: Error | null;
   signUpError: Error | null;
   signInOrOutError: Error | null;
   changeInfoConfirm: null | string;
@@ -259,6 +264,21 @@ export interface GetOtherUserFailure {
   payload: Error;
 }
 
+export interface GetUserSuggestionsStart {
+  type: typeof UserActions.GET_USER_SUGGESTIONS_START;
+  payload: string;
+}
+
+export interface GetUserSuggestionsSuccess {
+  type: typeof UserActions.GET_USER_SUGGESTIONS_SUCCESS;
+  payload: User[];
+}
+
+export interface GetUserSuggestionsFailure {
+  type: typeof UserActions.GET_USER_SUGGESTIONS_FAILURE;
+  payload: Error;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -291,4 +311,7 @@ export type UserActionTypes =
   | ClearPasswordStatuses
   | GetOtherUserStart
   | GetOtherUserSuccess
-  | GetOtherUserFailure;
+  | GetOtherUserFailure
+  | GetUserSuggestionsStart
+  | GetUserSuggestionsSuccess
+  | GetUserSuggestionsFailure;
