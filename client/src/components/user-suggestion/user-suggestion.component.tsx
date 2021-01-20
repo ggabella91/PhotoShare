@@ -3,6 +3,8 @@ import React from 'react';
 import './user-suggestion.styles.scss';
 
 interface UserSuggestionProps {
+  key: number;
+  onClick: void;
   username: string;
   name?: string;
   profilePhotoFileString?: string;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
@@ -26,13 +27,14 @@ export interface SearchBarProps {
   getPostFileStart: typeof getPostFileStart;
 }
 
-interface UserSuggestionsData {
+export interface UserSuggestionsData {
   profilePhotoFileString: string;
   username: string;
   name: string;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
+  getUserSuggestionsStart,
   userSuggestions,
   userSuggestionsError,
 }) => {
@@ -40,6 +42,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [userSuggestionsArray, setUserSuggestionsArray] = useState<
     UserSuggestionsData[]
   >([]);
+
+  let history = useHistory();
 
   const handleSearchStringChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -52,26 +56,49 @@ const SearchBar: React.FC<SearchBarProps> = ({
   useEffect(() => {
     if (searchString.length >= 3) {
       console.log(searchString);
+      getUserSuggestionsStart(searchString);
     }
-  });
+  }, [searchString]);
+
+  useEffect(() => {
+    if (userSuggestions) {
+      const suggested: UserSuggestionsData[] = userSuggestions.map(
+        (el: User) => {
+          return {
+            name: el.name,
+            username: el.username,
+            profilePhotoFileString: '',
+          };
+        }
+      );
+
+      setUserSuggestionsArray(suggested);
+    }
+  }, [userSuggestions]);
 
   const handleSearchSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {};
 
   const handleRenderSuggestions = () => {
-    return (
-      <div className='user-suggestions-dropdown'>
-        {userSuggestionsArray.map((el: UserSuggestionsData) => (
-          <UserSuggestion username={el.username} />
-        ))}
-      </div>
-    );
+    if (userSuggestionsArray.length) {
+      return (
+        <ul className='user-suggestions-dropdown'>
+          {userSuggestionsArray.map((el: UserSuggestionsData, idx: number) => (
+            <UserSuggestion
+              key={idx}
+              username={el.username}
+              onClick={history.push(`${el.username}`)}
+            />
+          ))}
+        </ul>
+      );
+    }
   };
 
   return (
     <form onSubmit={handleSearchSubmit}>
-      <div className='group'>
+      <div className='search-group'>
         <label
           className={`${searchString.length ? 'hide' : ''} search-bar-label`}
         >
