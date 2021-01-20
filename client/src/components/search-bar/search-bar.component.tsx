@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
@@ -16,7 +15,7 @@ import { PostFile, PostFileReq } from '../../redux/post/post.types';
 import {} from '../../redux/post/post.selectors';
 import { getPostFileStart } from '../../redux/post/post.actions';
 
-import UserSuggestion from '../user-suggestion/user-suggestion.component';
+import UserSuggestions from '../user-suggestions/user-suggestions.component';
 
 import './search-bar.styles.scss';
 
@@ -43,8 +42,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
     UserSuggestionsData[]
   >([]);
 
-  let history = useHistory();
-
   const handleSearchStringChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -55,7 +52,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     if (searchString.length >= 3) {
-      console.log(searchString);
       getUserSuggestionsStart(searchString);
     }
   }, [searchString]);
@@ -76,25 +72,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
   }, [userSuggestions]);
 
+  useEffect(() => {
+    if (userSuggestionsArray.length) {
+    }
+  }, [userSuggestionsArray]);
+
   const handleSearchSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {};
-
-  const handleRenderSuggestions = () => {
-    if (userSuggestionsArray.length) {
-      return (
-        <ul className='user-suggestions-dropdown'>
-          {userSuggestionsArray.map((el: UserSuggestionsData, idx: number) => (
-            <UserSuggestion
-              key={idx}
-              username={el.username}
-              onClick={history.push(`${el.username}`)}
-            />
-          ))}
-        </ul>
-      );
-    }
-  };
 
   return (
     <form onSubmit={handleSearchSubmit}>
@@ -111,8 +96,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
           type='text'
           value={searchString}
         />
+        <UserSuggestions userSuggestionsArray={userSuggestionsArray} />
       </div>
-      {handleRenderSuggestions}
     </form>
   );
 };

@@ -1,0 +1,27 @@
+.user-suggestions-dropdown {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 180px;
+  max-height: 150px;
+  overflow: scroll;
+
+  .user-suggestion {
+    display: flex;
+    position: relative;
+    justify-content: start;
+    width: 180px;
+    height: 45px;
+    background-color: white;
+
+    .username-and-name {
+      width: 120px;
+      height: 65px;
+
+      .username {
+        font-size: 14px;
+        color: black;
+      }
+    }
+  }
+}
