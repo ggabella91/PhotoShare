@@ -103,7 +103,7 @@ export function* getUserSuggestions({
 }): any {
   try {
     const { data }: { data: User[] } = yield axios.get(
-      `/api/users/suggestions/${match}`
+      `/api/users/suggested/${match}`
     );
     yield put(getUserSuggestionsSuccess(data));
   } catch (err) {
