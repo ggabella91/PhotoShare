@@ -200,3 +200,8 @@ export const getUserSuggestionsFailure = (error: Error): UserActionTypes => ({
   type: UserActions.GET_USER_SUGGESTIONS_FAILURE,
   payload: error,
 });
+
+export const clearUserSuggestions = (): UserActionTypes => ({
+  type: UserActions.CLEAR_USER_SUGGESTIONS,
+  payload: null,
+});

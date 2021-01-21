@@ -9,7 +9,10 @@ import {
   selectUserSuggestions,
   selectUserSuggestionsError,
 } from '../../redux/user/user.selectors';
-import { getUserSuggestionsStart } from '../../redux/user/user.actions';
+import {
+  getUserSuggestionsStart,
+  clearUserSuggestions,
+} from '../../redux/user/user.actions';
 
 import { PostFile, PostFileReq } from '../../redux/post/post.types';
 import {} from '../../redux/post/post.selectors';
@@ -24,6 +27,7 @@ export interface SearchBarProps {
   userSuggestionsError: Error | null;
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
   getPostFileStart: typeof getPostFileStart;
+  clearUserSuggestions: typeof clearUserSuggestions;
 }
 
 export interface UserSuggestionsData {
@@ -36,23 +40,28 @@ const SearchBar: React.FC<SearchBarProps> = ({
   getUserSuggestionsStart,
   userSuggestions,
   userSuggestionsError,
+  clearUserSuggestions,
 }) => {
   const [searchString, setSearchString] = useState('');
   const [userSuggestionsArray, setUserSuggestionsArray] = useState<
     UserSuggestionsData[]
   >([]);
+  const [showUserSuggestions, setShowUserSuggestions] = useState(false);
 
   const handleSearchStringChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
 
+    clearUserSuggestions();
     setSearchString(value);
   };
 
   useEffect(() => {
     if (searchString.length >= 3) {
       getUserSuggestionsStart(searchString);
+    } else {
+      setShowUserSuggestions(false);
     }
   }, [searchString]);
 
@@ -74,15 +83,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     if (userSuggestionsArray.length) {
+      setShowUserSuggestions(true);
+    } else {
+      setShowUserSuggestions(false);
     }
   }, [userSuggestionsArray]);
 
-  const handleSearchSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {};
-
   return (
-    <form onSubmit={handleSearchSubmit}>
+    <form>
       <div className='search-group'>
         <label
           className={`${searchString.length ? 'hide' : ''} search-bar-label`}
@@ -96,7 +104,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
           type='text'
           value={searchString}
         />
-        <UserSuggestions userSuggestionsArray={userSuggestionsArray} />
+        <UserSuggestions
+          userSuggestionsArray={userSuggestionsArray}
+          show={showUserSuggestions}
+        />
       </div>
     </form>
   );
@@ -117,6 +128,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getUserSuggestionsStart(match)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
+  clearUserSuggestions: () => dispatch(clearUserSuggestions()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

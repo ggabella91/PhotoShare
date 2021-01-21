@@ -7,6 +7,7 @@ import './user-suggestions.styles.scss';
 
 interface UserSuggestionsProps {
   userSuggestionsArray: UserSuggestionsData[];
+  show: boolean;
 }
 
 const UserSuggestions: React.FC<UserSuggestionsProps> = ({
@@ -22,6 +23,11 @@ const UserSuggestions: React.FC<UserSuggestionsProps> = ({
           history.push(`/${el.username}`);
         }}
       >
+        <div className='suggestion-avatar'>
+          <div className='suggestion-photo-placeholder'>
+            <span className='suggestion-photo-placeholder-text'>No photo</span>
+          </div>
+        </div>
         <div className='username-and-name'>
           <span className='username'>{el.username}</span>
         </div>

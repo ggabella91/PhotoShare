@@ -150,6 +150,12 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         changePasswordError: null,
         changePasswordConfirm: null,
       };
+    case UserActions.CLEAR_USER_SUGGESTIONS:
+      return {
+        ...state,
+        userSuggestions: [],
+        userSuggestionsError: null,
+      };
     default:
       return state;
   }
