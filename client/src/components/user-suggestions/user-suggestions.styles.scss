@@ -28,15 +28,21 @@
 
       .suggestion-profile-photo {
         position: relative;
-        width: 50px;
-        height: 50px;
+        margin-left: 50%;
+        margin-top: 50%;
+        transform: translate(-50%, -50%);
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
       }
 
       .suggestion-photo-placeholder {
         position: relative;
-        width: 50px;
-        height: 50px;
+        margin-left: 50%;
+        margin-top: 50%;
+        transform: translate(-50%, -50%);
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         border: solid 1px;
         border-color: black;

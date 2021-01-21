@@ -33,6 +33,7 @@ export enum UserActions {
   GET_USER_SUGGESTIONS_START = 'GET_USER_SUGGESTIONS_START',
   GET_USER_SUGGESTIONS_SUCCESS = 'GET_USER_SUGGESTIONS_SUCCESS',
   GET_USER_SUGGESTIONS_FAILURE = 'GET_USER_SUGGESTIONS_FAILURE',
+  CLEAR_USER_SUGGESTIONS = 'CLEAR_USER_SUGGESTIONS',
 }
 
 export interface UserSignUp {
@@ -279,6 +280,11 @@ export interface GetUserSuggestionsFailure {
   payload: Error;
 }
 
+export interface ClearUserSuggestions {
+  type: typeof UserActions.CLEAR_USER_SUGGESTIONS;
+  payload: null;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -314,4 +320,5 @@ export type UserActionTypes =
   | GetOtherUserFailure
   | GetUserSuggestionsStart
   | GetUserSuggestionsSuccess
-  | GetUserSuggestionsFailure;
+  | GetUserSuggestionsFailure
+  | ClearUserSuggestions;
