@@ -41,6 +41,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [userSuggestionsArray, setUserSuggestionsArray] = useState<
     UserSuggestionsData[]
   >([]);
+  const [showUserSuggestions, setShowUserSuggestions] = useState(false);
 
   const handleSearchStringChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -53,6 +54,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   useEffect(() => {
     if (searchString.length >= 3) {
       getUserSuggestionsStart(searchString);
+    } else {
+      setShowUserSuggestions(false);
     }
   }, [searchString]);
 
@@ -74,15 +77,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     if (userSuggestionsArray.length) {
+      setShowUserSuggestions(true);
+    } else {
+      setShowUserSuggestions(false);
     }
   }, [userSuggestionsArray]);
 
-  const handleSearchSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {};
-
   return (
-    <form onSubmit={handleSearchSubmit}>
+    <form>
       <div className='search-group'>
         <label
           className={`${searchString.length ? 'hide' : ''} search-bar-label`}
@@ -96,7 +98,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
           type='text'
           value={searchString}
         />
-        <UserSuggestions userSuggestionsArray={userSuggestionsArray} />
+        <UserSuggestions
+          userSuggestionsArray={userSuggestionsArray}
+          show={showUserSuggestions}
+        />
       </div>
     </form>
   );

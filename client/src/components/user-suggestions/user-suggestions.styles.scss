@@ -1,25 +1,67 @@
 .user-suggestions-dropdown {
   display: flex;
   flex-direction: column;
-  position: relative;
-  width: 180px;
-  max-height: 150px;
-  overflow: scroll;
+  position: absolute;
+  width: 220px;
+  max-height: 100px;
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border-radius: 4px;
+  transform: translate(-10px);
+  z-index: 20;
 
   .user-suggestion {
     display: flex;
     position: relative;
     justify-content: start;
-    width: 180px;
-    height: 45px;
+    width: 220px;
+    height: 50px;
     background-color: white;
+    border-bottom: solid 1px rgba(var(--b38, 219, 219, 219), 1);
+
+    .suggestion-avatar {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+
+      .suggestion-profile-photo {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      .suggestion-photo-placeholder {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: solid 1px;
+        border-color: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .suggestion-photo-placeholder-text {
+          position: relative;
+          font-size: 8px;
+          color: black;
+          margin-top: 50%;
+          transform: translateY(-55%);
+        }
+      }
+    }
 
     .username-and-name {
-      width: 120px;
-      height: 65px;
+      width: 140px;
+      height: 50px;
+      justify-self: flex-end;
 
       .username {
         font-size: 14px;
+        font-weight: 400;
         color: black;
       }
     }
