@@ -14,9 +14,12 @@ import {
   clearUserSuggestions,
 } from '../../redux/user/user.actions';
 
-import { PostFile, PostFileReq } from '../../redux/post/post.types';
-import {} from '../../redux/post/post.selectors';
-import { getPostFileStart } from '../../redux/post/post.actions';
+import { PostFile, PostFileReq, UserType } from '../../redux/post/post.types';
+import { selectUserSuggestionProfilePhotoFiles } from '../../redux/post/post.selectors';
+import {
+  getPostFileStart,
+  clearUserSuggestionPhotoFiles,
+} from '../../redux/post/post.actions';
 
 import UserSuggestions from '../user-suggestions/user-suggestions.component';
 
@@ -25,9 +28,11 @@ import './search-bar.styles.scss';
 export interface SearchBarProps {
   userSuggestions: User[];
   userSuggestionsError: Error | null;
+  userSuggestionProfilePhotoFiles: PostFile[];
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
   getPostFileStart: typeof getPostFileStart;
   clearUserSuggestions: typeof clearUserSuggestions;
+  clearUserSuggestionPhotoFiles: typeof clearUserSuggestionPhotoFiles;
 }
 
 export interface UserSuggestionsData {
@@ -38,9 +43,12 @@ export interface UserSuggestionsData {
 
 const SearchBar: React.FC<SearchBarProps> = ({
   getUserSuggestionsStart,
+  getPostFileStart,
   userSuggestions,
   userSuggestionsError,
+  userSuggestionProfilePhotoFiles,
   clearUserSuggestions,
+  clearUserSuggestionPhotoFiles,
 }) => {
   const [searchString, setSearchString] = useState('');
   const [userSuggestionsArray, setUserSuggestionsArray] = useState<
@@ -48,12 +56,21 @@ const SearchBar: React.FC<SearchBarProps> = ({
   >([]);
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
 
+  let bucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    bucket = 'photo-share-app-profile-photos';
+  } else {
+    bucket = 'photo-share-app-profile-photos-dev';
+  }
+
   const handleSearchStringChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
 
     clearUserSuggestions();
+    clearUserSuggestionPhotoFiles();
     setSearchString(value);
   };
 
@@ -66,20 +83,42 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchString]);
 
   useEffect(() => {
-    if (userSuggestions) {
-      const suggested: UserSuggestionsData[] = userSuggestions.map(
+    if (userSuggestions.length && !userSuggestionProfilePhotoFiles) {
+      for (let user of userSuggestions) {
+        if (user.photo) {
+          getPostFileStart({
+            user: UserType.searchSuggestion,
+            bucket,
+            s3Key: user.photo,
+          });
+        }
+      }
+    }
+  }, [searchString, userSuggestionProfilePhotoFiles]);
+
+  useEffect(() => {
+    if (userSuggestions.length && userSuggestionProfilePhotoFiles) {
+      const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
         (el: User) => {
+          let photoFileString: string;
+
+          for (let file of userSuggestionProfilePhotoFiles) {
+            if (el.photo === file.s3Key) {
+              photoFileString = file.fileString;
+            }
+          }
+
           return {
             name: el.name,
             username: el.username,
-            profilePhotoFileString: '',
+            profilePhotoFileString: photoFileString!,
           };
         }
       );
 
-      setUserSuggestionsArray(suggested);
+      setUserSuggestionsArray(suggestedUser);
     }
-  }, [userSuggestions]);
+  }, [searchString, userSuggestionProfilePhotoFiles]);
 
   useEffect(() => {
     if (userSuggestionsArray.length) {
@@ -116,11 +155,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
 interface LinkStateProps {
   userSuggestions: User[];
   userSuggestionsError: Error | null;
+  userSuggestionProfilePhotoFiles: PostFile[];
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   userSuggestions: selectUserSuggestions,
   userSuggestionsError: selectUserSuggestionsError,
+  userSuggestionProfilePhotoFiles: selectUserSuggestionProfilePhotoFiles,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -129,6 +170,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
   clearUserSuggestions: () => dispatch(clearUserSuggestions()),
+  clearUserSuggestionPhotoFiles: () =>
+    dispatch(clearUserSuggestionPhotoFiles()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
