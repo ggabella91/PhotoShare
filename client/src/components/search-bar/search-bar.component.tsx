@@ -43,6 +43,7 @@ export interface UserSuggestionsData {
 
 const SearchBar: React.FC<SearchBarProps> = ({
   getUserSuggestionsStart,
+  getPostFileStart,
   userSuggestions,
   userSuggestionsError,
   userSuggestionProfilePhotoFiles,
@@ -93,7 +94,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         }
       }
     } else if (userSuggestions && userSuggestionProfilePhotoFiles) {
-      const suggested: UserSuggestionsData[] = userSuggestions.map(
+      const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
         (el: User) => {
           let photoFileString: string;
 
@@ -111,7 +112,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         }
       );
 
-      setUserSuggestionsArray(suggested);
+      setUserSuggestionsArray(suggestedUser);
     }
   }, [userSuggestions, userSuggestionProfilePhotoFiles]);
 
