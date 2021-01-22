@@ -83,7 +83,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchString]);
 
   useEffect(() => {
-    if (userSuggestions && !userSuggestionProfilePhotoFiles) {
+    if (userSuggestions.length && !userSuggestionProfilePhotoFiles) {
       for (let user of userSuggestions) {
         if (user.photo) {
           getPostFileStart({
@@ -93,7 +93,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
           });
         }
       }
-    } else if (userSuggestions && userSuggestionProfilePhotoFiles) {
+    }
+  }, [searchString, userSuggestionProfilePhotoFiles]);
+
+  useEffect(() => {
+    if (userSuggestions.length && userSuggestionProfilePhotoFiles) {
       const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
         (el: User) => {
           let photoFileString: string;
@@ -114,7 +118,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       setUserSuggestionsArray(suggestedUser);
     }
-  }, [userSuggestions, userSuggestionProfilePhotoFiles]);
+  }, [searchString, userSuggestionProfilePhotoFiles]);
 
   useEffect(() => {
     if (userSuggestionsArray.length) {
