@@ -1,3 +1,7 @@
+@mixin hideSuggestions {
+  display: none;
+}
+
 .user-suggestions-dropdown {
   display: flex;
   flex-direction: column;
@@ -10,6 +14,10 @@
   border-radius: 4px;
   transform: translate(-10px);
   z-index: 20;
+
+  &.hide {
+    @include hideSuggestions();
+  }
 
   .user-suggestion {
     display: flex;
@@ -61,12 +69,20 @@
     }
 
     .username-and-name {
+      display: flex;
+      flex-direction: column;
       width: 140px;
       height: 50px;
       justify-self: flex-end;
 
       .username {
         font-size: 14px;
+        font-weight: 400;
+        color: black;
+      }
+
+      .name {
+        font-size: 12px;
         font-weight: 400;
         color: black;
       }

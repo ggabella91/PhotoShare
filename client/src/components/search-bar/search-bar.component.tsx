@@ -55,6 +55,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     UserSuggestionsData[]
   >([]);
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
+  const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
 
   let bucket: string;
 
@@ -117,12 +118,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }, [userSuggestions, userSuggestionProfilePhotoFiles]);
 
   useEffect(() => {
-    if (userSuggestionsArray.length) {
+    if (searchString.length) {
       setShowUserSuggestions(true);
     } else {
       setShowUserSuggestions(false);
     }
-  }, [userSuggestionsArray]);
+  }, [searchString.length]);
 
   return (
     <form>
@@ -138,8 +139,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
           name='search'
           type='text'
           value={searchString}
+          onBlur={(e) => setHideSuggestionsOnBlur(true)}
+          onFocus={(e) => setHideSuggestionsOnBlur(false)}
         />
         <UserSuggestions
+          hideOnBlur={hideSuggestionsOnBlur}
           userSuggestionsArray={userSuggestionsArray}
           show={showUserSuggestions}
         />

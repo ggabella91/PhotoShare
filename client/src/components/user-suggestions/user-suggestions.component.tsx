@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { UserSuggestionsData } from '../search-bar/search-bar.component';
@@ -8,11 +8,24 @@ import './user-suggestions.styles.scss';
 interface UserSuggestionsProps {
   userSuggestionsArray: UserSuggestionsData[];
   show: boolean;
+  hideOnBlur: boolean;
 }
 
 const UserSuggestions: React.FC<UserSuggestionsProps> = ({
   userSuggestionsArray,
+  show,
+  hideOnBlur,
 }) => {
+  const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
+
+  useEffect(() => {
+    if (hideOnBlur) {
+      setHideSuggestionsOnBlur(true);
+    } else {
+      setHideSuggestionsOnBlur(false);
+    }
+  }, [hideOnBlur]);
+
   let history = useHistory();
   const suggestions = userSuggestionsArray.map(
     (el: UserSuggestionsData, idx: number) => (
@@ -41,12 +54,21 @@ const UserSuggestions: React.FC<UserSuggestionsProps> = ({
         </div>
         <div className='username-and-name'>
           <span className='username'>{el.username}</span>
+          <span className='name'>{el.name}</span>
         </div>
       </div>
     )
   );
 
-  return <div className='user-suggestions-dropdown'>{suggestions}</div>;
+  return (
+    <div
+      className={`${
+        !show || hideSuggestionsOnBlur ? 'hide' : ''
+      } user-suggestions-dropdown`}
+    >
+      {suggestions}
+    </div>
+  );
 };
 
 export default UserSuggestions;
