@@ -26,7 +26,7 @@ import UserSuggestions from '../user-suggestions/user-suggestions.component';
 import './search-bar.styles.scss';
 
 export interface SearchBarProps {
-  userSuggestions: User[];
+  userSuggestions: User[] | null;
   userSuggestionsError: Error | null;
   userSuggestionProfilePhotoFiles: PostFile[];
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
@@ -83,7 +83,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchString]);
 
   useEffect(() => {
-    if (userSuggestions.length && !userSuggestionProfilePhotoFiles) {
+    if (userSuggestions && !userSuggestionProfilePhotoFiles.length) {
       for (let user of userSuggestions) {
         if (user.photo) {
           getPostFileStart({
@@ -93,11 +93,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           });
         }
       }
-    }
-  }, [searchString, userSuggestionProfilePhotoFiles]);
-
-  useEffect(() => {
-    if (userSuggestions.length && userSuggestionProfilePhotoFiles) {
+    } else if (userSuggestions && userSuggestionProfilePhotoFiles.length) {
       const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
         (el: User) => {
           let photoFileString: string;
@@ -118,7 +114,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       setUserSuggestionsArray(suggestedUser);
     }
-  }, [searchString, userSuggestionProfilePhotoFiles]);
+  }, [userSuggestions, userSuggestionProfilePhotoFiles]);
 
   useEffect(() => {
     if (userSuggestionsArray.length) {
@@ -153,7 +149,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 };
 
 interface LinkStateProps {
-  userSuggestions: User[];
+  userSuggestions: User[] | null;
   userSuggestionsError: Error | null;
   userSuggestionProfilePhotoFiles: PostFile[];
 }

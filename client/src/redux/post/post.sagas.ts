@@ -86,7 +86,9 @@ export function* getPostFile({
       } else if (user === UserType.other) {
         yield put(getOtherUserProfilePhotoFileSuccess(data));
       } else if (user === UserType.searchSuggestion) {
-        yield put(getUserSuggestionProfilePhotoFileSuccess(data));
+        yield put(
+          getUserSuggestionProfilePhotoFileSuccess({ s3Key, fileString: data })
+        );
       }
     }
   } catch (err) {
