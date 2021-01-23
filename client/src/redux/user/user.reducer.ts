@@ -4,7 +4,7 @@ const INITIAL_STATE: UserState = {
   currentUser: null,
   otherUser: null,
   otherUserError: null,
-  userSuggestions: [],
+  userSuggestions: null,
   userSuggestionsError: null,
   signUpError: null,
   signInOrOutError: null,
