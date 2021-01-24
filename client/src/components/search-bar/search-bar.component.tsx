@@ -41,7 +41,7 @@ export interface UserSuggestionsData {
   name: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
+export const SearchBar: React.FC<SearchBarProps> = ({
   getUserSuggestionsStart,
   getPostFileStart,
   userSuggestions,

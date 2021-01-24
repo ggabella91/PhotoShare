@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a search-bar component 1`] = `
+<form>
+  <div
+    className="search-group"
+  >
+    <label
+      className=" search-bar-label"
+    >
+      Search
+    </label>
+    <input
+      className="search-bar"
+      name="search"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      type="text"
+      value=""
+    />
+  </div>
+</form>
+`;
