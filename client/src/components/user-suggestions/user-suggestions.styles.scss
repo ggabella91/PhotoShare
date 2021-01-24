@@ -1,6 +1,6 @@
-@mixin hideSuggestions {
-  display: none;
-}
+// @mixin hideSuggestions {
+//   display: none;
+// }
 
 .user-suggestions-dropdown {
   display: flex;
@@ -13,11 +13,11 @@
   overflow-x: hidden;
   border-radius: 4px;
   transform: translate(-10px);
-  // z-index: 20;
+  z-index: 20;
 
-  &.hide {
-    @include hideSuggestions();
-  }
+  // &.hide {
+  //   @include hideSuggestions();
+  // }
 
   .user-suggestion {
     display: flex;

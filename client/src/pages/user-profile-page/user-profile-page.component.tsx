@@ -113,7 +113,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [username]);
 
   useEffect(() => {
-    if (otherUser && !user.name) {
+    if (otherUser) {
       setUser({
         id: otherUser.id,
         name: otherUser.name,
