@@ -13,7 +13,7 @@
   overflow-x: hidden;
   border-radius: 4px;
   transform: translate(-10px);
-  // z-index: 20;
+  z-index: 20;
 
   &.hide {
     @include hideSuggestions();

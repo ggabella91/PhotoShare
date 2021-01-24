@@ -127,14 +127,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
-      setHideSuggestionsOnBlur(true);
+      setTimeout(() => {
+        setHideSuggestionsOnBlur(true);
+      }, 100);
     }
   };
 
   return (
     <form
       onFocus={(e) => setHideSuggestionsOnBlur(false)}
-      // onBlur={(e) => handleBlur(e)}
+      onBlur={(e) => handleBlur(e)}
     >
       <div className='search-group'>
         <label
