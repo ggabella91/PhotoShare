@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactEventHandler } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { UserSuggestionsData } from '../search-bar/search-bar.component';
