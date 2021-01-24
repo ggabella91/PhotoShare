@@ -11,6 +11,7 @@
 .search-group {
   position: relative;
   margin-top: 4vh;
+  z-index: 20;
 
   @include respond-medium() {
     transform: translateY(-2vh);

@@ -55,6 +55,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     UserSuggestionsData[]
   >([]);
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
+  const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
 
   let bucket: string;
 
@@ -117,15 +118,24 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }, [userSuggestions, userSuggestionProfilePhotoFiles]);
 
   useEffect(() => {
-    if (userSuggestionsArray.length) {
+    if (searchString.length) {
       setShowUserSuggestions(true);
     } else {
       setShowUserSuggestions(false);
     }
-  }, [userSuggestionsArray]);
+  }, [searchString.length]);
+
+  const handleBlur = (event: React.FocusEvent) => {
+    if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+      setHideSuggestionsOnBlur(true);
+    }
+  };
 
   return (
-    <form>
+    <form
+      onFocus={(e) => setHideSuggestionsOnBlur(false)}
+      // onBlur={(e) => handleBlur(e)}
+    >
       <div className='search-group'>
         <label
           className={`${searchString.length ? 'hide' : ''} search-bar-label`}
@@ -140,6 +150,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           value={searchString}
         />
         <UserSuggestions
+          hideOnBlur={hideSuggestionsOnBlur}
           userSuggestionsArray={userSuggestionsArray}
           show={showUserSuggestions}
         />
