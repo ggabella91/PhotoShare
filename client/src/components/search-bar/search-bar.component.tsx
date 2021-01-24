@@ -129,15 +129,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
       setTimeout(() => {
         setHideSuggestionsOnBlur(true);
-      }, 100);
+      }, 150);
     }
   };
 
   return (
-    <form
-      onFocus={(e) => setHideSuggestionsOnBlur(false)}
-      onBlur={(e) => handleBlur(e)}
-    >
+    <form>
       <div className='search-group'>
         <label
           className={`${searchString.length ? 'hide' : ''} search-bar-label`}
@@ -150,12 +147,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
           name='search'
           type='text'
           value={searchString}
+          onFocus={(e) => setHideSuggestionsOnBlur(false)}
+          onBlur={(e) => handleBlur(e)}
         />
-        <UserSuggestions
-          hideOnBlur={hideSuggestionsOnBlur}
-          userSuggestionsArray={userSuggestionsArray}
-          show={showUserSuggestions}
-        />
+        {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
+          <UserSuggestions userSuggestionsArray={userSuggestionsArray} />
+        )}
       </div>
     </form>
   );
