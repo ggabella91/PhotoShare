@@ -7,6 +7,7 @@ import { AppState } from '../../redux/root-reducer';
 import { User, Error } from '../../redux/user/user.types';
 import {
   selectUserSuggestions,
+  selectUserSuggestionsConfirm,
   selectUserSuggestionsError,
 } from '../../redux/user/user.selectors';
 import {
@@ -27,6 +28,7 @@ import './search-bar.styles.scss';
 
 export interface SearchBarProps {
   userSuggestions: User[] | null;
+  userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
   userSuggestionProfilePhotoFiles: PostFile[];
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
@@ -45,6 +47,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   getUserSuggestionsStart,
   getPostFileStart,
   userSuggestions,
+  userSuggestionsConfirm,
   userSuggestionsError,
   userSuggestionProfilePhotoFiles,
   clearUserSuggestions,
@@ -72,6 +75,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
     clearUserSuggestions();
     clearUserSuggestionPhotoFiles();
+    setUserSuggestionsArray([]);
     setSearchString(value);
   };
 
@@ -153,6 +157,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
           <UserSuggestions userSuggestionsArray={userSuggestionsArray} />
         )}
+        {!userSuggestionsArray.length && userSuggestionsConfirm ? (
+          <div className='no-matches'>
+            <span className='no-matches-text'>No matches found</span>
+          </div>
+        ) : null}
       </div>
     </form>
   );
@@ -160,12 +169,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
 interface LinkStateProps {
   userSuggestions: User[] | null;
+  userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
   userSuggestionProfilePhotoFiles: PostFile[];
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   userSuggestions: selectUserSuggestions,
+  userSuggestionsConfirm: selectUserSuggestionsConfirm,
   userSuggestionsError: selectUserSuggestionsError,
   userSuggestionProfilePhotoFiles: selectUserSuggestionProfilePhotoFiles,
 });

@@ -25,6 +25,11 @@ export const selectUserSuggestions = createSelector(
   (user: UserState) => user.userSuggestions
 );
 
+export const selectUserSuggestionsConfirm = createSelector(
+  [selectUser],
+  (user: UserState) => user.userSuggestionsConfirm
+);
+
 export const selectUserSuggestionsError = createSelector(
   [selectUser],
   (user: UserState) => user.userSuggestionsError

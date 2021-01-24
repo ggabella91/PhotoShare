@@ -96,6 +96,7 @@ export interface UserState {
   otherUser: User | null;
   otherUserError: Error | null;
   userSuggestions: User[] | null;
+  userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
   signUpError: Error | null;
   signInOrOutError: Error | null;
