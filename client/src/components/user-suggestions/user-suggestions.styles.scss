@@ -1,7 +1,3 @@
-// @mixin hideSuggestions {
-//   display: none;
-// }
-
 .user-suggestions-dropdown {
   display: flex;
   flex-direction: column;
@@ -14,10 +10,6 @@
   border-radius: 4px;
   transform: translate(-10px);
   z-index: 20;
-
-  // &.hide {
-  //   @include hideSuggestions();
-  // }
 
   .user-suggestion {
     display: flex;

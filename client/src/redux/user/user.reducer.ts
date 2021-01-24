@@ -5,6 +5,7 @@ const INITIAL_STATE: UserState = {
   otherUser: null,
   otherUserError: null,
   userSuggestions: null,
+  userSuggestionsConfirm: null,
   userSuggestionsError: null,
   signUpError: null,
   signInOrOutError: null,
@@ -38,6 +39,7 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
       return {
         ...state,
         userSuggestions: action.payload,
+        userSuggestionsConfirm: 'User suggestions fetched!',
         userSuggestionsError: null,
       };
     case UserActions.SIGN_UP_SUCCESS:
@@ -135,7 +137,8 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
     case UserActions.GET_USER_SUGGESTIONS_FAILURE:
       return {
         ...state,
-        userSuggestions: [],
+        userSuggestions: null,
+        userSuggestionsConfirm: null,
         userSuggestionsError: action.payload,
       };
     case UserActions.CLEAR_INFO_STATUSES:
@@ -153,7 +156,8 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
     case UserActions.CLEAR_USER_SUGGESTIONS:
       return {
         ...state,
-        userSuggestions: [],
+        userSuggestions: null,
+        userSuggestionsConfirm: null,
         userSuggestionsError: null,
       };
     default:
