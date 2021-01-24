@@ -9,7 +9,7 @@ interface UserSuggestionsProps {
   userSuggestionsArray: UserSuggestionsData[];
 }
 
-const UserSuggestions: React.FC<UserSuggestionsProps> = ({
+export const UserSuggestions: React.FC<UserSuggestionsProps> = ({
   userSuggestionsArray,
 }) => {
   let history = useHistory();
