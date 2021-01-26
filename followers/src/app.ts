@@ -7,6 +7,8 @@ import {
   NotFoundError,
   currentUser,
 } from '@ggabella-photo-share/common';
+import { followNewUserRouter } from './routes/follow-new-user';
+import { getFollowersRouter } from './routes/get-followers';
 
 const app = express();
 app.set('trust proxy', true);
@@ -19,6 +21,9 @@ app.use(
 );
 
 app.use(currentUser);
+
+app.use(followNewUserRouter);
+app.use(getFollowersRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
