@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 
 import userReducer from './user/user.reducer';
 import postReducer from './post/post.reducer';
+import followerReducer from './follower/follower.reducer';
 
 const persistConfig = {
   key: 'root',
@@ -14,6 +15,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userReducer,
   post: postReducer,
+  follower: followerReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;
