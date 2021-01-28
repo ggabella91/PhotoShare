@@ -35,7 +35,7 @@ export interface FollowNewUserStart {
 
 export interface FollowNewUserSuccess {
   type: typeof FollowerActions.FOLLOW_NEW_USER_SUCCESS;
-  payload: Follower;
+  payload: string;
 }
 
 export interface FollowNewUserFailure {
