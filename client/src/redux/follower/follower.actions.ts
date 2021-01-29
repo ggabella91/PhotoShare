@@ -6,10 +6,10 @@ import {
 } from './follower.types';
 
 export const followNewUserStart = (
-  userToFollow: string
+  userToFollowId: string
 ): FollowerActionTypes => ({
   type: FollowerActions.FOLLOW_NEW_USER_START,
-  payload: userToFollow,
+  payload: userToFollowId,
 });
 
 export const followNewUserSuccess = (message: string): FollowerActionTypes => ({
@@ -40,5 +40,26 @@ export const getFollowersFailure = (
   error: FollowError
 ): FollowerActionTypes => ({
   type: FollowerActions.GET_FOLLOWERS_FAILURE,
+  payload: error,
+});
+
+export const getUsersFollowingStart = (
+  userId: string
+): FollowerActionTypes => ({
+  type: FollowerActions.GET_USERS_FOLLOWING_START,
+  payload: userId,
+});
+
+export const getUsersFollowingSuccess = (
+  usersFollowing: Follower[]
+): FollowerActionTypes => ({
+  type: FollowerActions.GET_USERS_FOLLOWING_SUCCESS,
+  payload: usersFollowing,
+});
+
+export const getUsersFollowingFailure = (
+  error: FollowError
+): FollowerActionTypes => ({
+  type: FollowerActions.GET_USERS_FOLLOWING_FAILURE,
   payload: error,
 });

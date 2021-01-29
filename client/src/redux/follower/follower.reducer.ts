@@ -6,11 +6,13 @@ import {
 
 const INITIAL_STATE: FollowerState = {
   followers: null,
-  following: null,
+  usersFollowing: null,
   followConfirm: null,
   followError: null,
   getFollowersConfirm: null,
   getFollowersError: null,
+  getUsersFollowingConfirm: null,
+  getUsersFollowingError: null,
 };
 
 const followerReducer = (
@@ -31,6 +33,13 @@ const followerReducer = (
         getFollowersConfirm: 'Followers fetched successfully!',
         getFollowersError: null,
       };
+    case FollowerActions.GET_USERS_FOLLOWING_SUCCESS:
+      return {
+        ...state,
+        usersFollowing: action.payload,
+        getUsersFollowingConfirm: 'Users following fetched successfully!',
+        getUsersFollowingError: null,
+      };
     case FollowerActions.FOLLOW_NEW_USER_FAILURE:
       return {
         ...state,
@@ -42,6 +51,12 @@ const followerReducer = (
         ...state,
         getFollowersConfirm: null,
         getFollowersError: action.payload,
+      };
+    case FollowerActions.GET_USERS_FOLLOWING_FAILURE:
+      return {
+        ...state,
+        getUsersFollowingConfirm: null,
+        getUsersFollowingError: action.payload,
       };
     default:
       return state;
