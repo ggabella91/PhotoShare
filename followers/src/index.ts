@@ -3,7 +3,7 @@ import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
 
 const start = async () => {
-  console.log('Starting up posts service....');
+  console.log('Starting up followers service....');
 
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');

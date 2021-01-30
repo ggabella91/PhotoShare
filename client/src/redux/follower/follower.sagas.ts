@@ -1,4 +1,4 @@
-import { takeLatest, put, all, call, take } from 'redux-saga/effects';
+import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 

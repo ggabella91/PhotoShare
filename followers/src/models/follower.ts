@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { version } from 'yargs';
 
 interface FollowerAttrs {
   userId: string;
@@ -31,6 +32,7 @@ const followerSchema = new mongoose.Schema(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
+        delete ret.version;
       },
     },
   }
