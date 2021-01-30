@@ -11,6 +11,10 @@ spec:
     - host: www.photo-share.us
       http:
         paths:
+          - path: /api/followers/?(.*)
+            backend:
+              serviceName: followers-srv
+              servicePort: 3000
           - path: /api/posts/?(.*)
             backend:
               serviceName: posts-srv

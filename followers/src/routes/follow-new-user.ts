@@ -10,6 +10,10 @@ router.post(
   async (req: Request, res: Response) => {
     const { userId } = req.params;
 
+    if (!userId) {
+      throw new BadRequestError('User not found');
+    }
+
     const newFollower = Follower.build({
       userId,
       followerId: req.currentUser!.id,

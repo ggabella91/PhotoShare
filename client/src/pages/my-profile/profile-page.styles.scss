@@ -108,7 +108,8 @@
         margin-top: 3.5vh;
         justify-content: flex-start;
 
-        .username-and-edit {
+        .username-and-edit,
+        .username-and-follow {
           position: relative;
           margin-left: inherit;
           display: flex;
@@ -123,12 +124,14 @@
             margin-right: 30px;
           }
 
-          .edit-profile {
+          .edit-profile,
+          .follow-profile {
             border: 1px solid rgba(122, 122, 122, 0.2);
             position: relative;
             min-width: 100px;
             padding: 0.5vh 0.5vw;
             border-radius: 4px;
+            cursor: pointer;
 
             &:hover {
               text-decoration: none;
@@ -138,15 +141,21 @@
               display: none;
             }
 
-            .edit-text {
+            .edit-text,
+            .follow-text {
               font-size: 14px;
               font-weight: 420;
               color: black;
             }
           }
+
+          .follow-profile:hover {
+            text-decoration: none;
+          }
         }
 
-        .edit-profile-narrow-screen {
+        .edit-profile-narrow-screen,
+        .follow-profile-narrow-screen {
           border: 1px solid rgba(122, 122, 122, 0.2);
           position: relative;
           font-size: 14px;
@@ -155,6 +164,7 @@
           border-radius: 4px;
           width: 100%;
           display: none;
+          cursor: pointer;
 
           &:hover {
             text-decoration: none;
@@ -164,11 +174,16 @@
             display: flex;
           }
 
-          .edit-narrow-text {
+          .edit-narrow-text,
+          .follow-narrow-text {
             margin-left: 50%;
             transform: translate(-50%);
             font-weight: 420;
           }
+        }
+
+        .follow-profile-narrow-screen:hover {
+          text-decoration: none;
         }
 
         .user-posts {

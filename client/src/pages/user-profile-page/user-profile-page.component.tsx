@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -36,6 +35,13 @@ import {
   archivePostStart,
 } from '../../redux/post/post.actions';
 
+import { Follower, FollowError } from '../../redux/follower/follower.types';
+import {
+  selectFollowConfirm,
+  selectFollowError,
+} from '../../redux/follower/follower.selectors';
+import { followNewUserStart } from '../../redux/follower/follower.actions';
+
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
@@ -59,6 +65,7 @@ interface UserProfilePageProps {
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
+  followNewUserStart: typeof followNewUserStart;
 }
 
 interface PostModalProps {
@@ -80,6 +87,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
+  followNewUserStart,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -231,15 +239,25 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
             ) : null}
           </div>
           <div className='user-details'>
-            <div className='username-and-edit'>
+            <div className='username-and-follow'>
               <span className='user-username'>{user.username}</span>
-              <div className='edit-profile'>
-                <span className='edit-text'>Follow</span>
-              </div>
+              <form className='follow-profile'>
+                <span
+                  className='follow-text'
+                  onClick={() => followNewUserStart(user.id)}
+                >
+                  Follow
+                </span>
+              </form>
             </div>
-            <div className='edit-profile-narrow-screen'>
-              <span className='edit-narrow-text'>Follow</span>
-            </div>
+            <form className='follow-profile-narrow-screen'>
+              <span
+                className='follow-narrow-text'
+                onClick={() => followNewUserStart(user.id)}
+              >
+                Follow
+              </span>
+            </form>
             <span className='user-posts'>{postDataArray.length} Posts</span>
             <div className='name-and-bio'>
               <span className='user-name'>{user.name}</span>
@@ -329,6 +347,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostDataStart: (userId: string) => dispatch(getPostDataStart(userId)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
+  followNewUserStart: (userToFollowId: string) =>
+    dispatch(followNewUserStart(userToFollowId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);
