@@ -16,6 +16,9 @@ import {
   clearPostStatuses,
 } from '../../redux/post/post.actions';
 
+import { Follower } from '../../redux/follower/follower.types';
+import { getUsersFollowingStart } from '../../redux/follower/follower.actions';
+
 import {
   FormInput,
   FormFileInput,
@@ -36,6 +39,7 @@ interface HomePageProps {
   postConfirm: string | null;
   postError: PostError | null;
   clearPostStatuses: typeof clearPostStatuses;
+  getUsersFollowingStart: typeof getUsersFollowingStart;
 }
 
 interface ImgPreview {
@@ -49,6 +53,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   postConfirm,
   postError,
   clearPostStatuses,
+  getUsersFollowingStart,
 }) => {
   const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
@@ -66,6 +71,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   useEffect(() => {
     if (currentUser) {
       setName(currentUser.name);
+      getUsersFollowingStart(currentUser.id);
     }
   }, [currentUser]);
 
@@ -229,6 +235,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostStart: (post: FormData) => dispatch(createPostStart(post)),
   clearPostStatuses: () => dispatch(clearPostStatuses()),
+  getUsersFollowingStart: (userId: string) =>
+    dispatch(getUsersFollowingStart(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
