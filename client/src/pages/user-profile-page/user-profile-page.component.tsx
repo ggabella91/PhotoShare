@@ -39,6 +39,7 @@ import { Follower, FollowError } from '../../redux/follower/follower.types';
 import {
   selectFollowConfirm,
   selectFollowError,
+  selectUsersFollowing,
 } from '../../redux/follower/follower.selectors';
 import { followNewUserStart } from '../../redux/follower/follower.actions';
 
@@ -62,6 +63,7 @@ interface UserProfilePageProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
+  usersFollowing: Follower[] | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -84,6 +86,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   profilePhotoFile,
   postData,
   postFiles,
+  usersFollowing,
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
@@ -214,6 +217,18 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     }
   };
 
+  const handleRenderFollowOrFollowingText = () => {
+    if (usersFollowing) {
+      for (let userFollowing of usersFollowing) {
+        if (userFollowing.userId === user.id) {
+          return 'Following';
+        }
+      }
+    }
+
+    return 'Follow';
+  };
+
   if (otherUserError) {
     return <NotFoundPage />;
   }
@@ -246,7 +261,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
                   className='follow-text'
                   onClick={() => followNewUserStart(user.id)}
                 >
-                  Follow
+                  {handleRenderFollowOrFollowingText()}
                 </span>
               </form>
             </div>
@@ -255,7 +270,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
                 className='follow-narrow-text'
                 onClick={() => followNewUserStart(user.id)}
               >
-                Follow
+                {handleRenderFollowOrFollowingText()}
               </span>
             </form>
             <span className='user-posts'>{postDataArray.length} Posts</span>
@@ -325,6 +340,7 @@ interface LinkStateProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
+  usersFollowing: Follower[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -339,6 +355,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostDataError: selectGetPostDataError,
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
+  usersFollowing: selectUsersFollowing,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
