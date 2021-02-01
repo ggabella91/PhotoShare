@@ -217,16 +217,29 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     }
   };
 
-  const handleRenderFollowOrFollowingText = () => {
+  const handleRenderFollowOrFollowingButton = (narrow: boolean) => {
+    let isFollowing: boolean;
+
     if (usersFollowing) {
       for (let userFollowing of usersFollowing) {
         if (userFollowing.userId === user.id) {
-          return 'Following';
+          isFollowing = true;
         }
       }
     }
 
-    return 'Follow';
+    return (
+      <div
+        className={narrow ? 'follow-profile-narrow-screen' : 'follow-profile'}
+      >
+        <span
+          className={narrow ? 'follow-narrow-text' : 'follow-text'}
+          onClick={isFollowing! ? () => {} : () => followNewUserStart(user.id)}
+        >
+          {isFollowing! ? 'Following' : 'Follow'}
+        </span>
+      </div>
+    );
   };
 
   if (otherUserError) {
@@ -256,23 +269,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           <div className='user-details'>
             <div className='username-and-follow'>
               <span className='user-username'>{user.username}</span>
-              <form className='follow-profile'>
-                <span
-                  className='follow-text'
-                  onClick={() => followNewUserStart(user.id)}
-                >
-                  {handleRenderFollowOrFollowingText()}
-                </span>
-              </form>
+              {handleRenderFollowOrFollowingButton(false)}
             </div>
-            <form className='follow-profile-narrow-screen'>
-              <span
-                className='follow-narrow-text'
-                onClick={() => followNewUserStart(user.id)}
-              >
-                {handleRenderFollowOrFollowingText()}
-              </span>
-            </form>
+            {handleRenderFollowOrFollowingButton(true)}
             <span className='user-posts'>{postDataArray.length} Posts</span>
             <div className='name-and-bio'>
               <span className='user-name'>{user.name}</span>

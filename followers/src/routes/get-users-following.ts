@@ -10,11 +10,11 @@ router.get(
   async (req: Request, res: Response) => {
     const { userId } = req.params;
 
-    const usersFollowing: FollowerDoc[] = Follower.find({
+    const usersFollowing: FollowerDoc[] = await Follower.find({
       followerId: userId,
     });
 
-    res.status(200).send(usersFollowing);
+    res.status(200).send(usersFollowing.map((el: FollowerDoc) => el.toJSON()));
   }
 );
 

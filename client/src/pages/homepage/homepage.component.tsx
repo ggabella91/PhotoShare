@@ -71,9 +71,14 @@ export const HomePage: React.FC<HomePageProps> = ({
   useEffect(() => {
     if (currentUser) {
       setName(currentUser.name);
-      getUsersFollowingStart(currentUser.id);
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (currentUser) {
+      getUsersFollowingStart(currentUser.id);
+    }
+  }, []);
 
   useEffect(() => {
     if (postError) {
