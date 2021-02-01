@@ -27,26 +27,28 @@ exports[`renders a my-profile-page component 1`] = `
         className="user-details"
       >
         <div
-          className="username-and-edit"
+          className="username-and-follow"
         >
           <span
             className="user-username"
           />
           <div
-            className="edit-profile"
+            className="follow-profile"
           >
             <span
-              className="edit-text"
+              className="follow-text"
+              onClick={[Function]}
             >
               Follow
             </span>
           </div>
         </div>
         <div
-          className="edit-profile-narrow-screen"
+          className="follow-profile-narrow-screen"
         >
           <span
-            className="edit-narrow-text"
+            className="follow-narrow-text"
+            onClick={[Function]}
           >
             Follow
           </span>
