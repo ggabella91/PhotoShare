@@ -10,7 +10,7 @@ router.get(
   async (req: Request, res: Response) => {
     const { userId } = req.params;
 
-    const followers: FollowerDoc[] = Follower.find({
+    const followers: FollowerDoc[] = await Follower.find({
       userId,
     });
 
