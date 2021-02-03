@@ -36,14 +36,21 @@ import {
   archivePostStart,
 } from '../../redux/post/post.actions';
 
-import { Follower, FollowError } from '../../redux/follower/follower.types';
+import {
+  Follower,
+  FollowError,
+  WhoseUsersFollowing,
+  UsersFollowingRequest,
+} from '../../redux/follower/follower.types';
 import {
   selectFollowConfirm,
   selectFollowError,
-  selectUsersFollowing,
+  selectCurrentUserUsersFollowing,
+  selectOtherUserUsersFollowing,
 } from '../../redux/follower/follower.selectors';
 import {
   followNewUserStart,
+  getFollowersStart,
   getUsersFollowingStart,
 } from '../../redux/follower/follower.actions';
 
@@ -68,12 +75,14 @@ interface UserProfilePageProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   followConfirm: string | null;
-  usersFollowing: Follower[] | null;
+  currentUserUsersFollowing: Follower[] | null;
+  otherUserUsersFollowing: Follower[] | null;
   currentUser: User | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
   followNewUserStart: typeof followNewUserStart;
+  getFollowersStart: typeof getFollowersStart;
   getUsersFollowingStart: typeof getUsersFollowingStart;
 }
 
@@ -93,13 +102,15 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   profilePhotoFile,
   postData,
   postFiles,
-  usersFollowing,
+  currentUserUsersFollowing,
+  otherUserUsersFollowing,
   currentUser,
   followConfirm,
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
   followNewUserStart,
+  getFollowersStart,
   getUsersFollowingStart,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
@@ -135,7 +146,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (currentUser) {
-      getUsersFollowingStart(currentUser.id);
+      getUsersFollowingStart({
+        userId: currentUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+      });
     }
   }, [followConfirm]);
 
@@ -147,12 +161,17 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         username: otherUser.username,
         bio: otherUser.bio || '',
       });
+
+      getFollowersStart(otherUser.id);
+      getUsersFollowingStart({
+        userId: otherUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.OTHER_USER,
+      });
     }
   }, [otherUser]);
 
   useEffect(() => {
     if (user.id) {
-      console.log(user);
       getPostDataStart(user.id);
     }
   }, [user.id]);
@@ -236,8 +255,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const handleRenderFollowOrFollowingButton = (narrow: boolean) => {
     let isFollowing: boolean;
 
-    if (usersFollowing) {
-      for (let userFollowing of usersFollowing) {
+    if (currentUserUsersFollowing) {
+      for (let userFollowing of currentUserUsersFollowing) {
         if (userFollowing.userId === user.id) {
           isFollowing = true;
         }
@@ -356,7 +375,8 @@ interface LinkStateProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   followConfirm: string | null;
-  usersFollowing: Follower[] | null;
+  currentUserUsersFollowing: Follower[] | null;
+  otherUserUsersFollowing: Follower[] | null;
   currentUser: User | null;
 }
 
@@ -373,7 +393,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
   followConfirm: selectFollowConfirm,
-  usersFollowing: selectUsersFollowing,
+  currentUserUsersFollowing: selectCurrentUserUsersFollowing,
+  otherUserUsersFollowing: selectOtherUserUsersFollowing,
   currentUser: selectCurrentUser,
 });
 
@@ -385,8 +406,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostFileStart(fileReq)),
   followNewUserStart: (userToFollowId: string) =>
     dispatch(followNewUserStart(userToFollowId)),
-  getUsersFollowingStart: (currentUserId: string) =>
-    dispatch(getUsersFollowingStart(currentUserId)),
+  getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
+  getUsersFollowingStart: (userId: string) =>
+    dispatch(getUsersFollowingStart(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

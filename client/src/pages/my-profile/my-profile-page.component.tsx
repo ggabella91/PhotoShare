@@ -37,6 +37,16 @@ import {
   clearPostState,
 } from '../../redux/post/post.actions';
 
+import { Follower } from '../../redux/follower/follower.types';
+import {
+  selectFollowers,
+  selectUsersFollowing,
+} from '../../redux/follower/follower.selectors';
+import {
+  getFollowersStart,
+  getUsersFollowingStart,
+} from '../../redux/follower/follower.actions';
+
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
@@ -57,11 +67,15 @@ interface MyProfilePageProps {
   getPostFileError: PostError | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
+  followers: Follower[] | null;
+  usersFollowing: Follower[] | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
   clearArchivePostStatuses: typeof clearArchivePostStatuses;
   clearPostState: typeof clearPostState;
+  getFollowersStart: typeof getFollowersStart;
+  getUsersFollowingStart: typeof getUsersFollowingStart;
 }
 
 interface PostModalProps {
@@ -71,6 +85,11 @@ interface PostModalProps {
   location: string;
   createdAt: Date | null;
   fileString: string;
+}
+
+interface FollowersAndUsersFollowing {
+  followers: Follower[] | null;
+  usersFollowing: Follower[] | null;
 }
 
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
@@ -85,9 +104,21 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   archivePostConfirm,
   clearArchivePostStatuses,
   clearPostState,
+  followers,
+  usersFollowing,
+  getFollowersStart,
+  getUsersFollowingStart,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+
+  const [
+    followersAndUsersFollowing,
+    setFollowersAndUsersFollowing,
+  ] = useState<FollowersAndUsersFollowing>({
+    followers: null,
+    usersFollowing: null,
+  });
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
   const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
@@ -124,8 +155,26 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         bio: currentUser.bio || '',
       });
       getPostDataStart(currentUser.id);
+      getFollowersStart(currentUser.id);
+      getUsersFollowingStart(currentUser.id);
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (followers) {
+      setFollowersAndUsersFollowing({
+        ...followersAndUsersFollowing,
+        followers,
+      });
+    }
+
+    if (usersFollowing) {
+      setFollowersAndUsersFollowing({
+        ...followersAndUsersFollowing,
+        usersFollowing,
+      });
+    }
+  }, [followers, usersFollowing]);
 
   useEffect(() => {
     if (profilePhotoKey) {
@@ -320,6 +369,8 @@ interface LinkStateProps {
   getPostFileError: PostError | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
+  followers: Follower[] | null;
+  usersFollowing: Follower[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -336,6 +387,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileError: selectGetPostFileError,
   archivePostConfirm: selectArchivePostConfirm,
   archivePostError: selectArchivePostError,
+  followers: selectFollowers,
+  usersFollowing: selectUsersFollowing,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -346,6 +399,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(archivePostStart(archiveReq)),
   clearArchivePostStatuses: () => dispatch(clearArchivePostStatuses()),
   clearPostState: () => dispatch(clearPostState()),
+  getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
+  getUsersFollowingStart: (userId: string) =>
+    dispatch(getUsersFollowingStart(userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);

@@ -6,7 +6,8 @@ import {
 
 const INITIAL_STATE: FollowerState = {
   followers: null,
-  usersFollowing: null,
+  currentUserUsersFollowing: null,
+  otherUserUsersFollowing: null,
   followConfirm: null,
   followError: null,
   getFollowersConfirm: null,
@@ -33,11 +34,20 @@ const followerReducer = (
         getFollowersConfirm: 'Followers fetched successfully!',
         getFollowersError: null,
       };
-    case FollowerActions.GET_USERS_FOLLOWING_SUCCESS:
+    case FollowerActions.GET_CURRENT_USER_USERS_FOLLOWING_SUCCESS:
       return {
         ...state,
-        usersFollowing: action.payload,
-        getUsersFollowingConfirm: 'Users following fetched successfully!',
+        currentUserUsersFollowing: action.payload,
+        getUsersFollowingConfirm:
+          "Current user's users following fetched successfully!",
+        getUsersFollowingError: null,
+      };
+    case FollowerActions.GET_OTHER_USER_USERS_FOLLOWING_SUCCESS:
+      return {
+        ...state,
+        otherUserUsersFollowing: action.payload,
+        getUsersFollowingConfirm:
+          "Other user's users following fetched successfully!",
         getUsersFollowingError: null,
       };
     case FollowerActions.FOLLOW_NEW_USER_FAILURE:

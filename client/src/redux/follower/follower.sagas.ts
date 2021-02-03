@@ -5,6 +5,8 @@ import { ActionPattern, Saga } from '@redux-saga/types';
 import {
   Follower,
   FollowError,
+  WhoseUsersFollowing,
+  UsersFollowingRequest,
   FollowerActions,
   FollowerActionTypes,
 } from './follower.types';
@@ -14,7 +16,9 @@ import {
   followNewUserFailure,
   getFollowersSuccess,
   getFollowersFailure,
-  getUsersFollowingSuccess,
+  getUsersFollowingStart,
+  getCurrentUserUsersFollowingSuccess,
+  getOtherUserUsersFollowingSuccess,
   getUsersFollowingFailure,
 } from './follower.actions';
 
@@ -53,16 +57,20 @@ export function* getFollowers({
 }
 
 export function* getUsersFollowing({
-  payload: userId,
+  payload: { userId, whoseUsersFollowing },
 }: {
-  payload: string;
+  payload: UsersFollowingRequest;
 }): any {
   try {
     const { data } = yield axios.get(
       `/api/followers/get-users-following/${userId}`
     );
 
-    yield put(getUsersFollowingSuccess(data));
+    if (whoseUsersFollowing === WhoseUsersFollowing.CURRENT_USER) {
+      yield put(getCurrentUserUsersFollowingSuccess(data));
+    } else if (whoseUsersFollowing === WhoseUsersFollowing.OTHER_USER) {
+      yield put(getOtherUserUsersFollowingSuccess(data));
+    }
   } catch (err) {
     yield put(getUsersFollowingFailure(err));
   }
