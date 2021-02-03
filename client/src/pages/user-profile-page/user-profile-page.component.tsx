@@ -45,6 +45,7 @@ import {
 import {
   selectFollowConfirm,
   selectFollowError,
+  selectFollowers,
   selectCurrentUserUsersFollowing,
   selectOtherUserUsersFollowing,
 } from '../../redux/follower/follower.selectors';
@@ -75,6 +76,7 @@ interface UserProfilePageProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   followConfirm: string | null;
+  followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
   otherUserUsersFollowing: Follower[] | null;
   currentUser: User | null;
@@ -95,6 +97,11 @@ interface PostModalProps {
   fileString: string;
 }
 
+interface FollowersAndUsersFollowing {
+  followers: Follower[] | null;
+  usersFollowing: Follower[] | null;
+}
+
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
   otherUser,
@@ -106,6 +113,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   otherUserUsersFollowing,
   currentUser,
   followConfirm,
+  followers,
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
@@ -115,6 +123,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+
+  const [
+    followersAndUsersFollowing,
+    setFollowersAndUsersFollowing,
+  ] = useState<FollowersAndUsersFollowing>({
+    followers: null,
+    usersFollowing: null,
+  });
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
   const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
@@ -169,6 +185,22 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       });
     }
   }, [otherUser]);
+
+  useEffect(() => {
+    if (followers) {
+      setFollowersAndUsersFollowing({
+        ...followersAndUsersFollowing,
+        followers,
+      });
+    }
+
+    if (otherUserUsersFollowing) {
+      setFollowersAndUsersFollowing({
+        ...followersAndUsersFollowing,
+        usersFollowing: currentUserUsersFollowing,
+      });
+    }
+  }, [followers, currentUserUsersFollowing]);
 
   useEffect(() => {
     if (user.id) {
@@ -375,6 +407,7 @@ interface LinkStateProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   followConfirm: string | null;
+  followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
   otherUserUsersFollowing: Follower[] | null;
   currentUser: User | null;
@@ -393,6 +426,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
   followConfirm: selectFollowConfirm,
+  followers: selectFollowers,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
   otherUserUsersFollowing: selectOtherUserUsersFollowing,
   currentUser: selectCurrentUser,
@@ -407,8 +441,16 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   followNewUserStart: (userToFollowId: string) =>
     dispatch(followNewUserStart(userToFollowId)),
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
-  getUsersFollowingStart: (userId: string) =>
-    dispatch(getUsersFollowingStart(userId)),
+  getUsersFollowingStart: ({
+    userId,
+    whoseUsersFollowing,
+  }: UsersFollowingRequest) =>
+    dispatch(
+      getUsersFollowingStart({
+        userId,
+        whoseUsersFollowing,
+      })
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

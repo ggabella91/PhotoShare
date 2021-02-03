@@ -37,10 +37,15 @@ import {
   clearPostState,
 } from '../../redux/post/post.actions';
 
-import { Follower } from '../../redux/follower/follower.types';
+import {
+  Follower,
+  FollowError,
+  WhoseUsersFollowing,
+  UsersFollowingRequest,
+} from '../../redux/follower/follower.types';
 import {
   selectFollowers,
-  selectUsersFollowing,
+  selectCurrentUserUsersFollowing,
 } from '../../redux/follower/follower.selectors';
 import {
   getFollowersStart,
@@ -68,7 +73,7 @@ interface MyProfilePageProps {
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
   followers: Follower[] | null;
-  usersFollowing: Follower[] | null;
+  currentUserUsersFollowing: Follower[] | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
@@ -105,7 +110,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   clearArchivePostStatuses,
   clearPostState,
   followers,
-  usersFollowing,
+  currentUserUsersFollowing,
   getFollowersStart,
   getUsersFollowingStart,
 }) => {
@@ -156,7 +161,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       });
       getPostDataStart(currentUser.id);
       getFollowersStart(currentUser.id);
-      getUsersFollowingStart(currentUser.id);
+      getUsersFollowingStart({
+        userId: currentUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+      });
     }
   }, [currentUser]);
 
@@ -168,13 +176,13 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       });
     }
 
-    if (usersFollowing) {
+    if (currentUserUsersFollowing) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
-        usersFollowing,
+        usersFollowing: currentUserUsersFollowing,
       });
     }
-  }, [followers, usersFollowing]);
+  }, [followers, currentUserUsersFollowing]);
 
   useEffect(() => {
     if (profilePhotoKey) {
@@ -300,7 +308,19 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
             <NavLink to='/settings' className='edit-profile-narrow-screen'>
               <span className='edit-narrow-text'>Edit profile</span>
             </NavLink>
-            <span className='user-posts'>{postDataArray.length} Posts</span>
+            <div className='posts-followers-following-stats'>
+              <span className='user-stat'>{postDataArray.length} Posts</span>
+              <span className='user-stat'>
+                {followersAndUsersFollowing.followers
+                  ? followersAndUsersFollowing.followers.length
+                  : 0}
+              </span>
+              <span className='user-stat'>
+                {followersAndUsersFollowing.usersFollowing
+                  ? followersAndUsersFollowing.usersFollowing.length
+                  : 0}
+              </span>
+            </div>
             <div className='name-and-bio'>
               <span className='user-name'>{user.name}</span>
               <span className='user-bio'>{user.bio}</span>
@@ -370,7 +390,7 @@ interface LinkStateProps {
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
   followers: Follower[] | null;
-  usersFollowing: Follower[] | null;
+  currentUserUsersFollowing: Follower[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -388,7 +408,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   archivePostConfirm: selectArchivePostConfirm,
   archivePostError: selectArchivePostError,
   followers: selectFollowers,
-  usersFollowing: selectUsersFollowing,
+  currentUserUsersFollowing: selectCurrentUserUsersFollowing,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -400,8 +420,16 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearArchivePostStatuses: () => dispatch(clearArchivePostStatuses()),
   clearPostState: () => dispatch(clearPostState()),
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
-  getUsersFollowingStart: (userId: string) =>
-    dispatch(getUsersFollowingStart(userId)),
+  getUsersFollowingStart: ({
+    userId,
+    whoseUsersFollowing,
+  }: UsersFollowingRequest) =>
+    dispatch(
+      getUsersFollowingStart({
+        userId,
+        whoseUsersFollowing,
+      })
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);
