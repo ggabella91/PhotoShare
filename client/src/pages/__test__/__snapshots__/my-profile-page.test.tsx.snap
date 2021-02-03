@@ -53,12 +53,26 @@ exports[`renders a my-profile-page component 1`] = `
             Edit profile
           </span>
         </NavLink>
-        <span
-          className="user-posts"
+        <div
+          className="posts-followers-following-stats"
         >
-          0
-           Posts
-        </span>
+          <span
+            className="user-stat"
+          >
+            0
+             Posts
+          </span>
+          <span
+            className="user-stat"
+          >
+            0
+          </span>
+          <span
+            className="user-stat"
+          >
+            0
+          </span>
+        </div>
         <div
           className="name-and-bio"
         >

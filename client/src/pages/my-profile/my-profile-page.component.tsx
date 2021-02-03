@@ -37,6 +37,21 @@ import {
   clearPostState,
 } from '../../redux/post/post.actions';
 
+import {
+  Follower,
+  FollowError,
+  WhoseUsersFollowing,
+  UsersFollowingRequest,
+} from '../../redux/follower/follower.types';
+import {
+  selectFollowers,
+  selectCurrentUserUsersFollowing,
+} from '../../redux/follower/follower.selectors';
+import {
+  getFollowersStart,
+  getUsersFollowingStart,
+} from '../../redux/follower/follower.actions';
+
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
@@ -57,11 +72,15 @@ interface MyProfilePageProps {
   getPostFileError: PostError | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
+  followers: Follower[] | null;
+  currentUserUsersFollowing: Follower[] | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
   clearArchivePostStatuses: typeof clearArchivePostStatuses;
   clearPostState: typeof clearPostState;
+  getFollowersStart: typeof getFollowersStart;
+  getUsersFollowingStart: typeof getUsersFollowingStart;
 }
 
 interface PostModalProps {
@@ -71,6 +90,11 @@ interface PostModalProps {
   location: string;
   createdAt: Date | null;
   fileString: string;
+}
+
+interface FollowersAndUsersFollowing {
+  followers: Follower[] | null;
+  usersFollowing: Follower[] | null;
 }
 
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
@@ -85,9 +109,21 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   archivePostConfirm,
   clearArchivePostStatuses,
   clearPostState,
+  followers,
+  currentUserUsersFollowing,
+  getFollowersStart,
+  getUsersFollowingStart,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+
+  const [
+    followersAndUsersFollowing,
+    setFollowersAndUsersFollowing,
+  ] = useState<FollowersAndUsersFollowing>({
+    followers: null,
+    usersFollowing: null,
+  });
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
   const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
@@ -124,8 +160,29 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         bio: currentUser.bio || '',
       });
       getPostDataStart(currentUser.id);
+      getFollowersStart(currentUser.id);
+      getUsersFollowingStart({
+        userId: currentUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+      });
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (followers) {
+      setFollowersAndUsersFollowing({
+        ...followersAndUsersFollowing,
+        followers,
+      });
+    }
+
+    if (currentUserUsersFollowing) {
+      setFollowersAndUsersFollowing({
+        ...followersAndUsersFollowing,
+        usersFollowing: currentUserUsersFollowing,
+      });
+    }
+  }, [followers, currentUserUsersFollowing]);
 
   useEffect(() => {
     if (profilePhotoKey) {
@@ -251,7 +308,19 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
             <NavLink to='/settings' className='edit-profile-narrow-screen'>
               <span className='edit-narrow-text'>Edit profile</span>
             </NavLink>
-            <span className='user-posts'>{postDataArray.length} Posts</span>
+            <div className='posts-followers-following-stats'>
+              <span className='user-stat'>{postDataArray.length} Posts</span>
+              <span className='user-stat'>
+                {followersAndUsersFollowing.followers
+                  ? followersAndUsersFollowing.followers.length
+                  : 0}
+              </span>
+              <span className='user-stat'>
+                {followersAndUsersFollowing.usersFollowing
+                  ? followersAndUsersFollowing.usersFollowing.length
+                  : 0}
+              </span>
+            </div>
             <div className='name-and-bio'>
               <span className='user-name'>{user.name}</span>
               <span className='user-bio'>{user.bio}</span>
@@ -320,6 +389,8 @@ interface LinkStateProps {
   getPostFileError: PostError | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
+  followers: Follower[] | null;
+  currentUserUsersFollowing: Follower[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -336,6 +407,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileError: selectGetPostFileError,
   archivePostConfirm: selectArchivePostConfirm,
   archivePostError: selectArchivePostError,
+  followers: selectFollowers,
+  currentUserUsersFollowing: selectCurrentUserUsersFollowing,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -346,6 +419,17 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(archivePostStart(archiveReq)),
   clearArchivePostStatuses: () => dispatch(clearArchivePostStatuses()),
   clearPostState: () => dispatch(clearPostState()),
+  getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
+  getUsersFollowingStart: ({
+    userId,
+    whoseUsersFollowing,
+  }: UsersFollowingRequest) =>
+    dispatch(
+      getUsersFollowingStart({
+        userId,
+        whoseUsersFollowing,
+      })
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);

@@ -6,7 +6,8 @@ export enum FollowerActions {
   GET_FOLLOWERS_SUCCESS = 'GET_FOLLOWERS_SUCCESS',
   GET_FOLLOWERS_FAILURE = 'GET_FOLLOWERS_FAILURE',
   GET_USERS_FOLLOWING_START = 'GET_USERS_FOLLOWING_START',
-  GET_USERS_FOLLOWING_SUCCESS = 'GET_USERS_FOLLOWING_SUCCESS',
+  GET_CURRENT_USER_USERS_FOLLOWING_SUCCESS = 'GET_CURRENT_USER_USERS_FOLLOWING_SUCCESS',
+  GET_OTHER_USER_USERS_FOLLOWING_SUCCESS = 'GET_OTHER_USER_USERS_FOLLOWING_SUCCESS',
   GET_USERS_FOLLOWING_FAILURE = 'GET_USERS_FOLLOWING_FAILURE',
 }
 
@@ -20,11 +21,22 @@ export interface FollowError {
   message: string;
 }
 
+export enum WhoseUsersFollowing {
+  CURRENT_USER = 'CURRENT_USER',
+  OTHER_USER = 'OTHER_USER',
+}
+
+export interface UsersFollowingRequest {
+  userId: string;
+  whoseUsersFollowing: WhoseUsersFollowing;
+}
+
 export type FollowerPayload = Follower | FollowError | null;
 
 export interface FollowerState {
   followers: Follower[] | null;
-  usersFollowing: Follower[] | null;
+  currentUserUsersFollowing: Follower[] | null;
+  otherUserUsersFollowing: Follower[] | null;
   followConfirm: string | null;
   followError: FollowError | null;
   getFollowersConfirm: string | null;
@@ -65,11 +77,16 @@ export interface GetFollowersFailure {
 
 export interface GetUsersFollowingStart {
   type: typeof FollowerActions.GET_USERS_FOLLOWING_START;
-  payload: string;
+  payload: UsersFollowingRequest;
 }
 
-export interface GetUsersFollowingSuccess {
-  type: typeof FollowerActions.GET_USERS_FOLLOWING_SUCCESS;
+export interface GetCurrentUserUsersFollowingSuccess {
+  type: typeof FollowerActions.GET_CURRENT_USER_USERS_FOLLOWING_SUCCESS;
+  payload: Follower[];
+}
+
+export interface GetOtherUserUsersFollowingSuccess {
+  type: typeof FollowerActions.GET_OTHER_USER_USERS_FOLLOWING_SUCCESS;
   payload: Follower[];
 }
 
@@ -86,5 +103,6 @@ export type FollowerActionTypes =
   | GetFollowersSuccess
   | GetFollowersFailure
   | GetUsersFollowingStart
-  | GetUsersFollowingSuccess
+  | GetCurrentUserUsersFollowingSuccess
+  | GetOtherUserUsersFollowingSuccess
   | GetUsersFollowingFailure;

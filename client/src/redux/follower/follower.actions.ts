@@ -1,6 +1,7 @@
 import {
   Follower,
   FollowError,
+  UsersFollowingRequest,
   FollowerActions,
   FollowerActionTypes,
 } from './follower.types';
@@ -43,17 +44,28 @@ export const getFollowersFailure = (
   payload: error,
 });
 
-export const getUsersFollowingStart = (
-  userId: string
-): FollowerActionTypes => ({
+export const getUsersFollowingStart = ({
+  userId,
+  whoseUsersFollowing,
+}: UsersFollowingRequest): FollowerActionTypes => ({
   type: FollowerActions.GET_USERS_FOLLOWING_START,
-  payload: userId,
+  payload: {
+    userId,
+    whoseUsersFollowing,
+  },
 });
 
-export const getUsersFollowingSuccess = (
+export const getCurrentUserUsersFollowingSuccess = (
   usersFollowing: Follower[]
 ): FollowerActionTypes => ({
-  type: FollowerActions.GET_USERS_FOLLOWING_SUCCESS,
+  type: FollowerActions.GET_CURRENT_USER_USERS_FOLLOWING_SUCCESS,
+  payload: usersFollowing,
+});
+
+export const getOtherUserUsersFollowingSuccess = (
+  usersFollowing: Follower[]
+): FollowerActionTypes => ({
+  type: FollowerActions.GET_OTHER_USER_USERS_FOLLOWING_SUCCESS,
   payload: usersFollowing,
 });
 

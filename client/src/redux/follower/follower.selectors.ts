@@ -10,9 +10,14 @@ export const selectFollowers = createSelector(
   (followerState: FollowerState) => followerState.followers
 );
 
-export const selectUsersFollowing = createSelector(
+export const selectCurrentUserUsersFollowing = createSelector(
   [selectFollowerState],
-  (followerState: FollowerState) => followerState.usersFollowing
+  (followerState: FollowerState) => followerState.currentUserUsersFollowing
+);
+
+export const selectOtherUserUsersFollowing = createSelector(
+  [selectFollowerState],
+  (followerState: FollowerState) => followerState.otherUserUsersFollowing
 );
 
 export const selectFollowConfirm = createSelector(

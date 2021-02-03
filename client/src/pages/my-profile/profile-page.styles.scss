@@ -186,15 +186,19 @@
           text-decoration: none;
         }
 
-        .user-posts {
-          width: 12vw;
+        .posts-followers-following-stats {
+          display: flex;
           position: relative;
-          font-size: 2vh;
-          font-weight: 420;
-          text-align: start;
 
-          @include respond-medium() {
-            display: none;
+          .user-stat {
+            width: 12vw;
+            position: relative;
+            font-size: 2vh;
+            font-weight: 420;
+
+            @include respond-medium() {
+              display: none;
+            }
           }
         }
 
