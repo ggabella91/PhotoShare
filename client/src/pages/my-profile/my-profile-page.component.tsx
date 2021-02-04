@@ -172,7 +172,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     if (followers) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
-        followers,
+        followers: followers,
       });
     }
 
@@ -313,12 +313,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               <span className='user-stat'>
                 {followersAndUsersFollowing.followers
                   ? followersAndUsersFollowing.followers.length
-                  : 0}
+                  : 0}{' '}
+                Followers
               </span>
               <span className='user-stat'>
                 {followersAndUsersFollowing.usersFollowing
                   ? followersAndUsersFollowing.usersFollowing.length
-                  : 0}
+                  : 0}{' '}
+                Following
               </span>
             </div>
             <div className='name-and-bio'>
@@ -331,9 +333,21 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           <span className='user-name-narrow'>{user.name}</span>
           <span className='user-bio-narrow'>{user.bio}</span>
         </div>
-        <div className='user-posts-narrow-screen'>
+        <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
             <li className='stats-item'>{postDataArray.length} Posts</li>
+            <li className='stats-item'>
+              {followersAndUsersFollowing.followers
+                ? followersAndUsersFollowing.followers.length
+                : 0}{' '}
+              Followers
+            </li>
+            <li className='stats-item'>
+              {followersAndUsersFollowing.usersFollowing
+                ? followersAndUsersFollowing.usersFollowing.length
+                : 0}{' '}
+              Following
+            </li>
           </ul>
         </div>
       </div>
@@ -420,16 +434,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearArchivePostStatuses: () => dispatch(clearArchivePostStatuses()),
   clearPostState: () => dispatch(clearPostState()),
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
-  getUsersFollowingStart: ({
-    userId,
-    whoseUsersFollowing,
-  }: UsersFollowingRequest) =>
-    dispatch(
-      getUsersFollowingStart({
-        userId,
-        whoseUsersFollowing,
-      })
-    ),
+  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
+    dispatch(getUsersFollowingStart(usersFollowingObj)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);

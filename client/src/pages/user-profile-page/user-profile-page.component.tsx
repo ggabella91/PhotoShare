@@ -190,17 +190,17 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     if (followers) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
-        followers,
+        followers: followers,
       });
     }
 
     if (otherUserUsersFollowing) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
-        usersFollowing: currentUserUsersFollowing,
+        usersFollowing: otherUserUsersFollowing,
       });
     }
-  }, [followers, currentUserUsersFollowing]);
+  }, [followers, otherUserUsersFollowing]);
 
   useEffect(() => {
     if (user.id) {
@@ -339,7 +339,21 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
               {handleRenderFollowOrFollowingButton(false)}
             </div>
             {handleRenderFollowOrFollowingButton(true)}
-            <span className='user-posts'>{postDataArray.length} Posts</span>
+            <div className='posts-followers-following-stats'>
+              <span className='user-stat'>{postDataArray.length} Posts</span>
+              <span className='user-stat'>
+                {followersAndUsersFollowing.followers
+                  ? followersAndUsersFollowing.followers.length
+                  : 0}{' '}
+                Followers
+              </span>
+              <span className='user-stat'>
+                {followersAndUsersFollowing.usersFollowing
+                  ? followersAndUsersFollowing.usersFollowing.length
+                  : 0}{' '}
+                Following
+              </span>
+            </div>
             <div className='name-and-bio'>
               <span className='user-name'>{user.name}</span>
               <span className='user-bio'>{user.bio}</span>
@@ -350,9 +364,21 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           <span className='user-name-narrow'>{user.name}</span>
           <span className='user-bio-narrow'>{user.bio}</span>
         </div>
-        <div className='user-posts-narrow-screen'>
+        <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
             <li className='stats-item'>{postDataArray.length} Posts</li>
+            <li className='stats-item'>
+              {followersAndUsersFollowing.followers
+                ? followersAndUsersFollowing.followers.length
+                : 0}{' '}
+              Followers
+            </li>
+            <li className='stats-item'>
+              {followersAndUsersFollowing.usersFollowing
+                ? followersAndUsersFollowing.usersFollowing.length
+                : 0}{' '}
+              Following
+            </li>
           </ul>
         </div>
       </div>
@@ -441,16 +467,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   followNewUserStart: (userToFollowId: string) =>
     dispatch(followNewUserStart(userToFollowId)),
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
-  getUsersFollowingStart: ({
-    userId,
-    whoseUsersFollowing,
-  }: UsersFollowingRequest) =>
-    dispatch(
-      getUsersFollowingStart({
-        userId,
-        whoseUsersFollowing,
-      })
-    ),
+  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
+    dispatch(getUsersFollowingStart(usersFollowingObj)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

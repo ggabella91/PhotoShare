@@ -16,7 +16,11 @@ import {
   clearPostStatuses,
 } from '../../redux/post/post.actions';
 
-import { Follower } from '../../redux/follower/follower.types';
+import {
+  Follower,
+  UsersFollowingRequest,
+  WhoseUsersFollowing,
+} from '../../redux/follower/follower.types';
 import { getUsersFollowingStart } from '../../redux/follower/follower.actions';
 
 import {
@@ -76,7 +80,10 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   useEffect(() => {
     if (currentUser) {
-      getUsersFollowingStart(currentUser.id);
+      getUsersFollowingStart({
+        userId: currentUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+      });
     }
   }, [currentUser]);
 
@@ -240,8 +247,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostStart: (post: FormData) => dispatch(createPostStart(post)),
   clearPostStatuses: () => dispatch(clearPostStatuses()),
-  getUsersFollowingStart: (userId: string) =>
-    dispatch(getUsersFollowingStart(userId)),
+  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) => dispatch(getUsersFollowingStart(usersFollowingObj)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
