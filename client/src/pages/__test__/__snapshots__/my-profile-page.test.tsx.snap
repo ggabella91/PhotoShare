@@ -66,11 +66,15 @@ exports[`renders a my-profile-page component 1`] = `
             className="user-stat"
           >
             0
+             
+            Followers
           </span>
           <span
             className="user-stat"
           >
             0
+             
+            Following
           </span>
         </div>
         <div
@@ -96,7 +100,7 @@ exports[`renders a my-profile-page component 1`] = `
       />
     </div>
     <div
-      className="user-posts-narrow-screen"
+      className="posts-followers-following-stats-narrow-screen"
     >
       <ul
         className="stats-list"
@@ -106,6 +110,20 @@ exports[`renders a my-profile-page component 1`] = `
         >
           0
            Posts
+        </li>
+        <li
+          className="stats-item"
+        >
+          0
+           
+          Followers
+        </li>
+        <li
+          className="stats-item"
+        >
+          0
+           
+          Following
         </li>
       </ul>
     </div>

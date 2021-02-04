@@ -188,6 +188,7 @@
 
         .posts-followers-following-stats {
           display: flex;
+          justify-content: space-between;
           position: relative;
 
           .user-stat {
@@ -195,6 +196,7 @@
             position: relative;
             font-size: 2vh;
             font-weight: 420;
+            text-align: left;
 
             @include respond-medium() {
               display: none;
@@ -253,24 +255,28 @@
       }
     }
 
-    .user-posts-narrow-screen {
+    .posts-followers-following-stats-narrow-screen {
       position: relative;
       display: none;
 
       @include respond-medium() {
         display: flex;
+        justify-content: space-evenly;
       }
 
       .stats-list {
         position: relative;
         display: flex;
         flex-direction: row;
+        justify-self: center;
         justify-content: space-evenly;
         list-style-type: none;
         margin-bottom: 1vh;
+        text-align: left;
 
         .stats-item {
-          font-size: 20px;
+          font-size: 18px;
+          margin-right: 20px;
         }
       }
     }
