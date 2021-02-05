@@ -10,6 +10,7 @@ import {
 import { followNewUserRouter } from './routes/follow-new-user';
 import { getFollowersRouter } from './routes/get-followers';
 import { getUsersFollowing } from './routes/get-users-following';
+import { unfollowUserRouter } from './routes/unfollow-user';
 
 const app = express();
 app.set('trust proxy', true);
@@ -26,6 +27,7 @@ app.use(currentUser);
 app.use(followNewUserRouter);
 app.use(getFollowersRouter);
 app.use(getUsersFollowing);
+app.use(unfollowUserRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();

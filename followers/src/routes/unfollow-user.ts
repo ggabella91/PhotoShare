@@ -5,7 +5,7 @@ import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 const router = express.Router();
 
 router.post(
-  '/api/followers/follow-new-user/:userId',
+  '/api/followers/unfollow-user/:userId',
   requireAuth,
   async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -14,24 +14,22 @@ router.post(
       throw new BadRequestError('User not found');
     }
 
-    const alreadyFollowing = await Follower.find({
+    const following = await Follower.find({
       userId,
       followerId: req.currentUser!.id,
     });
 
-    if (!alreadyFollowing) {
-      const newFollower = Follower.build({
+    if (following) {
+      await Follower.deleteOne({
         userId,
         followerId: req.currentUser!.id,
       });
 
-      await newFollower.save();
-
-      res.status(201).send(newFollower);
+      res.status(204).send('User unfollowed successfully');
     } else {
-      res.status(403).send('Already following user');
+      res.status(404).send('No follow record found for user');
     }
   }
 );
 
-export { router as followNewUserRouter };
+export { router as unfollowUserRouter };

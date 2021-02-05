@@ -166,6 +166,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         userId: currentUser.id,
         whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
       });
+      if (otherUser) {
+        getFollowersStart(otherUser.id);
+      }
     }
   }, [followConfirm]);
 
