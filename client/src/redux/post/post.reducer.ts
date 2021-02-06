@@ -21,6 +21,7 @@ const INITIAL_STATE: PostState = {
   archivePostError: null,
   otherUserProfilePhotoFile: null,
   userSuggestionsProfilePhotoFiles: null,
+  userSuggestionsProfilePhotoConfirm: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -74,7 +75,8 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
           action.payload
         ),
         getPostFileError: null,
-        getPostFileConfirm: 'Suggested user photo added to array!',
+        userSuggestionsProfilePhotoConfirm:
+          'Suggested user photo added to array!',
       };
     case PostActions.ARCHIVE_POST_SUCCESS:
       return {
@@ -133,7 +135,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.CLEAR_USER_SUGGESTION_PHOTO_FILES:
       return {
         ...state,
-        userSuggestionsProfilePhotoFiles: [],
+        userSuggestionsProfilePhotoFiles: null,
       };
     case PostActions.CLEAR_POST_STATE:
       return {
