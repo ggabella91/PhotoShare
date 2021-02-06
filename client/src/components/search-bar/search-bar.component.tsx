@@ -30,7 +30,7 @@ export interface SearchBarProps {
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
-  userSuggestionProfilePhotoFiles: PostFile[];
+  userSuggestionProfilePhotoFiles: PostFile[] | null;
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
   getPostFileStart: typeof getPostFileStart;
   clearUserSuggestions: typeof clearUserSuggestions;
@@ -88,7 +88,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchString]);
 
   useEffect(() => {
-    if (userSuggestions && !userSuggestionProfilePhotoFiles.length) {
+    if (userSuggestions && !userSuggestionProfilePhotoFiles) {
       for (let user of userSuggestions) {
         if (user.photo) {
           getPostFileStart({
@@ -98,7 +98,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           });
         }
       }
-    } else if (userSuggestions && userSuggestionProfilePhotoFiles.length) {
+    } else if (
+      userSuggestions &&
+      userSuggestionProfilePhotoFiles &&
+      userSuggestionProfilePhotoFiles.length
+    ) {
       const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
         (el: User) => {
           let photoFileString: string;
@@ -112,7 +116,19 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           return {
             name: el.name,
             username: el.username,
-            profilePhotoFileString: photoFileString!,
+            profilePhotoFileString: photoFileString! || '',
+          };
+        }
+      );
+
+      setUserSuggestionsArray(suggestedUser);
+    } else if (userSuggestions) {
+      const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
+        (el: User) => {
+          return {
+            name: el.name,
+            username: el.username,
+            profilePhotoFileString: '',
           };
         }
       );
@@ -171,7 +187,7 @@ interface LinkStateProps {
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
-  userSuggestionProfilePhotoFiles: PostFile[];
+  userSuggestionProfilePhotoFiles: PostFile[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({

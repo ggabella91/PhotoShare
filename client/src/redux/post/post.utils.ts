@@ -11,14 +11,22 @@ export const addPostFileToArray = (fileArray: PostFile[], file: PostFile) => {
 };
 
 export const addSuggestedUserPhotoFileToArray = (
-  fileArray: PostFile[],
+  fileArray: PostFile[] | null,
   file: PostFile
 ) => {
-  for (let el of fileArray) {
-    if (el.s3Key === file.s3Key) {
-      return [...fileArray];
+  if (fileArray) {
+    for (let el of fileArray) {
+      if (el.s3Key === file.s3Key) {
+        return [...fileArray];
+      }
+    }
+
+    return [...fileArray, file];
+  } else {
+    if (file) {
+      return [file];
+    } else {
+      return [];
     }
   }
-
-  return [...fileArray, file];
 };

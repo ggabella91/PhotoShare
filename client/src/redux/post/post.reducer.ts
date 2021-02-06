@@ -20,7 +20,7 @@ const INITIAL_STATE: PostState = {
   archivePostConfirm: null,
   archivePostError: null,
   otherUserProfilePhotoFile: null,
-  userSuggestionsProfilePhotoFiles: [],
+  userSuggestionsProfilePhotoFiles: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {

@@ -78,7 +78,7 @@ export interface PostState {
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
   otherUserProfilePhotoFile: string | null;
-  userSuggestionsProfilePhotoFiles: PostFile[];
+  userSuggestionsProfilePhotoFiles: PostFile[] | null;
 }
 
 export interface CreatePostStart {
