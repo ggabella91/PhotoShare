@@ -29,6 +29,7 @@ router.post(
 
       res.status(201).send(newFollower);
     } else {
+      console.log(alreadyFollowing);
       res.status(403).send('Already following user');
     }
   }
