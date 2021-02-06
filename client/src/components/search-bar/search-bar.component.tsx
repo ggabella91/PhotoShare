@@ -16,7 +16,10 @@ import {
 } from '../../redux/user/user.actions';
 
 import { PostFile, PostFileReq, UserType } from '../../redux/post/post.types';
-import { selectUserSuggestionProfilePhotoFiles } from '../../redux/post/post.selectors';
+import {
+  selectUserSuggestionProfilePhotoFiles,
+  selectUserSuggestionProfilePhotoConfirm,
+} from '../../redux/post/post.selectors';
 import {
   getPostFileStart,
   clearUserSuggestionPhotoFiles,
@@ -31,6 +34,7 @@ export interface SearchBarProps {
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
   userSuggestionProfilePhotoFiles: PostFile[] | null;
+  userSuggestionProfilePhotoConfirm: string | null;
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
   getPostFileStart: typeof getPostFileStart;
   clearUserSuggestions: typeof clearUserSuggestions;
@@ -50,6 +54,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   userSuggestionsConfirm,
   userSuggestionsError,
   userSuggestionProfilePhotoFiles,
+  userSuggestionProfilePhotoConfirm,
   clearUserSuggestions,
   clearUserSuggestionPhotoFiles,
 }) => {
@@ -88,7 +93,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchString]);
 
   useEffect(() => {
-    if (userSuggestions && !userSuggestionProfilePhotoFiles) {
+    if (
+      userSuggestions &&
+      !userSuggestionProfilePhotoFiles &&
+      !userSuggestionProfilePhotoConfirm
+    ) {
       for (let user of userSuggestions) {
         if (user.photo) {
           getPostFileStart({
@@ -116,13 +125,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           return {
             name: el.name,
             username: el.username,
-            profilePhotoFileString: photoFileString! || '',
+            profilePhotoFileString: photoFileString!,
           };
         }
       );
 
       setUserSuggestionsArray(suggestedUser);
-    } else if (userSuggestions) {
+    } else if (userSuggestions && userSuggestionProfilePhotoConfirm) {
       const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
         (el: User) => {
           return {
@@ -135,7 +144,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
       setUserSuggestionsArray(suggestedUser);
     }
-  }, [userSuggestions, userSuggestionProfilePhotoFiles]);
+  }, [
+    userSuggestions,
+    userSuggestionProfilePhotoFiles,
+    userSuggestionProfilePhotoConfirm,
+  ]);
 
   useEffect(() => {
     if (searchString.length) {
@@ -188,6 +201,7 @@ interface LinkStateProps {
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
   userSuggestionProfilePhotoFiles: PostFile[] | null;
+  userSuggestionProfilePhotoConfirm: string | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -195,6 +209,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   userSuggestionsConfirm: selectUserSuggestionsConfirm,
   userSuggestionsError: selectUserSuggestionsError,
   userSuggestionProfilePhotoFiles: selectUserSuggestionProfilePhotoFiles,
+  userSuggestionProfilePhotoConfirm: selectUserSuggestionProfilePhotoConfirm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
