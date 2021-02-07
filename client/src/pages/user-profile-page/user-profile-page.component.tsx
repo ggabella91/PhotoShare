@@ -304,7 +304,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         }
       }
     }
-    console.log(isFollowing);
   }, [getUsersFollowingConfirm]);
 
   const handleRenderFollowOrFollowingButton = (narrow: boolean) => {
