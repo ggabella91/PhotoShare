@@ -19,7 +19,7 @@ router.post(
       followerId: req.currentUser!.id,
     });
 
-    if (!alreadyFollowing) {
+    if (!alreadyFollowing.length) {
       const newFollower = Follower.build({
         userId,
         followerId: req.currentUser!.id,
@@ -29,7 +29,6 @@ router.post(
 
       res.status(201).send(newFollower);
     } else {
-      console.log(alreadyFollowing);
       res.status(403).send('Already following user');
     }
   }
