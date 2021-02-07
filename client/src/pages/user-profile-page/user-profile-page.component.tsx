@@ -48,6 +48,7 @@ import {
   selectFollowers,
   selectCurrentUserUsersFollowing,
   selectOtherUserUsersFollowing,
+  selectGetUsersFollowingConfirm,
 } from '../../redux/follower/follower.selectors';
 import {
   followNewUserStart,
@@ -79,6 +80,7 @@ interface UserProfilePageProps {
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
   otherUserUsersFollowing: Follower[] | null;
+  getUsersFollowingConfirm: string | null;
   currentUser: User | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
@@ -114,6 +116,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   currentUser,
   followConfirm,
   followers,
+  getUsersFollowingConfirm,
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
@@ -131,6 +134,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     followers: null,
     usersFollowing: null,
   });
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
   const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
@@ -190,20 +194,25 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [otherUser]);
 
   useEffect(() => {
-    if (followers) {
+    if (followers && followers.length) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
         followers: followers,
       });
     }
 
-    if (otherUserUsersFollowing) {
+    if (otherUserUsersFollowing && otherUserUsersFollowing.length) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
         usersFollowing: otherUserUsersFollowing,
       });
     }
-  }, [followers, otherUserUsersFollowing]);
+  }, [
+    followers,
+    followers?.length,
+    otherUserUsersFollowing,
+    otherUserUsersFollowing?.length,
+  ]);
 
   useEffect(() => {
     if (user.id) {
@@ -287,17 +296,18 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     }
   };
 
-  const handleRenderFollowOrFollowingButton = (narrow: boolean) => {
-    let isFollowing: boolean;
-
-    if (currentUserUsersFollowing) {
+  useEffect(() => {
+    if (currentUserUsersFollowing?.length) {
       for (let userFollowing of currentUserUsersFollowing) {
         if (userFollowing.userId === user.id) {
-          isFollowing = true;
+          setIsFollowing(true);
         }
       }
     }
+    console.log(isFollowing);
+  }, [getUsersFollowingConfirm]);
 
+  const handleRenderFollowOrFollowingButton = (narrow: boolean) => {
     return (
       <div
         className={narrow ? 'follow-profile-narrow-screen' : 'follow-profile'}
@@ -439,6 +449,7 @@ interface LinkStateProps {
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
   otherUserUsersFollowing: Follower[] | null;
+  getUsersFollowingConfirm: string | null;
   currentUser: User | null;
 }
 
@@ -458,6 +469,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   followers: selectFollowers,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
   otherUserUsersFollowing: selectOtherUserUsersFollowing,
+  getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   currentUser: selectCurrentUser,
 });
 

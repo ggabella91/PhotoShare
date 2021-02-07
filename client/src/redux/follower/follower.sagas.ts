@@ -1,14 +1,11 @@
-import { takeLatest, put, all, call } from 'redux-saga/effects';
+import { takeLatest, takeEvery, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
 import {
-  Follower,
-  FollowError,
   WhoseUsersFollowing,
   UsersFollowingRequest,
   FollowerActions,
-  FollowerActionTypes,
 } from './follower.types';
 
 import {
@@ -16,7 +13,6 @@ import {
   followNewUserFailure,
   getFollowersSuccess,
   getFollowersFailure,
-  getUsersFollowingStart,
   getCurrentUserUsersFollowingSuccess,
   getOtherUserUsersFollowingSuccess,
   getUsersFollowingFailure,
@@ -91,7 +87,7 @@ export function* onGetFollowersStart(): SagaIterator {
 }
 
 export function* onGetUsersFollowingStart(): SagaIterator {
-  yield takeLatest<ActionPattern, Saga>(
+  yield takeEvery<ActionPattern, Saga>(
     FollowerActions.GET_USERS_FOLLOWING_START,
     getUsersFollowing
   );
