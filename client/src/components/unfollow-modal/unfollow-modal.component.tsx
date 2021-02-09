@@ -41,7 +41,7 @@ const UnfollowModal: React.FC<Props> = ({
         ) : null}
       </div>
       <div className='unfollow-verify'>
-        <span>Unfollow @{username}?</span>
+        <span className='verify-text'>Unfollow @{username}?</span>
       </div>
     </Modal.Header>
     <Modal.Body className='unfollow-modal-body'>

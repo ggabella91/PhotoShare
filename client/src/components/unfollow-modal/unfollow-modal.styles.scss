@@ -1,35 +1,44 @@
 @mixin avatar-dimensions {
   position: relative;
-  width: 14vw;
-  max-width: 150px;
-  max-height: 150px;
-  min-width: 75px;
-  min-height: 75px;
-  height: 14vw;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
 }
 
 .unfollow-modal {
   display: flex;
   flex-direction: column;
+  justify-content: stretch;
   height: 35vh;
-  width: 20vw;
-  max-width: 200px;
-  min-width: 120px;
+  width: 50vw;
+  min-width: 250px;
+  max-width: 400px;
   max-height: 120px;
   margin-top: 45vh;
   margin-left: 50%;
   transform: translate(-50%);
 
-  // .modal-content {
-  //   width: 20vw;
-  //   max-width: inherit;
-  //   min-width: inherit;
-  //   max-height: 120px;
-  // }
+  .modal-content {
+    width: 50vw;
+    max-width: inherit;
+    min-width: inherit;
+    max-height: 300px;
+    border-radius: 15px;
+  }
 
   .unfollow-modal-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width: 50vw;
+    min-width: 250px;
+    max-width: 400px;
+
     .avatar {
+      align-self: center;
+      margin: 20px 0;
+
       @include avatar-dimensions();
 
       .profile-photo {
@@ -38,8 +47,6 @@
 
       .user-bio-photo-placeholder {
         @include avatar-dimensions();
-        border: solid 1.5px;
-        border-color: black;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -52,16 +59,22 @@
           margin: 0;
           margin-top: 50%;
           transform: translateY(-55%);
-
-          @include respond-wide() {
-            font-size: 3vw;
-          }
         }
       }
     }
 
     .unfollow-verify {
-      
+      display: flex;
+      margin-left: 0;
+      width: 50vw;
+      min-width: 250px;
+      max-width: 400px;
+      justify-content: center;
+      position: relative;
+
+      .verify-text {
+        font-weight: 400;
+      }
     }
   }
 
@@ -69,10 +82,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: solid 1px;
-    width: 20vw;
-    max-width: inherit;
-    min-width: inherit;
+    width: 50vw;
+    min-width: 250px;
+    max-width: 400px;
     max-height: 120px;
 
     &:hover {
@@ -81,18 +93,24 @@
 
     .unfollow {
       border-bottom: solid 1px;
-      border-color: rgba(0, 0, 0, 0.2);
-      width: 20vw;
-      max-width: inherit;
+      border-color: #dee2e6;
+      width: 50vw;
+      min-width: 250px;
+      max-width: 400px;
       text-align: center;
-      padding-bottom: 1vh;
+      padding-bottom: 1.5vh;
+
+      .unfollow-confirm {
+        color: red;
+        font-weight: 420;
+      }
     }
 
     .cancel-unfollow {
       width: 20vw;
       max-width: inherit;
       text-align: center;
-      padding-top: 1vh;
+      padding-top: 1.5vh;
     }
 
     span {
@@ -103,7 +121,3 @@
     }
   }
 }
-
-// .modal-backdrop {
-//   z-index: 1050;
-// }
