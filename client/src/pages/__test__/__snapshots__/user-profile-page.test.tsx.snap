@@ -147,5 +147,12 @@ exports[`renders a my-profile-page component 1`] = `
     onHide={[Function]}
     show={false}
   />
+  <UnfollowModal
+    onHide={[Function]}
+    profilePhoto={null}
+    show={false}
+    unfollow={[Function]}
+    username="giuliano_gabella"
+  />
 </div>
 `;

@@ -60,6 +60,7 @@ import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
 import NotFoundPage from '../../pages/not-found/not-found-page.component';
+import UnfollowModal from '../../components/unfollow-modal/unfollow-modal.component';
 
 import '../my-profile/profile-page.styles.scss';
 
@@ -150,6 +151,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   });
 
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
+
+  const [unfollowModalShow, setUnfollowModalShow] = useState(false);
 
   let postsBucket: string, profileBucket: string;
 
@@ -313,7 +316,11 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       >
         <span
           className={narrow ? 'follow-narrow-text' : 'follow-text'}
-          onClick={isFollowing! ? () => {} : () => followNewUserStart(user.id)}
+          onClick={
+            isFollowing!
+              ? () => setUnfollowModalShow(true)
+              : () => followNewUserStart(user.id)
+          }
         >
           {isFollowing! ? 'Following' : 'Follow'}
         </span>
@@ -427,6 +434,13 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
             s3Key: postModalProps.s3Key,
           })
         }
+      />
+      <UnfollowModal
+        show={unfollowModalShow}
+        onHide={() => setUnfollowModalShow(false)}
+        unfollow={() => {}}
+        username={username}
+        profilePhoto={profilePhotoFile}
       />
     </div>
   );

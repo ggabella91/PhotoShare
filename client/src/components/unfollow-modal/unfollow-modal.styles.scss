@@ -1,0 +1,123 @@
+@mixin avatar-dimensions {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+}
+
+.unfollow-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  height: 35vh;
+  width: 50vw;
+  min-width: 250px;
+  max-width: 400px;
+  max-height: 120px;
+  margin-top: 45vh;
+  margin-left: 50%;
+  transform: translate(-50%);
+
+  .modal-content {
+    width: 50vw;
+    max-width: inherit;
+    min-width: inherit;
+    max-height: 300px;
+    border-radius: 15px;
+  }
+
+  .unfollow-modal-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width: 50vw;
+    min-width: 250px;
+    max-width: 400px;
+
+    .avatar {
+      align-self: center;
+      margin: 20px 0;
+
+      @include avatar-dimensions();
+
+      .profile-photo {
+        @include avatar-dimensions();
+      }
+
+      .user-bio-photo-placeholder {
+        @include avatar-dimensions();
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+
+        .user-bio-photo-placeholder-text {
+          position: relative;
+          font-size: 32px;
+          color: black;
+          margin: 0;
+          margin-top: 50%;
+          transform: translateY(-55%);
+        }
+      }
+    }
+
+    .unfollow-verify {
+      display: flex;
+      margin-left: 0;
+      width: 50vw;
+      min-width: 250px;
+      max-width: 400px;
+      justify-content: center;
+      position: relative;
+
+      .verify-text {
+        font-weight: 400;
+      }
+    }
+  }
+
+  .unfollow-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50vw;
+    min-width: 250px;
+    max-width: 400px;
+    max-height: 120px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .unfollow {
+      border-bottom: solid 1px;
+      border-color: #dee2e6;
+      width: 50vw;
+      min-width: 250px;
+      max-width: 400px;
+      text-align: center;
+      padding-bottom: 1.5vh;
+
+      .unfollow-confirm {
+        color: red;
+        font-weight: 420;
+      }
+    }
+
+    .cancel-unfollow {
+      width: 20vw;
+      max-width: inherit;
+      text-align: center;
+      padding-top: 1.5vh;
+    }
+
+    span {
+      font-family: 'Lato', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      overflow: hidden;
+    }
+  }
+}
