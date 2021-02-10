@@ -14,6 +14,8 @@ const INITIAL_STATE: FollowerState = {
   getFollowersError: null,
   getUsersFollowingConfirm: null,
   getUsersFollowingError: null,
+  unfollowConfirm: null,
+  unfollowError: null,
 };
 
 const followerReducer = (
@@ -50,6 +52,12 @@ const followerReducer = (
           "Other user's users following fetched successfully!",
         getUsersFollowingError: null,
       };
+    case FollowerActions.UNFOLLOW_USER_SUCCESS:
+      return {
+        ...state,
+        unfollowConfirm: action.payload,
+        unfollowError: null,
+      };
     case FollowerActions.FOLLOW_NEW_USER_FAILURE:
       return {
         ...state,
@@ -67,6 +75,18 @@ const followerReducer = (
         ...state,
         getUsersFollowingConfirm: null,
         getUsersFollowingError: action.payload,
+      };
+    case FollowerActions.UNFOLLOW_USER_FAILURE:
+      return {
+        ...state,
+        unfollowConfirm: null,
+        unfollowError: action.payload,
+      };
+    case FollowerActions.CLEAR_UNFOLLOW_PROPERTIES:
+      return {
+        ...state,
+        unfollowConfirm: null,
+        unfollowError: null,
       };
     default:
       return state;

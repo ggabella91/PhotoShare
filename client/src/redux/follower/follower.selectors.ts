@@ -49,3 +49,13 @@ export const selectGetUsersFollowingError = createSelector(
   [selectFollowerState],
   (followerState: FollowerState) => followerState.getUsersFollowingError
 );
+
+export const selectUnfollowConfirm = createSelector(
+  [selectFollowerState],
+  (followerState: FollowerState) => followerState.unfollowConfirm
+);
+
+export const selectUnfollowError = createSelector(
+  [selectFollowerState],
+  (followerState: FollowerState) => followerState.unfollowError
+);
