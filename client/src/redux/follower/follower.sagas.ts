@@ -16,6 +16,8 @@ import {
   getCurrentUserUsersFollowingSuccess,
   getOtherUserUsersFollowingSuccess,
   getUsersFollowingFailure,
+  unfollowUserSuccess,
+  unfollowUserFailure,
 } from './follower.actions';
 
 import axios from 'axios';
@@ -72,6 +74,20 @@ export function* getUsersFollowing({
   }
 }
 
+export function* unfollowUserStart({
+  payload: userId,
+}: {
+  payload: string;
+}): any {
+  try {
+    const { data } = yield axios.post(`/api/followers/unfollow-user/${userId}`);
+
+    yield put(unfollowUserSuccess(data));
+  } catch (err) {
+    yield put(unfollowUserFailure(err));
+  }
+}
+
 export function* onFollowNewUserStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(
     FollowerActions.FOLLOW_NEW_USER_START,
@@ -93,10 +109,18 @@ export function* onGetUsersFollowingStart(): SagaIterator {
   );
 }
 
+export function* onUnfollowUserStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    FollowerActions.UNFOLLOW_USER_START,
+    unfollowUserStart
+  );
+}
+
 export function* followerSagas(): SagaIterator {
   yield all([
     call(onFollowNewUserStart),
     call(onGetFollowersStart),
     call(onGetUsersFollowingStart),
+    call(onUnfollowUserStart),
   ]);
 }

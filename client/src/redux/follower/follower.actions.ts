@@ -75,3 +75,25 @@ export const getUsersFollowingFailure = (
   type: FollowerActions.GET_USERS_FOLLOWING_FAILURE,
   payload: error,
 });
+
+export const unfollowUserStart = (userId: string): FollowerActionTypes => ({
+  type: FollowerActions.UNFOLLOW_USER_START,
+  payload: userId,
+});
+
+export const unfollowUserSuccess = (message: string): FollowerActionTypes => ({
+  type: FollowerActions.UNFOLLOW_USER_SUCCESS,
+  payload: message,
+});
+
+export const unfollowUserFailure = (
+  error: FollowError
+): FollowerActionTypes => ({
+  type: FollowerActions.UNFOLLOW_USER_FAILURE,
+  payload: error,
+});
+
+export const clearFollowState = (): FollowerActionTypes => ({
+  type: FollowerActions.CLEAR_FOLLOW_STATE,
+  payload: null,
+});
