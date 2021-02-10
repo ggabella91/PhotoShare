@@ -55,7 +55,7 @@ const followerReducer = (
     case FollowerActions.UNFOLLOW_USER_SUCCESS:
       return {
         ...state,
-        unfollowConfirm: action.payload,
+        unfollowConfirm: 'User unfollowed successfully',
         unfollowError: null,
       };
     case FollowerActions.FOLLOW_NEW_USER_FAILURE:
@@ -82,11 +82,9 @@ const followerReducer = (
         unfollowConfirm: null,
         unfollowError: action.payload,
       };
-    case FollowerActions.CLEAR_UNFOLLOW_PROPERTIES:
+    case FollowerActions.CLEAR_FOLLOW_STATE:
       return {
-        ...state,
-        unfollowConfirm: null,
-        unfollowError: null,
+        ...INITIAL_STATE,
       };
     default:
       return state;

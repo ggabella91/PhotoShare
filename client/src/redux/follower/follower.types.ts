@@ -12,7 +12,7 @@ export enum FollowerActions {
   UNFOLLOW_USER_START = 'UNFOLLOW_USER_START',
   UNFOLLOW_USER_SUCCESS = 'UNFOLLOW_USER_SUCCESS',
   UNFOLLOW_USER_FAILURE = 'UNFOLLOW_USER_FAILURE',
-  CLEAR_UNFOLLOW_PROPERTIES = 'CLEAR_UNFOLLOW_PROPERTIES',
+  CLEAR_FOLLOW_STATE = 'CLEAR_FOLLOW_STATE',
 }
 
 export interface Follower {
@@ -48,7 +48,7 @@ export interface FollowerState {
   getUsersFollowingConfirm: string | null;
   getUsersFollowingError: FollowError | null;
   unfollowConfirm: string | null;
-  unfollowError: string | null;
+  unfollowError: FollowError | null;
 }
 
 export interface FollowNewUserStart {
@@ -116,8 +116,8 @@ export interface UnfollowUserFailure {
   payload: FollowError;
 }
 
-export interface ClearUnfollowProperties {
-  type: typeof FollowerActions.CLEAR_UNFOLLOW_PROPERTIES;
+export interface ClearFollowState {
+  type: typeof FollowerActions.CLEAR_FOLLOW_STATE;
   payload: null;
 }
 
@@ -135,4 +135,4 @@ export type FollowerActionTypes =
   | UnfollowUserStart
   | UnfollowUserSuccess
   | UnfollowUserFailure
-  | ClearUnfollowProperties;
+  | ClearFollowState;

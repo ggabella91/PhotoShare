@@ -49,11 +49,15 @@ import {
   selectCurrentUserUsersFollowing,
   selectOtherUserUsersFollowing,
   selectGetUsersFollowingConfirm,
+  selectUnfollowConfirm,
+  selectUnfollowError,
 } from '../../redux/follower/follower.selectors';
 import {
   followNewUserStart,
   getFollowersStart,
   getUsersFollowingStart,
+  unfollowUserStart,
+  clearFollowState,
 } from '../../redux/follower/follower.actions';
 
 import PostTile from '../../components/post-tile/post-tile.component';
@@ -83,12 +87,16 @@ interface UserProfilePageProps {
   otherUserUsersFollowing: Follower[] | null;
   getUsersFollowingConfirm: string | null;
   currentUser: User | null;
+  unfollowConfirm: string | null;
+  unfollowError: FollowError | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
   followNewUserStart: typeof followNewUserStart;
   getFollowersStart: typeof getFollowersStart;
   getUsersFollowingStart: typeof getUsersFollowingStart;
+  unfollowUserStart: typeof unfollowUserStart;
+  clearFollowState: typeof clearFollowState;
 }
 
 interface PostModalProps {
@@ -124,6 +132,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   followNewUserStart,
   getFollowersStart,
   getUsersFollowingStart,
+  unfollowUserStart,
+  unfollowConfirm,
+  unfollowError,
+  clearFollowState,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -197,7 +209,12 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [otherUser]);
 
   useEffect(() => {
-    if (followers && followers.length) {
+    if (
+      (followers && followers.length) ||
+      (followers &&
+        followersAndUsersFollowing.followers &&
+        followers.length !== followersAndUsersFollowing.followers.length)
+    ) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
         followers: followers,
@@ -210,6 +227,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         usersFollowing: otherUserUsersFollowing,
       });
     }
+    clearFollowState();
   }, [
     followers,
     followers?.length,
@@ -308,6 +326,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       }
     }
   }, [getUsersFollowingConfirm]);
+
+  useEffect(() => {
+    if (unfollowConfirm) {
+      setIsFollowing(false);
+      getFollowersStart(otherUser!.id);
+      clearFollowState();
+    }
+  }, [unfollowConfirm]);
 
   const handleRenderFollowOrFollowingButton = (narrow: boolean) => {
     return (
@@ -438,7 +464,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       <UnfollowModal
         show={unfollowModalShow}
         onHide={() => setUnfollowModalShow(false)}
-        unfollow={() => {}}
+        unfollow={() => {
+          unfollowUserStart(otherUser!.id);
+          setUnfollowModalShow(false);
+        }}
         username={username}
         profilePhoto={profilePhotoFile}
       />
@@ -464,6 +493,8 @@ interface LinkStateProps {
   otherUserUsersFollowing: Follower[] | null;
   getUsersFollowingConfirm: string | null;
   currentUser: User | null;
+  unfollowConfirm: string | null;
+  unfollowError: FollowError | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -484,6 +515,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   otherUserUsersFollowing: selectOtherUserUsersFollowing,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   currentUser: selectCurrentUser,
+  unfollowConfirm: selectUnfollowConfirm,
+  unfollowError: selectUnfollowError,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -497,6 +530,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
+  unfollowUserStart: (userId: string) => dispatch(unfollowUserStart(userId)),
+  clearFollowState: () => dispatch(clearFollowState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);
