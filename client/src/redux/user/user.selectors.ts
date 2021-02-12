@@ -15,6 +15,11 @@ export const selectOtherUser = createSelector(
   (user: UserState) => user.otherUser
 );
 
+export const selectFollowersOrFollowing = createSelector(
+  [selectUser],
+  (user: UserState) => user.followersOrFollowing
+);
+
 export const selectOtherUserError = createSelector(
   [selectUser],
   (user: UserState) => user.otherUserError

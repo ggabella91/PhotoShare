@@ -17,7 +17,7 @@ import {
 
 import { PostFile, PostFileReq, UserType } from '../../redux/post/post.types';
 import {
-  selectUserSuggestionProfilePhotoFiles,
+  selectUsersProfilePhotoFileArray,
   selectUserSuggestionProfilePhotoConfirm,
 } from '../../redux/post/post.selectors';
 import {
@@ -101,7 +101,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       for (let user of userSuggestions) {
         if (user.photo) {
           getPostFileStart({
-            user: UserType.searchSuggestion,
+            user: UserType.usersArray,
             bucket,
             s3Key: user.photo,
           });
@@ -208,7 +208,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   userSuggestions: selectUserSuggestions,
   userSuggestionsConfirm: selectUserSuggestionsConfirm,
   userSuggestionsError: selectUserSuggestionsError,
-  userSuggestionProfilePhotoFiles: selectUserSuggestionProfilePhotoFiles,
+  userSuggestionProfilePhotoFiles: selectUsersProfilePhotoFileArray,
   userSuggestionProfilePhotoConfirm: selectUserSuggestionProfilePhotoConfirm,
 });
 

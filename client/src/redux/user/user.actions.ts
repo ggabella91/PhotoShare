@@ -5,6 +5,7 @@ import {
   UserSignIn,
   User,
   FieldsToUpdate,
+  OtherUserRequest,
   ChangePassword,
   ResetPassword,
   Error,
@@ -171,13 +172,22 @@ export const clearPasswordStatuses = (): UserActionTypes => ({
   payload: null,
 });
 
-export const getOtherUserStart = (username: string): UserActionTypes => ({
+export const getOtherUserStart = (
+  otherUserReq: OtherUserRequest
+): UserActionTypes => ({
   type: UserActions.GET_OTHER_USER_START,
-  payload: username,
+  payload: otherUserReq,
 });
 
 export const getOtherUserSuccess = (user: User): UserActionTypes => ({
   type: UserActions.GET_OTHER_USER_SUCCESS,
+  payload: user,
+});
+
+export const getFollowersOrFollowingSuccess = (
+  user: User
+): UserActionTypes => ({
+  type: UserActions.GET_FOLLOWERS_OR_FOLLOWING_SUCCESS,
   payload: user,
 });
 

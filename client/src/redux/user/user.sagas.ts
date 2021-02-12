@@ -1,4 +1,4 @@
-import { takeLatest, put, all, call } from 'redux-saga/effects';
+import { takeLatest, takeEvery, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
@@ -8,6 +8,8 @@ import {
   User,
   UserActions,
   FieldsToUpdate,
+  OtherUserType,
+  OtherUserRequest,
   ChangePassword,
   ResetPassword,
 } from './user.types';
@@ -31,6 +33,7 @@ import {
   deleteAccountSuccess,
   deleteAccountFailure,
   getOtherUserSuccess,
+  getFollowersOrFollowingSuccess,
   getOtherUserFailure,
   getUserSuggestionsSuccess,
   getUserSuggestionsFailure,
@@ -87,10 +90,23 @@ export function* isLoggedIn(): any {
   }
 }
 
-export function* getOtherUser({ payload: username }: { payload: string }): any {
+export function* getOtherUser({
+  payload: { type, usernameOrId },
+}: {
+  payload: OtherUserRequest;
+}): any {
   try {
-    const { data }: { data: User } = yield axios.get(`/api/users/${username}`);
-    yield put(getOtherUserSuccess(data));
+    if (type === OtherUserType.OTHER) {
+      const { data }: { data: User } = yield axios.get(
+        `/api/users/${usernameOrId}`
+      );
+      yield put(getOtherUserSuccess(data));
+    } else if (type === OtherUserType.FOLLOWERS_OR_FOLLOWING) {
+      const { data }: { data: User } = yield axios.get(
+        `/api/users/id/${usernameOrId}`
+      );
+      yield put(getFollowersOrFollowingSuccess(data));
+    }
   } catch (err) {
     yield put(getOtherUserFailure(err));
   }
@@ -220,7 +236,7 @@ export function* onCheckUserSession(): SagaIterator {
 }
 
 export function* onGetOtherUserStart(): SagaIterator {
-  yield takeLatest<ActionPattern, Saga>(
+  yield takeEvery<ActionPattern, Saga>(
     UserActions.GET_OTHER_USER_START,
     getOtherUser
   );

@@ -14,6 +14,7 @@ import { updatePasswordRouter } from './routes/update-password';
 import { updateUserRouter } from './routes/update-user';
 import { deleteUserRouter } from './routes/delete';
 import { getUserRouter } from './routes/get-user';
+import { getUserByIdRouter } from './routes/get-user-by-id';
 import { getSuggestedUsersRouter } from './routes/get-suggested-users';
 
 const app = express();
@@ -36,6 +37,7 @@ app.use(updatePasswordRouter);
 app.use(updateUserRouter);
 app.use(deleteUserRouter);
 app.use(getUserRouter);
+app.use(getUserByIdRouter);
 app.use(getSuggestedUsersRouter);
 
 app.all('*', async (req, res) => {

@@ -4,7 +4,12 @@ import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
-import { User, Error } from '../../redux/user/user.types';
+import {
+  User,
+  Error,
+  OtherUserType,
+  OtherUserRequest,
+} from '../../redux/user/user.types';
 import {
   selectCurrentUser,
   selectOtherUser,
@@ -176,7 +181,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
   useEffect(() => {
-    getOtherUserStart(username);
+    getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username });
   }, [username]);
 
   useEffect(() => {
@@ -520,8 +525,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getOtherUserStart: (username: string) =>
-    dispatch(getOtherUserStart(username)),
+  getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
+    dispatch(getOtherUserStart(otherUserRequest)),
   getPostDataStart: (userId: string) => dispatch(getPostDataStart(userId)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
