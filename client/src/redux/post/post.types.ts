@@ -19,7 +19,7 @@ export enum PostActions {
   ARCHIVE_POST_FAILURE = 'ARCHIVE_POST_FAILURE',
   CLEAR_ARCHIVE_POST_STATUSES = 'CLEAR_ARCHIVE_POST_STATUSES',
   GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
-  GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS = 'GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS',
+  GET_USER_PHOTO_FOR_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_ARRAY_SUCCESS',
   CLEAR_USER_SUGGESTION_PHOTO_FILES = 'CLEAR_USER_SUGGESTION_PHOTO_FILES',
   CLEAR_POST_STATE = 'CLEAR_POST_STATE',
 }
@@ -43,7 +43,7 @@ export interface Post {
 export enum UserType {
   self = 'self',
   other = 'other',
-  searchSuggestion = 'searchSuggestion',
+  usersArray = 'usersArray',
 }
 
 export interface PostFileReq {
@@ -78,8 +78,8 @@ export interface PostState {
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
   otherUserProfilePhotoFile: string | null;
-  userSuggestionsProfilePhotoFiles: PostFile[] | null;
-  userSuggestionsProfilePhotoConfirm: string | null;
+  usersProfilePhotoFileArray: PostFile[] | null;
+  usersProfilePhotoConfirm: string | null;
 }
 
 export interface CreatePostStart {
@@ -182,8 +182,8 @@ export interface GetOtherUserProfilePhotoFileSuccess {
   payload: string;
 }
 
-export interface GetUserSuggestionProfilePhotoFileSuccess {
-  type: typeof PostActions.GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS;
+export interface GetUserPhotoForArraySuccess {
+  type: typeof PostActions.GET_USER_PHOTO_FOR_ARRAY_SUCCESS;
   payload: PostFile;
 }
 
@@ -217,7 +217,7 @@ export type PostActionTypes =
   | ArchivePostSuccess
   | ArchivePostFailure
   | GetOtherUserProfilePhotoFileSuccess
-  | GetUserSuggestionProfilePhotoFileSuccess
+  | GetUserPhotoForArraySuccess
   | ClearArchivePostStatuses
   | ClearUserSuggestionPhotoFiles
   | ClearPostState;

@@ -4,19 +4,32 @@ import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 
-import { User } from '../../redux/user/user.types';
-import { selectUserSuggestions } from '../../redux/user/user.selectors';
+import {
+  User,
+  OtherUserType,
+  OtherUserRequest,
+} from '../../redux/user/user.types';
+import { selectFollowersOrFollowing } from '../../redux/user/user.selectors';
+import { getOtherUserStart } from '../../redux/user/user.actions';
+
+import { PostFileReq, PostFile, UserType } from '../../redux/post/post.types';
+import { selectUsersProfilePhotoFileArray } from '../../redux/post/post.selectors';
+import { getPostFileStart } from '../../redux/post/post.actions';
 
 import { Follower } from '../../redux/follower/follower.types';
 
 import './followers-or-following-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
 
-interface Props {
+interface FollowersOrFollowingModalProps {
   users: Follower[];
   show: boolean;
   onHide: () => void;
   isFollowersModal: boolean;
+  followersOrFollowing: User[] | null;
+  usersProfilePhotoArray: PostFile[] | null;
+  getOtherUserStart: typeof getOtherUserStart;
+  getPostFileStart: typeof getPostFileStart;
 }
 
 export interface FollowerOrFollowingData {
@@ -25,13 +38,17 @@ export interface FollowerOrFollowingData {
   name: string;
 }
 
-const FollowersOrFollowingModal: React.FC<Props> = ({
+const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
   users,
   isFollowersModal,
   onHide,
+  followersOrFollowing,
+  getOtherUserStart,
+  getPostFileStart,
   ...props
 }) => {
-  const [userSuggestionsArray, setUserSuggestionsArray] = useState<
+  const [usersArray, setUsersArray] = useState<User[]>([]);
+  const [userInfoAndPhotoArray, setUserInfoAndPhotoArray] = useState<
     FollowerOrFollowingData[]
   >([]);
 
@@ -43,7 +60,39 @@ const FollowersOrFollowingModal: React.FC<Props> = ({
     bucket = 'photo-share-app-profile-photos-dev';
   }
 
-  // Need to fetch info and photos of followers or users-following and map array of divs to display this
+  useEffect(() => {
+    if (users) {
+      if (isFollowersModal) {
+        for (let user of users) {
+          getOtherUserStart({
+            type: OtherUserType.FOLLOWERS_OR_FOLLOWING,
+            usernameOrId: user.followerId,
+          });
+        }
+      } else {
+        for (let user of users) {
+          getOtherUserStart({
+            type: OtherUserType.FOLLOWERS_OR_FOLLOWING,
+            usernameOrId: user.userId,
+          });
+        }
+      }
+    }
+  }, [users]);
+
+  useEffect(() => {
+    if (followersOrFollowing && followersOrFollowing.length === users.length) {
+      for (let user of followersOrFollowing) {
+        if (user.photo) {
+          getPostFileStart({
+            user: UserType.usersArray,
+            s3Key: user.photo,
+            bucket,
+          });
+        }
+      }
+    }
+  }, [followersOrFollowing, followersOrFollowing?.length]);
 
   return (
     <Modal
@@ -63,9 +112,15 @@ const FollowersOrFollowingModal: React.FC<Props> = ({
   );
 };
 
-interface LinkStateProps {}
+interface LinkStateProps {
+  followersOrFollowing: User[] | null;
+  usersProfilePhotoArray: PostFile[] | null;
+}
 
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({});
+const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
+  followersOrFollowing: selectFollowersOrFollowing,
+  usersProfilePhotoArray: selectUsersProfilePhotoFileArray,
+});
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({});
 

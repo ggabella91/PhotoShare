@@ -20,8 +20,8 @@ const INITIAL_STATE: PostState = {
   archivePostConfirm: null,
   archivePostError: null,
   otherUserProfilePhotoFile: null,
-  userSuggestionsProfilePhotoFiles: null,
-  userSuggestionsProfilePhotoConfirm: null,
+  usersProfilePhotoFileArray: null,
+  usersProfilePhotoConfirm: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -67,11 +67,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         getPostFileError: null,
         getPostFileConfirm: 'Profile photo of other user fetched!',
       };
-    case PostActions.GET_USER_SUGGESTION_PHOTO_FILE_SUCCESS:
+    case PostActions.GET_USER_PHOTO_FOR_ARRAY_SUCCESS:
       return {
         ...state,
         userSuggestionsProfilePhotoFiles: addSuggestedUserPhotoFileToArray(
-          state.userSuggestionsProfilePhotoFiles,
+          state.usersProfilePhotoFileArray,
           action.payload
         ),
         getPostFileError: null,

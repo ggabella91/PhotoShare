@@ -90,7 +90,7 @@ export enum OtherUserType {
 
 export interface OtherUserRequest {
   type: OtherUserType;
-  userId: string;
+  usernameOrId: string;
 }
 
 export type UserPayload =
