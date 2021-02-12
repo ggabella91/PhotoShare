@@ -3,6 +3,7 @@ import { UserActions, UserActionTypes, UserState } from './user.types';
 const INITIAL_STATE: UserState = {
   currentUser: null,
   otherUser: null,
+  followersOrFollowing: null,
   otherUserError: null,
   userSuggestions: null,
   userSuggestionsConfirm: null,

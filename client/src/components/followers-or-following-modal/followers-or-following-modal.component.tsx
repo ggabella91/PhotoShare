@@ -4,22 +4,45 @@ import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 
+import { User } from '../../redux/user/user.types';
+import { selectUserSuggestions } from '../../redux/user/user.selectors';
+
+import { Follower } from '../../redux/follower/follower.types';
+
 import './followers-or-following-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
 
 interface Props {
-  userId: string;
+  users: Follower[];
   show: boolean;
   onHide: () => void;
   isFollowersModal: boolean;
 }
 
+export interface FollowerOrFollowingData {
+  profilePhotoFileString: string;
+  username: string;
+  name: string;
+}
+
 const FollowersOrFollowingModal: React.FC<Props> = ({
-  userId,
+  users,
   isFollowersModal,
   onHide,
   ...props
 }) => {
+  const [userSuggestionsArray, setUserSuggestionsArray] = useState<
+    FollowerOrFollowingData[]
+  >([]);
+
+  let bucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    bucket = 'photo-share-app-profile-photos';
+  } else {
+    bucket = 'photo-share-app-profile-photos-dev';
+  }
+
   // Need to fetch info and photos of followers or users-following and map array of divs to display this
 
   return (

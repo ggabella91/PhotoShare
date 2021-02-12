@@ -1,4 +1,4 @@
-import { takeLatest, put, all, call } from 'redux-saga/effects';
+import { takeLatest, takeEvery, put, all, call } from 'redux-saga/effects';
 import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
@@ -8,6 +8,8 @@ import {
   User,
   UserActions,
   FieldsToUpdate,
+  OtherUserType,
+  OtherUserRequest,
   ChangePassword,
   ResetPassword,
 } from './user.types';
@@ -87,7 +89,11 @@ export function* isLoggedIn(): any {
   }
 }
 
-export function* getOtherUser({ payload: username }: { payload: string }): any {
+export function* getOtherUser({
+  payload: { type, userId },
+}: {
+  payload: OtherUserRequest;
+}): any {
   try {
     const { data }: { data: User } = yield axios.get(`/api/users/${username}`);
     yield put(getOtherUserSuccess(data));
@@ -220,7 +226,7 @@ export function* onCheckUserSession(): SagaIterator {
 }
 
 export function* onGetOtherUserStart(): SagaIterator {
-  yield takeLatest<ActionPattern, Saga>(
+  yield takeEvery<ActionPattern, Saga>(
     UserActions.GET_OTHER_USER_START,
     getOtherUser
   );
