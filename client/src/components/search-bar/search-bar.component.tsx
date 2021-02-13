@@ -18,7 +18,7 @@ import {
 import { PostFile, PostFileReq, UserType } from '../../redux/post/post.types';
 import {
   selectUsersProfilePhotoFileArray,
-  selectUserSuggestionProfilePhotoConfirm,
+  selectUsersProfilePhotoConfirm,
 } from '../../redux/post/post.selectors';
 import {
   getPostFileStart,
@@ -209,7 +209,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   userSuggestionsConfirm: selectUserSuggestionsConfirm,
   userSuggestionsError: selectUserSuggestionsError,
   userSuggestionProfilePhotoFiles: selectUsersProfilePhotoFileArray,
-  userSuggestionProfilePhotoConfirm: selectUserSuggestionProfilePhotoConfirm,
+  userSuggestionProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
