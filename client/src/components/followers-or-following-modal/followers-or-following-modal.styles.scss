@@ -1,8 +1,43 @@
 .followers-following-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 50vh;
+  width: 50vw;
+  min-width: 250px;
+  max-width: 400px;
+  min-height: 400px;
+  max-height: 400px;
+  margin-top: 25vh;
+  margin-left: 50%;
+  transform: translate(-50%);
+
+  .modal-content {
+    width: 50vw;
+    max-width: inherit;
+    min-width: inherit;
+    max-height: 400px;
+    border-radius: 15px;
+  }
+
   .followers-following-modal-header {
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    .header-text {
+      margin-left: 50%;
+      transform: translate(-50%);
+      font-size: 18px;
+      font-weight: 420;
+      text-align: center;
+    }
   }
 
   .followers-following-modal-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 338px;
     .follower-or-following-user {
     }
   }

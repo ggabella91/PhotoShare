@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/api/users/id/:userId', async (req: Request, res: Response) => {
   const { userId } = req.params;
 
-  const existingUser = await User.findById({ userId });
+  const existingUser = await User.findById(userId);
 
   if (!existingUser) {
     throw new BadRequestError('User not found');

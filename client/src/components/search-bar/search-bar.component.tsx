@@ -25,7 +25,7 @@ import {
   clearUserSuggestionPhotoFiles,
 } from '../../redux/post/post.actions';
 
-import UserSuggestions from '../user-suggestions/user-suggestions.component';
+import UserInfo from '../user-info/user-info.component';
 
 import './search-bar.styles.scss';
 
@@ -41,7 +41,7 @@ export interface SearchBarProps {
   clearUserSuggestionPhotoFiles: typeof clearUserSuggestionPhotoFiles;
 }
 
-export interface UserSuggestionsData {
+export interface UserInfoData {
   profilePhotoFileString: string;
   username: string;
   name: string;
@@ -60,7 +60,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [searchString, setSearchString] = useState('');
   const [userSuggestionsArray, setUserSuggestionsArray] = useState<
-    UserSuggestionsData[]
+    UserInfoData[]
   >([]);
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
   const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
@@ -112,35 +112,31 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       userSuggestionProfilePhotoFiles &&
       userSuggestionProfilePhotoFiles.length
     ) {
-      const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
-        (el: User) => {
-          let photoFileString: string;
+      const suggestedUser: UserInfoData[] = userSuggestions.map((el: User) => {
+        let photoFileString: string;
 
-          for (let file of userSuggestionProfilePhotoFiles) {
-            if (el.photo === file.s3Key) {
-              photoFileString = file.fileString;
-            }
+        for (let file of userSuggestionProfilePhotoFiles) {
+          if (el.photo === file.s3Key) {
+            photoFileString = file.fileString;
           }
-
-          return {
-            name: el.name,
-            username: el.username,
-            profilePhotoFileString: photoFileString!,
-          };
         }
-      );
+
+        return {
+          name: el.name,
+          username: el.username,
+          profilePhotoFileString: photoFileString!,
+        };
+      });
 
       setUserSuggestionsArray(suggestedUser);
     } else if (userSuggestions && userSuggestionProfilePhotoConfirm) {
-      const suggestedUser: UserSuggestionsData[] = userSuggestions.map(
-        (el: User) => {
-          return {
-            name: el.name,
-            username: el.username,
-            profilePhotoFileString: '',
-          };
-        }
-      );
+      const suggestedUser: UserInfoData[] = userSuggestions.map((el: User) => {
+        return {
+          name: el.name,
+          username: el.username,
+          profilePhotoFileString: '',
+        };
+      });
 
       setUserSuggestionsArray(suggestedUser);
     }
@@ -184,7 +180,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onBlur={(e) => handleBlur(e)}
         />
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
-          <UserSuggestions userSuggestionsArray={userSuggestionsArray} />
+          <UserInfo userInfoArray={userSuggestionsArray} />
         )}
         {!userSuggestionsArray.length && userSuggestionsConfirm ? (
           <div className='no-matches'>

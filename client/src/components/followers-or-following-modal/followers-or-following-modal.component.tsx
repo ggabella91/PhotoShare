@@ -21,6 +21,8 @@ import { getPostFileStart } from '../../redux/post/post.actions';
 
 import { Follower } from '../../redux/follower/follower.types';
 
+import UserInfo from '../user-info/user-info.component';
+
 import './followers-or-following-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
 
@@ -36,7 +38,7 @@ interface FollowersOrFollowingModalProps {
   usersProfilePhotoConfirm: string | null;
 }
 
-export interface FollowerOrFollowingData {
+export interface UserInfoData {
   profilePhotoFileString: string;
   username: string;
   name: string;
@@ -55,7 +57,7 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
 }) => {
   const [usersArray, setUsersArray] = useState<User[]>([]);
   const [userInfoAndPhotoArray, setUserInfoAndPhotoArray] = useState<
-    FollowerOrFollowingData[]
+    UserInfoData[]
   >([]);
 
   let bucket: string;
@@ -107,7 +109,7 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
       usersProfilePhotoArray &&
       usersProfilePhotoArray.length
     ) {
-      const followerOrFollowing: FollowerOrFollowingData[] = followersOrFollowing.map(
+      const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           let photoFileString: string;
 
@@ -127,7 +129,7 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
 
       setUserInfoAndPhotoArray(followerOrFollowing);
     } else if (followersOrFollowing && usersProfilePhotoConfirm) {
-      const followerOrFollowing: FollowerOrFollowingData[] = followersOrFollowing.map(
+      const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           return {
             name: el.name,
@@ -150,10 +152,14 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
       centered
     >
       <Modal.Header className='followers-following-modal-header' closeButton>
-        {isFollowersModal ? 'Followers' : 'Following'}
+        <span className='header-text'>
+          {isFollowersModal ? 'Followers' : 'Following'}
+        </span>
       </Modal.Header>
       <Modal.Body className='followers-following-modal-body'>
-        <div className='follower-or-following-user'></div>
+        <div className='follower-or-following-user'>
+          <UserInfo userInfoArray={userInfoAndPhotoArray} />
+        </div>
       </Modal.Body>
     </Modal>
   );
