@@ -21,7 +21,7 @@ import { getPostFileStart } from '../../redux/post/post.actions';
 
 import { Follower } from '../../redux/follower/follower.types';
 
-import UserInfo from '../user-info/user-info.component';
+import UserInfo, { StyleType } from '../user-info/user-info.component';
 
 import './followers-or-following-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
@@ -157,9 +157,10 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
         </span>
       </Modal.Header>
       <Modal.Body className='followers-following-modal-body'>
-        <div className='follower-or-following-user'>
-          <UserInfo userInfoArray={userInfoAndPhotoArray} />
-        </div>
+        <UserInfo
+          userInfoArray={userInfoAndPhotoArray}
+          styleType={StyleType.MODAL}
+        />
       </Modal.Body>
     </Modal>
   );
