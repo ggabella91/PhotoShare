@@ -70,6 +70,7 @@ import PostModal from '../../components/post-modal/post-modal.component';
 import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
 import NotFoundPage from '../../pages/not-found/not-found-page.component';
 import UnfollowModal from '../../components/unfollow-modal/unfollow-modal.component';
+import FollowersOrFollowingModal from '../../components/followers-or-following-modal/followers-or-following-modal.component';
 
 import '../my-profile/profile-page.styles.scss';
 
@@ -170,6 +171,12 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
 
   const [unfollowModalShow, setUnfollowModalShow] = useState(false);
+  const [isFollowersModal, setIsFollowersModal] = useState(true);
+
+  const [
+    followersOrFollowingModalShow,
+    setFollowersOrFollowingModalShow,
+  ] = useState(false);
 
   let postsBucket: string, profileBucket: string;
 
@@ -359,6 +366,40 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     );
   };
 
+  const handleRenderFollowersModal = () => {
+    if (
+      followersAndUsersFollowing.followers &&
+      followersAndUsersFollowing.followers.length
+    ) {
+      setIsFollowersModal(true);
+      setFollowersOrFollowingModalShow(true);
+    }
+  };
+
+  const handleRenderFollowingModal = () => {
+    if (
+      followersAndUsersFollowing.usersFollowing &&
+      followersAndUsersFollowing.usersFollowing.length
+    ) {
+      setIsFollowersModal(false);
+      setFollowersOrFollowingModalShow(true);
+    }
+  };
+
+  const handleMakeStatClickable = (type: string, baseClassName: string) => {
+    if (type === 'followers') {
+      return followersAndUsersFollowing.followers &&
+        followersAndUsersFollowing.followers.length
+        ? `${baseClassName} clickable`
+        : `${baseClassName}`;
+    } else if (type === 'following') {
+      return followersAndUsersFollowing.usersFollowing &&
+        followersAndUsersFollowing.usersFollowing.length
+        ? `${baseClassName} clickable`
+        : `${baseClassName}`;
+    }
+  };
+
   if (otherUserError) {
     return <NotFoundPage />;
   }
@@ -391,13 +432,19 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
             {handleRenderFollowOrFollowingButton(true)}
             <div className='posts-followers-following-stats'>
               <span className='user-stat'>{postDataArray.length} Posts</span>
-              <span className='user-stat'>
+              <span
+                className={handleMakeStatClickable('followers', 'user-stat')}
+                onClick={handleRenderFollowersModal}
+              >
                 {followersAndUsersFollowing.followers
                   ? followersAndUsersFollowing.followers.length
                   : 0}{' '}
                 Followers
               </span>
-              <span className='user-stat'>
+              <span
+                className={handleMakeStatClickable('following', 'user-stat')}
+                onClick={handleRenderFollowingModal}
+              >
                 {followersAndUsersFollowing.usersFollowing
                   ? followersAndUsersFollowing.usersFollowing.length
                   : 0}{' '}
@@ -417,13 +464,19 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
             <li className='stats-item'>{postDataArray.length} Posts</li>
-            <li className='stats-item'>
+            <li
+              className={handleMakeStatClickable('followers', 'stats-item')}
+              onClick={handleRenderFollowersModal}
+            >
               {followersAndUsersFollowing.followers
                 ? followersAndUsersFollowing.followers.length
                 : 0}{' '}
               Followers
             </li>
-            <li className='stats-item'>
+            <li
+              className={handleMakeStatClickable('following', 'stats-item')}
+              onClick={handleRenderFollowingModal}
+            >
               {followersAndUsersFollowing.usersFollowing
                 ? followersAndUsersFollowing.usersFollowing.length
                 : 0}{' '}
@@ -475,6 +528,16 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         }}
         username={username}
         profilePhoto={profilePhotoFile}
+      />
+      <FollowersOrFollowingModal
+        users={
+          isFollowersModal
+            ? followersAndUsersFollowing.followers
+            : followersAndUsersFollowing.usersFollowing
+        }
+        show={followersOrFollowingModalShow}
+        onHide={() => setFollowersOrFollowingModalShow(false)}
+        isFollowersModal={isFollowersModal}
       />
     </div>
   );

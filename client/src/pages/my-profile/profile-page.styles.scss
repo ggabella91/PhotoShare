@@ -198,6 +198,10 @@
               display: none;
             }
           }
+
+          .clickable:hover {
+            cursor: pointer;
+          }
         }
 
         .name-and-bio {
@@ -273,6 +277,10 @@
         .stats-item {
           font-size: 18px;
           margin-right: 20px;
+        }
+
+        .clickable:hover {
+          cursor: pointer;
         }
       }
     }

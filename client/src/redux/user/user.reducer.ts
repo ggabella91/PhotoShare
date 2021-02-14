@@ -40,7 +40,7 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
     case UserActions.GET_FOLLOWERS_OR_FOLLOWING_SUCCESS:
       return {
         ...state,
-        followerOrFollowing: addUserToFollowersOrFollowingArray(
+        followersOrFollowing: addUserToFollowersOrFollowingArray(
           state.followersOrFollowing,
           action.payload
         ),

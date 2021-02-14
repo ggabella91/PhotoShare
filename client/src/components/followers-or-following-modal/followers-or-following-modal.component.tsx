@@ -13,16 +13,21 @@ import { selectFollowersOrFollowing } from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import { PostFileReq, PostFile, UserType } from '../../redux/post/post.types';
-import { selectUsersProfilePhotoFileArray } from '../../redux/post/post.selectors';
+import {
+  selectUsersProfilePhotoFileArray,
+  selectUsersProfilePhotoConfirm,
+} from '../../redux/post/post.selectors';
 import { getPostFileStart } from '../../redux/post/post.actions';
 
 import { Follower } from '../../redux/follower/follower.types';
+
+import UserInfo from '../user-info/user-info.component';
 
 import './followers-or-following-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
 
 interface FollowersOrFollowingModalProps {
-  users: Follower[];
+  users: Follower[] | null;
   show: boolean;
   onHide: () => void;
   isFollowersModal: boolean;
@@ -30,9 +35,10 @@ interface FollowersOrFollowingModalProps {
   usersProfilePhotoArray: PostFile[] | null;
   getOtherUserStart: typeof getOtherUserStart;
   getPostFileStart: typeof getPostFileStart;
+  usersProfilePhotoConfirm: string | null;
 }
 
-export interface FollowerOrFollowingData {
+export interface UserInfoData {
   profilePhotoFileString: string;
   username: string;
   name: string;
@@ -43,13 +49,15 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
   isFollowersModal,
   onHide,
   followersOrFollowing,
+  usersProfilePhotoArray,
+  usersProfilePhotoConfirm,
   getOtherUserStart,
   getPostFileStart,
   ...props
 }) => {
   const [usersArray, setUsersArray] = useState<User[]>([]);
   const [userInfoAndPhotoArray, setUserInfoAndPhotoArray] = useState<
-    FollowerOrFollowingData[]
+    UserInfoData[]
   >([]);
 
   let bucket: string;
@@ -81,7 +89,12 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
   }, [users]);
 
   useEffect(() => {
-    if (followersOrFollowing && followersOrFollowing.length === users.length) {
+    if (
+      followersOrFollowing &&
+      users &&
+      followersOrFollowing.length === users.length &&
+      !usersProfilePhotoArray
+    ) {
       for (let user of followersOrFollowing) {
         if (user.photo) {
           getPostFileStart({
@@ -91,8 +104,44 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
           });
         }
       }
+    } else if (
+      followersOrFollowing &&
+      usersProfilePhotoArray &&
+      usersProfilePhotoArray.length
+    ) {
+      const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
+        (el: User) => {
+          let photoFileString: string;
+
+          for (let file of usersProfilePhotoArray) {
+            if (el.photo === file.s3Key) {
+              photoFileString = file.fileString;
+            }
+          }
+
+          return {
+            name: el.name,
+            username: el.username,
+            profilePhotoFileString: photoFileString!,
+          };
+        }
+      );
+
+      setUserInfoAndPhotoArray(followerOrFollowing);
+    } else if (followersOrFollowing && usersProfilePhotoConfirm) {
+      const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
+        (el: User) => {
+          return {
+            name: el.name,
+            username: el.username,
+            profilePhotoFileString: '',
+          };
+        }
+      );
+
+      setUserInfoAndPhotoArray(followerOrFollowing);
     }
-  }, [followersOrFollowing, followersOrFollowing?.length]);
+  }, [followersOrFollowing, usersProfilePhotoArray, usersProfilePhotoConfirm]);
 
   return (
     <Modal
@@ -103,10 +152,14 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
       centered
     >
       <Modal.Header className='followers-following-modal-header' closeButton>
-        {isFollowersModal ? 'Followers' : 'Following'}
+        <span className='header-text'>
+          {isFollowersModal ? 'Followers' : 'Following'}
+        </span>
       </Modal.Header>
       <Modal.Body className='followers-following-modal-body'>
-        <div className='follower-or-following-user'></div>
+        <div className='follower-or-following-user'>
+          <UserInfo userInfoArray={userInfoAndPhotoArray} />
+        </div>
       </Modal.Body>
     </Modal>
   );
@@ -115,14 +168,21 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
 interface LinkStateProps {
   followersOrFollowing: User[] | null;
   usersProfilePhotoArray: PostFile[] | null;
+  usersProfilePhotoConfirm: string | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   followersOrFollowing: selectFollowersOrFollowing,
   usersProfilePhotoArray: selectUsersProfilePhotoFileArray,
+  usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({});
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  getOtherUserStart: (otherUserReq: OtherUserRequest) =>
+    dispatch(getOtherUserStart(otherUserReq)),
+  getPostFileStart: (postFileReq: PostFileReq) =>
+    dispatch(getPostFileStart(postFileReq)),
+});
 
 export default connect(
   mapStateToProps,

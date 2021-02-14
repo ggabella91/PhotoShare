@@ -65,7 +65,7 @@ export const selectUsersProfilePhotoFileArray = createSelector(
   (postState: PostState) => postState.usersProfilePhotoFileArray
 );
 
-export const selectUserSuggestionProfilePhotoConfirm = createSelector(
+export const selectUsersProfilePhotoConfirm = createSelector(
   [selectPostState],
   (postState: PostState) => postState.usersProfilePhotoConfirm
 );
