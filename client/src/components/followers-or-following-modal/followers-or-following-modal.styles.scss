@@ -38,7 +38,8 @@
     display: flex;
     flex-direction: column;
     min-height: 338px;
-    .follower-or-following-user {
-    }
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 10px;
   }
 }

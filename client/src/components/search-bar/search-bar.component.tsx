@@ -25,7 +25,7 @@ import {
   clearUserSuggestionPhotoFiles,
 } from '../../redux/post/post.actions';
 
-import UserInfo from '../user-info/user-info.component';
+import UserInfo, { StyleType } from '../user-info/user-info.component';
 
 import './search-bar.styles.scss';
 
@@ -180,7 +180,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onBlur={(e) => handleBlur(e)}
         />
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
-          <UserInfo userInfoArray={userSuggestionsArray} />
+          <UserInfo
+            userInfoArray={userSuggestionsArray}
+            styleType={StyleType.SEARCH}
+          />
         )}
         {!userSuggestionsArray.length && userSuggestionsConfirm ? (
           <div className='no-matches'>
