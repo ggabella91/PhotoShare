@@ -110,6 +110,7 @@
     height: 60px;
     background-color: white;
     border-bottom: solid 1px rgb(180, 180, 180);
+    padding-bottom: 10px;
 
     &:hover {
       cursor: pointer;
@@ -120,6 +121,7 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
+      margin-left: 10vw;
 
       .modal-profile-photo {
         position: relative;
@@ -144,6 +146,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
 
         .modal-photo-placeholder-text {
           position: relative;
