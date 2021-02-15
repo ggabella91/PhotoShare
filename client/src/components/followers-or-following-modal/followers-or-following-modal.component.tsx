@@ -49,7 +49,7 @@ export interface UserInfoData {
   photo: string | null;
 }
 
-const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
+export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
   users,
   isFollowersModal,
   onHide,

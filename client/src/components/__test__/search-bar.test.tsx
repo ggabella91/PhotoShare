@@ -10,7 +10,7 @@ import {
 import '../../redux/post/post.actions';
 import {
   getPostFileStart,
-  clearUserSuggestionPhotoFiles,
+  clearUsersPhotoFileArray,
 } from '../../redux/post/post.actions';
 
 it('renders a search-bar component', () => {
@@ -21,8 +21,10 @@ it('renders a search-bar component', () => {
       userSuggestionsError={null}
       getPostFileStart={(fileReq) => getPostFileStart(fileReq)}
       userSuggestionProfilePhotoFiles={[]}
+      userSuggestionsConfirm=''
+      userSuggestionProfilePhotoConfirm=''
       clearUserSuggestions={() => clearUserSuggestions()}
-      clearUserSuggestionPhotoFiles={() => clearUserSuggestionPhotoFiles()}
+      clearUserSuggestionPhotoFiles={() => clearUsersPhotoFileArray()}
     />
   );
 
