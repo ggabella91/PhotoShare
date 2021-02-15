@@ -22,7 +22,7 @@ import {
 } from '../../redux/post/post.selectors';
 import {
   getPostFileStart,
-  clearUserSuggestionPhotoFiles,
+  clearUsersPhotoFileArray,
 } from '../../redux/post/post.actions';
 
 import UserInfo, { StyleType } from '../user-info/user-info.component';
@@ -38,7 +38,7 @@ export interface SearchBarProps {
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
   getPostFileStart: typeof getPostFileStart;
   clearUserSuggestions: typeof clearUserSuggestions;
-  clearUserSuggestionPhotoFiles: typeof clearUserSuggestionPhotoFiles;
+  clearUserSuggestionPhotoFiles: typeof clearUsersPhotoFileArray;
 }
 
 export interface UserInfoData {
@@ -217,8 +217,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
   clearUserSuggestions: () => dispatch(clearUserSuggestions()),
-  clearUserSuggestionPhotoFiles: () =>
-    dispatch(clearUserSuggestionPhotoFiles()),
+  clearUserSuggestionPhotoFiles: () => dispatch(clearUsersPhotoFileArray()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

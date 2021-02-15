@@ -17,7 +17,10 @@ import {
   selectUsersProfilePhotoFileArray,
   selectUsersProfilePhotoConfirm,
 } from '../../redux/post/post.selectors';
-import { getPostFileStart } from '../../redux/post/post.actions';
+import {
+  clearUsersPhotoFileArray,
+  getPostFileStart,
+} from '../../redux/post/post.actions';
 
 import { Follower } from '../../redux/follower/follower.types';
 
@@ -33,18 +36,20 @@ interface FollowersOrFollowingModalProps {
   isFollowersModal: boolean;
   followersOrFollowing: User[] | null;
   usersProfilePhotoArray: PostFile[] | null;
+  usersProfilePhotoConfirm: string | null;
   getOtherUserStart: typeof getOtherUserStart;
   getPostFileStart: typeof getPostFileStart;
-  usersProfilePhotoConfirm: string | null;
+  clearUsersPhotoFileArray: typeof clearUsersPhotoFileArray;
 }
 
 export interface UserInfoData {
   profilePhotoFileString: string;
   username: string;
   name: string;
+  photo: string | null;
 }
 
-const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
+export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
   users,
   isFollowersModal,
   onHide,
@@ -53,6 +58,7 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
   usersProfilePhotoConfirm,
   getOtherUserStart,
   getPostFileStart,
+  clearUsersPhotoFileArray,
   ...props
 }) => {
   const [usersArray, setUsersArray] = useState<User[]>([]);
@@ -70,6 +76,8 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
 
   useEffect(() => {
     if (users) {
+      clearUsersPhotoFileArray();
+
       if (isFollowersModal) {
         for (let user of users) {
           getOtherUserStart({
@@ -112,6 +120,7 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
       const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           let photoFileString: string;
+          console.log(el);
 
           for (let file of usersProfilePhotoArray) {
             if (el.photo === file.s3Key) {
@@ -123,6 +132,7 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
             name: el.name,
             username: el.username,
             profilePhotoFileString: photoFileString!,
+            photo: el.photo || '',
           };
         }
       );
@@ -135,6 +145,7 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
             name: el.name,
             username: el.username,
             profilePhotoFileString: '',
+            photo: el.photo || '',
           };
         }
       );
@@ -142,6 +153,10 @@ const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
       setUserInfoAndPhotoArray(followerOrFollowing);
     }
   }, [followersOrFollowing, usersProfilePhotoArray, usersProfilePhotoConfirm]);
+
+  useEffect(() => {
+    console.log(userInfoAndPhotoArray);
+  }, [userInfoAndPhotoArray]);
 
   return (
     <Modal
@@ -183,6 +198,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getOtherUserStart(otherUserReq)),
   getPostFileStart: (postFileReq: PostFileReq) =>
     dispatch(getPostFileStart(postFileReq)),
+  clearUsersPhotoFileArray: () => dispatch(clearUsersPhotoFileArray()),
 });
 
 export default connect(

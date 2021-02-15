@@ -131,7 +131,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         archivePostConfirm: null,
         archivePostError: null,
       };
-    case PostActions.CLEAR_USER_SUGGESTION_PHOTO_FILES:
+    case PostActions.CLEAR_USERS_PHOTO_FILE_ARRAY:
       return {
         ...state,
         usersProfilePhotoFileArray: null,

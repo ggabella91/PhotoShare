@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a user-suggestions component 1`] = `
+<Modal
+  animation={false}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  dialogClassName="followers-following-modal"
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+>
+  <ModalHeader
+    className="followers-following-modal-header"
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <span
+      className="header-text"
+    >
+      Followers
+    </span>
+  </ModalHeader>
+  <ModalBody
+    className="followers-following-modal-body"
+  >
+    <UserInfo
+      styleType="MODAL"
+      userInfoArray={Array []}
+    />
+  </ModalBody>
+</Modal>
+`;
