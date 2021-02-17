@@ -15,7 +15,10 @@ import {
   selectOtherUser,
   selectOtherUserError,
 } from '../../redux/user/user.selectors';
-import { getOtherUserStart } from '../../redux/user/user.actions';
+import {
+  getOtherUserStart,
+  clearFollowersOrFollowing,
+} from '../../redux/user/user.actions';
 
 import {
   Post,
@@ -39,6 +42,7 @@ import {
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
+  clearUsersPhotoFileArray,
 } from '../../redux/post/post.actions';
 
 import {
@@ -97,11 +101,13 @@ interface UserProfilePageProps {
   unfollowError: FollowError | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
+  clearUsersPhotoFileArray: typeof clearUsersPhotoFileArray;
   getOtherUserStart: typeof getOtherUserStart;
   followNewUserStart: typeof followNewUserStart;
   getFollowersStart: typeof getFollowersStart;
   getUsersFollowingStart: typeof getUsersFollowingStart;
   unfollowUserStart: typeof unfollowUserStart;
+  clearFollowersOrFollowing: typeof clearFollowersOrFollowing;
   clearFollowState: typeof clearFollowState;
 }
 
@@ -135,12 +141,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
+  clearUsersPhotoFileArray,
   followNewUserStart,
   getFollowersStart,
   getUsersFollowingStart,
   unfollowUserStart,
   unfollowConfirm,
   unfollowError,
+  clearFollowersOrFollowing,
   clearFollowState,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
@@ -188,6 +196,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
   useEffect(() => {
+    setFollowersOrFollowingModalShow(false);
+    clearFollowState();
+    clearFollowersOrFollowing();
     getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username });
   }, [username]);
 
@@ -222,10 +233,11 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (
-      (followers && followers.length) ||
-      (followers &&
-        followersAndUsersFollowing.followers &&
-        followers.length !== followersAndUsersFollowing.followers.length)
+      ((followers && followers.length) ||
+        (followers &&
+          followersAndUsersFollowing.followers &&
+          followers.length !== followersAndUsersFollowing.followers.length)) &&
+      followers[0].userId === otherUser!.id
     ) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
@@ -233,7 +245,11 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       });
     }
 
-    if (otherUserUsersFollowing && otherUserUsersFollowing.length) {
+    if (
+      otherUserUsersFollowing &&
+      otherUserUsersFollowing.length &&
+      otherUserUsersFollowing[0].followerId === otherUser!.id
+    ) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
         usersFollowing: otherUserUsersFollowing,
@@ -536,7 +552,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
             : followersAndUsersFollowing.usersFollowing
         }
         show={followersOrFollowingModalShow}
-        onHide={() => setFollowersOrFollowingModalShow(false)}
+        onHide={() => {
+          setFollowersOrFollowingModalShow(false);
+          clearUsersPhotoFileArray();
+        }}
         isFollowersModal={isFollowersModal}
       />
     </div>
@@ -593,12 +612,14 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostDataStart: (userId: string) => dispatch(getPostDataStart(userId)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
+  clearUsersPhotoFileArray: () => dispatch(clearUsersPhotoFileArray()),
   followNewUserStart: (userToFollowId: string) =>
     dispatch(followNewUserStart(userToFollowId)),
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
   unfollowUserStart: (userId: string) => dispatch(unfollowUserStart(userId)),
+  clearFollowersOrFollowing: () => dispatch(clearFollowersOrFollowing()),
   clearFollowState: () => dispatch(clearFollowState()),
 });
 

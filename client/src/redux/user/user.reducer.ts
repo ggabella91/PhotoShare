@@ -44,6 +44,7 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
           state.followersOrFollowing,
           action.payload
         ),
+        otherUserError: null,
       };
     case UserActions.GET_USER_SUGGESTIONS_SUCCESS:
       return {
@@ -169,6 +170,12 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         userSuggestions: null,
         userSuggestionsConfirm: null,
         userSuggestionsError: null,
+      };
+    case UserActions.CLEAR_FOLLOWERS_OR_FOLLOWING:
+      return {
+        ...state,
+        followersOrFollowing: null,
+        otherUserError: null,
       };
     default:
       return state;

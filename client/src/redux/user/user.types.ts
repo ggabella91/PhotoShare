@@ -35,6 +35,7 @@ export enum UserActions {
   GET_USER_SUGGESTIONS_SUCCESS = 'GET_USER_SUGGESTIONS_SUCCESS',
   GET_USER_SUGGESTIONS_FAILURE = 'GET_USER_SUGGESTIONS_FAILURE',
   CLEAR_USER_SUGGESTIONS = 'CLEAR_USER_SUGGESTIONS',
+  CLEAR_FOLLOWERS_OR_FOLLOWING = 'CLEAR_FOLLOWERS_OR_FOLLOWING',
 }
 
 export interface UserSignUp {
@@ -303,6 +304,11 @@ export interface ClearUserSuggestions {
   payload: null;
 }
 
+export interface ClearFollowersOrFollowing {
+  type: typeof UserActions.CLEAR_FOLLOWERS_OR_FOLLOWING;
+  payload: null;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -340,4 +346,5 @@ export type UserActionTypes =
   | GetUserSuggestionsStart
   | GetUserSuggestionsSuccess
   | GetUserSuggestionsFailure
-  | ClearUserSuggestions;
+  | ClearUserSuggestions
+  | ClearFollowersOrFollowing;
