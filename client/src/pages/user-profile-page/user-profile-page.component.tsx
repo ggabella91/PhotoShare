@@ -264,12 +264,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   ]);
 
   useEffect(() => {
-    if (!followersOrFollowingModalShow) {
-      clearFollowersOrFollowing();
-    }
-  }, [followersOrFollowingModalShow]);
-
-  useEffect(() => {
     if (user.id) {
       getPostDataStart(user.id);
     }
