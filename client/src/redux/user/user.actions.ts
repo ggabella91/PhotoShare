@@ -215,3 +215,8 @@ export const clearUserSuggestions = (): UserActionTypes => ({
   type: UserActions.CLEAR_USER_SUGGESTIONS,
   payload: null,
 });
+
+export const clearFollowersOrFollowing = (): UserActionTypes => ({
+  type: UserActions.CLEAR_FOLLOWERS_OR_FOLLOWING,
+  payload: null,
+});

@@ -157,6 +157,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
       setTimeout(() => {
+        // clearUserSuggestionPhotoFiles();
         setHideSuggestionsOnBlur(true);
       }, 150);
     }

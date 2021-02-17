@@ -120,7 +120,6 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
       const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           let photoFileString: string;
-          console.log(el);
 
           for (let file of usersProfilePhotoArray) {
             if (el.photo === file.s3Key) {
@@ -154,9 +153,9 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
     }
   }, [followersOrFollowing, usersProfilePhotoArray, usersProfilePhotoConfirm]);
 
-  useEffect(() => {
-    console.log(userInfoAndPhotoArray);
-  }, [userInfoAndPhotoArray]);
+  // useEffect(() => {
+  //   console.log(userInfoAndPhotoArray);
+  // }, [userInfoAndPhotoArray]);
 
   return (
     <Modal
