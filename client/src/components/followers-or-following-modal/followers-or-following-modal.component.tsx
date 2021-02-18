@@ -9,7 +9,10 @@ import {
   OtherUserType,
   OtherUserRequest,
 } from '../../redux/user/user.types';
-import { selectFollowersOrFollowing } from '../../redux/user/user.selectors';
+import {
+  selectFollowers,
+  selectFollowing,
+} from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import { PostFileReq, PostFile, UserType } from '../../redux/post/post.types';
@@ -34,7 +37,8 @@ interface FollowersOrFollowingModalProps {
   show: boolean;
   onHide: () => void;
   isFollowersModal: boolean;
-  followersOrFollowing: User[] | null;
+  followers: User[] | null;
+  following: User[] | null;
   usersProfilePhotoArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
   getOtherUserStart: typeof getOtherUserStart;
@@ -53,7 +57,8 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
   users,
   isFollowersModal,
   onHide,
-  followersOrFollowing,
+  followers,
+  following,
   usersProfilePhotoArray,
   usersProfilePhotoConfirm,
   getOtherUserStart,
@@ -81,14 +86,14 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
       if (isFollowersModal) {
         for (let user of users) {
           getOtherUserStart({
-            type: OtherUserType.FOLLOWERS_OR_FOLLOWING,
+            type: OtherUserType.FOLLOWERS,
             usernameOrId: user.followerId,
           });
         }
       } else {
         for (let user of users) {
           getOtherUserStart({
-            type: OtherUserType.FOLLOWERS_OR_FOLLOWING,
+            type: OtherUserType.FOLLOWING,
             usernameOrId: user.userId,
           });
         }
@@ -97,8 +102,17 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
   }, [users]);
 
   useEffect(() => {
+    if (isFollowersModal && followers) {
+      handleRenderFollowersOrFollowingInfoArray(followers);
+    } else if (!isFollowersModal && following) {
+      handleRenderFollowersOrFollowingInfoArray(following);
+    }
+  }, [followers, following, usersProfilePhotoArray, usersProfilePhotoConfirm]);
+
+  const handleRenderFollowersOrFollowingInfoArray = (
+    followersOrFollowing: User[]
+  ) => {
     if (
-      followersOrFollowing &&
       users &&
       followersOrFollowing.length === users.length &&
       !usersProfilePhotoArray
@@ -112,11 +126,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
           });
         }
       }
-    } else if (
-      followersOrFollowing &&
-      usersProfilePhotoArray &&
-      usersProfilePhotoArray.length
-    ) {
+    } else if (usersProfilePhotoArray && usersProfilePhotoArray.length) {
       const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           let photoFileString: string;
@@ -137,7 +147,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
       );
 
       setUserInfoAndPhotoArray(followerOrFollowing);
-    } else if (followersOrFollowing && usersProfilePhotoConfirm) {
+    } else if (usersProfilePhotoConfirm) {
       const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           return {
@@ -151,11 +161,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
 
       setUserInfoAndPhotoArray(followerOrFollowing);
     }
-  }, [followersOrFollowing, usersProfilePhotoArray, usersProfilePhotoConfirm]);
-
-  // useEffect(() => {
-  //   console.log(userInfoAndPhotoArray);
-  // }, [userInfoAndPhotoArray]);
+  };
 
   return (
     <Modal
@@ -181,13 +187,15 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
 };
 
 interface LinkStateProps {
-  followersOrFollowing: User[] | null;
+  followers: User[] | null;
+  following: User[] | null;
   usersProfilePhotoArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  followersOrFollowing: selectFollowersOrFollowing,
+  followers: selectFollowers,
+  following: selectFollowing,
   usersProfilePhotoArray: selectUsersProfilePhotoFileArray,
   usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
 });
