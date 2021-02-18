@@ -29,7 +29,8 @@ export enum UserActions {
   CLEAR_PASSWORD_STATUSES = 'CLEAR_PASSWORD_STATUSES',
   GET_OTHER_USER_START = 'GET_OTHER_USER_START',
   GET_OTHER_USER_SUCCESS = 'GET_OTHER_USER_SUCCESS',
-  GET_FOLLOWERS_OR_FOLLOWING_SUCCESS = 'GET_FOLLOWERS_OR_FOLLOWING_SUCCESS',
+  GET_FOLLOWERS_SUCCESS = 'GET_FOLLOWERS_SUCCESS',
+  GET_FOLLOWING_SUCCESS = 'GET_FOLLOWING_SUCCESS',
   GET_OTHER_USER_FAILURE = 'GET_OTHER_USER_FAILURE',
   GET_USER_SUGGESTIONS_START = 'GET_USER_SUGGESTIONS_START',
   GET_USER_SUGGESTIONS_SUCCESS = 'GET_USER_SUGGESTIONS_SUCCESS',
@@ -86,7 +87,8 @@ export interface Error {
 
 export enum OtherUserType {
   OTHER = 'OTHER',
-  FOLLOWERS_OR_FOLLOWING = 'FOLLOWERS_OR_FOLLOWING',
+  FOLLOWERS = 'FOLLOWERS',
+  FOLLOWING = 'FOLLOWING',
 }
 
 export interface OtherUserRequest {
@@ -106,7 +108,8 @@ export type UserPayload =
 export interface UserState {
   currentUser: User | null;
   otherUser: User | null;
-  followersOrFollowing: User[] | null;
+  followers: User[] | null;
+  following: User[] | null;
   otherUserError: Error | null;
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
@@ -274,8 +277,13 @@ export interface GetOtherUserSuccess {
   payload: User;
 }
 
-export interface GetFollowersOrFollowingSuccess {
-  type: typeof UserActions.GET_FOLLOWERS_OR_FOLLOWING_SUCCESS;
+export interface GetFollowersSuccess {
+  type: typeof UserActions.GET_FOLLOWERS_SUCCESS;
+  payload: User;
+}
+
+export interface GetFollowingSuccess {
+  type: typeof UserActions.GET_FOLLOWING_SUCCESS;
   payload: User;
 }
 
@@ -341,7 +349,8 @@ export type UserActionTypes =
   | ClearPasswordStatuses
   | GetOtherUserStart
   | GetOtherUserSuccess
-  | GetFollowersOrFollowingSuccess
+  | GetFollowersSuccess
+  | GetFollowingSuccess
   | GetOtherUserFailure
   | GetUserSuggestionsStart
   | GetUserSuggestionsSuccess

@@ -33,7 +33,8 @@ import {
   deleteAccountSuccess,
   deleteAccountFailure,
   getOtherUserSuccess,
-  getFollowersOrFollowingSuccess,
+  getFollowersSuccess,
+  getFollowingSuccess,
   getOtherUserFailure,
   getUserSuggestionsSuccess,
   getUserSuggestionsFailure,
@@ -101,11 +102,16 @@ export function* getOtherUser({
         `/api/users/${usernameOrId}`
       );
       yield put(getOtherUserSuccess(data));
-    } else if (type === OtherUserType.FOLLOWERS_OR_FOLLOWING) {
+    } else if (type === OtherUserType.FOLLOWERS) {
       const { data }: { data: User } = yield axios.get(
         `/api/users/id/${usernameOrId}`
       );
-      yield put(getFollowersOrFollowingSuccess(data));
+      yield put(getFollowersSuccess(data));
+    } else if (type === OtherUserType.FOLLOWING) {
+      const { data }: { data: User } = yield axios.get(
+        `/api/users/id/${usernameOrId}`
+      );
+      yield put(getFollowingSuccess(data));
     }
   } catch (err) {
     yield put(getOtherUserFailure(err));

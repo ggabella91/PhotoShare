@@ -4,7 +4,8 @@ import { addUserToFollowersOrFollowingArray } from './user.utils';
 const INITIAL_STATE: UserState = {
   currentUser: null,
   otherUser: null,
-  followersOrFollowing: null,
+  followers: null,
+  following: null,
   otherUserError: null,
   userSuggestions: null,
   userSuggestionsConfirm: null,
@@ -37,11 +38,20 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         otherUser: action.payload,
         otherUserError: null,
       };
-    case UserActions.GET_FOLLOWERS_OR_FOLLOWING_SUCCESS:
+    case UserActions.GET_FOLLOWERS_SUCCESS:
       return {
         ...state,
-        followersOrFollowing: addUserToFollowersOrFollowingArray(
-          state.followersOrFollowing,
+        followers: addUserToFollowersOrFollowingArray(
+          state.followers,
+          action.payload
+        ),
+        otherUserError: null,
+      };
+    case UserActions.GET_FOLLOWING_SUCCESS:
+      return {
+        ...state,
+        following: addUserToFollowersOrFollowingArray(
+          state.following,
           action.payload
         ),
         otherUserError: null,
