@@ -233,11 +233,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (
-      ((followers && followers.length) ||
-        (followers &&
-          followersAndUsersFollowing.followers &&
-          followers.length !== followersAndUsersFollowing.followers.length)) &&
-      followers[0].userId === otherUser!.id
+      (followers && followers.length) ||
+      (followers &&
+        followersAndUsersFollowing.followers &&
+        followers.length !== followersAndUsersFollowing.followers.length)
     ) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
@@ -245,11 +244,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       });
     }
 
-    if (
-      otherUserUsersFollowing &&
-      otherUserUsersFollowing.length &&
-      otherUserUsersFollowing[0].followerId === otherUser!.id
-    ) {
+    if (otherUserUsersFollowing && otherUserUsersFollowing.length) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
         usersFollowing: otherUserUsersFollowing,
