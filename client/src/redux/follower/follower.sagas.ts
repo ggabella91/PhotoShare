@@ -3,6 +3,7 @@ import { SagaIterator } from '@redux-saga/core';
 import { ActionPattern, Saga } from '@redux-saga/types';
 
 import {
+  Follower,
   WhoseUsersFollowing,
   UsersFollowingRequest,
   FollowerActions,
@@ -44,7 +45,7 @@ export function* getFollowers({
   payload: string;
 }): any {
   try {
-    const { data } = yield axios.get(
+    const { data }: { data: Follower[] } = yield axios.get(
       `/api/followers/get-followers/${userToFollowId}`
     );
 
@@ -60,7 +61,7 @@ export function* getUsersFollowing({
   payload: UsersFollowingRequest;
 }): any {
   try {
-    const { data } = yield axios.get(
+    const { data }: { data: Follower[] } = yield axios.get(
       `/api/followers/get-users-following/${userId}`
     );
 

@@ -185,12 +185,12 @@ export const getOtherUserSuccess = (user: User): UserActionTypes => ({
 });
 
 export const getFollowersSuccess = (user: User): UserActionTypes => ({
-  type: UserActions.GET_FOLLOWERS_SUCCESS,
+  type: UserActions.GET_FOLLOWERS_INFO_SUCCESS,
   payload: user,
 });
 
 export const getFollowingSuccess = (user: User): UserActionTypes => ({
-  type: UserActions.GET_FOLLOWING_SUCCESS,
+  type: UserActions.GET_FOLLOWING_INFO_SUCCESS,
   payload: user,
 });
 
@@ -219,7 +219,7 @@ export const clearUserSuggestions = (): UserActionTypes => ({
   payload: null,
 });
 
-export const clearFollowersOrFollowing = (): UserActionTypes => ({
-  type: UserActions.CLEAR_FOLLOWERS_OR_FOLLOWING,
+export const clearFollowersAndFollowing = (): UserActionTypes => ({
+  type: UserActions.CLEAR_FOLLOWERS_AND_FOLLOWING,
   payload: null,
 });

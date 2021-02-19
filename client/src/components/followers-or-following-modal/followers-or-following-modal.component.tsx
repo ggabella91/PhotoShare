@@ -80,7 +80,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
   }
 
   useEffect(() => {
-    if (users) {
+    if (users && users.length) {
       clearUsersPhotoFileArray();
 
       if (isFollowersModal) {
