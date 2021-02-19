@@ -36,7 +36,7 @@ export enum UserActions {
   GET_USER_SUGGESTIONS_SUCCESS = 'GET_USER_SUGGESTIONS_SUCCESS',
   GET_USER_SUGGESTIONS_FAILURE = 'GET_USER_SUGGESTIONS_FAILURE',
   CLEAR_USER_SUGGESTIONS = 'CLEAR_USER_SUGGESTIONS',
-  CLEAR_FOLLOWERS_OR_FOLLOWING = 'CLEAR_FOLLOWERS_OR_FOLLOWING',
+  CLEAR_FOLLOWERS_AND_FOLLOWING = 'CLEAR_FOLLOWERS_OR_FOLLOWING',
 }
 
 export interface UserSignUp {
@@ -108,8 +108,8 @@ export type UserPayload =
 export interface UserState {
   currentUser: User | null;
   otherUser: User | null;
-  followers: User[] | null;
-  following: User[] | null;
+  followersInfo: User[] | null;
+  followingInfo: User[] | null;
   otherUserError: Error | null;
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
@@ -313,7 +313,7 @@ export interface ClearUserSuggestions {
 }
 
 export interface ClearFollowersOrFollowing {
-  type: typeof UserActions.CLEAR_FOLLOWERS_OR_FOLLOWING;
+  type: typeof UserActions.CLEAR_FOLLOWERS_AND_FOLLOWING;
   payload: null;
 }
 

@@ -219,7 +219,7 @@ export const clearUserSuggestions = (): UserActionTypes => ({
   payload: null,
 });
 
-export const clearFollowersOrFollowing = (): UserActionTypes => ({
-  type: UserActions.CLEAR_FOLLOWERS_OR_FOLLOWING,
+export const clearFollowersAndFollowing = (): UserActionTypes => ({
+  type: UserActions.CLEAR_FOLLOWERS_AND_FOLLOWING,
   payload: null,
 });

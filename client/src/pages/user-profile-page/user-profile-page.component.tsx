@@ -17,7 +17,7 @@ import {
 } from '../../redux/user/user.selectors';
 import {
   getOtherUserStart,
-  clearFollowersOrFollowing,
+  clearFollowersAndFollowing,
 } from '../../redux/user/user.actions';
 
 import {
@@ -107,7 +107,7 @@ interface UserProfilePageProps {
   getFollowersStart: typeof getFollowersStart;
   getUsersFollowingStart: typeof getUsersFollowingStart;
   unfollowUserStart: typeof unfollowUserStart;
-  clearFollowersOrFollowing: typeof clearFollowersOrFollowing;
+  clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
   clearFollowState: typeof clearFollowState;
 }
 
@@ -148,7 +148,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   unfollowUserStart,
   unfollowConfirm,
   unfollowError,
-  clearFollowersOrFollowing,
+  clearFollowersAndFollowing,
   clearFollowState,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
@@ -198,7 +198,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     setFollowersOrFollowingModalShow(false);
     clearFollowState();
-    clearFollowersOrFollowing();
+    clearFollowersAndFollowing();
     getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username });
   }, [username]);
 
@@ -250,7 +250,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         usersFollowing: otherUserUsersFollowing,
       });
     }
-    clearFollowState();
   }, [
     followers,
     followers?.length,
@@ -410,6 +409,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         : `${baseClassName}`;
     }
   };
+
+  useEffect(() => {
+    console.log(followersAndUsersFollowing);
+  }, []);
 
   if (otherUserError) {
     return <NotFoundPage />;
@@ -614,7 +617,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
   unfollowUserStart: (userId: string) => dispatch(unfollowUserStart(userId)),
-  clearFollowersOrFollowing: () => dispatch(clearFollowersOrFollowing()),
+  clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
   clearFollowState: () => dispatch(clearFollowState()),
 });
 
