@@ -185,12 +185,12 @@ export const getOtherUserSuccess = (user: User): UserActionTypes => ({
 });
 
 export const getFollowersSuccess = (user: User): UserActionTypes => ({
-  type: UserActions.GET_FOLLOWERS_SUCCESS,
+  type: UserActions.GET_FOLLOWERS_INFO_SUCCESS,
   payload: user,
 });
 
 export const getFollowingSuccess = (user: User): UserActionTypes => ({
-  type: UserActions.GET_FOLLOWING_SUCCESS,
+  type: UserActions.GET_FOLLOWING_INFO_SUCCESS,
   payload: user,
 });
 

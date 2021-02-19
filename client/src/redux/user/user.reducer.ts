@@ -38,7 +38,7 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         otherUser: action.payload,
         otherUserError: null,
       };
-    case UserActions.GET_FOLLOWERS_SUCCESS:
+    case UserActions.GET_FOLLOWERS_INFO_SUCCESS:
       return {
         ...state,
         followersInfo: addUserToFollowersOrFollowingArray(
@@ -47,7 +47,7 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         ),
         otherUserError: null,
       };
-    case UserActions.GET_FOLLOWING_SUCCESS:
+    case UserActions.GET_FOLLOWING_INFO_SUCCESS:
       return {
         ...state,
         followingInfo: addUserToFollowersOrFollowingArray(

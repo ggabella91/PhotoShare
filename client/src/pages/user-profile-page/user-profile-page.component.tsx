@@ -195,6 +195,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     postsBucket = 'photo-share-app-dev';
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
+
   useEffect(() => {
     setFollowersOrFollowingModalShow(false);
     clearFollowState();
@@ -232,12 +233,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [otherUser]);
 
   useEffect(() => {
-    if (
-      (followers && followers.length) ||
-      (followers &&
-        followersAndUsersFollowing.followers &&
-        followers.length !== followersAndUsersFollowing.followers.length)
-    ) {
+    if (followers && followers.length) {
       setFollowersAndUsersFollowing({
         ...followersAndUsersFollowing,
         followers: followers,
@@ -412,7 +408,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     console.log(followersAndUsersFollowing);
-  }, []);
+  }, [
+    followersAndUsersFollowing.followers,
+    followersAndUsersFollowing.usersFollowing,
+  ]);
 
   if (otherUserError) {
     return <NotFoundPage />;
