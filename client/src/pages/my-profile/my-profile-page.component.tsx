@@ -67,6 +67,7 @@ import {
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
+import FollowersOrFollowingModal from '../../components/followers-or-following-modal/followers-or-following-modal.component';
 
 import './profile-page.styles.scss';
 
@@ -131,6 +132,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   currentUserUsersFollowing,
   getFollowersStart,
   getUsersFollowingStart,
+  getUsersFollowingConfirm,
   getOtherUserStart,
   clearFollowersAndFollowing,
   clearFollowState,
@@ -302,6 +304,42 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (currentUserUsersFollowing?.length) {
+      for (let userFollowing of currentUserUsersFollowing) {
+        if (userFollowing.userId === user.id) {
+          setIsFollowing(true);
+        }
+      }
+    }
+  }, [getUsersFollowingConfirm]);
+
+  const handleRenderFollowersModal = () => {
+    if (followersArray && followersArray.length) {
+      setIsFollowersModal(true);
+      setFollowersOrFollowingModalShow(true);
+    }
+  };
+
+  const handleRenderFollowingModal = () => {
+    if (usersFollowingArray && usersFollowingArray.length) {
+      setIsFollowersModal(false);
+      setFollowersOrFollowingModalShow(true);
+    }
+  };
+
+  const handleMakeStatClickable = (type: string, baseClassName: string) => {
+    if (type === 'followers') {
+      return followersArray && followersArray.length
+        ? `${baseClassName} clickable`
+        : `${baseClassName}`;
+    } else if (type === 'following') {
+      return usersFollowingArray && usersFollowingArray.length
+        ? `${baseClassName} clickable`
+        : `${baseClassName}`;
+    }
+  };
+
   return (
     <div className='profile-page'>
       <div className='user-bio'>
@@ -334,10 +372,16 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
             </NavLink>
             <div className='posts-followers-following-stats'>
               <span className='user-stat'>{postDataArray.length} Posts</span>
-              <span className='user-stat'>
+              <span
+                className={handleMakeStatClickable('followers', 'user-stat')}
+                onClick={handleRenderFollowersModal}
+              >
                 {followersArray ? followersArray.length : 0} Followers
               </span>
-              <span className='user-stat'>
+              <span
+                className={handleMakeStatClickable('following', 'user-stat')}
+                onClick={handleRenderFollowingModal}
+              >
                 {usersFollowingArray ? usersFollowingArray.length : 0} Following
               </span>
             </div>
@@ -354,10 +398,16 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
             <li className='stats-item'>{postDataArray.length} Posts</li>
-            <li className='stats-item'>
+            <li
+              className={handleMakeStatClickable('followers', 'stats-item')}
+              onClick={handleRenderFollowersModal}
+            >
               {followersArray ? followersArray.length : 0} Followers
             </li>
-            <li className='stats-item'>
+            <li
+              className={handleMakeStatClickable('following', 'stats-item')}
+              onClick={handleRenderFollowingModal}
+            >
               {usersFollowingArray ? usersFollowingArray.length : 0} Following
             </li>
           </ul>
@@ -396,6 +446,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
             s3Key: postModalProps.s3Key,
           })
         }
+      />
+      <FollowersOrFollowingModal
+        users={isFollowersModal ? followersArray : usersFollowingArray}
+        show={followersOrFollowingModalShow}
+        onHide={() => {
+          setFollowersOrFollowingModalShow(false);
+          clearUsersPhotoFileArray();
+        }}
+        isFollowersModal={isFollowersModal}
       />
     </div>
   );
