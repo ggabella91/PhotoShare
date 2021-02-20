@@ -5,8 +5,17 @@ import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
-import { User } from '../../redux/user/user.types';
+import {
+  User,
+  OtherUserRequest,
+  OtherUserType,
+} from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import {
+  getOtherUserStart,
+  clearFollowersAndFollowing,
+} from '../../redux/user/user.actions';
+
 import {
   Post,
   PostFileReq,
@@ -34,6 +43,7 @@ import {
   getPostFileStart,
   archivePostStart,
   clearArchivePostStatuses,
+  clearUsersPhotoFileArray,
   clearPostState,
 } from '../../redux/post/post.actions';
 
@@ -46,10 +56,12 @@ import {
 import {
   selectFollowers,
   selectCurrentUserUsersFollowing,
+  selectGetUsersFollowingConfirm,
 } from '../../redux/follower/follower.selectors';
 import {
   getFollowersStart,
   getUsersFollowingStart,
+  clearFollowState,
 } from '../../redux/follower/follower.actions';
 
 import PostTile from '../../components/post-tile/post-tile.component';
@@ -74,13 +86,18 @@ interface MyProfilePageProps {
   archivePostError: PostError | null;
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
+  getUsersFollowingConfirm: string | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
   clearArchivePostStatuses: typeof clearArchivePostStatuses;
   clearPostState: typeof clearPostState;
+  clearUsersPhotoFileArray: typeof clearUsersPhotoFileArray;
   getFollowersStart: typeof getFollowersStart;
   getUsersFollowingStart: typeof getUsersFollowingStart;
+  getOtherUserStart: typeof getOtherUserStart;
+  clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
+  clearFollowState: typeof clearFollowState;
 }
 
 interface PostModalProps {
@@ -93,8 +110,8 @@ interface PostModalProps {
 }
 
 interface FollowersAndUsersFollowing {
-  followers: Follower[] | null;
-  usersFollowing: Follower[] | null;
+  followersArray: Follower[] | null;
+  usersFollowingArray: Follower[] | null;
 }
 
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
@@ -108,22 +125,25 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   archivePostStart,
   archivePostConfirm,
   clearArchivePostStatuses,
+  clearUsersPhotoFileArray,
   clearPostState,
   followers,
   currentUserUsersFollowing,
   getFollowersStart,
   getUsersFollowingStart,
+  getOtherUserStart,
+  clearFollowersAndFollowing,
+  clearFollowState,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
 
-  const [
-    followersAndUsersFollowing,
-    setFollowersAndUsersFollowing,
-  ] = useState<FollowersAndUsersFollowing>({
-    followers: null,
-    usersFollowing: null,
-  });
+  const [followersArray, setFollowersArray] = useState<Follower[] | null>(null);
+  const [usersFollowingArray, setUsersFollowingArray] = useState<
+    Follower[] | null
+  >(null);
+
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const [postDataArray, setPostDataArray] = useState<Post[]>([]);
   const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
@@ -140,6 +160,13 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
 
+  const [isFollowersModal, setIsFollowersModal] = useState(true);
+
+  const [
+    followersOrFollowingModalShow,
+    setFollowersOrFollowingModalShow,
+  ] = useState(false);
+
   let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -153,6 +180,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   useEffect(() => {
     if (currentUser && !user.name) {
       clearPostState();
+      clearFollowState();
+      clearFollowersAndFollowing();
+
       setUser({
         id: currentUser.id,
         name: currentUser.name,
@@ -170,17 +200,11 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (followers) {
-      setFollowersAndUsersFollowing({
-        ...followersAndUsersFollowing,
-        followers: followers,
-      });
+      setFollowersArray(followers);
     }
 
     if (currentUserUsersFollowing) {
-      setFollowersAndUsersFollowing({
-        ...followersAndUsersFollowing,
-        usersFollowing: currentUserUsersFollowing,
-      });
+      setUsersFollowingArray(currentUserUsersFollowing);
     }
   }, [followers, currentUserUsersFollowing]);
 
@@ -311,16 +335,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
             <div className='posts-followers-following-stats'>
               <span className='user-stat'>{postDataArray.length} Posts</span>
               <span className='user-stat'>
-                {followersAndUsersFollowing.followers
-                  ? followersAndUsersFollowing.followers.length
-                  : 0}{' '}
-                Followers
+                {followersArray ? followersArray.length : 0} Followers
               </span>
               <span className='user-stat'>
-                {followersAndUsersFollowing.usersFollowing
-                  ? followersAndUsersFollowing.usersFollowing.length
-                  : 0}{' '}
-                Following
+                {usersFollowingArray ? usersFollowingArray.length : 0} Following
               </span>
             </div>
             <div className='name-and-bio'>
@@ -337,16 +355,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           <ul className='stats-list'>
             <li className='stats-item'>{postDataArray.length} Posts</li>
             <li className='stats-item'>
-              {followersAndUsersFollowing.followers
-                ? followersAndUsersFollowing.followers.length
-                : 0}{' '}
-              Followers
+              {followersArray ? followersArray.length : 0} Followers
             </li>
             <li className='stats-item'>
-              {followersAndUsersFollowing.usersFollowing
-                ? followersAndUsersFollowing.usersFollowing.length
-                : 0}{' '}
-              Following
+              {usersFollowingArray ? usersFollowingArray.length : 0} Following
             </li>
           </ul>
         </div>
@@ -405,6 +417,7 @@ interface LinkStateProps {
   archivePostError: PostError | null;
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
+  getUsersFollowingConfirm: string | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -423,6 +436,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   archivePostError: selectArchivePostError,
   followers: selectFollowers,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
+  getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -436,6 +450,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
+  clearUsersPhotoFileArray: () => dispatch(clearUsersPhotoFileArray()),
+  getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
+    dispatch(getOtherUserStart(otherUserRequest)),
+  clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
+  clearFollowState: () => dispatch(clearFollowState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);
