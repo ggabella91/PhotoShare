@@ -64,17 +64,17 @@ exports[`renders a my-profile-page component 1`] = `
           </span>
           <span
             className="user-stat"
+            onClick={[Function]}
           >
             0
-             
-            Followers
+             Followers
           </span>
           <span
             className="user-stat"
+            onClick={[Function]}
           >
             0
-             
-            Following
+             Following
           </span>
         </div>
         <div
@@ -113,17 +113,17 @@ exports[`renders a my-profile-page component 1`] = `
         </li>
         <li
           className="stats-item"
+          onClick={[Function]}
         >
           0
-           
-          Followers
+           Followers
         </li>
         <li
           className="stats-item"
+          onClick={[Function]}
         >
           0
-           
-          Following
+           Following
         </li>
       </ul>
     </div>
@@ -146,6 +146,12 @@ exports[`renders a my-profile-page component 1`] = `
     archive={[Function]}
     onHide={[Function]}
     show={false}
+  />
+  <Connect(FollowersOrFollowingModal)
+    isFollowersModal={true}
+    onHide={[Function]}
+    show={false}
+    users={null}
   />
 </div>
 `;

@@ -67,16 +67,14 @@ exports[`renders a my-profile-page component 1`] = `
             onClick={[Function]}
           >
             0
-             
-            Followers
+             Followers
           </span>
           <span
             className="user-stat"
             onClick={[Function]}
           >
             0
-             
-            Following
+             Following
           </span>
         </div>
         <div
@@ -118,16 +116,14 @@ exports[`renders a my-profile-page component 1`] = `
           onClick={[Function]}
         >
           0
-           
-          Followers
+           Followers
         </li>
         <li
           className="stats-item"
           onClick={[Function]}
         >
           0
-           
-          Following
+           Following
         </li>
       </ul>
     </div>
