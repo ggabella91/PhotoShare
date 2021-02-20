@@ -14,6 +14,7 @@ exports[`renders a user-suggestions component 1`] = `
   }
   dialogClassName="followers-following-modal"
   enforceFocus={true}
+  followersOrFollowing={Array []}
   keyboard={true}
   onHide={[Function]}
   restoreFocus={true}
