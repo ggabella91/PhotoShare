@@ -452,7 +452,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         }
       />
       <FollowersOrFollowingModal
-        userViewing={currentUser!.username}
         users={isFollowersModal ? followersArray : usersFollowingArray}
         show={followersOrFollowingModalShow}
         onHide={() => {

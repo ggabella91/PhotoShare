@@ -517,7 +517,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         profilePhoto={profilePhotoFile}
       />
       <FollowersOrFollowingModal
-        userViewing={user.username}
         users={isFollowersModal ? followersArray : usersFollowingArray}
         show={followersOrFollowingModalShow}
         onHide={() => {
