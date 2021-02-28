@@ -196,7 +196,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     setFollowersOrFollowingModalShow(false);
-    clearFollowState();
     clearFollowersAndFollowing();
     getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username });
   }, [username]);
@@ -215,20 +214,26 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (otherUser) {
+      clearFollowState();
+
       setUser({
         id: otherUser.id,
         name: otherUser.name,
         username: otherUser.username,
         bio: otherUser.bio || '',
       });
+    }
+  }, [otherUser]);
 
-      getFollowersStart(otherUser.id);
+  useEffect(() => {
+    if (user) {
+      getFollowersStart(user.id);
       getUsersFollowingStart({
-        userId: otherUser.id,
+        userId: user.id,
         whoseUsersFollowing: WhoseUsersFollowing.OTHER_USER,
       });
     }
-  }, [otherUser]);
+  }, [user]);
 
   useEffect(() => {
     if (followers && followers.length) {
