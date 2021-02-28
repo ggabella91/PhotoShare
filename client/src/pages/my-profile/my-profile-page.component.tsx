@@ -203,10 +203,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   useEffect(() => {
     if (followers) {
       setFollowersArray(followers);
+    } else {
+      setFollowersArray(null);
     }
 
     if (currentUserUsersFollowing) {
       setUsersFollowingArray(currentUserUsersFollowing);
+    } else {
+      setUsersFollowingArray(null);
     }
   }, [followers, currentUserUsersFollowing]);
 
