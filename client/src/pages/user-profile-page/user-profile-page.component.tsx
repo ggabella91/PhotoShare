@@ -57,6 +57,7 @@ import {
   selectFollowers,
   selectCurrentUserUsersFollowing,
   selectOtherUserUsersFollowing,
+  selectGetFollowersConfirm,
   selectGetUsersFollowingConfirm,
   selectUnfollowConfirm,
   selectUnfollowError,
@@ -95,6 +96,7 @@ interface UserProfilePageProps {
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
   otherUserUsersFollowing: Follower[] | null;
+  getFollowersConfirm: string | null;
   getUsersFollowingConfirm: string | null;
   currentUser: User | null;
   unfollowConfirm: string | null;
@@ -137,6 +139,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   currentUser,
   followConfirm,
   followers,
+  getFollowersConfirm,
   getUsersFollowingConfirm,
   getOtherUserStart,
   getPostDataStart,
@@ -227,6 +230,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (user) {
+      console.log(user);
+      console.log(followersArray);
       getFollowersStart(user.id);
       getUsersFollowingStart({
         userId: user.id,
@@ -238,10 +243,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     if (followers && followers.length) {
       setFollowersArray(followers);
+    } else {
+      setFollowersArray(null);
     }
 
     if (otherUserUsersFollowing && otherUserUsersFollowing.length) {
       setUsersFollowingArray(otherUserUsersFollowing);
+    } else {
+      setUsersFollowingArray(null);
     }
   }, [followers, otherUserUsersFollowing]);
 
@@ -508,6 +517,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         profilePhoto={profilePhotoFile}
       />
       <FollowersOrFollowingModal
+        userViewing={user.username}
         users={isFollowersModal ? followersArray : usersFollowingArray}
         show={followersOrFollowingModalShow}
         onHide={() => {
@@ -536,6 +546,7 @@ interface LinkStateProps {
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
   otherUserUsersFollowing: Follower[] | null;
+  getFollowersConfirm: string | null;
   getUsersFollowingConfirm: string | null;
   currentUser: User | null;
   unfollowConfirm: string | null;
@@ -558,6 +569,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   followers: selectFollowers,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
   otherUserUsersFollowing: selectOtherUserUsersFollowing,
+  getFollowersConfirm: selectGetFollowersConfirm,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   currentUser: selectCurrentUser,
   unfollowConfirm: selectUnfollowConfirm,

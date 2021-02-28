@@ -33,6 +33,7 @@ import './followers-or-following-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
 
 interface FollowersOrFollowingModalProps {
+  userViewing: string;
   users: Follower[] | null;
   show: boolean;
   onHide: () => void;
@@ -54,6 +55,7 @@ export interface UserInfoData {
 }
 
 export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
+  userViewing,
   users,
   isFollowersModal,
   onHide,
@@ -99,7 +101,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
         }
       }
     }
-  }, [users]);
+  }, [users, userViewing]);
 
   useEffect(() => {
     if (isFollowersModal && followers) {
