@@ -147,7 +147,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
       );
 
       setUserInfoAndPhotoArray(followerOrFollowing);
-    } else if (usersProfilePhotoConfirm) {
+    } else if (!usersProfilePhotoArray && usersProfilePhotoConfirm) {
       const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           return {

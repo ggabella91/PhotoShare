@@ -122,11 +122,6 @@ interface PostModalProps {
   fileString: string;
 }
 
-interface FollowersAndUsersFollowing {
-  followersArray: Follower[] | null;
-  usersFollowingArray: Follower[] | null;
-}
-
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
   otherUser,
@@ -337,14 +332,21 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   };
 
   useEffect(() => {
+    handleDetermineIfFollowing();
+  }, [getUsersFollowingConfirm]);
+
+  const handleDetermineIfFollowing = () => {
     if (currentUserUsersFollowing?.length) {
       for (let userFollowing of currentUserUsersFollowing) {
         if (userFollowing.userId === user.id) {
           setIsFollowing(true);
+          return;
         }
       }
+      setIsFollowing(false);
+      return;
     }
-  }, [getUsersFollowingConfirm]);
+  };
 
   useEffect(() => {
     if (unfollowConfirm) {
@@ -521,6 +523,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         show={followersOrFollowingModalShow}
         onHide={() => {
           setFollowersOrFollowingModalShow(false);
+          clearFollowersAndFollowing();
           clearUsersPhotoFileArray();
         }}
         isFollowersModal={isFollowersModal}

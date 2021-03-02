@@ -110,11 +110,6 @@ interface PostModalProps {
   fileString: string;
 }
 
-interface FollowersAndUsersFollowing {
-  followersArray: Follower[] | null;
-  usersFollowingArray: Follower[] | null;
-}
-
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   currentUser,
   profilePhotoKey,
@@ -456,6 +451,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         show={followersOrFollowingModalShow}
         onHide={() => {
           setFollowersOrFollowingModalShow(false);
+          clearFollowersAndFollowing();
           clearUsersPhotoFileArray();
         }}
         isFollowersModal={isFollowersModal}
