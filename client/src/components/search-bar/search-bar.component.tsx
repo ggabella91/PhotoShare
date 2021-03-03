@@ -129,7 +129,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       });
 
       setUserSuggestionsArray(suggestedUser);
-    } else if (userSuggestions && userSuggestionProfilePhotoConfirm) {
+    } else if (
+      userSuggestions &&
+      !userSuggestionProfilePhotoFiles &&
+      userSuggestionProfilePhotoConfirm
+    ) {
       const suggestedUser: UserInfoData[] = userSuggestions.map((el: User) => {
         return {
           name: el.name,
@@ -157,7 +161,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
       setTimeout(() => {
-        // clearUserSuggestionPhotoFiles();
+        clearUserSuggestionPhotoFiles();
         setHideSuggestionsOnBlur(true);
       }, 150);
     }
