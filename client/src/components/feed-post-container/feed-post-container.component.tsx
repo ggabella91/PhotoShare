@@ -7,7 +7,9 @@ interface FeedPostContainerProps {}
 const FeedPostContainer: React.FC<FeedPostContainerProps> = () => {
   return (
     <div className='feed-post-container'>
-      <div></div>
+      <div className='profile-and-options'></div>
+      <div className='post-photo'></div>
+      <div className='likes-and-comments'></div>
     </div>
   );
 };
