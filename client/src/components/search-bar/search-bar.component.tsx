@@ -45,6 +45,7 @@ export interface UserInfoData {
   profilePhotoFileString: string;
   username: string;
   name: string;
+  photo: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -124,6 +125,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         return {
           name: el.name,
           username: el.username,
+          photo: el.photo || '',
           profilePhotoFileString: photoFileString!,
         };
       });
@@ -138,6 +140,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         return {
           name: el.name,
           username: el.username,
+          photo: el.photo || '',
           profilePhotoFileString: '',
         };
       });
@@ -187,7 +190,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
           <UserInfo
             userInfoArray={userSuggestionsArray}
-            styleType={StyleType.SEARCH}
+            styleType={StyleType.suggestion}
           />
         )}
         {!userSuggestionsArray.length && userSuggestionsConfirm ? (

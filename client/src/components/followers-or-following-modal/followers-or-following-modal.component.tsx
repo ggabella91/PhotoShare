@@ -179,7 +179,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
       <Modal.Body className='followers-following-modal-body'>
         <UserInfo
           userInfoArray={userInfoAndPhotoArray}
-          styleType={StyleType.MODAL}
+          styleType={StyleType.modal}
         />
       </Modal.Body>
     </Modal>
