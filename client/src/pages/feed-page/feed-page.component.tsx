@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -72,8 +72,6 @@ interface FeedPageProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
-  archivePostConfirm: string | null;
-  archivePostError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
   getUsersFollowingConfirm: string | null;
   getPostDataStart: typeof getPostDataStart;
@@ -85,7 +83,62 @@ interface FeedPageProps {
   clearFollowState: typeof clearFollowState;
 }
 
-const FeedPage: React.FC<FeedPageProps> = () => {
+const FeedPage: React.FC<FeedPageProps> = ({
+  currentUser,
+  postData,
+  postFiles,
+  currentUserUsersFollowing,
+  getPostDataStart,
+  getPostFileStart,
+  clearPostState,
+  getUsersFollowingStart,
+  getOtherUserStart,
+  clearFollowersAndFollowing,
+  clearFollowState,
+}) => {
+  const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
+
+  const [usersFollowingArray, setUsersFollowingArray] = useState<
+    Follower[] | null
+  >(null);
+
+  let postsBucket: string, profileBucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    postsBucket = 'photo-share-app';
+    profileBucket = 'photo-share-app-profile-photos';
+  } else {
+    postsBucket = 'photo-share-app-dev';
+    profileBucket = 'photo-share-app-profile-photos-dev';
+  }
+
+  useEffect(() => {
+    if (currentUser && !user.name) {
+      clearPostState();
+      clearFollowState();
+      clearFollowersAndFollowing();
+
+      setUser({
+        id: currentUser.id,
+        name: currentUser.name,
+        username: currentUser.username,
+        bio: currentUser.bio || '',
+      });
+      getUsersFollowingStart({
+        userId: currentUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+      });
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (currentUserUsersFollowing) {
+      setUsersFollowingArray(currentUserUsersFollowing);
+    } else {
+      setUsersFollowingArray(null);
+    }
+  }, [currentUserUsersFollowing]);
+
   return (
     <div className='feed-page'>
       <div></div>
