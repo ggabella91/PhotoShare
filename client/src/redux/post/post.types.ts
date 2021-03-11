@@ -9,6 +9,7 @@ export enum PostActions {
   CLEAR_PROFILE_PHOTO_STATUSES = 'CLEAR_PHOTO_STATUSES',
   GET_POST_DATA_START = 'GET_POST_DATA_START',
   GET_POST_DATA_SUCCESS = 'GET_POST_DATA_SUCCESS',
+  ADD_POST_DATA_TO_FEED_ARRAY = 'ADD_POST_DATA_TO_FEED_ARRAY',
   GET_POST_DATA_FAILURE = 'GET_POST_DATA_FAILURE',
   GET_POST_FILE_START = 'GET_POST_FILE_START',
   GET_POST_FILE_SUCCESS = 'GET_POST_FILE_SUCCESS',
@@ -46,6 +47,16 @@ export enum UserType {
   usersArray = 'usersArray',
 }
 
+export enum DataRequestType {
+  single = 'single',
+  feed = 'feed',
+}
+
+export interface PostDataReq {
+  userId: string;
+  dataReqType: DataRequestType;
+}
+
 export interface PostFileReq {
   s3Key: string;
   bucket: string;
@@ -64,6 +75,7 @@ export interface ArchivePostReq {
 
 export interface PostState {
   postData: Post[] | null;
+  postDataFeedArray: Post[][];
   postFiles: PostFile[];
   getPostDataError: PostError | null;
   getPostDataConfirm: string | null;
@@ -124,11 +136,16 @@ export interface ClearProfilePhotoStatuses {
 
 export interface GetPostDataStart {
   type: typeof PostActions.GET_POST_DATA_START;
-  payload: string;
+  payload: PostDataReq;
 }
 
 export interface GetPostDataSuccess {
   type: typeof PostActions.GET_POST_DATA_SUCCESS;
+  payload: Post[];
+}
+
+export interface AddPostDataToFeedArray {
+  type: typeof PostActions.ADD_POST_DATA_TO_FEED_ARRAY;
   payload: Post[];
 }
 
@@ -208,6 +225,7 @@ export type PostActionTypes =
   | ClearProfilePhotoStatuses
   | GetPostDataStart
   | GetPostDataSuccess
+  | AddPostDataToFeedArray
   | GetPostDataFailure
   | GetPostFileStart
   | GetPostFileSuccess

@@ -102,6 +102,8 @@ const FeedPage: React.FC<FeedPageProps> = ({
     Follower[] | null
   >(null);
 
+  const [postDataArray, setPostDataArray] = useState<Post[]>([]);
+
   let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -138,6 +140,16 @@ const FeedPage: React.FC<FeedPageProps> = ({
       setUsersFollowingArray(null);
     }
   }, [currentUserUsersFollowing]);
+
+  useEffect(() => {
+    if (usersFollowingArray) {
+      for (let user of usersFollowingArray) {
+        // Need to come up with a way to get postData array for each user following, as current redux logic uses takeLatest in saga for fetching post data
+
+        getPostDataStart(user.userId);
+      }
+    }
+  }, [usersFollowingArray]);
 
   return (
     <div className='feed-page'>
