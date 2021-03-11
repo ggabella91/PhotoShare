@@ -1,5 +1,6 @@
 import {
   Post,
+  PostDataReq,
   PostFileReq,
   ArchivePostReq,
   PostFile,
@@ -50,13 +51,22 @@ export const clearProfilePhotoStatuses = (): PostActionTypes => ({
   payload: null,
 });
 
-export const getPostDataStart = (userId: string): PostActionTypes => ({
+export const getPostDataStart = (
+  postDataReq: PostDataReq
+): PostActionTypes => ({
   type: PostActions.GET_POST_DATA_START,
-  payload: userId,
+  payload: postDataReq,
 });
 
 export const getPostDataSuccess = (postDataArray: Post[]): PostActionTypes => ({
   type: PostActions.GET_POST_DATA_SUCCESS,
+  payload: postDataArray,
+});
+
+export const addPostDataToFeedArray = (
+  postDataArray: Post[]
+): PostActionTypes => ({
+  type: PostActions.ADD_POST_DATA_TO_FEED_ARRAY,
   payload: postDataArray,
 });
 

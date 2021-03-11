@@ -18,6 +18,8 @@ import {
 
 import {
   Post,
+  DataRequestType,
+  PostDataReq,
   PostFileReq,
   ArchivePostReq,
   PostFile,
@@ -186,7 +188,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         username: currentUser.username,
         bio: currentUser.bio || '',
       });
-      getPostDataStart(currentUser.id);
+      getPostDataStart({
+        userId: currentUser.id,
+        dataReqType: DataRequestType.single,
+      });
       getFollowersStart(currentUser.id);
       getUsersFollowingStart({
         userId: currentUser.id,
@@ -499,7 +504,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getPostDataStart: (userId: string) => dispatch(getPostDataStart(userId)),
+  getPostDataStart: (postDataReq: PostDataReq) =>
+    dispatch(getPostDataStart(postDataReq)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
   archivePostStart: (archiveReq: ArchivePostReq) =>

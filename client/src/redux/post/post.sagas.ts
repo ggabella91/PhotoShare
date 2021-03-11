@@ -4,6 +4,8 @@ import { ActionPattern, Saga } from '@redux-saga/types';
 
 import {
   Post,
+  DataRequestType,
+  PostDataReq,
   PostFileReq,
   ArchivePostReq,
   PostActions,
@@ -16,6 +18,7 @@ import {
   updateProfilePhotoSuccess,
   updateProfilePhotoFailure,
   getPostDataSuccess,
+  addPostDataToFeedArray,
   getPostDataFailure,
   getPostFileSuccess,
   getProfilePhotoFileSuccess,
@@ -52,13 +55,21 @@ export function* updateProfilePhoto({
   }
 }
 
-export function* getPostData({ payload: userId }: { payload: string }): any {
+export function* getPostData({
+  payload: { userId, dataReqType },
+}: {
+  payload: PostDataReq;
+}): any {
   try {
     const { data }: { data: Post[] } = yield axios.post('/api/posts/data', {
       userId,
     });
 
-    yield put(getPostDataSuccess(data));
+    if (dataReqType === DataRequestType.single) {
+      yield put(getPostDataSuccess(data));
+    } else if (dataReqType === DataRequestType.feed) {
+      yield put(addPostDataToFeedArray(data));
+    }
   } catch (err) {
     yield put(getPostDataFailure(err));
   }
@@ -127,7 +138,7 @@ export function* onUpdateProfilePhotoStart(): SagaIterator {
 }
 
 export function* onGetPostDataStart(): SagaIterator {
-  yield takeLatest<ActionPattern, Saga>(
+  yield takeEvery<ActionPattern, Saga>(
     PostActions.GET_POST_DATA_START,
     getPostData
   );

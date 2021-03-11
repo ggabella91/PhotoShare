@@ -22,6 +22,8 @@ import {
 
 import {
   Post,
+  DataRequestType,
+  PostDataReq,
   PostFileReq,
   PostFile,
   PostError,
@@ -251,7 +253,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (user.id) {
-      getPostDataStart(user.id);
+      getPostDataStart({
+        userId: user.id,
+        dataReqType: DataRequestType.single,
+      });
     }
   }, [user.id]);
 
@@ -581,7 +586,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserRequest)),
-  getPostDataStart: (userId: string) => dispatch(getPostDataStart(userId)),
+  getPostDataStart: (postDataReq: PostDataReq) =>
+    dispatch(getPostDataStart(postDataReq)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
   clearUsersPhotoFileArray: () => dispatch(clearUsersPhotoFileArray()),
