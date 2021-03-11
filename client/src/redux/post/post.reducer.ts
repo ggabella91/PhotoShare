@@ -1,11 +1,13 @@
 import { PostActions, PostActionTypes, PostState } from './post.types';
 import {
   addPostFileToArray,
+  addPostDataToFeedArray,
   addSuggestedUserPhotoFileToArray,
 } from './post.utils';
 
 const INITIAL_STATE: PostState = {
   postData: null,
+  postDataFeedArray: [],
   postFiles: [],
   getPostDataError: null,
   getPostDataConfirm: null,
@@ -45,6 +47,16 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         postData: action.payload,
         getPostDataError: null,
         getPostDataConfirm: 'Post data fetched!',
+      };
+    case PostActions.ADD_POST_DATA_TO_FEED_ARRAY:
+      return {
+        ...state,
+        postDataFeedArray: addPostDataToFeedArray(
+          state.postDataFeedArray,
+          action.payload
+        ),
+        getPostDataError: null,
+        getPostDataConfirm: 'Post data added to feed array!',
       };
     case PostActions.GET_POST_FILE_SUCCESS:
       return {

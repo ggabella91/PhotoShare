@@ -21,6 +21,8 @@ import {
 
 import {
   Post,
+  DataRequestType,
+  PostDataReq,
   PostFileReq,
   ArchivePostReq,
   PostFile,
@@ -146,7 +148,10 @@ const FeedPage: React.FC<FeedPageProps> = ({
       for (let user of usersFollowingArray) {
         // Need to come up with a way to get postData array for each user following, as current redux logic uses takeLatest in saga for fetching post data
 
-        getPostDataStart(user.userId);
+        getPostDataStart({
+          userId: user.userId,
+          dataReqType: DataRequestType.feed,
+        });
       }
     }
   }, [usersFollowingArray]);
@@ -187,7 +192,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getPostDataStart: (userId: string) => dispatch(getPostDataStart(userId)),
+  getPostDataStart: (postDataReq: PostDataReq) =>
+    dispatch(getPostDataStart(postDataReq)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
   clearPostState: () => dispatch(clearPostState()),
