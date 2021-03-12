@@ -30,7 +30,7 @@ import {
   UserType,
 } from '../../redux/post/post.types';
 import {
-  selectPostData,
+  selectPostDataFeedArray,
   selectPostFiles,
   selectPostError,
   selectPostConfirm,
@@ -66,7 +66,7 @@ import './feed-page.styles.scss';
 
 interface FeedPageProps {
   currentUser: User | null;
-  postData: Post[] | null;
+  postDataFeedArray: Post[][];
   postFiles: PostFile[];
   postConfirm: string | null;
   postError: PostError | null;
@@ -87,7 +87,7 @@ interface FeedPageProps {
 
 const FeedPage: React.FC<FeedPageProps> = ({
   currentUser,
-  postData,
+  postDataFeedArray,
   postFiles,
   currentUserUsersFollowing,
   getPostDataStart,
@@ -104,7 +104,7 @@ const FeedPage: React.FC<FeedPageProps> = ({
     Follower[] | null
   >(null);
 
-  const [postDataArray, setPostDataArray] = useState<Post[]>([]);
+  const [dataFeedArray, setDataFeedArray] = useState<Post[][] | null>(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -146,7 +146,10 @@ const FeedPage: React.FC<FeedPageProps> = ({
   useEffect(() => {
     if (usersFollowingArray) {
       for (let user of usersFollowingArray) {
-        // Need to come up with a way to get postData array for each user following, as current redux logic uses takeLatest in saga for fetching post data
+        getOtherUserStart({
+          usernameOrId: user.userId,
+          type: OtherUserType.FOLLOWING,
+        });
 
         getPostDataStart({
           userId: user.userId,
@@ -155,6 +158,12 @@ const FeedPage: React.FC<FeedPageProps> = ({
       }
     }
   }, [usersFollowingArray]);
+
+  useEffect(() => {
+    if (postDataFeedArray.length) {
+      setDataFeedArray(postDataFeedArray);
+    }
+  }, [postDataFeedArray]);
 
   return (
     <div className='feed-page'>
@@ -165,7 +174,7 @@ const FeedPage: React.FC<FeedPageProps> = ({
 
 interface LinkStateProps {
   currentUser: User | null;
-  postData: Post[] | null;
+  postDataFeedArray: Post[][];
   postFiles: PostFile[];
   postConfirm: string | null;
   postError: PostError | null;
@@ -179,7 +188,7 @@ interface LinkStateProps {
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
-  postData: selectPostData,
+  postDataFeedArray: selectPostDataFeedArray,
   postFiles: selectPostFiles,
   postConfirm: selectPostConfirm,
   postError: selectPostError,

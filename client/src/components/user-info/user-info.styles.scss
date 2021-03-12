@@ -64,7 +64,7 @@
       }
     }
 
-    .suggestion-username-and-name {
+    .suggestion-username-and-name-or-location {
       display: flex;
       position: relative;
       flex-direction: column;
@@ -88,6 +88,10 @@
         font-size: 12px;
         font-weight: 380;
         color: black;
+      }
+
+      .suggestion-location {
+        display: none;
       }
     }
   }
@@ -161,7 +165,7 @@
       }
     }
 
-    .modal-username-and-name {
+    .modal-username-and-name-or-location {
       display: flex;
       position: relative;
       flex-direction: column;
@@ -185,6 +189,10 @@
         font-size: 14px;
         font-weight: 380;
         color: black;
+      }
+
+      .modal-location {
+        display: none;
       }
     }
   }
@@ -258,7 +266,7 @@
       }
     }
 
-    .feed-username-and-name {
+    .feed-username-and-name-or-location {
       display: flex;
       position: relative;
       flex-direction: column;
@@ -277,6 +285,10 @@
       }
 
       .feed-name {
+        display: none;
+      }
+
+      .feed-location {
         display: flex;
         position: relative;
         font-size: 14px;
