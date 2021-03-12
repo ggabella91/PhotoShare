@@ -10,6 +10,11 @@ export const selectPostData = createSelector(
   (postState: PostState) => postState.postData
 );
 
+export const selectPostDataFeedArray = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postDataFeedArray
+);
+
 export const selectGetPostDataError = createSelector(
   [selectPostState],
   (postState: PostState) => postState.getPostDataError
