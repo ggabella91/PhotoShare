@@ -10,8 +10,8 @@ import {
   OtherUserRequest,
 } from '../../redux/user/user.types';
 import {
-  selectFollowers,
-  selectFollowing,
+  selectFollowersInfo,
+  selectFollowingInfo,
 } from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
@@ -51,6 +51,7 @@ export interface UserInfoData {
   username: string;
   name: string;
   photo: string | null;
+  location: string;
 }
 
 export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
@@ -142,6 +143,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
             username: el.username,
             profilePhotoFileString: photoFileString!,
             photo: el.photo || '',
+            location: '',
           };
         }
       );
@@ -155,6 +157,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
             username: el.username,
             profilePhotoFileString: '',
             photo: el.photo || '',
+            location: '',
           };
         }
       );
@@ -194,8 +197,8 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  followers: selectFollowers,
-  following: selectFollowing,
+  followers: selectFollowersInfo,
+  following: selectFollowingInfo,
   usersProfilePhotoArray: selectUsersProfilePhotoFileArray,
   usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
 });

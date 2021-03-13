@@ -12,8 +12,7 @@ interface FeedPostContainerProps {
 export interface UserInfoData {
   profilePhotoFileString: string;
   username: string;
-  name: string;
-  photo: string;
+  location: string;
 }
 
 const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
