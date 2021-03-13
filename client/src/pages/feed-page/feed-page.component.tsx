@@ -62,6 +62,8 @@ import {
   clearFollowState,
 } from '../../redux/follower/follower.actions';
 
+import FeedPostContainer from '../../components/feed-post-container/feed-post-container.component';
+
 import './feed-page.styles.scss';
 
 interface FeedPageProps {
@@ -106,14 +108,16 @@ const FeedPage: React.FC<FeedPageProps> = ({
 
   const [dataFeedArray, setDataFeedArray] = useState<Post[][] | null>(null);
 
-  let postsBucket: string, profileBucket: string;
+  const [postFileFeedArray, setPostFileFeedArray] = useState<PostFile[] | null>(
+    null
+  );
+
+  let postsBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
     postsBucket = 'photo-share-app';
-    profileBucket = 'photo-share-app-profile-photos';
   } else {
     postsBucket = 'photo-share-app-dev';
-    profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
   useEffect(() => {
@@ -164,6 +168,20 @@ const FeedPage: React.FC<FeedPageProps> = ({
       setDataFeedArray(postDataFeedArray);
     }
   }, [postDataFeedArray]);
+
+  useEffect(() => {
+    if (dataFeedArray) {
+      for (let innerArray of dataFeedArray) {
+        for (let el of innerArray) {
+          getPostFileStart({
+            s3Key: el.s3Key,
+            bucket: postsBucket,
+            user: UserType.other,
+          });
+        }
+      }
+    }
+  }, [dataFeedArray]);
 
   return (
     <div className='feed-page'>
