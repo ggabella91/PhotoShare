@@ -13,7 +13,6 @@ export interface UserInfoAndPostLocationData {
   profilePhotoFileString: string;
   username: string;
   name: string;
-  photo: string | null;
   location: string;
 }
 

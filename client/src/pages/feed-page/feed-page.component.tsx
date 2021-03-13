@@ -12,7 +12,7 @@ import {
 } from '../../redux/user/user.types';
 import {
   selectCurrentUser,
-  selectFollowing,
+  selectFollowingInfo,
 } from '../../redux/user/user.selectors';
 import {
   getOtherUserStart,
@@ -32,6 +32,7 @@ import {
 import {
   selectPostDataFeedArray,
   selectPostFiles,
+  selectUsersProfilePhotoFileArray,
   selectPostError,
   selectPostConfirm,
   selectGetPostDataConfirm,
@@ -66,6 +67,13 @@ import FeedPostContainer from '../../components/feed-post-container/feed-post-co
 
 import './feed-page.styles.scss';
 
+interface UserInfoAndPostFile {
+  profilePhotoFileString: string;
+  username: string;
+  location: string;
+  postFileString: string;
+}
+
 interface FeedPageProps {
   currentUser: User | null;
   postDataFeedArray: Post[][];
@@ -77,6 +85,8 @@ interface FeedPageProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
+  followingInfo: User[] | null;
+  usersProfilePhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
@@ -92,6 +102,8 @@ const FeedPage: React.FC<FeedPageProps> = ({
   postDataFeedArray,
   postFiles,
   currentUserUsersFollowing,
+  followingInfo,
+  usersProfilePhotoFileArray,
   getPostDataStart,
   getPostFileStart,
   clearPostState,
@@ -106,18 +118,34 @@ const FeedPage: React.FC<FeedPageProps> = ({
     Follower[] | null
   >(null);
 
+  const [followingInfoArray, setFollowingInfoArray] = useState<User[] | null>(
+    null
+  );
+
   const [dataFeedArray, setDataFeedArray] = useState<Post[][] | null>(null);
+
+  const [followingProfilePhotoArray, setFollowingProfilePhotoArray] = useState<
+    PostFile[] | null
+  >(null);
 
   const [postFileFeedArray, setPostFileFeedArray] = useState<PostFile[] | null>(
     null
   );
 
-  let postsBucket: string;
+  const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] = useState<
+    UserInfoAndPostFile[] | null
+  >(null);
+
+  let totalNumberOfPosts = 0;
+
+  let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
     postsBucket = 'photo-share-app';
+    profileBucket = 'photo-share-app-profile-photos';
   } else {
     postsBucket = 'photo-share-app-dev';
+    profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
   useEffect(() => {
@@ -170,8 +198,30 @@ const FeedPage: React.FC<FeedPageProps> = ({
   }, [postDataFeedArray]);
 
   useEffect(() => {
+    if (followingInfo) {
+      setFollowingInfoArray(followingInfo);
+    }
+  }, [followingInfo]);
+
+  useEffect(() => {
+    if (followingInfoArray) {
+      for (let el of followingInfoArray) {
+        if (el.photo) {
+          getPostFileStart({
+            s3Key: el.photo,
+            bucket: profileBucket,
+            user: UserType.usersArray,
+          });
+        }
+      }
+    }
+  }, [followingInfoArray]);
+
+  useEffect(() => {
     if (dataFeedArray) {
       for (let innerArray of dataFeedArray) {
+        totalNumberOfPosts += innerArray.length;
+
         for (let el of innerArray) {
           getPostFileStart({
             s3Key: el.s3Key,
@@ -183,9 +233,92 @@ const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [dataFeedArray]);
 
+  useEffect(() => {
+    if (usersProfilePhotoFileArray) {
+      setFollowingProfilePhotoArray(usersProfilePhotoFileArray);
+    }
+  }, [usersProfilePhotoFileArray]);
+
+  useEffect(() => {
+    if (postFiles.length === totalNumberOfPosts) {
+      setPostFileFeedArray(postFiles);
+    }
+  }, [postFiles]);
+
+  useEffect(() => {
+    if (
+      followingInfoArray &&
+      dataFeedArray &&
+      followingProfilePhotoArray &&
+      postFileFeedArray
+    ) {
+      let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
+        (el) => {
+          let location: string;
+          let id: string;
+          let username: string;
+          let photoS3Key: string;
+          let profilePhotoString: string;
+
+          for (let innerArr of dataFeedArray) {
+            for (let innerEl of innerArr) {
+              if (innerEl.s3Key === el.s3Key) {
+                location = innerEl.postLocation || '';
+                id = innerEl.userId;
+              }
+            }
+          }
+
+          for (let userEl of followingInfoArray) {
+            if (userEl.id === id!) {
+              username = userEl.username;
+              photoS3Key = userEl.photo || '';
+            }
+          }
+
+          for (let userEl of followingProfilePhotoArray) {
+            if (photoS3Key! && userEl.s3Key === photoS3Key) {
+              profilePhotoString = userEl.fileString;
+            }
+          }
+
+          if (!profilePhotoString!) {
+            profilePhotoString = '';
+          }
+          if (!location!) {
+            location = '';
+          }
+
+          return {
+            username: username!,
+            profilePhotoFileString: profilePhotoString,
+            location,
+            postFileString: el.fileString,
+          };
+        }
+      );
+
+      setUserInfoAndPostFileArray(userInfoAndPostObjArray);
+    }
+  }, [
+    followingInfoArray,
+    dataFeedArray,
+    followingProfilePhotoArray,
+    postFileFeedArray,
+  ]);
+
   return (
     <div className='feed-page'>
-      <div></div>
+      <div>
+        <FeedPostContainer
+          userInfo={{
+            profilePhotoFileString: '',
+            username: '',
+            location: '',
+          }}
+          fileString={''}
+        />
+      </div>
     </div>
   );
 };
@@ -201,6 +334,8 @@ interface LinkStateProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
+  followingInfo: User[] | null;
+  usersProfilePhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
 }
 
@@ -215,6 +350,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
+  followingInfo: selectFollowingInfo,
+  usersProfilePhotoFileArray: selectUsersProfilePhotoFileArray,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
 });
 
