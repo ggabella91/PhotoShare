@@ -13,6 +13,7 @@ export interface UserInfoData {
   profilePhotoFileString: string;
   username: string;
   location: string;
+  name: string;
 }
 
 const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
