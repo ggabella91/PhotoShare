@@ -13,6 +13,11 @@ exports[`renders app component 1`] = `
     />
     <Route
       exact={true}
+      path="/post"
+      render={[Function]}
+    />
+    <Route
+      exact={true}
       path="/settings"
       render={[Function]}
     />
