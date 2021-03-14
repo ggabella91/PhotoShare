@@ -13,7 +13,8 @@ import './App.scss';
 import Header from './components/header/header.component';
 import Footer from './components/footer/footer.component';
 import SignUpAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-sign-up.component';
-import HomePage from './pages/homepage/homepage.component';
+import FeedPage from './pages/feed-page/feed-page.component';
+import PostPage from './pages/post-page/post-page.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SettingsPage from './pages/settings-page/settings-page.component';
 import MyProfilePage from './pages/my-profile/my-profile-page.component';
@@ -38,8 +39,9 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
         <Route
           exact
           path='/me'
-          render={() => (!currentUser ? <Redirect to='/' /> : <HomePage />)}
+          render={() => (!currentUser ? <Redirect to='/' /> : <FeedPage />)}
         />
+        <Route exact path='/post' render={() => <PostPage />} />
         <Route
           exact
           path='/settings'

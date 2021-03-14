@@ -30,14 +30,14 @@ import {
 import Button from '../../components/button/button.component';
 import Alert from 'react-bootstrap/Alert';
 
-import './homepage.styles.scss';
+import './post-page.styles.scss';
 
 interface PostStatus {
   success: boolean;
   error: boolean;
 }
 
-interface HomePageProps {
+interface PostPageProps {
   currentUser: User | null;
   createPostStart: typeof createPostStart;
   postConfirm: string | null;
@@ -51,7 +51,7 @@ interface ImgPreview {
   alt: string;
 }
 
-export const HomePage: React.FC<HomePageProps> = ({
+export const PostPage: React.FC<PostPageProps> = ({
   currentUser,
   createPostStart,
   postConfirm,
@@ -247,7 +247,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostStart: (post: FormData) => dispatch(createPostStart(post)),
   clearPostStatuses: () => dispatch(clearPostStatuses()),
-  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) => dispatch(getUsersFollowingStart(usersFollowingObj)),
+  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
+    dispatch(getUsersFollowingStart(usersFollowingObj)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(PostPage);

@@ -311,15 +311,15 @@ const FeedPage: React.FC<FeedPageProps> = ({
     <div className='feed-page'>
       <div>
         {userInfoAndPostFileArray
-          ? userInfoAndPostFileArray.map(() => (
+          ? userInfoAndPostFileArray.map((el) => (
               <FeedPostContainer
                 userInfo={{
-                  profilePhotoFileString: '',
-                  username: '',
-                  location: '',
+                  profilePhotoFileString: el.profilePhotoFileString,
+                  username: el.username,
+                  location: el.location,
                   name: '',
                 }}
-                fileString={''}
+                fileString={el.postFileString}
               />
             ))
           : null}

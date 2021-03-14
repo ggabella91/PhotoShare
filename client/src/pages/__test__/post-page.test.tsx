@@ -1,6 +1,8 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import { HomePage } from '../homepage/homepage.component';
+import { PostPage } from '../post-page/post-page.component';
+
+import { getUsersFollowingStart } from '../../redux/follower/follower.actions';
 
 import {
   createPostStart,
@@ -8,15 +10,18 @@ import {
 } from '../../redux/post/post.actions';
 
 it('renders a homepage component', () => {
-  const homepageWrapper = shallow(
-    <HomePage
+  const postPageWrapper = shallow(
+    <PostPage
       currentUser={null}
       createPostStart={(postRequest) => createPostStart(postRequest)}
       postConfirm={null}
       postError={null}
       clearPostStatuses={() => clearPostStatuses()}
+      getUsersFollowingStart={(usersFollowingRequest) =>
+        getUsersFollowingStart(usersFollowingRequest)
+      }
     />
   );
 
-  expect(homepageWrapper).toMatchSnapshot();
+  expect(postPageWrapper).toMatchSnapshot();
 });
