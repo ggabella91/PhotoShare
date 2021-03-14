@@ -88,6 +88,9 @@ export const Header: React.FC<HeaderProps> = ({
             ) : null}
           </NavLink>
           <nav className='header-menu'>
+            <NavLink className='link' to='/post'>
+              New Post
+            </NavLink>
             <NavLink className='link' to='/settings'>
               Settings
             </NavLink>
