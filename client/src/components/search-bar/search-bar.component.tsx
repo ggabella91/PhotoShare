@@ -46,6 +46,7 @@ export interface UserInfoData {
   username: string;
   name: string;
   photo: string | null;
+  location: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -127,6 +128,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           username: el.username,
           photo: el.photo || '',
           profilePhotoFileString: photoFileString!,
+          location: '',
         };
       });
 
@@ -142,6 +144,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           username: el.username,
           photo: el.photo || '',
           profilePhotoFileString: '',
+          location: '',
         };
       });
 
