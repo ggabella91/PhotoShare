@@ -1,10 +1,22 @@
 .feed-post-container {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  width: auto;
+
   .profile-and-options {
+    display: flex;
   }
 
   .feed-post-photo {
+    display: flex;
   }
 
-  .likes-and-comments {
+  .caption-and-reactions {
+    display: flex;
+  }
+
+  .username {
+    font-weight: 420;
   }
 }

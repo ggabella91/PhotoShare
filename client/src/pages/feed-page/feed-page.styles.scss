@@ -1,2 +1,36 @@
+@mixin respond-medium {
+  @media (max-width: 724px) {
+    @content;
+  }
+}
+
+@mixin respond-wide {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
 .feed-page {
+  min-height: 800px;
+  display: flex;
+  width: 85vw;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 50%;
+  transform: translate(-50%);
+
+  @include respond-wide() {
+    width: 70vw;
+    padding: 1vh 0;
+  }
+
+  @include respond-medium() {
+    width: 95vw;
+  }
+}
+
+.no-franz {
+  margin-top: 15vh;
+  font-size: 24px;
+  font-weight: 420;
 }
