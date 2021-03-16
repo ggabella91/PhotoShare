@@ -72,6 +72,7 @@ interface UserInfoAndPostFile {
   username: string;
   location: string;
   postFileString: string;
+  caption?: string;
 }
 
 interface FeedPageProps {
@@ -122,6 +123,8 @@ const FeedPage: React.FC<FeedPageProps> = ({
     null
   );
 
+  const [totalNumberOfPosts, setTotalNumberOfPosts] = useState(0);
+
   const [dataFeedArray, setDataFeedArray] = useState<Post[][] | null>(null);
 
   const [followingProfilePhotoArray, setFollowingProfilePhotoArray] = useState<
@@ -135,8 +138,6 @@ const FeedPage: React.FC<FeedPageProps> = ({
   const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] = useState<
     UserInfoAndPostFile[] | null
   >(null);
-
-  let totalNumberOfPosts = 0;
 
   let postsBucket: string, profileBucket: string;
 
@@ -220,7 +221,7 @@ const FeedPage: React.FC<FeedPageProps> = ({
   useEffect(() => {
     if (dataFeedArray) {
       for (let innerArray of dataFeedArray) {
-        totalNumberOfPosts += innerArray.length;
+        setTotalNumberOfPosts(totalNumberOfPosts + innerArray.length);
 
         for (let el of innerArray) {
           getPostFileStart({
@@ -259,12 +260,14 @@ const FeedPage: React.FC<FeedPageProps> = ({
           let username: string;
           let photoS3Key: string;
           let profilePhotoString: string;
+          let caption: string;
 
           for (let innerArr of dataFeedArray) {
             for (let innerEl of innerArr) {
               if (innerEl.s3Key === el.s3Key) {
                 location = innerEl.postLocation || '';
                 id = innerEl.userId;
+                caption = innerEl.caption || '';
               }
             }
           }
@@ -289,11 +292,16 @@ const FeedPage: React.FC<FeedPageProps> = ({
             location = '';
           }
 
+          if (!caption!) {
+            caption = '';
+          }
+
           return {
             username: username!,
             profilePhotoFileString: profilePhotoString,
             location,
             postFileString: el.fileString,
+            caption,
           };
         }
       );
@@ -307,23 +315,31 @@ const FeedPage: React.FC<FeedPageProps> = ({
     postFileFeedArray,
   ]);
 
+  useEffect(() => {
+    if (userInfoAndPostFileArray && userInfoAndPostFileArray.length) {
+      console.log(userInfoAndPostFileArray);
+    }
+  }, [userInfoAndPostFileArray]);
+
   return (
     <div className='feed-page'>
-      <div>
-        {userInfoAndPostFileArray
-          ? userInfoAndPostFileArray.map((el) => (
-              <FeedPostContainer
-                userInfo={{
-                  profilePhotoFileString: el.profilePhotoFileString,
-                  username: el.username,
-                  location: el.location,
-                  name: '',
-                }}
-                fileString={el.postFileString}
-              />
-            ))
-          : null}
-      </div>
+      {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
+        userInfoAndPostFileArray.map((el) => (
+          <FeedPostContainer
+            userInfo={{
+              profilePhotoFileString: el.profilePhotoFileString,
+              username: el.username,
+              location: el.location,
+              name: '',
+            }}
+            fileString={el.postFileString}
+          />
+        ))
+      ) : (
+        <div className='no-franz'>
+          Follow users to see their recent posts here
+        </div>
+      )}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import './feed-post-container.styles.scss';
 interface FeedPostContainerProps {
   userInfo: UserInfoData;
   fileString: string;
+  caption?: string;
 }
 
 export interface UserInfoData {
@@ -19,6 +20,7 @@ export interface UserInfoData {
 const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   userInfo,
   fileString,
+  caption,
 }) => {
   return (
     <div className='feed-post-container'>
@@ -32,7 +34,12 @@ const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           alt='user'
         />
       </div>
-      <div className='likes-and-comments'></div>
+      <div className='caption-and-reactions'>
+        <div className='caption'>
+          <span className='username'>{userInfo.username}</span>{' '}
+          {caption ? caption : ''}
+        </div>
+      </div>
     </div>
   );
 };
