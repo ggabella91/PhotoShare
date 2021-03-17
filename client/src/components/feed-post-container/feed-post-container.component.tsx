@@ -8,6 +8,7 @@ interface FeedPostContainerProps {
   userInfo: UserInfoData;
   fileString: string;
   caption?: string;
+  date: string;
 }
 
 export interface UserInfoData {
@@ -21,6 +22,7 @@ const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   userInfo,
   fileString,
   caption,
+  date,
 }) => {
   return (
     <div className='feed-post-container'>
@@ -38,6 +40,7 @@ const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         <div className='caption'>
           <span className='username'>{userInfo.username}</span>{' '}
           {caption ? caption : ''}
+          <span className='date'>{date}</span>
         </div>
       </div>
     </div>
