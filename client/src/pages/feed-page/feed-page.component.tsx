@@ -65,9 +65,10 @@ import {
 
 import FeedPostContainer from '../../components/feed-post-container/feed-post-container.component';
 
+import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
 
-interface UserInfoAndPostFile {
+export interface UserInfoAndPostFile {
   profilePhotoFileString: string;
   username: string;
   location: string;
@@ -222,8 +223,15 @@ const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (dataFeedArray) {
+      if (totalNumberOfPosts !== 0) {
+        setTotalNumberOfPosts(0);
+      }
+
       for (let innerArray of dataFeedArray) {
+        console.log('innerArray length: ', innerArray.length);
+        console.log('totalNumberOfPosts: ', totalNumberOfPosts);
         setTotalNumberOfPosts(totalNumberOfPosts + innerArray.length);
+        console.log(totalNumberOfPosts + innerArray.length);
 
         for (let el of innerArray) {
           getPostFileStart({
@@ -255,82 +263,112 @@ const FeedPage: React.FC<FeedPageProps> = ({
       followingProfilePhotoArray &&
       postFileFeedArray
     ) {
-      let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
-        (el) => {
-          let location: string;
-          let dateString: string;
-          let dateInt: number;
-          let id: string;
-          let username: string;
-          let photoS3Key: string;
-          let profilePhotoString: string;
-          let caption: string;
-
-          for (let innerArr of dataFeedArray) {
-            for (let innerEl of innerArr) {
-              if (innerEl.s3Key === el.s3Key) {
-                location = innerEl.postLocation || '';
-                id = innerEl.userId;
-                caption = innerEl.caption || '';
-                dateString = new Date(innerEl.createdAt).toDateString();
-                dateInt = innerEl.createdAt.getTime();
-              }
-            }
-          }
-
-          for (let userEl of followingInfoArray) {
-            if (userEl.id === id!) {
-              username = userEl.username;
-              photoS3Key = userEl.photo || '';
-            }
-          }
-
-          for (let userEl of followingProfilePhotoArray) {
-            if (photoS3Key! && userEl.s3Key === photoS3Key) {
-              profilePhotoString = userEl.fileString;
-            }
-          }
-
-          if (!profilePhotoString!) {
-            profilePhotoString = '';
-          }
-          if (!location!) {
-            location = '';
-          }
-
-          if (!caption!) {
-            caption = '';
-          }
-
-          if (!dateString!) {
-            dateString = '';
-          }
-
-          if (!dateInt!) {
-            dateInt = Date.now();
-          }
-
-          return {
-            username: username!,
-            profilePhotoFileString: profilePhotoString,
-            location,
-            postFileString: el.fileString,
-            caption,
-            dateString,
-            dateInt,
-          };
-        }
+      const userInfoAndPostObjArray = prepareUserInfoAndFileArray(
+        followingInfoArray,
+        dataFeedArray,
+        followingProfilePhotoArray,
+        postFileFeedArray
       );
 
-      userInfoAndPostFileArray!.sort((a, b) => b.dateInt - a.dateInt);
+      // let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
+      //   (el) => {
+      //     let location: string;
+      //     let dateString: string;
+      //     let dateInt: number;
+      //     let id: string;
+      //     let username: string;
+      //     let photoS3Key: string;
+      //     let profilePhotoString: string;
+      //     let caption: string;
 
-      setUserInfoAndPostFileArray(userInfoAndPostObjArray);
+      //     for (let innerArr of dataFeedArray) {
+      //       for (let innerEl of innerArr) {
+      //         if (innerEl.s3Key === el.s3Key) {
+      //           location = innerEl.postLocation || '';
+      //           id = innerEl.userId;
+      //           caption = innerEl.caption || '';
+      //           dateString = new Date(innerEl.createdAt).toDateString();
+      //           dateInt = innerEl.createdAt.getTime();
+      //         }
+      //       }
+      //     }
+
+      //     for (let userEl of followingInfoArray) {
+      //       if (userEl.id === id!) {
+      //         username = userEl.username;
+      //         photoS3Key = userEl.photo || '';
+      //       }
+      //     }
+
+      //     for (let userEl of followingProfilePhotoArray) {
+      //       if (photoS3Key! && userEl.s3Key === photoS3Key) {
+      //         profilePhotoString = userEl.fileString;
+      //       }
+      //     }
+
+      //     if (!profilePhotoString!) {
+      //       profilePhotoString = '';
+      //     }
+      //     if (!location!) {
+      //       location = '';
+      //     }
+
+      //     if (!caption!) {
+      //       caption = '';
+      //     }
+
+      //     if (!dateString!) {
+      //       dateString = '';
+      //     }
+
+      //     if (!dateInt!) {
+      //       dateInt = Date.now();
+      //     }
+
+      //     return {
+      //       username: username!,
+      //       profilePhotoFileString: profilePhotoString,
+      //       location,
+      //       postFileString: el.fileString,
+      //       caption,
+      //       dateString,
+      //       dateInt,
+      //     };
+      //   }
+      // );
+
+      const sortedUserInfoAndPostArray = userInfoAndPostObjArray.sort(
+        (a, b) => b.dateInt - a.dateInt
+      );
+
+      setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
     }
   }, [
     followingInfoArray,
     dataFeedArray,
     followingProfilePhotoArray,
     postFileFeedArray,
+  ]);
+
+  useEffect(() => {
+    console.log('followingInfoArray: ', followingInfoArray);
+    console.log('dataFeedArray: ', dataFeedArray);
+    console.log('followingProfilePhotoArray: ', followingProfilePhotoArray);
+    console.log('postFileFeedArray: ', postFileFeedArray);
+    console.log(
+      'postFiles.length: ',
+      postFiles.length,
+      'totalNumberOfPosts: ',
+      totalNumberOfPosts
+    );
+  }, [
+    followingInfoArray,
+    dataFeedArray,
+    followingProfilePhotoArray,
+    postFileFeedArray,
+    postFileFeedArray,
+    postFiles,
+    totalNumberOfPosts,
   ]);
 
   return (
