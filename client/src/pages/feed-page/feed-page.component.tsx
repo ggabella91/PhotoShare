@@ -65,9 +65,10 @@ import {
 
 import FeedPostContainer from '../../components/feed-post-container/feed-post-container.component';
 
+import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
 
-interface UserInfoAndPostFile {
+export interface UserInfoAndPostFile {
   profilePhotoFileString: string;
   username: string;
   location: string;
@@ -222,6 +223,10 @@ const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (dataFeedArray) {
+      if (totalNumberOfPosts !== 0) {
+        setTotalNumberOfPosts(0);
+      }
+
       for (let innerArray of dataFeedArray) {
         setTotalNumberOfPosts(totalNumberOfPosts + innerArray.length);
 
@@ -255,6 +260,13 @@ const FeedPage: React.FC<FeedPageProps> = ({
       followingProfilePhotoArray &&
       postFileFeedArray
     ) {
+      // const userInfoAndPostObjArray = prepareUserInfoAndFileArray(
+      //   followingInfoArray,
+      //   dataFeedArray,
+      //   followingProfilePhotoArray,
+      //   postFileFeedArray
+      // );
+
       let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
         (el) => {
           let location: string;
@@ -322,7 +334,11 @@ const FeedPage: React.FC<FeedPageProps> = ({
         }
       );
 
-      userInfoAndPostFileArray!.sort((a, b) => b.dateInt - a.dateInt);
+      // const copyOfUserInfoAndPostObjArray = userInfoAndPostObjArray;
+
+      // const sortedUserInfoAndPostArray = copyOfUserInfoAndPostObjArray.sort(
+      //   (a, b) => b.dateInt - a.dateInt
+      // );
 
       setUserInfoAndPostFileArray(userInfoAndPostObjArray);
     }
@@ -331,6 +347,27 @@ const FeedPage: React.FC<FeedPageProps> = ({
     dataFeedArray,
     followingProfilePhotoArray,
     postFileFeedArray,
+  ]);
+
+  useEffect(() => {
+    console.log('followingInfoArray: ', followingInfoArray);
+    console.log('dataFeedArray: ', dataFeedArray);
+    console.log('followingProfilePhotoArray: ', followingProfilePhotoArray);
+    console.log('postFileFeedArray: ', postFileFeedArray);
+    console.log(
+      'postFiles.length: ',
+      postFiles.length,
+      'totalNumberOfPosts: ',
+      totalNumberOfPosts
+    );
+  }, [
+    followingInfoArray,
+    dataFeedArray,
+    followingProfilePhotoArray,
+    postFileFeedArray,
+    postFileFeedArray,
+    postFiles,
+    totalNumberOfPosts,
   ]);
 
   return (
