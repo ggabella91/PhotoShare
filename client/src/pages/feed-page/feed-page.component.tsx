@@ -73,6 +73,8 @@ interface UserInfoAndPostFile {
   location: string;
   postFileString: string;
   caption?: string;
+  dateString: string;
+  dateInt: number;
 }
 
 interface FeedPageProps {
@@ -256,6 +258,8 @@ const FeedPage: React.FC<FeedPageProps> = ({
       let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
         (el) => {
           let location: string;
+          let dateString: string;
+          let dateInt: number;
           let id: string;
           let username: string;
           let photoS3Key: string;
@@ -268,6 +272,8 @@ const FeedPage: React.FC<FeedPageProps> = ({
                 location = innerEl.postLocation || '';
                 id = innerEl.userId;
                 caption = innerEl.caption || '';
+                dateString = new Date(innerEl.createdAt).toDateString();
+                dateInt = innerEl.createdAt.getTime();
               }
             }
           }
@@ -296,15 +302,27 @@ const FeedPage: React.FC<FeedPageProps> = ({
             caption = '';
           }
 
+          if (!dateString!) {
+            dateString = '';
+          }
+
+          if (!dateInt!) {
+            dateInt = Date.now();
+          }
+
           return {
             username: username!,
             profilePhotoFileString: profilePhotoString,
             location,
             postFileString: el.fileString,
             caption,
+            dateString,
+            dateInt,
           };
         }
       );
+
+      userInfoAndPostFileArray!.sort((a, b) => b.dateInt - a.dateInt);
 
       setUserInfoAndPostFileArray(userInfoAndPostObjArray);
     }
@@ -314,12 +332,6 @@ const FeedPage: React.FC<FeedPageProps> = ({
     followingProfilePhotoArray,
     postFileFeedArray,
   ]);
-
-  useEffect(() => {
-    if (userInfoAndPostFileArray && userInfoAndPostFileArray.length) {
-      console.log(userInfoAndPostFileArray);
-    }
-  }, [userInfoAndPostFileArray]);
 
   return (
     <div className='feed-page'>
@@ -333,6 +345,7 @@ const FeedPage: React.FC<FeedPageProps> = ({
               name: '',
             }}
             fileString={el.postFileString}
+            date={el.dateString}
           />
         ))
       ) : (
