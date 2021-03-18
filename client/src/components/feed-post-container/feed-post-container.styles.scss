@@ -1,11 +1,15 @@
 .feed-post-container {
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 750px;
   width: auto;
+  margin-bottom: 40px;
+  border: solid 1px rgb(180, 180, 180);
+  border-radius: 2px;
 
   .profile-and-options {
     display: flex;
+    padding-top: 10px;
   }
 
   .feed-post-photo {
@@ -14,9 +18,25 @@
 
   .caption-and-reactions {
     display: flex;
-  }
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 50px;
 
-  .username {
-    font-weight: 420;
+    .caption {
+      display: flex;
+      flex-direction: column;
+
+      .username {
+        margin-top: 5px;
+        margin-left: 10px;
+        font-size: 14px;
+        font-weight: 420;
+      }
+
+      .date {
+        font-size: 10px;
+        text-align: start;
+      }
+    }
   }
 }
