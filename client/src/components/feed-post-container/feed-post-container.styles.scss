@@ -1,7 +1,7 @@
 .feed-post-container {
   display: flex;
   flex-direction: column;
-  height: 750px;
+  height: 860px;
   width: auto;
   margin-bottom: 40px;
   border: solid 1px rgb(180, 180, 180);
@@ -9,11 +9,12 @@
 
   .profile-and-options {
     display: flex;
-    padding-top: 10px;
   }
 
   .feed-post-photo {
     display: flex;
+    height: 750px;
+    width: auto;
   }
 
   .caption-and-reactions {
@@ -35,6 +36,8 @@
 
       .date {
         font-size: 10px;
+        margin-top: 5px;
+        margin-left: 10px;
         text-align: start;
       }
     }
