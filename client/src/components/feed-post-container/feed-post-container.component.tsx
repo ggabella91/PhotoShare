@@ -38,8 +38,8 @@ const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         <div className='caption'>
           <span className='username'>{userInfo.username}</span>{' '}
           {caption ? caption : ''}
-          <span className='date'>{date}</span>
         </div>
+        <span className='date'>{date}</span>
       </div>
     </div>
   );

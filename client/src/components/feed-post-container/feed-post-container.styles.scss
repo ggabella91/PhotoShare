@@ -1,7 +1,7 @@
 .feed-post-container {
   display: flex;
   flex-direction: column;
-  height: 860px;
+  height: 865px;
   width: auto;
   margin-bottom: 40px;
   border: solid 1px rgb(180, 180, 180);
@@ -22,24 +22,23 @@
     flex-direction: column;
     align-items: flex-start;
     min-height: 50px;
+    text-align: start;
+    margin-left: 10px;
+    font-size: 14px;
 
     .caption {
       display: flex;
-      flex-direction: column;
+      margin-top: 5px;
 
       .username {
-        margin-top: 5px;
-        margin-left: 10px;
-        font-size: 14px;
-        font-weight: 420;
-      }
-
-      .date {
-        font-size: 10px;
-        margin-top: 5px;
-        margin-left: 10px;
-        text-align: start;
+        margin-right: 5px;
+        font-weight: 540;
       }
     }
+  }
+
+  .date {
+    font-size: 12px;
+    margin-top: 5px;
   }
 }

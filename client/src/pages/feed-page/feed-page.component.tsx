@@ -282,6 +282,7 @@ const FeedPage: React.FC<FeedPageProps> = ({
               name: '',
             }}
             fileString={el.postFileString}
+            caption={el.caption}
             date={el.dateString}
           />
         ))
