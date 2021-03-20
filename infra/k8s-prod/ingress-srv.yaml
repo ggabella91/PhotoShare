@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
 spec:
   rules:
-    - host: photo-share.us
+    - host: www.photo-share.us
       http:
         paths:
           - path: /api/followers/?(.*)
