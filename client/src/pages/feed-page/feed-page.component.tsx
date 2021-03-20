@@ -101,7 +101,7 @@ interface FeedPageProps {
   clearFollowState: typeof clearFollowState;
 }
 
-const FeedPage: React.FC<FeedPageProps> = ({
+export const FeedPage: React.FC<FeedPageProps> = ({
   currentUser,
   postDataFeedArray,
   postFiles,
