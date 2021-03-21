@@ -180,15 +180,17 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   useEffect(() => {
     if (usersFollowingArray) {
       for (let user of usersFollowingArray) {
-        getOtherUserStart({
-          usernameOrId: user.userId,
-          type: OtherUserType.FOLLOWING,
-        });
+        if (currentUser) {
+          getOtherUserStart({
+            usernameOrId: user.userId,
+            type: OtherUserType.FOLLOWING,
+          });
 
-        getPostDataStart({
-          userId: user.userId,
-          dataReqType: DataRequestType.feed,
-        });
+          getPostDataStart({
+            userId: user.userId,
+            dataReqType: DataRequestType.feed,
+          });
+        }
       }
     }
   }, [usersFollowingArray]);
@@ -206,7 +208,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [followingInfo]);
 
   useEffect(() => {
-    if (followingInfoArray) {
+    if (currentUser && followingInfoArray) {
       for (let el of followingInfoArray) {
         if (el.photo) {
           getPostFileStart({
@@ -220,7 +222,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [followingInfoArray]);
 
   useEffect(() => {
-    if (dataFeedArray) {
+    if (currentUser && dataFeedArray) {
       for (let innerArray of dataFeedArray) {
         for (let el of innerArray) {
           getPostFileStart({

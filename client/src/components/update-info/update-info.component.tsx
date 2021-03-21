@@ -64,37 +64,47 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
   };
 
   const handleSubmitInfo = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    if (currentUser) {
+      event.preventDefault();
 
-    const fieldsToUpdate: FieldsToUpdate = {};
+      const fieldsToUpdate: FieldsToUpdate = {};
 
-    fieldsToUpdate.name = name ? name : currentUser!.name;
-    fieldsToUpdate.email = email ? email : currentUser!.email;
-    fieldsToUpdate.username = username ? username : currentUser!.username;
-    fieldsToUpdate.bio = bio ? bio : currentUser!.bio;
+      fieldsToUpdate.name = name ? name : currentUser!.name;
+      fieldsToUpdate.email = email ? email : currentUser!.email;
+      fieldsToUpdate.username = username ? username : currentUser!.username;
+      fieldsToUpdate.bio = bio ? bio : currentUser!.bio;
 
-    changeInfoStart(fieldsToUpdate);
+      changeInfoStart(fieldsToUpdate);
+    }
   };
 
   useEffect(() => {
-    if (changeInfoError) {
-      setStatusInfo({ ...statusInfo, error: true });
-    } else if (changeInfoConfirm) {
-      setStatusInfo({ ...statusInfo, success: true });
+    if (currentUser) {
+      if (changeInfoError) {
+        setStatusInfo({ ...statusInfo, error: true });
+      } else if (changeInfoConfirm) {
+        setStatusInfo({ ...statusInfo, success: true });
+      }
     }
   }, [changeInfoError, changeInfoConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
-    clearInfoStatuses();
-    setTimeout(() => {
-      setUserInfo({ name: '', email: '', username: '', bio: '' });
-      setStatusInfo({ success: false, error: false });
-    }, 3000);
-    return (
-      <Alert variant={type} onClose={() => setShowInfoAlert(false)} dismissible>
-        {message}
-      </Alert>
-    );
+    if (currentUser) {
+      clearInfoStatuses();
+      setTimeout(() => {
+        setUserInfo({ name: '', email: '', username: '', bio: '' });
+        setStatusInfo({ success: false, error: false });
+      }, 3000);
+      return (
+        <Alert
+          variant={type}
+          onClose={() => setShowInfoAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
+    }
   };
 
   return (

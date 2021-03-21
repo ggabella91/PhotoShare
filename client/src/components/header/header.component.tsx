@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
   }
 
   useEffect(() => {
-    if (profilePhotoKey) {
+    if (currentUser && profilePhotoKey) {
       getPostFileStart({
         s3Key: profilePhotoKey,
         bucket,
