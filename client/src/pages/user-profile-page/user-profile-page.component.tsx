@@ -45,6 +45,7 @@ import {
   getPostFileStart,
   archivePostStart,
   clearUsersPhotoFileArray,
+  clearPostFiles,
 } from '../../redux/post/post.actions';
 
 import {
@@ -112,6 +113,7 @@ interface UserProfilePageProps {
   getUsersFollowingStart: typeof getUsersFollowingStart;
   unfollowUserStart: typeof unfollowUserStart;
   clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
+  clearPostFiles: typeof clearPostFiles;
   clearFollowState: typeof clearFollowState;
 }
 
@@ -149,6 +151,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   unfollowConfirm,
   unfollowError,
   clearFollowersAndFollowing,
+  clearPostFiles,
   clearFollowState,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
@@ -197,6 +200,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     setFollowersOrFollowingModalShow(false);
     clearFollowersAndFollowing();
+    clearPostFiles();
+
     getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username });
   }, [username]);
 
@@ -214,8 +219,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (otherUser) {
-      clearFollowState();
-
       setUser({
         id: otherUser.id,
         name: otherUser.name,
@@ -227,8 +230,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (user) {
-      console.log(user);
-      console.log(followersArray);
       getFollowersStart(user.id);
       getUsersFollowingStart({
         userId: user.id,
@@ -598,6 +599,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getUsersFollowingStart(usersFollowingObj)),
   unfollowUserStart: (userId: string) => dispatch(unfollowUserStart(userId)),
   clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
+  clearPostFiles: () => dispatch(clearPostFiles()),
   clearFollowState: () => dispatch(clearFollowState()),
 });
 

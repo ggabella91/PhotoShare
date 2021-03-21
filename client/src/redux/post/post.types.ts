@@ -22,6 +22,7 @@ export enum PostActions {
   GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
   GET_USER_PHOTO_FOR_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_ARRAY_SUCCESS',
   CLEAR_USERS_PHOTO_FILE_ARRAY = 'CLEAR_USERS_PHOTO_FILE_ARRAY',
+  CLEAR_POST_FILES = 'CLEAR_POST_FILES',
   CLEAR_POST_STATE = 'CLEAR_POST_STATE',
 }
 
@@ -209,6 +210,11 @@ export interface ClearUsersPhotoFileArray {
   payload: null;
 }
 
+export interface ClearPostFiles {
+  type: typeof PostActions.CLEAR_POST_FILES;
+  payload: null;
+}
+
 export interface ClearPostState {
   type: typeof PostActions.CLEAR_POST_STATE;
   payload: null;
@@ -238,4 +244,5 @@ export type PostActionTypes =
   | GetUserPhotoForArraySuccess
   | ClearArchivePostStatuses
   | ClearUsersPhotoFileArray
+  | ClearPostFiles
   | ClearPostState;

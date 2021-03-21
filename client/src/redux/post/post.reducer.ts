@@ -148,6 +148,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         usersProfilePhotoFileArray: null,
       };
+    case PostActions.CLEAR_POST_FILES:
+      return {
+        ...state,
+        postFiles: [],
+      };
     case PostActions.CLEAR_POST_STATE:
       return {
         ...INITIAL_STATE,
