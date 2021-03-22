@@ -79,57 +79,63 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   const handleSubmitProfilePhoto = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
-    event.preventDefault();
-    setProfilePhotoStatus({ success: false, error: false });
+    if (currentUser) {
+      event.preventDefault();
+      setProfilePhotoStatus({ success: false, error: false });
 
-    if (profilePhoto) {
-      setShowProfilePhotoAlert(true);
+      if (profilePhoto) {
+        setShowProfilePhotoAlert(true);
 
-      updateProfilePhotoStart(profilePhoto);
-      setTimeout(() => setShowProfilePhotoAlert(false), 5000);
+        updateProfilePhotoStart(profilePhoto);
+        setTimeout(() => setShowProfilePhotoAlert(false), 5000);
+      }
+
+      setFileInputKey(Date.now());
+
+      setProfilePhoto(null);
+      setImgPreview(null);
     }
-
-    setFileInputKey(Date.now());
-
-    setProfilePhoto(null);
-    setImgPreview(null);
   };
 
   useEffect(() => {
-    if (updateProfilePhotoError) {
-      setProfilePhotoStatus({ ...profilePhotoStatus, error: true });
-    } else if (updateProfilePhotoConfirm) {
-      setProfilePhotoStatus({ ...profilePhotoStatus, success: true });
-      if (profilePhotoKey && currentUser) {
-        const fieldsToUpdate: FieldsToUpdate = {
-          name: currentUser.name,
-          email: currentUser.email,
-          username: currentUser.username,
-          bio: currentUser.bio,
-          photo: profilePhotoKey,
-        };
+    if (currentUser) {
+      if (updateProfilePhotoError) {
+        setProfilePhotoStatus({ ...profilePhotoStatus, error: true });
+      } else if (updateProfilePhotoConfirm) {
+        setProfilePhotoStatus({ ...profilePhotoStatus, success: true });
+        if (profilePhotoKey && currentUser) {
+          const fieldsToUpdate: FieldsToUpdate = {
+            name: currentUser.name,
+            email: currentUser.email,
+            username: currentUser.username,
+            bio: currentUser.bio,
+            photo: profilePhotoKey,
+          };
 
-        changeInfoStart(fieldsToUpdate);
+          changeInfoStart(fieldsToUpdate);
+        }
       }
     }
   }, [updateProfilePhotoError, updateProfilePhotoConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
-    clearProfilePhotoStatuses();
-    setTimeout(() => {
-      setProfilePhotoStatus({ success: false, error: false });
-      setShowProfilePhotoAlert(false);
-    }, 3000);
-    return (
-      <Alert
-        variant={type}
-        className='photo-alert'
-        onClose={() => setShowProfilePhotoAlert(false)}
-        dismissible
-      >
-        {message}
-      </Alert>
-    );
+    if (currentUser) {
+      clearProfilePhotoStatuses();
+      setTimeout(() => {
+        setProfilePhotoStatus({ success: false, error: false });
+        setShowProfilePhotoAlert(false);
+      }, 3000);
+      return (
+        <Alert
+          variant={type}
+          className='photo-alert'
+          onClose={() => setShowProfilePhotoAlert(false)}
+          dismissible
+        >
+          {message}
+        </Alert>
+      );
+    }
   };
 
   return (

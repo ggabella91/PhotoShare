@@ -46,6 +46,7 @@ import {
   archivePostStart,
   clearArchivePostStatuses,
   clearUsersPhotoFileArray,
+  clearPostFiles,
   clearPostState,
 } from '../../redux/post/post.actions';
 
@@ -100,6 +101,7 @@ interface MyProfilePageProps {
   getUsersFollowingStart: typeof getUsersFollowingStart;
   getOtherUserStart: typeof getOtherUserStart;
   clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
+  clearPostFiles: typeof clearPostFiles;
   clearFollowState: typeof clearFollowState;
 }
 
@@ -132,6 +134,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   getUsersFollowingConfirm,
   getOtherUserStart,
   clearFollowersAndFollowing,
+  clearPostFiles,
   clearFollowState,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
@@ -519,6 +522,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserRequest)),
   clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
+  clearPostFiles: () => dispatch(clearPostFiles()),
   clearFollowState: () => dispatch(clearFollowState()),
 });
 
