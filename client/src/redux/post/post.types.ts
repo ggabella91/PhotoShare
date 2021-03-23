@@ -20,8 +20,10 @@ export enum PostActions {
   ARCHIVE_POST_FAILURE = 'ARCHIVE_POST_FAILURE',
   CLEAR_ARCHIVE_POST_STATUSES = 'CLEAR_ARCHIVE_POST_STATUSES',
   GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
-  GET_USER_PHOTO_FOR_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_ARRAY_SUCCESS',
-  CLEAR_USERS_PHOTO_FILE_ARRAY = 'CLEAR_USERS_PHOTO_FILE_ARRAY',
+  GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS',
+  GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS',
+  CLEAR_FOLLOW_PHOTO_FILE_ARRAY = 'CLEAR_FOLLOW_PHOTO_FILE_ARRAY',
+  CLEAR_SUGGESTION_PHOTO_FILE_ARRAY = 'CLEAR_SUGGESTION_PHOTO_FILE_ARRAY',
   CLEAR_POST_FILES = 'CLEAR_POST_FILES',
   CLEAR_POST_STATE = 'CLEAR_POST_STATE',
 }
@@ -45,7 +47,8 @@ export interface Post {
 export enum UserType {
   self = 'self',
   other = 'other',
-  usersArray = 'usersArray',
+  followArray = 'followArray',
+  suggestionArray = 'suggestionArray',
 }
 
 export enum DataRequestType {
@@ -91,7 +94,8 @@ export interface PostState {
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
   otherUserProfilePhotoFile: string | null;
-  usersProfilePhotoFileArray: PostFile[] | null;
+  followPhotoFileArray: PostFile[] | null;
+  suggestionPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
 }
 
@@ -200,13 +204,23 @@ export interface GetOtherUserProfilePhotoFileSuccess {
   payload: string;
 }
 
-export interface GetUserPhotoForArraySuccess {
-  type: typeof PostActions.GET_USER_PHOTO_FOR_ARRAY_SUCCESS;
+export interface GetUserPhotoForFollowArraySuccess {
+  type: typeof PostActions.GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS;
   payload: PostFile;
 }
 
-export interface ClearUsersPhotoFileArray {
-  type: typeof PostActions.CLEAR_USERS_PHOTO_FILE_ARRAY;
+export interface GetUserPhotoForSuggestionArraySuccess {
+  type: typeof PostActions.GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS;
+  payload: PostFile;
+}
+
+export interface ClearFollowPhotoFileArray {
+  type: typeof PostActions.CLEAR_FOLLOW_PHOTO_FILE_ARRAY;
+  payload: null;
+}
+
+export interface ClearSuggestionPhotoFileArray {
+  type: typeof PostActions.CLEAR_SUGGESTION_PHOTO_FILE_ARRAY;
   payload: null;
 }
 
@@ -241,8 +255,10 @@ export type PostActionTypes =
   | ArchivePostSuccess
   | ArchivePostFailure
   | GetOtherUserProfilePhotoFileSuccess
-  | GetUserPhotoForArraySuccess
+  | GetUserPhotoForFollowArraySuccess
+  | GetUserPhotoForSuggestionArraySuccess
   | ClearArchivePostStatuses
-  | ClearUsersPhotoFileArray
+  | ClearFollowPhotoFileArray
+  | ClearSuggestionPhotoFileArray
   | ClearPostFiles
   | ClearPostState;

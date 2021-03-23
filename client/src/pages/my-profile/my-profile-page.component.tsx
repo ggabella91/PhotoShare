@@ -45,7 +45,7 @@ import {
   getPostFileStart,
   archivePostStart,
   clearArchivePostStatuses,
-  clearUsersPhotoFileArray,
+  clearFollowPhotoFileArray,
   clearPostFiles,
   clearPostState,
 } from '../../redux/post/post.actions';
@@ -96,7 +96,7 @@ interface MyProfilePageProps {
   archivePostStart: typeof archivePostStart;
   clearArchivePostStatuses: typeof clearArchivePostStatuses;
   clearPostState: typeof clearPostState;
-  clearUsersPhotoFileArray: typeof clearUsersPhotoFileArray;
+  clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
   getFollowersStart: typeof getFollowersStart;
   getUsersFollowingStart: typeof getUsersFollowingStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -125,7 +125,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   archivePostStart,
   archivePostConfirm,
   clearArchivePostStatuses,
-  clearUsersPhotoFileArray,
+  clearFollowPhotoFileArray,
   clearPostState,
   followers,
   currentUserUsersFollowing,
@@ -460,7 +460,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         onHide={() => {
           setFollowersOrFollowingModalShow(false);
           clearFollowersAndFollowing();
-          clearUsersPhotoFileArray();
+          clearFollowPhotoFileArray();
         }}
         isFollowersModal={isFollowersModal}
       />
@@ -518,7 +518,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
-  clearUsersPhotoFileArray: () => dispatch(clearUsersPhotoFileArray()),
+  clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
   getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserRequest)),
   clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),

@@ -6,6 +6,7 @@ import { AppState } from '../../redux/root-reducer';
 
 import { User, Error } from '../../redux/user/user.types';
 import {
+  selectCurrentUser,
   selectUserSuggestions,
   selectUserSuggestionsConfirm,
   selectUserSuggestionsError,
@@ -17,12 +18,12 @@ import {
 
 import { PostFile, PostFileReq, UserType } from '../../redux/post/post.types';
 import {
-  selectUsersProfilePhotoFileArray,
+  selectSuggestionPhotoFileArray,
   selectUsersProfilePhotoConfirm,
 } from '../../redux/post/post.selectors';
 import {
   getPostFileStart,
-  clearUsersPhotoFileArray,
+  clearSuggestionPhotoFileArray,
 } from '../../redux/post/post.actions';
 
 import UserInfo, { StyleType } from '../user-info/user-info.component';
@@ -30,6 +31,7 @@ import UserInfo, { StyleType } from '../user-info/user-info.component';
 import './search-bar.styles.scss';
 
 export interface SearchBarProps {
+  currentUser: User | null;
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
@@ -38,7 +40,7 @@ export interface SearchBarProps {
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
   getPostFileStart: typeof getPostFileStart;
   clearUserSuggestions: typeof clearUserSuggestions;
-  clearUserSuggestionPhotoFiles: typeof clearUsersPhotoFileArray;
+  clearSuggestionPhotoFileArray: typeof clearSuggestionPhotoFileArray;
 }
 
 export interface UserInfoData {
@@ -52,18 +54,21 @@ export interface UserInfoData {
 export const SearchBar: React.FC<SearchBarProps> = ({
   getUserSuggestionsStart,
   getPostFileStart,
+  currentUser,
   userSuggestions,
   userSuggestionsConfirm,
   userSuggestionsError,
   userSuggestionProfilePhotoFiles,
   userSuggestionProfilePhotoConfirm,
   clearUserSuggestions,
-  clearUserSuggestionPhotoFiles,
+  clearSuggestionPhotoFileArray,
 }) => {
   const [searchString, setSearchString] = useState('');
   const [userSuggestionsArray, setUserSuggestionsArray] = useState<
     UserInfoData[]
   >([]);
+  // const [userSuggestionsObj, setUserSuggestionsObj] = useState({});
+
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
   const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
 
@@ -80,11 +85,20 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   ) => {
     const { value } = event.target;
 
-    clearUserSuggestions();
-    clearUserSuggestionPhotoFiles();
     setUserSuggestionsArray([]);
     setSearchString(value);
   };
+
+  useEffect(() => {
+    clearUserSuggestions();
+    setUserSuggestionsArray([]);
+    clearSuggestionPhotoFileArray();
+  }, [currentUser]);
+
+  // useEffect(() => {
+  //    clearUserSuggestions();
+  //    clearSuggestionPhotoFileArray();
+  // }, [userSuggestions]);
 
   useEffect(() => {
     if (searchString.length >= 3) {
@@ -103,7 +117,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       for (let user of userSuggestions) {
         if (user.photo) {
           getPostFileStart({
-            user: UserType.usersArray,
+            user: UserType.suggestionArray,
             bucket,
             s3Key: user.photo,
           });
@@ -118,8 +132,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         let photoFileString: string;
 
         for (let file of userSuggestionProfilePhotoFiles) {
+          console.log('Suggestion Array Element: ', el, 'File: ', file);
           if (el.photo === file.s3Key) {
             photoFileString = file.fileString;
+            console.log('photoFileString: ', photoFileString.substring(0, 20));
           }
         }
 
@@ -131,6 +147,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           location: '',
         };
       });
+
+      console.log(suggestedUser);
 
       setUserSuggestionsArray(suggestedUser);
     } else if (
@@ -157,6 +175,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   ]);
 
   useEffect(() => {
+    console.log('userSuggestionsArray: ', userSuggestionsArray);
+  }, [userSuggestionsArray]);
+
+  useEffect(() => {
     if (searchString.length) {
       setShowUserSuggestions(true);
     } else {
@@ -167,7 +189,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
       setTimeout(() => {
-        clearUserSuggestionPhotoFiles();
+        // clearSuggestionPhotoFileArray();
         setHideSuggestionsOnBlur(true);
       }, 150);
     }
@@ -207,6 +229,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 };
 
 interface LinkStateProps {
+  currentUser: User | null;
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
@@ -215,10 +238,11 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
+  currentUser: selectCurrentUser,
   userSuggestions: selectUserSuggestions,
   userSuggestionsConfirm: selectUserSuggestionsConfirm,
   userSuggestionsError: selectUserSuggestionsError,
-  userSuggestionProfilePhotoFiles: selectUsersProfilePhotoFileArray,
+  userSuggestionProfilePhotoFiles: selectSuggestionPhotoFileArray,
   userSuggestionProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
 });
 
@@ -228,7 +252,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
   clearUserSuggestions: () => dispatch(clearUserSuggestions()),
-  clearUserSuggestionPhotoFiles: () => dispatch(clearUsersPhotoFileArray()),
+  clearSuggestionPhotoFileArray: () =>
+    dispatch(clearSuggestionPhotoFileArray()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

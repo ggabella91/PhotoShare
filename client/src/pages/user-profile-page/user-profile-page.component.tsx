@@ -44,7 +44,7 @@ import {
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
-  clearUsersPhotoFileArray,
+  clearFollowPhotoFileArray,
   clearPostFiles,
 } from '../../redux/post/post.actions';
 
@@ -106,7 +106,7 @@ interface UserProfilePageProps {
   unfollowError: FollowError | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
-  clearUsersPhotoFileArray: typeof clearUsersPhotoFileArray;
+  clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
   getOtherUserStart: typeof getOtherUserStart;
   followNewUserStart: typeof followNewUserStart;
   getFollowersStart: typeof getFollowersStart;
@@ -143,7 +143,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
-  clearUsersPhotoFileArray,
+  clearFollowPhotoFileArray,
   followNewUserStart,
   getFollowersStart,
   getUsersFollowingStart,
@@ -530,7 +530,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         onHide={() => {
           setFollowersOrFollowingModalShow(false);
           clearFollowersAndFollowing();
-          clearUsersPhotoFileArray();
+          clearFollowPhotoFileArray();
         }}
         isFollowersModal={isFollowersModal}
       />
@@ -591,7 +591,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostDataStart(postDataReq)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
-  clearUsersPhotoFileArray: () => dispatch(clearUsersPhotoFileArray()),
+  clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
   followNewUserStart: (userToFollowId: string) =>
     dispatch(followNewUserStart(userToFollowId)),
   getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),

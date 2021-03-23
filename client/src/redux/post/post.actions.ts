@@ -121,10 +121,17 @@ export const getOtherUserProfilePhotoFileSuccess = (
   payload: file,
 });
 
-export const getUserPhotoForArraySuccess = (
+export const getUserPhotoForFollowArraySuccess = (
   postFile: PostFile
 ): PostActionTypes => ({
-  type: PostActions.GET_USER_PHOTO_FOR_ARRAY_SUCCESS,
+  type: PostActions.GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS,
+  payload: postFile,
+});
+
+export const getUserPhotoForSuggestionArraySuccess = (
+  postFile: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS,
   payload: postFile,
 });
 
@@ -133,8 +140,13 @@ export const clearArchivePostStatuses = (): PostActionTypes => ({
   payload: null,
 });
 
-export const clearUsersPhotoFileArray = (): PostActionTypes => ({
-  type: PostActions.CLEAR_USERS_PHOTO_FILE_ARRAY,
+export const clearFollowPhotoFileArray = (): PostActionTypes => ({
+  type: PostActions.CLEAR_FOLLOW_PHOTO_FILE_ARRAY,
+  payload: null,
+});
+
+export const clearSuggestionPhotoFileArray = (): PostActionTypes => ({
+  type: PostActions.CLEAR_SUGGESTION_PHOTO_FILE_ARRAY,
   payload: null,
 });
 

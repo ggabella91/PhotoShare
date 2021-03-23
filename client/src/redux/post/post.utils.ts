@@ -23,7 +23,7 @@ export const addPostDataToFeedArray = (
   return [postData, ...postDataFeedArray];
 };
 
-export const addSuggestedUserPhotoFileToArray = (
+export const addUserPhotoFileToArray = (
   fileArray: PostFile[] | null,
   file: PostFile
 ) => {
