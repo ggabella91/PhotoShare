@@ -31,6 +31,7 @@ import UserInfo, { StyleType } from '../user-info/user-info.component';
 import './search-bar.styles.scss';
 
 export interface SearchBarProps {
+  key: number;
   currentUser: User | null;
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
@@ -67,7 +68,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [userSuggestionsArray, setUserSuggestionsArray] = useState<
     UserInfoData[]
   >([]);
-  // const [userSuggestionsObj, setUserSuggestionsObj] = useState({});
 
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
   const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
@@ -95,11 +95,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     clearSuggestionPhotoFileArray();
   }, [currentUser]);
 
-  // useEffect(() => {
-  //    clearUserSuggestions();
-  //    clearSuggestionPhotoFileArray();
-  // }, [userSuggestions]);
-
   useEffect(() => {
     if (searchString.length >= 3) {
       getUserSuggestionsStart(searchString);
@@ -109,11 +104,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchString]);
 
   useEffect(() => {
-    if (
-      userSuggestions &&
-      !userSuggestionProfilePhotoFiles &&
-      !userSuggestionProfilePhotoConfirm
-    ) {
+    if (userSuggestions && userSuggestions.length) {
       for (let user of userSuggestions) {
         if (user.photo) {
           getPostFileStart({
@@ -123,7 +114,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           });
         }
       }
-    } else if (
+    }
+  }, [userSuggestions]);
+
+  useEffect(() => {
+    if (
       userSuggestions &&
       userSuggestionProfilePhotoFiles &&
       userSuggestionProfilePhotoFiles.length
@@ -218,7 +213,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             styleType={StyleType.suggestion}
           />
         )}
-        {!userSuggestionsArray.length && userSuggestionsConfirm ? (
+        {showUserSuggestions &&
+        !userSuggestionsArray.length &&
+        userSuggestionsConfirm ? (
           <div className='no-matches'>
             <span className='no-matches-text'>No matches found</span>
           </div>
