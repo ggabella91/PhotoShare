@@ -32,7 +32,7 @@ import {
 import {
   selectPostDataFeedArray,
   selectPostFiles,
-  selectUsersProfilePhotoFileArray,
+  selectFollowPhotoFileArray,
   selectPostError,
   selectPostConfirm,
   selectGetPostDataConfirm,
@@ -44,7 +44,7 @@ import {
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
-  clearUsersPhotoFileArray,
+  clearFollowPhotoFileArray,
   clearPostState,
 } from '../../redux/post/post.actions';
 
@@ -90,7 +90,7 @@ interface FeedPageProps {
   getPostFileError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
   followingInfo: User[] | null;
-  usersProfilePhotoFileArray: PostFile[] | null;
+  followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
@@ -107,7 +107,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   postFiles,
   currentUserUsersFollowing,
   followingInfo,
-  usersProfilePhotoFileArray,
+  followPhotoFileArray,
   getPostDataStart,
   getPostFileStart,
   clearPostState,
@@ -236,10 +236,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [dataFeedArray]);
 
   useEffect(() => {
-    if (usersProfilePhotoFileArray) {
-      setFollowingProfilePhotoArray(usersProfilePhotoFileArray);
+    if (followPhotoFileArray) {
+      setFollowingProfilePhotoArray(followPhotoFileArray);
     }
-  }, [usersProfilePhotoFileArray]);
+  }, [followPhotoFileArray]);
 
   useEffect(() => {
     setPostFileFeedArray(postFiles);
@@ -309,7 +309,7 @@ interface LinkStateProps {
   getPostFileError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
   followingInfo: User[] | null;
-  usersProfilePhotoFileArray: PostFile[] | null;
+  followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
 }
 
@@ -325,7 +325,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileError: selectGetPostFileError,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
   followingInfo: selectFollowingInfo,
-  usersProfilePhotoFileArray: selectUsersProfilePhotoFileArray,
+  followPhotoFileArray: selectFollowPhotoFileArray,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
 });
 

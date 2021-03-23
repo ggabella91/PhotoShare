@@ -6,6 +6,7 @@ exports[`renders a user-suggestions component 1`] = `
   autoFocus={true}
   backdrop={true}
   centered={true}
+  clearUsersPhotoFileArray={[Function]}
   dialogAs={
     Object {
       "$$typeof": Symbol(react.forward_ref),
@@ -19,6 +20,7 @@ exports[`renders a user-suggestions component 1`] = `
   onHide={[Function]}
   restoreFocus={true}
   show={true}
+  usersProfilePhotoArray={Array []}
 >
   <ModalHeader
     className="followers-following-modal-header"

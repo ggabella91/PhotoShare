@@ -159,6 +159,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         followPhotoFileArray: null,
       };
+    case PostActions.CLEAR_SUGGESTION_PHOTO_FILE_ARRAY:
+      return {
+        ...state,
+        suggestionPhotoFileArray: null,
+      };
     case PostActions.CLEAR_POST_FILES:
       return {
         ...state,
