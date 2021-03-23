@@ -2,7 +2,7 @@ import { PostActions, PostActionTypes, PostState } from './post.types';
 import {
   addPostFileToArray,
   addPostDataToFeedArray,
-  addSuggestedUserPhotoFileToArray,
+  addUserPhotoFileToArray,
 } from './post.utils';
 
 const INITIAL_STATE: PostState = {
@@ -22,7 +22,8 @@ const INITIAL_STATE: PostState = {
   archivePostConfirm: null,
   archivePostError: null,
   otherUserProfilePhotoFile: null,
-  usersProfilePhotoFileArray: null,
+  followPhotoFileArray: null,
+  suggestionPhotoFileArray: null,
   usersProfilePhotoConfirm: null,
 };
 
@@ -79,15 +80,23 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         getPostFileError: null,
         getPostFileConfirm: 'Profile photo of other user fetched!',
       };
-    case PostActions.GET_USER_PHOTO_FOR_ARRAY_SUCCESS:
+    case PostActions.GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS:
       return {
         ...state,
-        usersProfilePhotoFileArray: addSuggestedUserPhotoFileToArray(
-          state.usersProfilePhotoFileArray,
+        followPhotoFileArray: addUserPhotoFileToArray(
+          state.followPhotoFileArray,
           action.payload
         ),
         getPostFileError: null,
         usersProfilePhotoConfirm: 'User photo added to array!',
+      };
+    case PostActions.GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS:
+      return {
+        ...state,
+        suggestionPhotoFileArray: addUserPhotoFileToArray(
+          state.suggestionPhotoFileArray,
+          action.payload
+        ),
       };
     case PostActions.ARCHIVE_POST_SUCCESS:
       return {
@@ -143,10 +152,10 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         archivePostConfirm: null,
         archivePostError: null,
       };
-    case PostActions.CLEAR_USERS_PHOTO_FILE_ARRAY:
+    case PostActions.CLEAR_FOLLOW_PHOTO_FILE_ARRAY:
       return {
         ...state,
-        usersProfilePhotoFileArray: null,
+        followPhotoFileArray: null,
       };
     case PostActions.CLEAR_POST_FILES:
       return {

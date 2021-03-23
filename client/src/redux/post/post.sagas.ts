@@ -26,7 +26,8 @@ import {
   archivePostSuccess,
   archivePostFailure,
   getOtherUserProfilePhotoFileSuccess,
-  getUserPhotoForArraySuccess,
+  getUserPhotoForFollowArraySuccess,
+  getUserPhotoForSuggestionArraySuccess,
 } from './post.actions';
 
 import axios from 'axios';
@@ -96,8 +97,14 @@ export function* getPostFile({
         yield put(getProfilePhotoFileSuccess(data));
       } else if (user === UserType.other) {
         yield put(getOtherUserProfilePhotoFileSuccess(data));
-      } else if (user === UserType.usersArray) {
-        yield put(getUserPhotoForArraySuccess({ s3Key, fileString: data }));
+      } else if (user === UserType.followArray) {
+        yield put(
+          getUserPhotoForFollowArraySuccess({ s3Key, fileString: data })
+        );
+      } else if (user === UserType.suggestionArray) {
+        yield put(
+          getUserPhotoForSuggestionArraySuccess({ s3Key, fileString: data })
+        );
       }
     }
   } catch (err) {

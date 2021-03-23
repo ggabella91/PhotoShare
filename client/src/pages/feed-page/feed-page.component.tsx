@@ -214,7 +214,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           getPostFileStart({
             s3Key: el.photo,
             bucket: profileBucket,
-            user: UserType.usersArray,
+            user: UserType.followArray,
           });
         }
       }

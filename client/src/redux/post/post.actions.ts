@@ -121,10 +121,17 @@ export const getOtherUserProfilePhotoFileSuccess = (
   payload: file,
 });
 
-export const getUserPhotoForArraySuccess = (
+export const getUserPhotoForFollowArraySuccess = (
   postFile: PostFile
 ): PostActionTypes => ({
-  type: PostActions.GET_USER_PHOTO_FOR_ARRAY_SUCCESS,
+  type: PostActions.GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS,
+  payload: postFile,
+});
+
+export const getUserPhotoForSuggestionArraySuccess = (
+  postFile: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS,
   payload: postFile,
 });
 
