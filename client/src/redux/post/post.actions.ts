@@ -140,8 +140,13 @@ export const clearArchivePostStatuses = (): PostActionTypes => ({
   payload: null,
 });
 
-export const clearUsersPhotoFileArray = (): PostActionTypes => ({
-  type: PostActions.CLEAR_USERS_PHOTO_FILE_ARRAY,
+export const clearFollowPhotoFileArray = (): PostActionTypes => ({
+  type: PostActions.CLEAR_FOLLOW_PHOTO_FILE_ARRAY,
+  payload: null,
+});
+
+export const clearSuggestionPhotoFileArray = (): PostActionTypes => ({
+  type: PostActions.CLEAR_SUGGESTION_PHOTO_FILE_ARRAY,
   payload: null,
 });
 

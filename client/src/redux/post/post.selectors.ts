@@ -65,9 +65,14 @@ export const selectOtherUserProfilePhotoFile = createSelector(
   (postState: PostState) => postState.otherUserProfilePhotoFile
 );
 
-export const selectUsersProfilePhotoFileArray = createSelector(
+export const selectFollowPhotoFileArray = createSelector(
   [selectPostState],
-  (postState: PostState) => postState.usersProfilePhotoFileArray
+  (postState: PostState) => postState.followPhotoFileArray
+);
+
+export const selectSuggestionPhotoFileArray = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.suggestionPhotoFileArray
 );
 
 export const selectUsersProfilePhotoConfirm = createSelector(

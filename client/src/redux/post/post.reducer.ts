@@ -88,7 +88,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
           action.payload
         ),
         getPostFileError: null,
-        usersProfilePhotoConfirm: 'User photo added to array!',
+        usersProfilePhotoConfirm: 'User photo added to follow array!',
       };
     case PostActions.GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS:
       return {
@@ -97,6 +97,8 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
           state.suggestionPhotoFileArray,
           action.payload
         ),
+        getPostFileError: null,
+        usersProfilePhotoConfirm: 'User photo added to suggestion array!',
       };
     case PostActions.ARCHIVE_POST_SUCCESS:
       return {

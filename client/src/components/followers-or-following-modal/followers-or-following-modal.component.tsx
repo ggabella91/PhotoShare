@@ -17,11 +17,11 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import { PostFileReq, PostFile, UserType } from '../../redux/post/post.types';
 import {
-  selectUsersProfilePhotoFileArray,
+  selectFollowPhotoFileArray,
   selectUsersProfilePhotoConfirm,
 } from '../../redux/post/post.selectors';
 import {
-  clearUsersPhotoFileArray,
+  clearFollowPhotoFileArray,
   getPostFileStart,
 } from '../../redux/post/post.actions';
 
@@ -39,11 +39,11 @@ interface FollowersOrFollowingModalProps {
   isFollowersModal: boolean;
   followers: User[] | null;
   following: User[] | null;
-  usersProfilePhotoArray: PostFile[] | null;
+  followPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
   getOtherUserStart: typeof getOtherUserStart;
   getPostFileStart: typeof getPostFileStart;
-  clearUsersPhotoFileArray: typeof clearUsersPhotoFileArray;
+  clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
 }
 
 export interface UserInfoData {
@@ -60,11 +60,11 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
   onHide,
   followers,
   following,
-  usersProfilePhotoArray,
+  followPhotoFileArray,
   usersProfilePhotoConfirm,
   getOtherUserStart,
   getPostFileStart,
-  clearUsersPhotoFileArray,
+  clearFollowPhotoFileArray,
   ...props
 }) => {
   const [usersArray, setUsersArray] = useState<User[]>([]);
@@ -82,7 +82,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
 
   useEffect(() => {
     if (users && users.length) {
-      clearUsersPhotoFileArray();
+      clearFollowPhotoFileArray();
 
       if (isFollowersModal) {
         for (let user of users) {
@@ -108,7 +108,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
     } else if (!isFollowersModal && following) {
       handleRenderFollowersOrFollowingInfoArray(following);
     }
-  }, [followers, following, usersProfilePhotoArray, usersProfilePhotoConfirm]);
+  }, [followers, following, followPhotoFileArray, usersProfilePhotoConfirm]);
 
   const handleRenderFollowersOrFollowingInfoArray = (
     followersOrFollowing: User[]
@@ -116,23 +116,23 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
     if (
       users &&
       followersOrFollowing.length === users.length &&
-      !usersProfilePhotoArray
+      !followPhotoFileArray
     ) {
       for (let user of followersOrFollowing) {
         if (user.photo) {
           getPostFileStart({
-            user: UserType.usersArray,
+            user: UserType.followArray,
             s3Key: user.photo,
             bucket,
           });
         }
       }
-    } else if (usersProfilePhotoArray && usersProfilePhotoArray.length) {
+    } else if (followPhotoFileArray && followPhotoFileArray.length) {
       const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           let photoFileString: string;
 
-          for (let file of usersProfilePhotoArray) {
+          for (let file of followPhotoFileArray) {
             if (el.photo === file.s3Key) {
               photoFileString = file.fileString;
             }
@@ -149,7 +149,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
       );
 
       setUserInfoAndPhotoArray(followerOrFollowing);
-    } else if (!usersProfilePhotoArray && usersProfilePhotoConfirm) {
+    } else if (!followPhotoFileArray && usersProfilePhotoConfirm) {
       const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           return {
@@ -192,14 +192,14 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
 interface LinkStateProps {
   followers: User[] | null;
   following: User[] | null;
-  usersProfilePhotoArray: PostFile[] | null;
+  followPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   followers: selectFollowersInfo,
   following: selectFollowingInfo,
-  usersProfilePhotoArray: selectUsersProfilePhotoFileArray,
+  followPhotoFileArray: selectFollowPhotoFileArray,
   usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
 });
 
@@ -208,7 +208,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getOtherUserStart(otherUserReq)),
   getPostFileStart: (postFileReq: PostFileReq) =>
     dispatch(getPostFileStart(postFileReq)),
-  clearUsersPhotoFileArray: () => dispatch(clearUsersPhotoFileArray()),
+  clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
 });
 
 export default connect(
