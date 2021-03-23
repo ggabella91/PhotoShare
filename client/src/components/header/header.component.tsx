@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -34,6 +34,9 @@ export const Header: React.FC<HeaderProps> = ({
   signOutStart,
 }) => {
   const [photoFile, setPhotoFile] = useState<string | null>(null);
+  const [searchBarKey, setSearchBarKey] = useState(Math.random());
+
+  const path = useParams();
 
   let bucket: string;
 
@@ -42,6 +45,8 @@ export const Header: React.FC<HeaderProps> = ({
   } else {
     bucket = 'photo-share-app-profile-photos-dev';
   }
+
+  useEffect(() => setSearchBarKey(Math.random()), [path]);
 
   useEffect(() => {
     if (currentUser && profilePhotoKey) {
@@ -72,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
       </NavLink>
       {currentUser ? (
         <div>
-          <SearchBar />
+          <SearchBar key={searchBarKey} />
           <NavLink to={`/${currentUser.username}`} className='avatar'>
             {photoFile ? (
               <img
