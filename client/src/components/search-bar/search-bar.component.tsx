@@ -127,10 +127,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         let photoFileString: string;
 
         for (let file of userSuggestionProfilePhotoFiles) {
-          console.log('Suggestion Array Element: ', el, 'File: ', file);
           if (el.photo === file.s3Key) {
             photoFileString = file.fileString;
-            console.log('photoFileString: ', photoFileString.substring(0, 20));
           }
         }
 
@@ -142,8 +140,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           location: '',
         };
       });
-
-      console.log(suggestedUser);
 
       setUserSuggestionsArray(suggestedUser);
     } else if (
@@ -168,10 +164,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     userSuggestionProfilePhotoFiles,
     userSuggestionProfilePhotoConfirm,
   ]);
-
-  useEffect(() => {
-    console.log('userSuggestionsArray: ', userSuggestionsArray);
-  }, [userSuggestionsArray]);
 
   useEffect(() => {
     if (searchString.length) {
