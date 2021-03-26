@@ -164,10 +164,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         suggestionPhotoFileArray: null,
       };
-    case PostActions.CLEAR_POST_FILES:
+    case PostActions.CLEAR_POST_FILES_AND_DATA:
       return {
         ...state,
         postFiles: [],
+        postData: null,
       };
     case PostActions.CLEAR_POST_STATE:
       return {

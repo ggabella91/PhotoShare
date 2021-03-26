@@ -3,6 +3,7 @@ import { addUserToFollowersOrFollowingArray } from './user.utils';
 
 const INITIAL_STATE: UserState = {
   currentUser: null,
+  isCurrentUserProfilePage: true,
   otherUser: null,
   followersInfo: null,
   followingInfo: null,
@@ -187,6 +188,11 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         followersInfo: null,
         followingInfo: null,
         otherUserError: null,
+      };
+    case UserActions.SET_IS_CURRENT_USER_PROFILE_PAGE:
+      return {
+        ...state,
+        isCurrentUserProfilePage: action.payload,
       };
     default:
       return state;

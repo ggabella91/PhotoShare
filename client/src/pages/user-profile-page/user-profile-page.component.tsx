@@ -14,10 +14,12 @@ import {
   selectCurrentUser,
   selectOtherUser,
   selectOtherUserError,
+  selectIsCurrentUserProfilePage,
 } from '../../redux/user/user.selectors';
 import {
   getOtherUserStart,
   clearFollowersAndFollowing,
+  setIsCurrentUserProfilePage,
 } from '../../redux/user/user.actions';
 
 import {
@@ -45,7 +47,7 @@ import {
   getPostFileStart,
   archivePostStart,
   clearFollowPhotoFileArray,
-  clearPostFiles,
+  clearPostFilesAndData,
 } from '../../redux/post/post.actions';
 
 import {
@@ -104,6 +106,7 @@ interface UserProfilePageProps {
   currentUser: User | null;
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
+  isCurrentUserProfilePage: boolean;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
@@ -113,8 +116,9 @@ interface UserProfilePageProps {
   getUsersFollowingStart: typeof getUsersFollowingStart;
   unfollowUserStart: typeof unfollowUserStart;
   clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
-  clearPostFiles: typeof clearPostFiles;
+  clearPostFilesAndData: typeof clearPostFilesAndData;
   clearFollowState: typeof clearFollowState;
+  setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
 }
 
 interface PostModalProps {
@@ -140,6 +144,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   followers,
   getFollowersConfirm,
   getUsersFollowingConfirm,
+  isCurrentUserProfilePage,
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
@@ -151,8 +156,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   unfollowConfirm,
   unfollowError,
   clearFollowersAndFollowing,
-  clearPostFiles,
+  clearPostFilesAndData,
   clearFollowState,
+  setIsCurrentUserProfilePage,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -198,12 +204,15 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }
 
   useEffect(() => {
+    if (isCurrentUserProfilePage) {
+      setIsCurrentUserProfilePage(false);
+    }
     setFollowersOrFollowingModalShow(false);
     clearFollowersAndFollowing();
-    clearPostFiles();
+    clearPostFilesAndData();
 
     getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username });
-  }, [username]);
+  }, [username, isCurrentUserProfilePage]);
 
   useEffect(() => {
     if (currentUser) {
@@ -559,6 +568,7 @@ interface LinkStateProps {
   currentUser: User | null;
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
+  isCurrentUserProfilePage: boolean;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -582,6 +592,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   unfollowConfirm: selectUnfollowConfirm,
   unfollowError: selectUnfollowError,
+  isCurrentUserProfilePage: selectIsCurrentUserProfilePage,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -599,8 +610,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getUsersFollowingStart(usersFollowingObj)),
   unfollowUserStart: (userId: string) => dispatch(unfollowUserStart(userId)),
   clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
-  clearPostFiles: () => dispatch(clearPostFiles()),
+  clearPostFilesAndData: () => dispatch(clearPostFilesAndData()),
   clearFollowState: () => dispatch(clearFollowState()),
+  setIsCurrentUserProfilePage: (isCurrentUserProfilePage: boolean) =>
+    dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

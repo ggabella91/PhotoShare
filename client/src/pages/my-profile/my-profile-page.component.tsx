@@ -14,6 +14,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import {
   getOtherUserStart,
   clearFollowersAndFollowing,
+  setIsCurrentUserProfilePage,
 } from '../../redux/user/user.actions';
 
 import {
@@ -46,7 +47,7 @@ import {
   archivePostStart,
   clearArchivePostStatuses,
   clearFollowPhotoFileArray,
-  clearPostFiles,
+  clearPostFilesAndData,
   clearPostState,
 } from '../../redux/post/post.actions';
 
@@ -101,8 +102,9 @@ interface MyProfilePageProps {
   getUsersFollowingStart: typeof getUsersFollowingStart;
   getOtherUserStart: typeof getOtherUserStart;
   clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
-  clearPostFiles: typeof clearPostFiles;
+  clearPostFilesAndData: typeof clearPostFilesAndData;
   clearFollowState: typeof clearFollowState;
+  setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
 }
 
 interface PostModalProps {
@@ -134,8 +136,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   getUsersFollowingConfirm,
   getOtherUserStart,
   clearFollowersAndFollowing,
-  clearPostFiles,
+  clearPostFilesAndData,
   clearFollowState,
+  setIsCurrentUserProfilePage,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -184,6 +187,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       clearPostState();
       clearFollowState();
       clearFollowersAndFollowing();
+      setIsCurrentUserProfilePage(true);
 
       setUser({
         id: currentUser.id,
@@ -522,8 +526,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserRequest)),
   clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
-  clearPostFiles: () => dispatch(clearPostFiles()),
+  clearPostFilesAndData: () => dispatch(clearPostFilesAndData()),
   clearFollowState: () => dispatch(clearFollowState()),
+  setIsCurrentUserProfilePage: (isCurrentUserProfilePage: boolean) =>
+    dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);

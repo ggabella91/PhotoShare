@@ -94,3 +94,8 @@ export const selectResetConfirm = createSelector(
   [selectUser],
   (user: UserState) => user.resetConfirm
 );
+
+export const selectIsCurrentUserProfilePage = createSelector(
+  [selectUser],
+  (user: UserState) => user.isCurrentUserProfilePage
+);
