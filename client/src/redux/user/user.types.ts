@@ -37,6 +37,7 @@ export enum UserActions {
   GET_USER_SUGGESTIONS_FAILURE = 'GET_USER_SUGGESTIONS_FAILURE',
   CLEAR_USER_SUGGESTIONS = 'CLEAR_USER_SUGGESTIONS',
   CLEAR_FOLLOWERS_AND_FOLLOWING = 'CLEAR_FOLLOWERS_OR_FOLLOWING',
+  SET_IS_CURRENT_USER_PROFILE_PAGE = 'SET_IS_CURRENT_USER_PROFILE_PAGE',
 }
 
 export interface UserSignUp {
@@ -107,6 +108,7 @@ export type UserPayload =
 
 export interface UserState {
   currentUser: User | null;
+  isCurrentUserProfilePage: boolean;
   otherUser: User | null;
   followersInfo: User[] | null;
   followingInfo: User[] | null;
@@ -317,6 +319,11 @@ export interface ClearFollowersOrFollowing {
   payload: null;
 }
 
+export interface SetIsCurrentUserProfilePage {
+  type: typeof UserActions.SET_IS_CURRENT_USER_PROFILE_PAGE;
+  payload: boolean;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -356,4 +363,5 @@ export type UserActionTypes =
   | GetUserSuggestionsSuccess
   | GetUserSuggestionsFailure
   | ClearUserSuggestions
-  | ClearFollowersOrFollowing;
+  | ClearFollowersOrFollowing
+  | SetIsCurrentUserProfilePage;

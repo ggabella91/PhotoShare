@@ -150,8 +150,8 @@ export const clearSuggestionPhotoFileArray = (): PostActionTypes => ({
   payload: null,
 });
 
-export const clearPostFiles = (): PostActionTypes => ({
-  type: PostActions.CLEAR_POST_FILES,
+export const clearPostFilesAndData = (): PostActionTypes => ({
+  type: PostActions.CLEAR_POST_FILES_AND_DATA,
   payload: null,
 });
 

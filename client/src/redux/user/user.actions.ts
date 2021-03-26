@@ -223,3 +223,10 @@ export const clearFollowersAndFollowing = (): UserActionTypes => ({
   type: UserActions.CLEAR_FOLLOWERS_AND_FOLLOWING,
   payload: null,
 });
+
+export const setIsCurrentUserProfilePage = (
+  isCurrentUserProfilePage: boolean
+): UserActionTypes => ({
+  type: UserActions.SET_IS_CURRENT_USER_PROFILE_PAGE,
+  payload: isCurrentUserProfilePage,
+});
