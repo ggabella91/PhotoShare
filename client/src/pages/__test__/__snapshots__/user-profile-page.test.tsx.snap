@@ -144,6 +144,7 @@ exports[`renders a my-profile-page component 1`] = `
   />
   <PostOptionsModal
     archive={[Function]}
+    isCurrentUserPost={false}
     onHide={[Function]}
     show={false}
   />
