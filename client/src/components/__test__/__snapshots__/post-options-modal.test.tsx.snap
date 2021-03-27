@@ -23,14 +23,6 @@ exports[`renders a post options modal 1`] = `
     className="post-options-modal-body"
   >
     <div
-      className="archive"
-      onClick={[Function]}
-    >
-      <span>
-        Archive
-      </span>
-    </div>
-    <div
       className="cancel"
       onClick={[Function]}
     >
