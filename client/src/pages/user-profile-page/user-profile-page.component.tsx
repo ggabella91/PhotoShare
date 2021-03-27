@@ -262,13 +262,13 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [followers, otherUserUsersFollowing]);
 
   useEffect(() => {
-    if (user.id) {
+    if (user.username === username && user.id) {
       getPostDataStart({
         userId: user.id,
         dataReqType: DataRequestType.single,
       });
     }
-  }, [user.id]);
+  }, [user]);
 
   useEffect(() => {
     if (otherUser && otherUser.photo) {
@@ -299,7 +299,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [postData]);
 
   useEffect(() => {
-    if (postData && postDataArray.length === postData.length) {
+    if (user && postData && postDataArray.length === postData.length) {
       for (let post of postDataArray) {
         getPostFileStart({
           s3Key: post.s3Key,
