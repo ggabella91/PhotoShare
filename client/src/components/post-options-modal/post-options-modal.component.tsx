@@ -7,9 +7,15 @@ interface Props {
   show: boolean;
   onHide: () => void;
   archive: () => void;
+  isCurrentUserPost: boolean;
 }
 
-const PostOptionsModal: React.FC<Props> = ({ archive, onHide, ...props }) => (
+const PostOptionsModal: React.FC<Props> = ({
+  archive,
+  onHide,
+  isCurrentUserPost,
+  ...props
+}) => (
   <Modal
     {...props}
     dialogClassName='post-options-modal'
@@ -18,9 +24,11 @@ const PostOptionsModal: React.FC<Props> = ({ archive, onHide, ...props }) => (
     centered
   >
     <Modal.Body className='post-options-modal-body'>
-      <div className='archive' onClick={archive}>
-        <span>Archive</span>
-      </div>
+      {isCurrentUserPost ? (
+        <div className='archive' onClick={archive}>
+          <span>Archive</span>
+        </div>
+      ) : null}
       <div className='cancel' onClick={onHide}>
         <span>Cancel</span>
       </div>

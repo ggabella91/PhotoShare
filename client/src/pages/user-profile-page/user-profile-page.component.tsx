@@ -516,6 +516,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       <PostOptionsModal
         show={postOptionsModalShow}
         onHide={() => setPostOptionsModalShow(false)}
+        isCurrentUserPost={false}
         archive={() =>
           archivePostStart({
             postId: postModalProps.id,
