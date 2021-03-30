@@ -25,4 +25,4 @@ router.post(
   }
 );
 
-export { router as createReactionRouter };
+export { router as newReactionRouter };
