@@ -8,6 +8,7 @@ import {
 const INITIAL_STATE: PostState = {
   postData: null,
   postDataFeedArray: [],
+  postReactionsArray: [],
   postFiles: [],
   getPostDataError: null,
   getPostDataConfirm: null,
