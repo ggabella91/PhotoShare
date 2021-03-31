@@ -2,6 +2,12 @@ export enum PostActions {
   CREATE_POST_START = 'CREATE_POST_START',
   CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS',
   CREATE_POST_FAILURE = 'CREATE_POST_FAILURE',
+  CREATE_POST_REACTION_START = 'CREATE_POST_REACTION_START',
+  CREATE_POST_REACTION_SUCCESS = 'CREATE_POST_REACTION_SUCCESS',
+  CREATE_POST_REACTION_FAILURE = 'CREATE_POST_REACTION_FAILURE',
+  GET_POST_REACTIONS_START = 'GET_POST_REACTIONS_START',
+  GET_POST_REACTIONS_SUCCESS = 'GET_POST_REACTIONS_SUCCESS',
+  GET_POST_REACTIONS_FAILURE = 'GET_POST_REACTIONS_FAILURE',
   UPDATE_PROFILE_PHOTO_START = 'UPDATE_PROFILE_PHOTO_START',
   UPDATE_PROFILE_PHOTO_SUCCESS = 'UPDATE_PROFILE_PHOTO_SUCCESS',
   UPDATE_PROFILE_PHOTO_FAILURE = 'UPDATE_PROFILE_PHOTO_FAILURE',
@@ -44,6 +50,21 @@ export interface Post {
   userId: string;
 }
 
+export interface Reaction {
+  createdAt: Date;
+  reactingUserId: string;
+  postId: string;
+  likedPost: boolean;
+  comment?: string;
+}
+
+export interface ReactionReq {
+  reactingUserId: string;
+  postId: string;
+  likedPost: boolean;
+  comment?: string;
+}
+
 export enum UserType {
   self = 'self',
   other = 'other',
@@ -80,6 +101,7 @@ export interface ArchivePostReq {
 export interface PostState {
   postData: Post[] | null;
   postDataFeedArray: Post[][];
+  postReactionsArray: Reaction[][];
   postFiles: PostFile[];
   getPostDataError: PostError | null;
   getPostDataConfirm: string | null;
@@ -111,6 +133,36 @@ export interface CreatePostSuccess {
 
 export interface CreatePostFailure {
   type: typeof PostActions.CREATE_POST_FAILURE;
+  payload: PostError;
+}
+
+export interface CreatePostReactionStart {
+  type: typeof PostActions.CREATE_POST_REACTION_START;
+  payload: ReactionReq;
+}
+
+export interface CreatePostReactionSuccess {
+  type: typeof PostActions.CREATE_POST_REACTION_SUCCESS;
+  payload: Reaction;
+}
+
+export interface CreatePostReactionFailure {
+  type: typeof PostActions.CREATE_POST_REACTION_SUCCESS;
+  payload: PostError;
+}
+
+export interface GetPostReactionsStart {
+  type: typeof PostActions.GET_POST_REACTIONS_START;
+  payload: string;
+}
+
+export interface GetPostReactionsSuccess {
+  type: typeof PostActions.GET_POST_REACTIONS_SUCCESS;
+  payload: Reaction[];
+}
+
+export interface GetPostReactionsFailure {
+  type: typeof PostActions.GET_POST_REACTIONS_FAILURE;
   payload: PostError;
 }
 
@@ -238,6 +290,12 @@ export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
   | CreatePostFailure
+  | CreatePostReactionStart
+  | CreatePostReactionSuccess
+  | CreatePostReactionFailure
+  | GetPostReactionsStart
+  | GetPostReactionsSuccess
+  | GetPostReactionsFailure
   | ClearPostStatuses
   | UpdateProfilePhotoStart
   | UpdateProfilePhotoSuccess
