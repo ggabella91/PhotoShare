@@ -15,6 +15,21 @@ export const selectPostDataFeedArray = createSelector(
   (postState: PostState) => postState.postDataFeedArray
 );
 
+export const selectPostReactionsArray = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postReactionsArray
+);
+
+export const selectPostReactionConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postReactionConfirm
+);
+
+export const selectPostReactionError = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postReactionError
+);
+
 export const selectGetPostDataError = createSelector(
   [selectPostState],
   (postState: PostState) => postState.getPostDataError
@@ -33,6 +48,16 @@ export const selectGetPostFileError = createSelector(
 export const selectGetPostFileConfirm = createSelector(
   [selectPostState],
   (postState: PostState) => postState.getPostFileConfirm
+);
+
+export const selectGetPostReactionsError = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.getPostReactionsError
+);
+
+export const selectGetPostReactionsConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.getPostReactionsConfirm
 );
 
 export const selectPostFiles = createSelector(

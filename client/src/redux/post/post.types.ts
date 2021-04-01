@@ -109,6 +109,8 @@ export interface PostState {
   getPostDataConfirm: string | null;
   getPostFileError: PostError | null;
   getPostFileConfirm: string | null;
+  getPostReactionsError: PostError | null;
+  getPostReactionsConfirm: string | null;
   postError: PostError | null;
   postConfirm: string | null;
   profilePhotoKey: string | null;

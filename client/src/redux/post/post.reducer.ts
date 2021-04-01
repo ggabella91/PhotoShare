@@ -14,6 +14,8 @@ const INITIAL_STATE: PostState = {
   getPostDataConfirm: null,
   getPostFileError: null,
   getPostFileConfirm: null,
+  getPostReactionsError: null,
+  getPostReactionsConfirm: null,
   postError: null,
   postConfirm: null,
   postReactionError: null,
@@ -62,6 +64,9 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
       return {
         ...state,
         postReactionsArray: state.postReactionsArray.push(action.payload),
+        getPostReactionsConfirm:
+          'Successfully fetched reactions for the requested post!',
+        getPostReactionsError: null,
       };
     case PostActions.ADD_POST_DATA_TO_FEED_ARRAY:
       return {
@@ -150,6 +155,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         getPostFileError: action.payload,
         getPostFileConfirm: null,
       };
+    case PostActions.GET_POST_REACTIONS_FAILURE:
+      return {
+        ...state,
+        getPostReactionsError: action.payload,
+        getPostReactionsConfirm: null,
+      };
     case PostActions.ARCHIVE_POST_FAILURE:
       return {
         ...state,
@@ -189,6 +200,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         postFiles: [],
         postData: null,
+        postReactionsArray: [],
       };
     case PostActions.CLEAR_POST_STATE:
       return {
