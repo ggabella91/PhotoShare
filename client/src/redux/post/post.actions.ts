@@ -2,6 +2,8 @@ import {
   Post,
   PostDataReq,
   PostFileReq,
+  Reaction,
+  ReactionReq,
   ArchivePostReq,
   PostFile,
   PostError,
@@ -21,6 +23,44 @@ export const createPostSuccess = (post: Post): PostActionTypes => ({
 
 export const createPostFailure = (error: PostError): PostActionTypes => ({
   type: PostActions.CREATE_POST_FAILURE,
+  payload: error,
+});
+
+export const createPostReactionStart = (
+  reactionReq: ReactionReq
+): PostActionTypes => ({
+  type: PostActions.CREATE_POST_REACTION_START,
+  payload: reactionReq,
+});
+
+export const createPostReactionSuccess = (
+  reaction: Reaction
+): PostActionTypes => ({
+  type: PostActions.CREATE_POST_REACTION_SUCCESS,
+  payload: reaction,
+});
+
+export const createPostReactionFailure = (
+  error: PostError
+): PostActionTypes => ({
+  type: PostActions.CREATE_POST_REACTION_FAILURE,
+  payload: error,
+});
+
+export const getPostReactionsStart = (postId: string): PostActionTypes => ({
+  type: PostActions.GET_POST_REACTIONS_START,
+  payload: postId,
+});
+
+export const getPostReactionsSuccess = (
+  reactions: Reaction[]
+): PostActionTypes => ({
+  type: PostActions.GET_POST_REACTIONS_SUCCESS,
+  payload: reactions,
+});
+
+export const getPostReactionsFailure = (error: PostError): PostActionTypes => ({
+  type: PostActions.GET_POST_REACTIONS_FAILURE,
   payload: error,
 });
 

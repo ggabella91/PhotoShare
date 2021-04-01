@@ -14,8 +14,12 @@ const INITIAL_STATE: PostState = {
   getPostDataConfirm: null,
   getPostFileError: null,
   getPostFileConfirm: null,
+  getPostReactionsError: null,
+  getPostReactionsConfirm: null,
   postError: null,
   postConfirm: null,
+  postReactionError: null,
+  postReactionConfirm: null,
   profilePhotoKey: null,
   profilePhotoFile: null,
   profilePhotoError: null,
@@ -43,12 +47,26 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         postError: null,
         postConfirm: 'Post uploaded!',
       };
+    case PostActions.CREATE_POST_REACTION_SUCCESS:
+      return {
+        ...state,
+        postReactionConfirm: 'Post reaction created successfully!',
+        postReactionError: null,
+      };
     case PostActions.GET_POST_DATA_SUCCESS:
       return {
         ...state,
         postData: action.payload,
         getPostDataError: null,
         getPostDataConfirm: 'Post data fetched!',
+      };
+    case PostActions.GET_POST_REACTIONS_SUCCESS:
+      return {
+        ...state,
+        postReactionsArray: state.postReactionsArray.push(action.payload),
+        getPostReactionsConfirm:
+          'Successfully fetched reactions for the requested post!',
+        getPostReactionsError: null,
       };
     case PostActions.ADD_POST_DATA_TO_FEED_ARRAY:
       return {
@@ -119,6 +137,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         postError: action.payload,
         postConfirm: null,
       };
+    case PostActions.CREATE_POST_REACTION_FAILURE:
+      return {
+        ...state,
+        postReactionConfirm: null,
+        postReactionError: action.payload,
+      };
     case PostActions.GET_POST_DATA_FAILURE:
       return {
         ...state,
@@ -130,6 +154,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         getPostFileError: action.payload,
         getPostFileConfirm: null,
+      };
+    case PostActions.GET_POST_REACTIONS_FAILURE:
+      return {
+        ...state,
+        getPostReactionsError: action.payload,
+        getPostReactionsConfirm: null,
       };
     case PostActions.ARCHIVE_POST_FAILURE:
       return {
@@ -170,6 +200,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         postFiles: [],
         postData: null,
+        postReactionsArray: [],
       };
     case PostActions.CLEAR_POST_STATE:
       return {

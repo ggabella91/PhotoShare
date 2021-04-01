@@ -102,11 +102,15 @@ export interface PostState {
   postData: Post[] | null;
   postDataFeedArray: Post[][];
   postReactionsArray: Reaction[][];
+  postReactionError: PostError | null;
+  postReactionConfirm: string | null;
   postFiles: PostFile[];
   getPostDataError: PostError | null;
   getPostDataConfirm: string | null;
   getPostFileError: PostError | null;
   getPostFileConfirm: string | null;
+  getPostReactionsError: PostError | null;
+  getPostReactionsConfirm: string | null;
   postError: PostError | null;
   postConfirm: string | null;
   profilePhotoKey: string | null;
@@ -147,7 +151,7 @@ export interface CreatePostReactionSuccess {
 }
 
 export interface CreatePostReactionFailure {
-  type: typeof PostActions.CREATE_POST_REACTION_SUCCESS;
+  type: typeof PostActions.CREATE_POST_REACTION_FAILURE;
   payload: PostError;
 }
 
