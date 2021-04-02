@@ -1,10 +1,28 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { createStructuredSelector } from 'reselect';
+
+import { AppState } from '../../redux/root-reducer';
+
+import { Reaction, ReactionReq } from '../../redux/post/post.types';
+import {
+  selectPostReactionsArray,
+  selectPostReactionConfirm,
+  selectPostReactionError,
+  selectGetPostReactionsConfirm,
+  selectGetPostReactionsError,
+} from '../../redux/post/post.selectors';
+import {
+  createPostReactionStart,
+  getPostReactionsStart,
+} from '../../redux/post/post.actions';
 
 import Modal from 'react-bootstrap/Modal';
 
 import './post-modal.styles.scss';
 
-interface Props {
+interface PostModalProps {
   postId: string;
   caption: string;
   createdAt: Date;
@@ -17,7 +35,7 @@ interface Props {
   userProfilePhotoFile: string;
 }
 
-const PostModal: React.FC<Props> = ({
+const PostModal: React.FC<PostModalProps> = ({
   postId,
   fileString,
   caption,
@@ -73,4 +91,10 @@ const PostModal: React.FC<Props> = ({
   );
 };
 
-export default PostModal;
+interface LinkStateProps {}
+
+const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
