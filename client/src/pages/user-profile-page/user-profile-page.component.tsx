@@ -501,6 +501,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           : null}
       </div>
       <PostModal
+        postId={postModalProps.id}
         show={postModalShow}
         fileString={postModalProps.fileString}
         caption={postModalProps.caption}
