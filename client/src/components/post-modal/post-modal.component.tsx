@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import './post-modal.styles.scss';
 
 interface Props {
+  postId: string;
   caption: string;
   createdAt: Date;
   location: string;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const PostModal: React.FC<Props> = ({
+  postId,
   fileString,
   caption,
   location,
