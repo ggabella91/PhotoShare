@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
 
-import { Reaction, ReactionReq } from '../../redux/post/post.types';
+import { Reaction, ReactionReq, PostError } from '../../redux/post/post.types';
 import {
   selectPostReactionsArray,
   selectPostReactionConfirm,
@@ -33,6 +33,13 @@ interface PostModalProps {
   userName: string;
   onOptionsClick: () => void;
   userProfilePhotoFile: string;
+  postReactionsArray: Reaction[][];
+  postReactionConfirm: string | null;
+  postReactionError: PostError | null;
+  getPostReactionsConfirm: string | null;
+  getPostReactionsError: PostError | null;
+  createPostReactionStart: typeof createPostReactionStart;
+  getPostReactionsStart: typeof getPostReactionsStart;
 }
 
 const PostModal: React.FC<PostModalProps> = ({
@@ -91,10 +98,27 @@ const PostModal: React.FC<PostModalProps> = ({
   );
 };
 
-interface LinkStateProps {}
+interface LinkStateProps {
+  postReactionsArray: Reaction[][];
+  postReactionConfirm: string | null;
+  postReactionError: PostError | null;
+  getPostReactionsConfirm: string | null;
+  getPostReactionsError: PostError | null;
+}
 
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({});
+const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
+  postReactionsArray: selectPostReactionsArray,
+  postReactionConfirm: selectPostReactionConfirm,
+  postReactionError: selectPostReactionError,
+  getPostReactionsConfirm: selectGetPostReactionsConfirm,
+  getPostReactionsError: selectGetPostReactionsError,
+});
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({});
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  createPostReactionStart: (reactionReq: ReactionReq) =>
+    dispatch(createPostReactionStart(reactionReq)),
+  getPostReactionsStart: (postId: string) =>
+    dispatch(getPostReactionsStart(postId)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
