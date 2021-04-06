@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -21,6 +21,7 @@ import {
 import Modal from 'react-bootstrap/Modal';
 
 import './post-modal.styles.scss';
+import { FormInput } from '../form-input/form-input.component';
 
 interface PostModalProps {
   postId: string;
@@ -31,6 +32,7 @@ interface PostModalProps {
   onHide: () => void;
   fileString: string;
   userName: string;
+  userId: string;
   onOptionsClick: () => void;
   userProfilePhotoFile: string;
   postReactionsArray: Reaction[][];
@@ -49,14 +51,34 @@ const PostModal: React.FC<PostModalProps> = ({
   location,
   createdAt,
   userName,
+  userId,
   onOptionsClick,
   userProfilePhotoFile,
-  ...props
+  createPostReactionStart,
 }) => {
+  const [comment, setComment] = useState('');
+
   const postDate = new Date(createdAt).toDateString();
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setComment(value);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    createPostReactionStart({
+      reactingUserId: userId,
+      postId: postId,
+      likedPost: false,
+      comment,
+    });
+  };
+
   return (
-    <Modal {...props} dialogClassName='post-modal' animation={false} centered>
+    <Modal dialogClassName='post-modal' animation={false} centered>
       <div className='large-image-adjustments'>
         <img
           className='post-modal-image-large'
@@ -92,6 +114,16 @@ const PostModal: React.FC<PostModalProps> = ({
           </div>
           <span className='post-caption'>{caption}</span>
           <span className='post-date'>{postDate}</span>
+          <form className='comment-form' onSubmit={handleSubmit}>
+            <FormInput
+              onChange={handleChange}
+              name='comment'
+              type='text'
+              value={comment}
+              label='Add a comment...'
+            />
+            <span className='post-text-button'>Post</span>
+          </form>
         </div>
       </Modal.Body>
     </Modal>

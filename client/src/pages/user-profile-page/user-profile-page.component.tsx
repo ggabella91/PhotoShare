@@ -513,6 +513,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         onOptionsClick={() => setPostOptionsModalShow(true)}
         userProfilePhotoFile={profilePhoto || ''}
         userName={user.username}
+        userId={user.id}
       />
       <PostOptionsModal
         show={postOptionsModalShow}
