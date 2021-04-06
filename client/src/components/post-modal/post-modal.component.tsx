@@ -66,7 +66,7 @@ const PostModal: React.FC<PostModalProps> = ({
     setComment(value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     createPostReactionStart({
@@ -74,6 +74,15 @@ const PostModal: React.FC<PostModalProps> = ({
       postId: postId,
       likedPost: false,
       comment,
+    });
+  };
+
+  const handleSubmitLike = () => {
+    createPostReactionStart({
+      reactingUserId: userId,
+      postId: postId,
+      likedPost: true,
+      comment: '',
     });
   };
 
@@ -113,8 +122,11 @@ const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <span className='post-caption'>{caption}</span>
+          <span className='like-text-button' onClick={handleSubmitLike}>
+            Like
+          </span>
           <span className='post-date'>{postDate}</span>
-          <form className='comment-form' onSubmit={handleSubmit}>
+          <form className='comment-form' onSubmit={handleSubmitComment}>
             <FormInput
               onChange={handleChange}
               name='comment'
