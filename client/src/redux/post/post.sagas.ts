@@ -4,6 +4,8 @@ import { ActionPattern, Saga } from '@redux-saga/types';
 
 import {
   Post,
+  Reaction,
+  ReactionReq,
   DataRequestType,
   PostDataReq,
   PostFileReq,
@@ -15,6 +17,8 @@ import {
 import {
   createPostSuccess,
   createPostFailure,
+  createPostReactionSuccess,
+  createPostReactionFailure,
   updateProfilePhotoSuccess,
   updateProfilePhotoFailure,
   getPostDataSuccess,
@@ -39,6 +43,25 @@ export function* createPost({ payload: post }: { payload: FormData }): any {
     yield put(createPostSuccess(data));
   } catch (err) {
     yield put(createPostFailure(err));
+  }
+}
+
+export function* createPostReaction({
+  payload: { postId, reactingUserId, comment, likedPost },
+}: {
+  payload: ReactionReq;
+}): any {
+  try {
+    const { data } = yield axios.post('/api/posts/reaction', {
+      postId,
+      reactingUserId,
+      comment,
+      likedPost,
+    });
+
+    yield put(createPostReactionSuccess(data));
+  } catch (err) {
+    yield put(createPostReactionFailure(err));
   }
 }
 
@@ -137,6 +160,13 @@ export function* onCreatePostStart(): SagaIterator {
   );
 }
 
+export function* onCreatePostReactionStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    PostActions.CREATE_POST_REACTION_START,
+    createPostReaction
+  );
+}
+
 export function* onUpdateProfilePhotoStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(
     PostActions.UPDATE_PROFILE_PHOTO_START,
@@ -168,6 +198,7 @@ export function* onArchivePostStart(): SagaIterator {
 export function* postSagas(): SagaIterator {
   yield all([
     call(onCreatePostStart),
+    call(onCreatePostReactionStart),
     call(onUpdateProfilePhotoStart),
     call(onGetPostDataStart),
     call(onGetPostFileStart),
