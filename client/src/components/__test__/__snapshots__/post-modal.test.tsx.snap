@@ -15,9 +15,8 @@ exports[`expect to render a post modal component 1`] = `
   dialogClassName="post-modal"
   enforceFocus={true}
   keyboard={true}
-  onHide={[Function]}
   restoreFocus={true}
-  show={true}
+  show={false}
 >
   <div
     className="large-image-adjustments"
@@ -87,10 +86,33 @@ exports[`expect to render a post modal component 1`] = `
         hi
       </span>
       <span
+        className="like-text-button"
+        onClick={[Function]}
+      >
+        Like
+      </span>
+      <span
         className="post-date"
       >
         Sat Jan 02 2021
       </span>
+      <form
+        className="comment-form"
+        onSubmit={[Function]}
+      >
+        <FormInput
+          label="Add a comment..."
+          name="comment"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+        <span
+          className="post-text-button"
+        >
+          Post
+        </span>
+      </form>
     </div>
   </ModalBody>
 </Modal>

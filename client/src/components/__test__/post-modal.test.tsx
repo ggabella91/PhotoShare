@@ -1,6 +1,11 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import PostModal from '../post-modal/post-modal.component';
+import { PostModal } from '../post-modal/post-modal.component';
+
+import {
+  createPostReactionStart,
+  getPostReactionsStart,
+} from '../../redux/post/post.actions';
 
 it('expect to render a post modal component', () => {
   const modalWrapper = shallow(
@@ -14,6 +19,17 @@ it('expect to render a post modal component', () => {
       onHide={() => {}}
       onOptionsClick={() => {}}
       userProfilePhotoFile='userFile'
+      postId=''
+      userId=''
+      createPostReactionStart={(reactionReq) =>
+        createPostReactionStart(reactionReq)
+      }
+      postReactionsArray={[]}
+      postReactionConfirm=''
+      postReactionError={null}
+      getPostReactionsStart={(postId) => getPostReactionsStart(postId)}
+      getPostReactionsConfirm=''
+      getPostReactionsError={null}
     />
   );
 

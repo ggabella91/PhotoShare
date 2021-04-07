@@ -131,19 +131,22 @@ exports[`renders a my-profile-page component 1`] = `
   <div
     className="posts-grid"
   />
-  <PostModal
+  <Connect(PostModal)
     caption=""
     createdAt={2021-01-09T22:39:39.945Z}
     fileString=""
     location=""
     onHide={[Function]}
     onOptionsClick={[Function]}
+    postId=""
     show={false}
+    userId=""
     userName=""
     userProfilePhotoFile=""
   />
   <PostOptionsModal
     archive={[Function]}
+    isCurrentUserPost={true}
     onHide={[Function]}
     show={false}
   />
