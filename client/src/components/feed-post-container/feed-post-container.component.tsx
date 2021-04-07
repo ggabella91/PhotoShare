@@ -43,7 +43,7 @@ export interface UserInfoData {
   name: string;
 }
 
-const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
+export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   userInfo,
   fileString,
   caption,

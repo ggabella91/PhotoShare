@@ -44,7 +44,7 @@ interface PostModalProps {
   getPostReactionsStart: typeof getPostReactionsStart;
 }
 
-const PostModal: React.FC<PostModalProps> = ({
+export const PostModal: React.FC<PostModalProps> = ({
   postId,
   fileString,
   caption,
