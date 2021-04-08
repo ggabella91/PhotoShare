@@ -8,6 +8,7 @@ export interface FormInputProps {
   type: string;
   value: string;
   label: string;
+  tall?: boolean;
 }
 
 export interface FormFileInputType {
@@ -22,6 +23,7 @@ export interface FormFileInputType {
 export const FormInput: React.FC<FormInputProps> = ({
   children,
   label,
+  tall,
   ...otherProps
 }) => (
   <div className='group'>
@@ -33,6 +35,24 @@ export const FormInput: React.FC<FormInputProps> = ({
       </label>
     ) : null}
     <input className='form-input' {...otherProps} />
+  </div>
+);
+
+export const ExpandableFormInput: React.FC<FormInputProps> = ({
+  children,
+  label,
+  tall,
+  ...otherProps
+}) => (
+  <div className='group comment'>
+    {label ? (
+      <label
+        className={`${otherProps.value.length ? 'hide' : ''} form-input-label`}
+      >
+        {label}
+      </label>
+    ) : null}
+    <textarea className='form-input comment' {...otherProps} />
   </div>
 );
 
