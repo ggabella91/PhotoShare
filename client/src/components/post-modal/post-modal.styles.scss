@@ -200,7 +200,7 @@
       }
 
       .like-text-button {
-        font-size: 14;
+        font-size: 14px;
         font-weight: 520;
       }
 
@@ -211,9 +211,12 @@
 
       .comment-form {
         display: flex;
+        max-height: 65px;
 
         .post-text-button {
-          font-size: 14;
+          margin-top: 35px;
+          margin-left: 15px;
+          font-size: 14px;
           font-weight: 520;
         }
       }
