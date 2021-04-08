@@ -198,9 +198,24 @@
         font-weight: 400;
         margin-bottom: 1vh;
       }
+
+      .like-text-button {
+        font-size: 14;
+        font-weight: 520;
+      }
+
       .post-date {
         margin: 0;
         font-size: 12px;
+      }
+
+      .comment-form {
+        display: flex;
+
+        .post-text-button {
+          font-size: 14;
+          font-weight: 520;
+        }
       }
 
       span {

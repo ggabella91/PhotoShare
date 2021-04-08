@@ -21,7 +21,7 @@ import {
 import Modal from 'react-bootstrap/Modal';
 
 import './post-modal.styles.scss';
-import { FormInput } from '../form-input/form-input.component';
+import { ExpandableFormInput } from '../form-input/form-input.component';
 
 interface PostModalProps {
   postId: string;
@@ -55,6 +55,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   onOptionsClick,
   userProfilePhotoFile,
   createPostReactionStart,
+  ...props
 }) => {
   const [comment, setComment] = useState('');
 
@@ -87,7 +88,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   };
 
   return (
-    <Modal dialogClassName='post-modal' animation={false} centered>
+    <Modal {...props} dialogClassName='post-modal' animation={false} centered>
       <div className='large-image-adjustments'>
         <img
           className='post-modal-image-large'
@@ -127,10 +128,11 @@ export const PostModal: React.FC<PostModalProps> = ({
           </span>
           <span className='post-date'>{postDate}</span>
           <form className='comment-form' onSubmit={handleSubmitComment}>
-            <FormInput
+            <ExpandableFormInput
+              tall={true}
               onChange={handleChange}
               name='comment'
-              type='text'
+              type='textarea'
               value={comment}
               label='Add a comment...'
             />

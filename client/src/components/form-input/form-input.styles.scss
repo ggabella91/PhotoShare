@@ -37,6 +37,14 @@ span {
     &:focus ~ .form-input-label {
       @include hideLabel();
     }
+
+    &.comment {
+      font-size: 14px;
+      height: fit-content;
+      // max-height: 72px;
+      width: 75%;
+      overflow-y: scroll;
+    }
   }
 
   input[type='password'] {
@@ -55,6 +63,11 @@ span {
 
     &.hide {
       @include hideLabel();
+    }
+
+    &.comment {
+      font-size: 14px;
+      top: 5px;
     }
   }
 
