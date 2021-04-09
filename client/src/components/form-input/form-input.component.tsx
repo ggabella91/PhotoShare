@@ -47,7 +47,9 @@ export const ExpandableFormInput: React.FC<FormInputProps> = ({
   <div className='group comment'>
     {label ? (
       <label
-        className={`${otherProps.value.length ? 'hide' : ''} form-input-label`}
+        className={`${
+          otherProps.value.length ? 'hide' : ''
+        } comment-form-input-label`}
       >
         {label}
       </label>

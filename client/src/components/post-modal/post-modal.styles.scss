@@ -244,6 +244,10 @@
             margin: auto;
             font-family: 'Lato', sans-serif;
           }
+
+          &.greyed-out {
+            opacity: 60%;
+          }
         }
       }
 
