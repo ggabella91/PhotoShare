@@ -19,6 +19,7 @@ import {
 } from '../../redux/post/post.actions';
 
 import Modal from 'react-bootstrap/Modal';
+import Button from '../button/button.component';
 
 import './post-modal.styles.scss';
 import { ExpandableFormInput } from '../form-input/form-input.component';
@@ -70,12 +71,14 @@ export const PostModal: React.FC<PostModalProps> = ({
   const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    createPostReactionStart({
-      reactingUserId: userId,
-      postId: postId,
-      likedPost: false,
-      comment,
-    });
+    if (comment) {
+      createPostReactionStart({
+        reactingUserId: userId,
+        postId: postId,
+        likedPost: false,
+        comment,
+      });
+    }
   };
 
   const handleSubmitLike = () => {
@@ -136,7 +139,13 @@ export const PostModal: React.FC<PostModalProps> = ({
               value={comment}
               label='Add a comment...'
             />
-            <span className='post-text-button'>Post</span>
+            <Button
+              className='submit-comment-button'
+              disabled={comment ? false : true}
+              onClick={handleSubmitComment}
+            >
+              <span>Post</span>
+            </Button>
           </form>
         </div>
       </Modal.Body>

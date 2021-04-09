@@ -202,6 +202,7 @@
       .like-text-button {
         font-size: 14px;
         font-weight: 520;
+        margin-bottom: 5px;
       }
 
       .post-date {
@@ -218,6 +219,31 @@
           margin-left: 15px;
           font-size: 14px;
           font-weight: 520;
+        }
+
+        .submit-comment-button {
+          width: auto;
+          cursor: pointer;
+          display: inline-flex;
+          justify-content: center;
+          background-color: white;
+          color: #074aaf;
+          border: none;
+          margin-top: 25px;
+          margin-left: 15px;
+          text-transform: capitalize;
+          text-decoration: none;
+          border-radius: 15px;
+
+          span {
+            font-size: 14px;
+            font-weight: 520;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+            margin: auto;
+            font-family: 'Lato', sans-serif;
+          }
         }
       }
 
