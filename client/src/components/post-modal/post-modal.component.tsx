@@ -140,7 +140,9 @@ export const PostModal: React.FC<PostModalProps> = ({
               label='Add a comment...'
             />
             <Button
-              className='submit-comment-button'
+              className={`${
+                !comment ? 'greyed-out' : ''
+              } submit-comment-button`}
               disabled={comment ? false : true}
               onClick={handleSubmitComment}
             >

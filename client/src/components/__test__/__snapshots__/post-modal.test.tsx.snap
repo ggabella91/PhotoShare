@@ -14,9 +14,16 @@ exports[`expect to render a post modal component 1`] = `
   }
   dialogClassName="post-modal"
   enforceFocus={true}
+  getPostReactionsConfirm=""
+  getPostReactionsError={null}
+  getPostReactionsStart={[Function]}
   keyboard={true}
+  onHide={[Function]}
+  postReactionConfirm=""
+  postReactionError={null}
+  postReactionsArray={Array []}
   restoreFocus={true}
-  show={false}
+  show={true}
 >
   <div
     className="large-image-adjustments"
@@ -100,18 +107,23 @@ exports[`expect to render a post modal component 1`] = `
         className="comment-form"
         onSubmit={[Function]}
       >
-        <FormInput
+        <ExpandableFormInput
           label="Add a comment..."
           name="comment"
           onChange={[Function]}
-          type="text"
+          tall={true}
+          type="textarea"
           value=""
         />
-        <span
-          className="post-text-button"
+        <Button
+          className="greyed-out submit-comment-button"
+          disabled={true}
+          onClick={[Function]}
         >
-          Post
-        </span>
+          <span>
+            Post
+          </span>
+        </Button>
       </form>
     </div>
   </ModalBody>

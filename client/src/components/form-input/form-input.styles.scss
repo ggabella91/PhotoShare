@@ -64,10 +64,20 @@ span {
     &.hide {
       @include hideLabel();
     }
+  }
 
-    &.comment {
-      font-size: 14px;
-      top: 15px;
+  .comment-form-input-label {
+    color: $sub-color;
+    font-size: 14px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 10px;
+    top: 23px;
+    transition: 300ms ease all;
+
+    &.hide {
+      @include hideLabel();
     }
   }
 
