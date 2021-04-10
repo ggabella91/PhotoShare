@@ -200,17 +200,15 @@
       }
 
       .like-text-button {
-        width: auto;
+        width: fit-content;
         cursor: pointer;
         display: inline-flex;
         justify-content: center;
         background-color: white;
         color: #074aaf;
         border: none;
-        margin-top: 25px;
         margin-bottom: 5px;
-        // margin-left: 15px;
-        // text-transform: capitalize;
+        padding-left: 0;
         text-decoration: none;
         border-radius: 15px;
 
@@ -267,6 +265,7 @@
 
           &.greyed-out {
             opacity: 60%;
+            cursor: default;
           }
         }
       }
