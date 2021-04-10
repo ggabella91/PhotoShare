@@ -126,9 +126,9 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <span className='post-caption'>{caption}</span>
-          <span className='like-text-button' onClick={handleSubmitLike}>
-            Like
-          </span>
+          <Button className='like-text-button' onClick={handleSubmitLike}>
+            <span>Like</span>
+          </Button>
           <span className='post-date'>{postDate}</span>
           <form className='comment-form' onSubmit={handleSubmitComment}>
             <ExpandableFormInput

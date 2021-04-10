@@ -92,12 +92,14 @@ exports[`expect to render a post modal component 1`] = `
       >
         hi
       </span>
-      <span
+      <Button
         className="like-text-button"
         onClick={[Function]}
       >
-        Like
-      </span>
+        <span>
+          Like
+        </span>
+      </Button>
       <span
         className="post-date"
       >
