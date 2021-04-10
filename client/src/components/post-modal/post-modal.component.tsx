@@ -79,6 +79,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         comment,
       });
     }
+    setComment('');
   };
 
   const handleSubmitLike = () => {

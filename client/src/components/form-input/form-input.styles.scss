@@ -41,7 +41,6 @@ span {
     &.comment {
       font-size: 14px;
       height: fit-content;
-      // max-height: 72px;
       width: 75%;
       overflow-y: scroll;
     }
@@ -72,7 +71,7 @@ span {
     font-weight: normal;
     position: absolute;
     pointer-events: none;
-    left: 10px;
+    left: 7px;
     top: 22px;
     transition: 300ms ease all;
 
