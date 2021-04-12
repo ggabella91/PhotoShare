@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -56,11 +56,18 @@ export const PostModal: React.FC<PostModalProps> = ({
   onOptionsClick,
   userProfilePhotoFile,
   createPostReactionStart,
+  getPostReactionsStart,
   ...props
 }) => {
   const [comment, setComment] = useState('');
 
   const postDate = new Date(createdAt).toDateString();
+
+  useEffect(() => {
+    if (postId) {
+      getPostReactionsStart(postId);
+    }
+  }, [postId]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;

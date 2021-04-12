@@ -24,6 +24,8 @@ import {
   getPostDataSuccess,
   addPostDataToFeedArray,
   getPostDataFailure,
+  getPostReactionsSuccess,
+  getPostReactionsFailure,
   getPostFileSuccess,
   getProfilePhotoFileSuccess,
   getPostFileFailure,
@@ -47,17 +49,12 @@ export function* createPost({ payload: post }: { payload: FormData }): any {
 }
 
 export function* createPostReaction({
-  payload: { postId, reactingUserId, comment, likedPost },
+  payload: reactionReq,
 }: {
   payload: ReactionReq;
 }): any {
   try {
-    const { data } = yield axios.post('/api/posts/reaction', {
-      postId,
-      reactingUserId,
-      comment,
-      likedPost,
-    });
+    const { data } = yield axios.post('/api/posts/reaction', reactionReq);
 
     yield put(createPostReactionSuccess(data));
   } catch (err) {
@@ -96,6 +93,20 @@ export function* getPostData({
     }
   } catch (err) {
     yield put(getPostDataFailure(err));
+  }
+}
+
+export function* getPostReactions({
+  payload: postId,
+}: {
+  payload: string;
+}): any {
+  try {
+    const { data } = yield axios.post('/api/posts/get-reactions', { postId });
+
+    yield put(getPostReactionsSuccess(data));
+  } catch (err) {
+    yield put(getPostReactionsFailure(err));
   }
 }
 
@@ -181,6 +192,13 @@ export function* onGetPostDataStart(): SagaIterator {
   );
 }
 
+export function* onGetPostReactionsStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    PostActions.GET_POST_REACTIONS_START,
+    getPostReactions
+  );
+}
+
 export function* onGetPostFileStart(): SagaIterator {
   yield takeEvery<ActionPattern, Saga>(
     PostActions.GET_POST_FILE_START,
@@ -201,6 +219,7 @@ export function* postSagas(): SagaIterator {
     call(onCreatePostReactionStart),
     call(onUpdateProfilePhotoStart),
     call(onGetPostDataStart),
+    call(onGetPostReactionsStart),
     call(onGetPostFileStart),
     call(onArchivePostStart),
   ]);

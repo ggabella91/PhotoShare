@@ -16,7 +16,6 @@ exports[`expect to render a post modal component 1`] = `
   enforceFocus={true}
   getPostReactionsConfirm=""
   getPostReactionsError={null}
-  getPostReactionsStart={[Function]}
   keyboard={true}
   onHide={[Function]}
   postReactionConfirm=""
