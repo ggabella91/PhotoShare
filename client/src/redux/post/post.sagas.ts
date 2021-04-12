@@ -102,7 +102,7 @@ export function* getPostReactions({
   payload: string;
 }): any {
   try {
-    const { data } = yield axios.post('/api/posts/reaction', { postId });
+    const { data } = yield axios.post('/api/posts/get-reactions', { postId });
 
     yield put(getPostReactionsSuccess(data));
   } catch (err) {

@@ -9,7 +9,7 @@ import { Reaction } from '../models/reaction';
 const router = express.Router();
 
 router.post(
-  '/api/posts/reaction',
+  '/api/posts/get-reactions',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {

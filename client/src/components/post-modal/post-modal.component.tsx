@@ -64,7 +64,9 @@ export const PostModal: React.FC<PostModalProps> = ({
   const postDate = new Date(createdAt).toDateString();
 
   useEffect(() => {
-    getPostReactionsStart(postId);
+    if (postId) {
+      getPostReactionsStart(postId);
+    }
   }, [postId]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

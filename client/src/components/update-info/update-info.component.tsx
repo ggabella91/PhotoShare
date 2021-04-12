@@ -75,6 +75,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
       fieldsToUpdate.bio = bio ? bio : currentUser!.bio;
 
       changeInfoStart(fieldsToUpdate);
+      setUserInfo({ name: '', email: '', username: '', bio: '' });
     }
   };
 
@@ -92,7 +93,6 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
     if (currentUser) {
       clearInfoStatuses();
       setTimeout(() => {
-        setUserInfo({ name: '', email: '', username: '', bio: '' });
         setStatusInfo({ success: false, error: false });
       }, 3000);
       return (
