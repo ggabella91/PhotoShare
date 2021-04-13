@@ -55,11 +55,15 @@ export const PostModal: React.FC<PostModalProps> = ({
   userId,
   onOptionsClick,
   userProfilePhotoFile,
+  postReactionsArray,
   createPostReactionStart,
   getPostReactionsStart,
   ...props
 }) => {
   const [comment, setComment] = useState('');
+
+  const [reactionsArray, setReactionsArray] = useState<Reaction[]>([]);
+  const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
   const postDate = new Date(createdAt).toDateString();
 
@@ -68,6 +72,16 @@ export const PostModal: React.FC<PostModalProps> = ({
       getPostReactionsStart(postId);
     }
   }, [postId]);
+
+  useEffect(() => {
+    if (postReactionsArray.length) {
+      for (let innerArray of postReactionsArray) {
+        if (innerArray[0].postId === postId) {
+          setReactionsArray(innerArray);
+        }
+      }
+    }
+  }, [postReactionsArray]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
