@@ -5,6 +5,9 @@ import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
 
+import { User } from '../../redux/user/user.types';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+
 import { Reaction, ReactionReq, PostError } from '../../redux/post/post.types';
 import {
   selectPostReactionsArray,
@@ -25,6 +28,7 @@ import './post-modal.styles.scss';
 import { ExpandableFormInput } from '../form-input/form-input.component';
 
 interface PostModalProps {
+  currentUser: User | null;
   postId: string;
   caption: string;
   createdAt: Date;
@@ -46,6 +50,7 @@ interface PostModalProps {
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
+  currentUser,
   postId,
   fileString,
   caption,
@@ -82,6 +87,20 @@ export const PostModal: React.FC<PostModalProps> = ({
       }
     }
   }, [postReactionsArray]);
+
+  useEffect(() => {
+    if (reactionsArray.length) {
+      for (let el of reactionsArray) {
+        if (
+          currentUser &&
+          el.reactingUserId === currentUser.id &&
+          el.likedPost
+        ) {
+          setAlreadyLikedPost(true);
+        }
+      }
+    }
+  }, [reactionsArray]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -149,7 +168,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           </div>
           <span className='post-caption'>{caption}</span>
           <Button className='like-text-button' onClick={handleSubmitLike}>
-            <span>Like</span>
+            <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
           </Button>
           <span className='post-date'>{postDate}</span>
           <form className='comment-form' onSubmit={handleSubmitComment}>
@@ -178,6 +197,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 };
 
 interface LinkStateProps {
+  currentUser: User | null;
   postReactionsArray: Reaction[][];
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
@@ -186,6 +206,7 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
+  currentUser: selectCurrentUser,
   postReactionsArray: selectPostReactionsArray,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
