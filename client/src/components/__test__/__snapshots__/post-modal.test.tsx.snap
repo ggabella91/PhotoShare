@@ -20,7 +20,6 @@ exports[`expect to render a post modal component 1`] = `
   onHide={[Function]}
   postReactionConfirm=""
   postReactionError={null}
-  postReactionsArray={Array []}
   restoreFocus={true}
   show={true}
 >
