@@ -21,6 +21,11 @@ import {
   getPostReactionsStart,
 } from '../../redux/post/post.actions';
 
+import UserInfo, {
+  StyleType,
+  UserInfoAndOtherData,
+} from '../user-info/user-info.component';
+
 import Modal from 'react-bootstrap/Modal';
 import Button from '../button/button.component';
 
@@ -68,6 +73,16 @@ export const PostModal: React.FC<PostModalProps> = ({
   const [comment, setComment] = useState('');
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[]>([]);
+
+  /******************************************************************
+    TODO
+    
+    1. Fetch usernames corresponding to each user that reacted on post
+    2. Organize and save comments data array with usernames, photos, and comments
+    3. Organize and save likes data array with usernames and photos
+
+    *****************************************************************/
+
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
   const postDate = new Date(createdAt).toDateString();
@@ -167,6 +182,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <span className='post-caption'>{caption}</span>
+          <UserInfo styleType={StyleType.comment} userInfoArray={[]} />
           <Button className='like-text-button' onClick={handleSubmitLike}>
             <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
           </Button>

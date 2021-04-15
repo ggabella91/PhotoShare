@@ -50,6 +50,7 @@ export interface UserInfoData {
   name: string;
   photo: string | null;
   location: string;
+  comment: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -138,6 +139,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           photo: el.photo || '',
           profilePhotoFileString: photoFileString!,
           location: '',
+          comment: '',
         };
       });
 
@@ -154,6 +156,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           photo: el.photo || '',
           profilePhotoFileString: '',
           location: '',
+          comment: '',
         };
       });
 
