@@ -52,6 +52,7 @@ export interface UserInfoData {
   name: string;
   photo: string | null;
   location: string;
+  comment: string;
 }
 
 export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps> = ({
@@ -144,6 +145,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
             profilePhotoFileString: photoFileString!,
             photo: el.photo || '',
             location: '',
+            comment: '',
           };
         }
       );
@@ -158,6 +160,7 @@ export const FollowersOrFollowingModal: React.FC<FollowersOrFollowingModalProps>
             profilePhotoFileString: '',
             photo: el.photo || '',
             location: '',
+            comment: '',
           };
         }
       );

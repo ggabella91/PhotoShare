@@ -7,18 +7,20 @@ export enum StyleType {
   suggestion = 'suggestion',
   modal = 'modal',
   feed = 'feed',
+  comment = 'comment',
 }
 
-export interface UserInfoAndPostLocationData {
+export interface UserInfoAndOtherData {
   profilePhotoFileString: string;
   username: string;
   name: string;
   location: string;
+  comment: string;
 }
 
 interface UserInfoProps {
   styleType: StyleType;
-  userInfoArray: UserInfoAndPostLocationData[];
+  userInfoArray: UserInfoAndOtherData[];
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({
@@ -27,7 +29,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 }) => {
   let history = useHistory();
   const userInfo = userInfoArray.map(
-    (el: UserInfoAndPostLocationData, idx: number) => (
+    (el: UserInfoAndOtherData, idx: number) => (
       <div
         className={`user-${styleType}-element`}
         key={idx}
@@ -51,10 +53,11 @@ export const UserInfo: React.FC<UserInfoProps> = ({
             </div>
           ) : null}
         </div>
-        <div className={`${styleType}-username-and-name-or-location`}>
+        <div className={`${styleType}-username-and-other-data`}>
           <span className={`${styleType}-username`}>{el.username}</span>
           <span className={`${styleType}-name`}>{el.name}</span>
           <span className={`${styleType}-location`}>{el.location}</span>
+          <span className={`${styleType}-comment`}>{el.comment}</span>
         </div>
       </div>
     )

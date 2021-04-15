@@ -41,6 +41,7 @@ export interface UserInfoData {
   username: string;
   location: string;
   name: string;
+  comment: string;
 }
 
 export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
