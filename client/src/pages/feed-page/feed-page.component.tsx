@@ -282,6 +282,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
               username: el.username,
               location: el.location,
               name: '',
+              comment: '',
             }}
             fileString={el.postFileString}
             caption={el.caption}
