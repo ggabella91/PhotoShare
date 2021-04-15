@@ -3,6 +3,7 @@ import {
   addPostFileToArray,
   addPostDataToFeedArray,
   addUserPhotoFileToArray,
+  addPostReactionsToOuterReactionsArray,
 } from './post.utils';
 
 const INITIAL_STATE: PostState = {
@@ -63,7 +64,10 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.GET_POST_REACTIONS_SUCCESS:
       return {
         ...state,
-        postReactionsArray: state.postReactionsArray.push(action.payload),
+        postReactionsArray: addPostReactionsToOuterReactionsArray(
+          state.postReactionsArray,
+          action.payload
+        ),
         getPostReactionsConfirm:
           'Successfully fetched reactions for the requested post!',
         getPostReactionsError: null,

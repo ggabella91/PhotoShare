@@ -1,4 +1,4 @@
-import { Post, PostFile } from './post.types';
+import { Post, PostFile, Reaction } from './post.types';
 
 export const addPostFileToArray = (fileArray: PostFile[], file: PostFile) => {
   for (let el of fileArray) {
@@ -21,6 +21,19 @@ export const addPostDataToFeedArray = (
   }
 
   return [postData, ...postDataFeedArray];
+};
+
+export const addPostReactionsToOuterReactionsArray = (
+  postReactionsOuterArray: Reaction[][],
+  postReactions: Reaction[]
+) => {
+  for (let el of postReactionsOuterArray) {
+    if (el.length && el[0].postId === postReactions[0].postId) {
+      return [...postReactionsOuterArray];
+    }
+  }
+
+  return [postReactions, ...postReactionsOuterArray];
 };
 
 export const addUserPhotoFileToArray = (
