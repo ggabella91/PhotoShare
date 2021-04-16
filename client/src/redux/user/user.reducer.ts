@@ -11,6 +11,7 @@ const INITIAL_STATE: UserState = {
   userSuggestions: null,
   userSuggestionsConfirm: null,
   userSuggestionsError: null,
+  postReactingUsers: null,
   signUpError: null,
   signInOrOutError: null,
   changeInfoConfirm: null,
