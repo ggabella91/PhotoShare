@@ -5,8 +5,13 @@ import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
 
-import { User } from '../../redux/user/user.types';
+import {
+  User,
+  OtherUserType,
+  OtherUserRequest,
+} from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import { Reaction, ReactionReq, PostError } from '../../redux/post/post.types';
 import {
@@ -96,7 +101,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (postReactionsArray.length) {
       for (let innerArray of postReactionsArray) {
-        if (innerArray[0].postId === postId) {
+        if (innerArray.length && innerArray[0].postId === postId) {
           setReactionsArray(innerArray);
         }
       }

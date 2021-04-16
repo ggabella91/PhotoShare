@@ -31,6 +31,7 @@ export enum UserActions {
   GET_OTHER_USER_SUCCESS = 'GET_OTHER_USER_SUCCESS',
   GET_FOLLOWERS_INFO_SUCCESS = 'GET_FOLLOWERS_INFO_SUCCESS',
   GET_FOLLOWING_INFO_SUCCESS = 'GET_FOLLOWING_INFO_SUCCESS',
+  GET_POST_REACTORS_SUCCESS = 'GET_POST_REACTORS_SUCCESS',
   GET_OTHER_USER_FAILURE = 'GET_OTHER_USER_FAILURE',
   GET_USER_SUGGESTIONS_START = 'GET_USER_SUGGESTIONS_START',
   GET_USER_SUGGESTIONS_SUCCESS = 'GET_USER_SUGGESTIONS_SUCCESS',
@@ -90,6 +91,7 @@ export enum OtherUserType {
   OTHER = 'OTHER',
   FOLLOWERS = 'FOLLOWERS',
   FOLLOWING = 'FOLLOWING',
+  POST_REACTORS = 'POST_REACTORS',
 }
 
 export interface OtherUserRequest {
@@ -116,6 +118,7 @@ export interface UserState {
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
+  postReactingUsers: User[] | null;
   signUpError: Error | null;
   signInOrOutError: Error | null;
   changeInfoConfirm: null | string;
@@ -289,6 +292,11 @@ export interface GetFollowingSuccess {
   payload: User;
 }
 
+export interface GetPostReactorsSuccess {
+  type: typeof UserActions.GET_POST_REACTORS_SUCCESS;
+  payload: User;
+}
+
 export interface GetOtherUserFailure {
   type: typeof UserActions.GET_OTHER_USER_FAILURE;
   payload: Error;
@@ -358,6 +366,7 @@ export type UserActionTypes =
   | GetOtherUserSuccess
   | GetFollowersSuccess
   | GetFollowingSuccess
+  | GetPostReactorsSuccess
   | GetOtherUserFailure
   | GetUserSuggestionsStart
   | GetUserSuggestionsSuccess
