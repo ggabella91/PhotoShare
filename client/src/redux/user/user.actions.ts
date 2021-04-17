@@ -194,6 +194,11 @@ export const getFollowingSuccess = (user: User): UserActionTypes => ({
   payload: user,
 });
 
+export const getPostReactorsSuccess = (user: User): UserActionTypes => ({
+  type: UserActions.GET_POST_REACTOR_SUCCESS,
+  payload: user,
+});
+
 export const getOtherUserFailure = (error: Error): UserActionTypes => ({
   type: UserActions.GET_OTHER_USER_FAILURE,
   payload: error,

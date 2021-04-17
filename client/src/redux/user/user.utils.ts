@@ -1,20 +1,17 @@
 import { User } from './user.types';
 
-export const addUserToFollowersOrFollowingArray = (
-  followersOrFollowingArray: User[] | null,
-  followerOrFollowing: User
-) => {
-  if (followersOrFollowingArray) {
-    for (let el of followersOrFollowingArray) {
-      if (el.id === followerOrFollowing.id) {
-        return [...followersOrFollowingArray];
+export const addUserToUsersArray = (usersArray: User[] | null, user: User) => {
+  if (usersArray) {
+    for (let el of usersArray) {
+      if (el.id === user.id) {
+        return [...usersArray];
       }
     }
 
-    return [followerOrFollowing, ...followersOrFollowingArray];
+    return [user, ...usersArray];
   } else {
-    if (followerOrFollowing) {
-      return [followerOrFollowing];
+    if (user) {
+      return [user];
     } else {
       return [];
     }
