@@ -1,5 +1,5 @@
 import { UserActions, UserActionTypes, UserState } from './user.types';
-import { addUserToFollowersOrFollowingArray } from './user.utils';
+import { addUserToUsersArray } from './user.utils';
 
 const INITIAL_STATE: UserState = {
   currentUser: null,
@@ -43,19 +43,13 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
     case UserActions.GET_FOLLOWERS_INFO_SUCCESS:
       return {
         ...state,
-        followersInfo: addUserToFollowersOrFollowingArray(
-          state.followersInfo,
-          action.payload
-        ),
+        followersInfo: addUserToUsersArray(state.followersInfo, action.payload),
         otherUserError: null,
       };
     case UserActions.GET_FOLLOWING_INFO_SUCCESS:
       return {
         ...state,
-        followingInfo: addUserToFollowersOrFollowingArray(
-          state.followingInfo,
-          action.payload
-        ),
+        followingInfo: addUserToUsersArray(state.followingInfo, action.payload),
         otherUserError: null,
       };
     case UserActions.GET_USER_SUGGESTIONS_SUCCESS:
@@ -64,6 +58,15 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         userSuggestions: action.payload,
         userSuggestionsConfirm: 'User suggestions fetched!',
         userSuggestionsError: null,
+      };
+    case UserActions.GET_POST_REACTOR_SUCCESS:
+      return {
+        ...state,
+        postReactingUsers: addUserToUsersArray(
+          state.postReactingUsers,
+          action.payload
+        ),
+        otherUserError: null,
       };
     case UserActions.SIGN_UP_SUCCESS:
       return {
