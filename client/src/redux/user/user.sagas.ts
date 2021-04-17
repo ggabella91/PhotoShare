@@ -35,6 +35,7 @@ import {
   getOtherUserSuccess,
   getFollowersSuccess,
   getFollowingSuccess,
+  getPostReactorSuccess,
   getOtherUserFailure,
   getUserSuggestionsSuccess,
   getUserSuggestionsFailure,
@@ -112,6 +113,12 @@ export function* getOtherUser({
         `/api/users/id/${usernameOrId}`
       );
       yield put(getFollowingSuccess(data));
+    } else if (type === OtherUserType.POST_REACTOR) {
+      const { data }: { data: User } = yield axios.get(
+        `/api/users/id/${usernameOrId}`
+      );
+
+      yield put(getPostReactorSuccess(data));
     }
   } catch (err) {
     yield put(getOtherUserFailure(err));

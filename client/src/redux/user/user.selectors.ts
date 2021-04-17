@@ -30,6 +30,11 @@ export const selectOtherUserError = createSelector(
   (user: UserState) => user.otherUserError
 );
 
+export const selectPostReactingUsers = createSelector(
+  [selectUser],
+  (user: UserState) => user.postReactingUsers
+);
+
 export const selectUserSuggestions = createSelector(
   [selectUser],
   (user: UserState) => user.userSuggestions
