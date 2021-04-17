@@ -194,7 +194,7 @@ export const getFollowingSuccess = (user: User): UserActionTypes => ({
   payload: user,
 });
 
-export const getPostReactorsSuccess = (user: User): UserActionTypes => ({
+export const getPostReactorSuccess = (user: User): UserActionTypes => ({
   type: UserActions.GET_POST_REACTOR_SUCCESS,
   payload: user,
 });

@@ -10,7 +10,10 @@ import {
   OtherUserType,
   OtherUserRequest,
 } from '../../redux/user/user.types';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
+import {
+  selectCurrentUser,
+  selectPostReactingUsers,
+} from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import { Reaction, ReactionReq, PostError } from '../../redux/post/post.types';
@@ -79,6 +82,10 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[]>([]);
 
+  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<User[]>(
+    []
+  );
+
   /******************************************************************
     TODO
     
@@ -118,6 +125,17 @@ export const PostModal: React.FC<PostModalProps> = ({
         ) {
           setAlreadyLikedPost(true);
         }
+      }
+    }
+  }, [reactionsArray]);
+
+  useEffect(() => {
+    if (reactionsArray.length) {
+      for (let el of reactionsArray) {
+        getOtherUserStart({
+          type: OtherUserType.POST_REACTOR,
+          usernameOrId: el.reactingUserId,
+        });
       }
     }
   }, [reactionsArray]);

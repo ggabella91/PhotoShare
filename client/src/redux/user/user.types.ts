@@ -91,7 +91,7 @@ export enum OtherUserType {
   OTHER = 'OTHER',
   FOLLOWERS = 'FOLLOWERS',
   FOLLOWING = 'FOLLOWING',
-  POST_REACTORS = 'POST_REACTORS',
+  POST_REACTOR = 'POST_REACTOR',
 }
 
 export interface OtherUserRequest {
