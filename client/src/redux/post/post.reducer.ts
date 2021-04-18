@@ -30,6 +30,7 @@ const INITIAL_STATE: PostState = {
   otherUserProfilePhotoFile: null,
   followPhotoFileArray: null,
   suggestionPhotoFileArray: null,
+  reactorPhotoFileArray: null,
   usersProfilePhotoConfirm: null,
 };
 
@@ -122,6 +123,16 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ),
         getPostFileError: null,
         usersProfilePhotoConfirm: 'User photo added to suggestion array!',
+      };
+    case PostActions.GET_USER_PHOTO_FOR_REACTOR_ARRAY_SUCCESS:
+      return {
+        ...state,
+        reactorPhotoFileArray: addUserPhotoFileToArray(
+          state.reactorPhotoFileArray,
+          action.payload
+        ),
+        getPostFileError: null,
+        usersProfilePhotoConfirm: 'User photo added to reactor array!',
       };
     case PostActions.ARCHIVE_POST_SUCCESS:
       return {

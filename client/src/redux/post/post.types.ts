@@ -28,6 +28,7 @@ export enum PostActions {
   GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
   GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS',
   GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_SUGGESTION_ARRAY_SUCCESS',
+  GET_USER_PHOTO_FOR_REACTOR_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_REACTOR_ARRAY_SUCCESS',
   CLEAR_FOLLOW_PHOTO_FILE_ARRAY = 'CLEAR_FOLLOW_PHOTO_FILE_ARRAY',
   CLEAR_SUGGESTION_PHOTO_FILE_ARRAY = 'CLEAR_SUGGESTION_PHOTO_FILE_ARRAY',
   CLEAR_POST_FILES_AND_DATA = 'CLEAR_POST_FILES_AND_DATA',
@@ -70,6 +71,7 @@ export enum UserType {
   other = 'other',
   followArray = 'followArray',
   suggestionArray = 'suggestionArray',
+  postReactorsArray = 'postReactorsArray',
 }
 
 export enum DataRequestType {
@@ -122,6 +124,7 @@ export interface PostState {
   otherUserProfilePhotoFile: string | null;
   followPhotoFileArray: PostFile[] | null;
   suggestionPhotoFileArray: PostFile[] | null;
+  reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
 }
 
@@ -270,6 +273,11 @@ export interface GetUserPhotoForSuggestionArraySuccess {
   payload: PostFile;
 }
 
+export interface GetUserPhotoForReactorArraySuccess {
+  type: typeof PostActions.GET_USER_PHOTO_FOR_REACTOR_ARRAY_SUCCESS;
+  payload: PostFile;
+}
+
 export interface ClearFollowPhotoFileArray {
   type: typeof PostActions.CLEAR_FOLLOW_PHOTO_FILE_ARRAY;
   payload: null;
@@ -319,6 +327,7 @@ export type PostActionTypes =
   | GetOtherUserProfilePhotoFileSuccess
   | GetUserPhotoForFollowArraySuccess
   | GetUserPhotoForSuggestionArraySuccess
+  | GetUserPhotoForReactorArraySuccess
   | ClearArchivePostStatuses
   | ClearFollowPhotoFileArray
   | ClearSuggestionPhotoFileArray

@@ -34,6 +34,7 @@ import {
   getOtherUserProfilePhotoFileSuccess,
   getUserPhotoForFollowArraySuccess,
   getUserPhotoForSuggestionArraySuccess,
+  getUserPhotoForReactorArraySuccess,
 } from './post.actions';
 
 import axios from 'axios';
@@ -138,6 +139,10 @@ export function* getPostFile({
       } else if (user === UserType.suggestionArray) {
         yield put(
           getUserPhotoForSuggestionArraySuccess({ s3Key, fileString: data })
+        );
+      } else if (user === UserType.postReactorsArray) {
+        yield put(
+          getUserPhotoForReactorArraySuccess({ s3Key, fileString: data })
         );
       }
     }

@@ -175,6 +175,13 @@ export const getUserPhotoForSuggestionArraySuccess = (
   payload: postFile,
 });
 
+export const getUserPhotoForReactorArraySuccess = (
+  postFile: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_USER_PHOTO_FOR_REACTOR_ARRAY_SUCCESS,
+  payload: postFile,
+});
+
 export const clearArchivePostStatuses = (): PostActionTypes => ({
   type: PostActions.CLEAR_ARCHIVE_POST_STATUSES,
   payload: null,

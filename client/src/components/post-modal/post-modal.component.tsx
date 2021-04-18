@@ -16,9 +16,17 @@ import {
 } from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
-import { Reaction, ReactionReq, PostError } from '../../redux/post/post.types';
+import {
+  Reaction,
+  ReactionReq,
+  PostError,
+  PostFileReq,
+  PostFile,
+  UserType,
+} from '../../redux/post/post.types';
 import {
   selectPostReactionsArray,
+  selectReactorPhotoFileArray,
   selectPostReactionConfirm,
   selectPostReactionError,
   selectGetPostReactionsConfirm,
@@ -27,6 +35,7 @@ import {
 import {
   createPostReactionStart,
   getPostReactionsStart,
+  getPostFileStart,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -56,10 +65,13 @@ interface PostModalProps {
   postReactionsArray: Reaction[][];
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
+  postReactingUsers: User[] | null;
+  reactorPhotoFileArray: PostFile[] | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
+  getPostFileStart: typeof getPostFileStart;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -74,8 +86,11 @@ export const PostModal: React.FC<PostModalProps> = ({
   onOptionsClick,
   userProfilePhotoFile,
   postReactionsArray,
+  postReactingUsers,
+  reactorPhotoFileArray,
   createPostReactionStart,
   getPostReactionsStart,
+  getPostFileStart,
   ...props
 }) => {
   const [comment, setComment] = useState('');
@@ -86,18 +101,38 @@ export const PostModal: React.FC<PostModalProps> = ({
     []
   );
 
+  const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
+    PostFile[]
+  >([]);
+
+  const [commentingUserArray, setCommentingUserArray] = useState<
+    UserInfoAndOtherData[]
+  >([]);
+
+  const [postLikingUserArray, setPostLikingUserArray] = useState<
+    UserInfoAndOtherData[]
+  >([]);
+
   /******************************************************************
     TODO
     
-    1. Fetch usernames corresponding to each user that reacted on post
-    2. Organize and save comments data array with usernames, photos, and comments
-    3. Organize and save likes data array with usernames and photos
+    1. Fetch usernames corresponding to each user that reacted on post - DONE
+    2. Organize and save comments data array with usernames, photos, and comments - DONE?
+    3. Organize and save likes data array with usernames and photos - DONE?
 
     *****************************************************************/
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
   const postDate = new Date(createdAt).toDateString();
+
+  let bucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    bucket = 'photo-share-app-profile-photos';
+  } else {
+    bucket = 'photo-share-app-profile-photos-dev';
+  }
 
   useEffect(() => {
     if (postId) {
@@ -139,6 +174,90 @@ export const PostModal: React.FC<PostModalProps> = ({
       }
     }
   }, [reactionsArray]);
+
+  useEffect(() => {
+    if (postReactingUsers && postReactingUsers.length) {
+      setReactingUsersInfoArray(postReactingUsers);
+    }
+  }, [postReactingUsers]);
+
+  useEffect(() => {
+    if (reactingUserInfoArray.length) {
+      for (let el of reactingUserInfoArray) {
+        if (el.photo) {
+          getPostFileStart({
+            s3Key: el.photo,
+            bucket,
+            user: UserType.postReactorsArray,
+          });
+        }
+      }
+    }
+  }, [reactingUserInfoArray]);
+
+  useEffect(() => {
+    if (reactorPhotoFileArray) {
+      setUserProfilePhotoArray(reactorPhotoFileArray);
+    }
+  }, [reactorPhotoFileArray]);
+
+  useEffect(() => {
+    if (
+      reactionsArray.length &&
+      reactingUserInfoArray.length &&
+      userProfilePhotoArray.length
+    ) {
+      let commentsArray: UserInfoAndOtherData[] = [];
+      let likesArray: UserInfoAndOtherData[] = [];
+
+      for (let reactionEl of reactionsArray) {
+        const userId = reactionEl.reactingUserId;
+        let username: string;
+        let name: string;
+        let photoKey: string;
+        let fileString: string;
+
+        for (let infoEl of reactingUserInfoArray) {
+          if (infoEl.id === userId) {
+            username = infoEl.username;
+            name = infoEl.name;
+            photoKey = infoEl.photo || '';
+          }
+        }
+
+        for (let photoEl of userProfilePhotoArray) {
+          if (photoEl.s3Key === photoKey!) {
+            fileString = photoEl.fileString;
+          }
+        }
+
+        if (!photoKey!) {
+          fileString = '';
+        }
+
+        if (reactionEl.likedPost) {
+          likesArray.push({
+            username: username!,
+            name: name!,
+            profilePhotoFileString: fileString!,
+            comment: '',
+            location: '',
+          });
+        } else {
+          commentsArray.push({
+            username: username!,
+            name: name!,
+            profilePhotoFileString: fileString!,
+            comment,
+            location: '',
+          });
+        }
+      }
+
+      setCommentingUserArray(commentsArray);
+      setPostLikingUserArray(likesArray);
+    }
+  }, [reactionsArray, reactingUserInfoArray, userProfilePhotoArray]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -238,6 +357,8 @@ export const PostModal: React.FC<PostModalProps> = ({
 interface LinkStateProps {
   currentUser: User | null;
   postReactionsArray: Reaction[][];
+  postReactingUsers: User[] | null;
+  reactorPhotoFileArray: PostFile[] | null;
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -247,6 +368,8 @@ interface LinkStateProps {
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   postReactionsArray: selectPostReactionsArray,
+  postReactingUsers: selectPostReactingUsers,
+  reactorPhotoFileArray: selectReactorPhotoFileArray,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
@@ -258,6 +381,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(createPostReactionStart(reactionReq)),
   getPostReactionsStart: (postId: string) =>
     dispatch(getPostReactionsStart(postId)),
+  getPostFileStart: (postFileReq: PostFileReq) =>
+    dispatch(getPostFileStart(postFileReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
