@@ -16,6 +16,7 @@ export interface UserInfoAndOtherData {
   name: string;
   location: string;
   comment: string;
+  commentDate?: Date;
 }
 
 interface UserInfoProps {
