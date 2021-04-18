@@ -100,6 +100,11 @@ export const selectSuggestionPhotoFileArray = createSelector(
   (postState: PostState) => postState.suggestionPhotoFileArray
 );
 
+export const selectReactorPhotoFileArray = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.reactorPhotoFileArray
+);
+
 export const selectUsersProfilePhotoConfirm = createSelector(
   [selectPostState],
   (postState: PostState) => postState.usersProfilePhotoConfirm

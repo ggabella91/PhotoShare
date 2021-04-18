@@ -16,7 +16,13 @@ import {
 } from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
-import { Reaction, ReactionReq, PostError } from '../../redux/post/post.types';
+import {
+  Reaction,
+  ReactionReq,
+  PostError,
+  PostFileReq,
+  PostFile,
+} from '../../redux/post/post.types';
 import {
   selectPostReactionsArray,
   selectPostReactionConfirm,
@@ -27,6 +33,7 @@ import {
 import {
   createPostReactionStart,
   getPostReactionsStart,
+  getPostFileStart,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -56,10 +63,12 @@ interface PostModalProps {
   postReactionsArray: Reaction[][];
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
+  postReactingUsers: User[] | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
+  getPostFileStart: typeof getPostFileStart;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -74,8 +83,10 @@ export const PostModal: React.FC<PostModalProps> = ({
   onOptionsClick,
   userProfilePhotoFile,
   postReactionsArray,
+  postReactingUsers,
   createPostReactionStart,
   getPostReactionsStart,
+  getPostFileStart,
   ...props
 }) => {
   const [comment, setComment] = useState('');
@@ -89,7 +100,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   /******************************************************************
     TODO
     
-    1. Fetch usernames corresponding to each user that reacted on post
+    1. Fetch usernames corresponding to each user that reacted on post - DONE
     2. Organize and save comments data array with usernames, photos, and comments
     3. Organize and save likes data array with usernames and photos
 
@@ -139,6 +150,12 @@ export const PostModal: React.FC<PostModalProps> = ({
       }
     }
   }, [reactionsArray]);
+
+  useEffect(() => {
+    if (postReactingUsers && postReactingUsers.length) {
+      setReactingUsersInfoArray(postReactingUsers);
+    }
+  }, [postReactingUsers]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -238,6 +255,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 interface LinkStateProps {
   currentUser: User | null;
   postReactionsArray: Reaction[][];
+  postReactingUsers: User[] | null;
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -247,6 +265,7 @@ interface LinkStateProps {
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   postReactionsArray: selectPostReactionsArray,
+  postReactingUsers: selectPostReactingUsers,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
@@ -258,6 +277,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(createPostReactionStart(reactionReq)),
   getPostReactionsStart: (postId: string) =>
     dispatch(getPostReactionsStart(postId)),
+  getPostFileStart: (postFileReq: PostFileReq) =>
+    dispatch(getPostFileStart(postFileReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
