@@ -394,6 +394,15 @@
       .comment-location {
         display: none;
       }
+
+      .comment-text {
+        display: flex;
+      }
+    }
+
+    .comment-date {
+      display: flex;
+      margin-top: 5px;
     }
   }
 }

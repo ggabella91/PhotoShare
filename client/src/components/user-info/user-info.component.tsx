@@ -29,6 +29,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   styleType,
 }) => {
   let history = useHistory();
+
   const userInfo = userInfoArray.map(
     (el: UserInfoAndOtherData, idx: number) => (
       <div
@@ -58,8 +59,13 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           <span className={`${styleType}-username`}>{el.username}</span>
           <span className={`${styleType}-name`}>{el.name}</span>
           <span className={`${styleType}-location`}>{el.location}</span>
-          <span className={`${styleType}-comment`}>{el.comment}</span>
+          <span className={`${styleType}-text`}>{el.comment}</span>
         </div>
+        {el.commentDate ? (
+          <span className={`${styleType}-date`}>
+            {new Date(el.commentDate).toDateString()}
+          </span>
+        ) : null}
       </div>
     )
   );

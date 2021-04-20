@@ -324,7 +324,12 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <span className='post-caption'>{caption}</span>
-          <UserInfo styleType={StyleType.comment} userInfoArray={[]} />
+          {commentingUserArray.length ? (
+            <UserInfo
+              styleType={StyleType.comment}
+              userInfoArray={commentingUserArray}
+            />
+          ) : null}
           <Button className='like-text-button' onClick={handleSubmitLike}>
             <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
           </Button>
