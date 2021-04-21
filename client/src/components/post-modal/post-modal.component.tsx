@@ -95,23 +95,23 @@ export const PostModal: React.FC<PostModalProps> = ({
 }) => {
   const [comment, setComment] = useState('');
 
-  const [reactionsArray, setReactionsArray] = useState<Reaction[]>([]);
+  const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
-  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<User[]>(
-    []
-  );
+  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
+    User[] | null
+  >(null);
 
   const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
-    PostFile[]
-  >([]);
+    PostFile[] | null
+  >(null);
 
   const [commentingUserArray, setCommentingUserArray] = useState<
-    UserInfoAndOtherData[]
-  >([]);
+    UserInfoAndOtherData[] | null
+  >(null);
 
   const [postLikingUserArray, setPostLikingUserArray] = useState<
-    UserInfoAndOtherData[]
-  >([]);
+    UserInfoAndOtherData[] | null
+  >(null);
 
   /******************************************************************
     TODO
@@ -142,8 +142,10 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (postReactionsArray.length) {
+      console.log('Setting reactionsArray');
       for (let innerArray of postReactionsArray) {
         if (innerArray.length && innerArray[0].postId === postId) {
+          console.log('postId matches');
           setReactionsArray(innerArray);
         }
       }
@@ -151,7 +153,8 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [postReactionsArray]);
 
   useEffect(() => {
-    if (reactionsArray.length) {
+    if (reactionsArray && reactionsArray.length) {
+      console.log('reactionsArray is set');
       for (let el of reactionsArray) {
         if (
           currentUser &&
@@ -165,7 +168,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [reactionsArray]);
 
   useEffect(() => {
-    if (reactionsArray.length) {
+    if (reactionsArray && reactionsArray.length) {
       for (let el of reactionsArray) {
         getOtherUserStart({
           type: OtherUserType.POST_REACTOR,
@@ -182,7 +185,8 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [postReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoArray.length) {
+    if (reactingUserInfoArray && reactingUserInfoArray.length) {
+      console.log('Fetched reacting users successfully');
       for (let el of reactingUserInfoArray) {
         if (el.photo) {
           getPostFileStart({
@@ -203,10 +207,14 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (
+      reactionsArray &&
       reactionsArray.length &&
+      reactingUserInfoArray &&
       reactingUserInfoArray.length &&
+      userProfilePhotoArray &&
       userProfilePhotoArray.length
     ) {
+      console.log('Got to comment and like array creation');
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
 
@@ -288,6 +296,12 @@ export const PostModal: React.FC<PostModalProps> = ({
     });
   };
 
+  useEffect(() => {
+    if (commentingUserArray && commentingUserArray.length) {
+      console.log(commentingUserArray);
+    }
+  }, [commentingUserArray]);
+
   return (
     <Modal {...props} dialogClassName='post-modal' animation={false} centered>
       <div className='large-image-adjustments'>
@@ -324,7 +338,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <span className='post-caption'>{caption}</span>
-          {commentingUserArray.length ? (
+          {commentingUserArray && commentingUserArray.length ? (
             <UserInfo
               styleType={StyleType.comment}
               userInfoArray={commentingUserArray}

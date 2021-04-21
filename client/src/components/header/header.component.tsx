@@ -50,14 +50,12 @@ export const Header: React.FC<HeaderProps> = ({
 
   useEffect(() => {
     if (currentUser && profilePhotoKey) {
-      console.log('Case 1 happened');
       getPostFileStart({
         s3Key: profilePhotoKey,
         bucket,
         user: UserType.self,
       });
     } else if (!profilePhotoFile && currentUser && currentUser.photo) {
-      console.log('Case 2 happened');
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket,
