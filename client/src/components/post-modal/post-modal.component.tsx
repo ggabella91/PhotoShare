@@ -115,15 +115,6 @@ export const PostModal: React.FC<PostModalProps> = ({
     UserInfoAndOtherData[] | null
   >(null);
 
-  /******************************************************************
-    TODO
-    
-    1. Fetch usernames corresponding to each user that reacted on post - DONE
-    2. Organize and save comments data array with usernames, photos, and comments - DONE?
-    3. Organize and save likes data array with usernames and photos - DONE?
-
-    *****************************************************************/
-
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
   const postDate = new Date(createdAt).toDateString();
@@ -144,10 +135,8 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (postReactionsArray.length) {
-      console.log('Setting reactionsArray');
       for (let innerArray of postReactionsArray) {
         if (innerArray.length && innerArray[0].postId === postId) {
-          console.log('postId matches');
           setReactionsArray(innerArray);
         }
       }
@@ -156,7 +145,6 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
-      console.log('reactionsArray is set:', reactionsArray);
       for (let el of reactionsArray) {
         if (
           currentUser &&
@@ -171,12 +159,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
-      console.log(
-        'reactionsArray is set in getOtherUserStart useEffect hook:',
-        reactionsArray
-      );
       for (let el of reactionsArray) {
-        console.log(el);
         getOtherUserStart({
           type: OtherUserType.POST_REACTOR,
           usernameOrId: el.reactingUserId,
