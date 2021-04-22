@@ -72,6 +72,7 @@ interface PostModalProps {
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getPostFileStart: typeof getPostFileStart;
+  getOtherUserStart: typeof getOtherUserStart;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -90,6 +91,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   reactorPhotoFileArray,
   createPostReactionStart,
   getPostReactionsStart,
+  getOtherUserStart,
   getPostFileStart,
   ...props
 }) => {
@@ -154,7 +156,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
-      console.log('reactionsArray is set');
+      console.log('reactionsArray is set:', reactionsArray);
       for (let el of reactionsArray) {
         if (
           currentUser &&
@@ -169,7 +171,12 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
+      console.log(
+        'reactionsArray is set in getOtherUserStart useEffect hook:',
+        reactionsArray
+      );
       for (let el of reactionsArray) {
+        console.log(el);
         getOtherUserStart({
           type: OtherUserType.POST_REACTOR,
           usernameOrId: el.reactingUserId,
@@ -402,6 +409,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostReactionsStart(postId)),
   getPostFileStart: (postFileReq: PostFileReq) =>
     dispatch(getPostFileStart(postFileReq)),
+  getOtherUserStart: (otherUserReq: OtherUserRequest) =>
+    dispatch(getOtherUserStart(otherUserReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
