@@ -176,7 +176,6 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactingUserInfoArray && reactingUserInfoArray.length) {
-      console.log('Fetched reacting users successfully');
       for (let el of reactingUserInfoArray) {
         if (el.photo) {
           getPostFileStart({
@@ -204,7 +203,6 @@ export const PostModal: React.FC<PostModalProps> = ({
       userProfilePhotoArray &&
       userProfilePhotoArray.length
     ) {
-      console.log('Got to comment and like array creation');
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
 
@@ -212,6 +210,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
+        let comment = reactionEl.comment;
         let photoKey: string;
         let fileString: string;
 
@@ -233,6 +232,10 @@ export const PostModal: React.FC<PostModalProps> = ({
           fileString = '';
         }
 
+        if (!comment) {
+          comment = '';
+        }
+
         if (reactionEl.likedPost) {
           likesArray.push({
             username: username!,
@@ -248,6 +251,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             profilePhotoFileString: fileString!,
             comment,
             location: '',
+            commentDate: reactionEl.createdAt,
           });
         }
       }

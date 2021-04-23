@@ -397,11 +397,17 @@
 
       .comment-text {
         display: flex;
+        position: relative;
+        font-size: 12;
+        font-weight: 400;
       }
     }
 
     .comment-date {
       display: flex;
+      position: relative;
+      font-size: 10;
+      font-weight: 380;
       margin-top: 5px;
     }
   }
