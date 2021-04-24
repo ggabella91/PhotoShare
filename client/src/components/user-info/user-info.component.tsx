@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, NavLink } from 'react-router-dom';
 
 import './user-info.styles.scss';
 
@@ -35,9 +35,13 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       <div
         className={`user-${styleType}-element`}
         key={idx}
-        onClick={() => {
-          history.push(`/${el.username}`);
-        }}
+        onClick={
+          styleType === StyleType.suggestion
+            ? () => {
+                history.push(`/${el.username}`);
+              }
+            : () => {}
+        }
       >
         <div className={`${styleType}-avatar`}>
           {el.profilePhotoFileString ? (
@@ -57,12 +61,19 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         </div>
         <div className='user-data-and-date'>
           <div className={`${styleType}-username-and-other-data`}>
-            <p>
+            {styleType !== StyleType.suggestion ? (
+              <NavLink
+                to={`/${el.username}`}
+                className={`${styleType}-username`}
+              >
+                {el.username}
+              </NavLink>
+            ) : (
               <span className={`${styleType}-username`}>{el.username}</span>
-              <span className={`${styleType}-name`}>{el.name}</span>
-              <span className={`${styleType}-location`}>{el.location}</span>
-              {el.comment ? el.comment : null}
-            </p>
+            )}
+            <span className={`${styleType}-name`}>{el.name}</span>
+            <span className={`${styleType}-location`}>{el.location}</span>
+            <span>{el.comment ? el.comment : null}</span>
           </div>
           {el.commentDate ? (
             <span className={`${styleType}-date`}>

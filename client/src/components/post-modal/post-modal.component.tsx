@@ -97,6 +97,10 @@ export const PostModal: React.FC<PostModalProps> = ({
 }) => {
   const [comment, setComment] = useState('');
 
+  const [captionInfoArray, setCaptionInfoArray] = useState<
+    UserInfoAndOtherData[] | null
+  >(null);
+
   const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
   const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
@@ -126,6 +130,21 @@ export const PostModal: React.FC<PostModalProps> = ({
   } else {
     bucket = 'photo-share-app-profile-photos-dev';
   }
+
+  useEffect(() => {
+    if (caption) {
+      setCaptionInfoArray([
+        {
+          username: userName,
+          name: '',
+          profilePhotoFileString: userProfilePhotoFile,
+          comment: caption,
+          location: '',
+          commentDate: createdAt,
+        },
+      ]);
+    }
+  }, [caption]);
 
   useEffect(() => {
     if (postId) {
@@ -331,7 +350,12 @@ export const PostModal: React.FC<PostModalProps> = ({
               </div>
             </div>
           </div>
-          <span className='post-caption'>{caption}</span>
+          {captionInfoArray && captionInfoArray.length ? (
+            <UserInfo
+              styleType={StyleType.comment}
+              userInfoArray={captionInfoArray}
+            />
+          ) : null}
           {commentingUserArray && commentingUserArray.length ? (
             <UserInfo
               styleType={StyleType.comment}
