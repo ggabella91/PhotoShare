@@ -177,7 +177,7 @@
 
           .post-options {
             font-size: 30px;
-            transform: translate(50%, -50%);
+            transform: translate(0, -50%);
 
             @include respond-medium() {
               transform: translate(20%, -50%);
