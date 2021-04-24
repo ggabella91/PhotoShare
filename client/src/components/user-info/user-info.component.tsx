@@ -57,10 +57,12 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         </div>
         <div className='user-data-and-date'>
           <div className={`${styleType}-username-and-other-data`}>
-            <span className={`${styleType}-username`}>{el.username}</span>
-            <span className={`${styleType}-name`}>{el.name}</span>
-            <span className={`${styleType}-location`}>{el.location}</span>
-            <span className={`${styleType}-text`}>{el.comment}</span>
+            <p>
+              <span className={`${styleType}-username`}>{el.username}</span>
+              <span className={`${styleType}-name`}>{el.name}</span>
+              <span className={`${styleType}-location`}>{el.location}</span>
+              {el.comment ? el.comment : null}
+            </p>
           </div>
           {el.commentDate ? (
             <span className={`${styleType}-date`}>
