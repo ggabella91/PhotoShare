@@ -314,7 +314,7 @@
     display: flex;
     position: relative;
     justify-content: start;
-    width: 80%;
+    width: 90%;
     height: 60px;
     background-color: white;
     border-bottom: solid 1px rgb(180, 180, 180);
@@ -384,6 +384,9 @@
         height: 60px;
         justify-self: flex-end;
         text-align: left;
+        word-wrap: break-word;
+        font-size: 12px;
+        font-weight: 380;
 
         .comment-username {
           display: flex;
@@ -391,6 +394,9 @@
           font-size: 14px;
           font-weight: 540;
           color: black;
+          height: fit-content;
+          width: fit-content;
+          margin: 0;
         }
 
         .comment-name {
@@ -399,15 +405,6 @@
 
         .comment-location {
           display: none;
-        }
-
-        .comment-text {
-          display: flex;
-          position: relative;
-          padding-top: 6px;
-          word-wrap: break-word;
-          font-size: 12px;
-          font-weight: 380;
         }
       }
 

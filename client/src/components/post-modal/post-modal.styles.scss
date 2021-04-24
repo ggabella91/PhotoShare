@@ -165,7 +165,7 @@
             .user-name {
               margin: 0;
               font-size: 14px;
-              font-weight: 520;
+              font-weight: 540;
             }
 
             .post-location {
@@ -177,7 +177,7 @@
 
           .post-options {
             font-size: 30px;
-            transform: translate(350%, -50%);
+            transform: translate(50%, -50%);
 
             @include respond-medium() {
               transform: translate(20%, -50%);
