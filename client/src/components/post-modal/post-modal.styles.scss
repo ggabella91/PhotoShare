@@ -178,6 +178,7 @@
           .post-options {
             font-size: 30px;
             transform: translate(0, -50%);
+            margin-left: 45px;
 
             @include respond-medium() {
               transform: translate(20%, -50%);
@@ -207,7 +208,7 @@
         background-color: white;
         color: #074aaf;
         border: none;
-        margin-bottom: 5px;
+        margin: 10px 0 5px 0;
         padding-left: 0;
         text-decoration: none;
         border-radius: 15px;
