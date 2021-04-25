@@ -313,11 +313,9 @@
   .user-comment-element {
     display: flex;
     position: relative;
-    justify-content: start;
     width: 90%;
     background-color: white;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 6px;
 
     &:hover {
       cursor: pointer;
@@ -325,18 +323,13 @@
 
     .comment-avatar {
       position: relative;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      margin-left: 8px;
-      margin-right: 8px;
-      padding-top: 5px;
 
       .comment-profile-photo {
         position: relative;
-        margin-left: 18px;
-        margin-top: 50%;
-        transform: translate(-50%, -50%);
+        margin-top: 30%;
         width: 36px;
         height: 36px;
         border-radius: 50%;
@@ -344,11 +337,8 @@
 
       .comment-photo-placeholder {
         position: relative;
-        margin-left: 50%;
-        margin-top: 50%;
-        transform: translate(-50%, -50%);
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         border: solid 1px;
         border-color: black;
@@ -361,9 +351,6 @@
           position: relative;
           font-size: 10px;
           color: black;
-          margin-top: 50%;
-          margin-left: 50%;
-          transform: translate(-50%, -50%);
         }
       }
     }
@@ -372,15 +359,16 @@
       display: flex;
       position: relative;
       flex-direction: column;
+      margin-left: 12px;
 
       .comment-username-and-other-data {
         display: inline-block;
         position: relative;
-        padding-top: 6px;
+        padding-top: 10px;
         width: 100%;
         text-align: left;
         word-wrap: break-word;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 420;
 
         .comment-username {
@@ -391,7 +379,6 @@
           color: black;
           height: fit-content;
           width: fit-content;
-          margin: 0;
           margin-right: 4px;
         }
 
