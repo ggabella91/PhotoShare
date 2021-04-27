@@ -85,11 +85,6 @@ exports[`expect to render a post modal component 1`] = `
           </div>
         </div>
       </div>
-      <span
-        className="post-caption"
-      >
-        hi
-      </span>
       <Button
         className="like-text-button"
         onClick={[Function]}
