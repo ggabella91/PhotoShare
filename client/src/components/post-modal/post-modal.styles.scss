@@ -1,13 +1,19 @@
+$image-height: 62.5vw;
+
 @mixin respond-wide {
   @media (max-width: 1024px) {
     @content;
   }
 }
 
-$image-height: 62.5vw;
-
 @mixin respond-medium-wide {
   @media (max-width: 895px) {
+    @content;
+  }
+}
+
+@mixin respond-medium-narrow-wide {
+  @media (max-width: 834px) {
     @content;
   }
 }
@@ -27,7 +33,7 @@ $image-height: 62.5vw;
   }
 
   @include respond-medium() {
-    height: calc(#{$image-height} * 1.4);
+    height: calc(#{$image-height} * 1.25);
   }
 
   @include respond-medium() {
@@ -239,6 +245,10 @@ $image-height: 62.5vw;
         display: flex;
         max-height: 65px;
 
+        @include respond-medium-narrow-wide() {
+          width: 75%;
+        }
+
         @include respond-medium() {
           display: none;
         }
@@ -263,6 +273,10 @@ $image-height: 62.5vw;
           text-transform: capitalize;
           text-decoration: none;
           border-radius: 15px;
+
+          @include respond-medium-narrow-wide() {
+            width: 75%;
+          }
 
           span {
             font-size: 14px;

@@ -5,6 +5,12 @@ $sub-color: #525252;
   display: none;
 }
 
+@mixin respond-medium-narrow-wide {
+  @media (max-width: 834px) {
+    @content;
+  }
+}
+
 h2 {
   font-weight: 420;
 }
@@ -43,6 +49,10 @@ span {
       height: fit-content;
       width: 75%;
       overflow-y: scroll;
+
+      @include respond-medium-narrow-wide() {
+        width: 75%;
+      }
     }
   }
 
