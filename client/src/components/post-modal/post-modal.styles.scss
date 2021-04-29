@@ -53,7 +53,6 @@ $image-height: 62.5vw;
   @include respond-medium-wide() {
     width: 40vw;
     height: 70vh;
-    height: auto;
   }
 
   @include respond-medium() {
@@ -63,7 +62,6 @@ $image-height: 62.5vw;
     margin-top: 50%;
     margin-left: 50%;
     transform: translate(-50%, -25%);
-    min-height: 435px;
   }
 
   .large-image-adjustments {
@@ -205,11 +203,11 @@ $image-height: 62.5vw;
         }
       }
 
-      .post-caption {
-        margin: 0;
-        font-size: 14px;
-        font-weight: 400;
-        margin-bottom: 1vh;
+      .caption-and-comments-container {
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        overflow-x: hidden;
       }
 
       .like-text-button {
