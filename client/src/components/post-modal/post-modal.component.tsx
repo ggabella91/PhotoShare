@@ -350,18 +350,20 @@ export const PostModal: React.FC<PostModalProps> = ({
               </div>
             </div>
           </div>
-          {captionInfoArray && captionInfoArray.length ? (
-            <UserInfo
-              styleType={StyleType.comment}
-              userInfoArray={captionInfoArray}
-            />
-          ) : null}
-          {commentingUserArray && commentingUserArray.length ? (
-            <UserInfo
-              styleType={StyleType.comment}
-              userInfoArray={commentingUserArray}
-            />
-          ) : null}
+          <div className='caption-and-comments-container'>
+            {captionInfoArray && captionInfoArray.length ? (
+              <UserInfo
+                styleType={StyleType.comment}
+                userInfoArray={captionInfoArray}
+              />
+            ) : null}
+            {commentingUserArray && commentingUserArray.length ? (
+              <UserInfo
+                styleType={StyleType.comment}
+                userInfoArray={commentingUserArray}
+              />
+            ) : null}
+          </div>
           <Button className='like-text-button' onClick={handleSubmitLike}>
             <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
           </Button>
