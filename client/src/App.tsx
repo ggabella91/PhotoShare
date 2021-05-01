@@ -41,7 +41,11 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           path='/me'
           render={() => (!currentUser ? <Redirect to='/' /> : <FeedPage />)}
         />
-        <Route exact path='/post' render={() => <PostPage />} />
+        <Route
+          exact
+          path='/post'
+          render={() => (!currentUser ? <Redirect to='/' /> : <PostPage />)}
+        />
         <Route
           exact
           path='/settings'
