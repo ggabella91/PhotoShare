@@ -10,6 +10,7 @@ import {
   PostDataReq,
   PostFileReq,
   ArchivePostReq,
+  DeleteReactionReq,
   PostActions,
   UserType,
 } from './post.types';
@@ -31,6 +32,8 @@ import {
   getPostFileFailure,
   archivePostSuccess,
   archivePostFailure,
+  deleteReactionSuccess,
+  deleteReactionFailure,
   getOtherUserProfilePhotoFileSuccess,
   getUserPhotoForFollowArraySuccess,
   getUserPhotoForSuggestionArraySuccess,
@@ -157,7 +160,7 @@ export function* archivePost({
   payload: ArchivePostReq;
 }): any {
   try {
-    const { data } = yield axios.delete<string>(`/api/posts/${postId}`, {
+    const { data } = yield axios.delete(`/api/posts/${postId}`, {
       data: {
         s3Key,
       },
@@ -166,6 +169,22 @@ export function* archivePost({
     yield put(archivePostSuccess(data.message));
   } catch (err) {
     yield put(archivePostFailure(err));
+  }
+}
+
+export function* deleteReaction({
+  payload: deleteReactionReq,
+}: {
+  payload: DeleteReactionReq;
+}): any {
+  try {
+    const { data } = yield axios.delete(`/api/posts/reaction`, {
+      data: deleteReactionReq,
+    });
+
+    yield put(deleteReactionSuccess(data));
+  } catch (err) {
+    yield put(deleteReactionFailure(err));
   }
 }
 
@@ -218,6 +237,13 @@ export function* onArchivePostStart(): SagaIterator {
   );
 }
 
+export function* onDeleteReactionStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    PostActions.DELETE_REACTION_START,
+    deleteReaction
+  );
+}
+
 export function* postSagas(): SagaIterator {
   yield all([
     call(onCreatePostStart),
@@ -227,5 +253,6 @@ export function* postSagas(): SagaIterator {
     call(onGetPostReactionsStart),
     call(onGetPostFileStart),
     call(onArchivePostStart),
+    call(onDeleteReactionStart),
   ]);
 }

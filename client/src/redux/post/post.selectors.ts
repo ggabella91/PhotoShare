@@ -129,3 +129,13 @@ export const selectArchivePostConfirm = createSelector(
   [selectPostState],
   (postState: PostState) => postState.archivePostConfirm
 );
+
+export const selectDeleteReactionConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.deleteReactionConfirm
+);
+
+export const selectDeleteReactionError = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.deleteReactionError
+);

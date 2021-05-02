@@ -5,6 +5,7 @@ import {
   Reaction,
   ReactionReq,
   ArchivePostReq,
+  DeleteReactionReq,
   PostFile,
   PostError,
   PostActions,
@@ -151,6 +152,23 @@ export const archivePostSuccess = (message: string): PostActionTypes => ({
 
 export const archivePostFailure = (error: Error): PostActionTypes => ({
   type: PostActions.ARCHIVE_POST_FAILURE,
+  payload: error,
+});
+
+export const deleteReactionStart = (
+  deleteReactionReq: DeleteReactionReq
+): PostActionTypes => ({
+  type: PostActions.DELETE_REACTION_START,
+  payload: deleteReactionReq,
+});
+
+export const deleteReactionSuccess = (message: string): PostActionTypes => ({
+  type: PostActions.DELETE_REACTION_SUCCESS,
+  payload: message,
+});
+
+export const deleteReactionFailure = (error: PostError): PostActionTypes => ({
+  type: PostActions.DELETE_REACTION_FAILURE,
   payload: error,
 });
 
