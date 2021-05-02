@@ -27,6 +27,8 @@ const INITIAL_STATE: PostState = {
   profilePhotoConfirm: null,
   archivePostConfirm: null,
   archivePostError: null,
+  deleteReactionConfirm: null,
+  deleteReactionError: null,
   otherUserProfilePhotoFile: null,
   followPhotoFileArray: null,
   suggestionPhotoFileArray: null,
@@ -140,6 +142,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         archivePostConfirm: action.payload,
         archivePostError: null,
       };
+    case PostActions.DELETE_REACTION_SUCCESS:
+      return {
+        ...state,
+        deleteReactionConfirm: action.payload,
+        deleteReactionError: null,
+      };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
         ...state,
@@ -181,6 +189,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         archivePostConfirm: null,
         archivePostError: action.payload,
+      };
+    case PostActions.DELETE_REACTION_FAILURE:
+      return {
+        ...state,
+        deleteReactionConfirm: null,
+        deleteReactionError: action.payload,
       };
     case PostActions.CLEAR_POST_STATUSES:
       return {

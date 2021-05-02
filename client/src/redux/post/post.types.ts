@@ -24,6 +24,9 @@ export enum PostActions {
   ARCHIVE_POST_START = 'ARCHIVE_POST_START',
   ARCHIVE_POST_SUCCESS = 'ARCHIVE_POST_SUCCESS',
   ARCHIVE_POST_FAILURE = 'ARCHIVE_POST_FAILURE',
+  DELETE_REACTION_START = 'DELETE_REACTION_START',
+  DELETE_REACTION_SUCCESS = 'DELETE_REACTION_SUCCESS',
+  DELETE_REACTION_FAILURE = 'DELETE_REACTION_FAILURE',
   CLEAR_ARCHIVE_POST_STATUSES = 'CLEAR_ARCHIVE_POST_STATUSES',
   GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS = 'GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS',
   GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_FOLLOW_ARRAY_SUCCESS',
@@ -100,6 +103,12 @@ export interface ArchivePostReq {
   s3Key: string;
 }
 
+export interface DeleteReactionReq {
+  reactionId: string;
+  reactingUserId: string;
+  isLikeRemoval: boolean;
+}
+
 export interface PostState {
   postData: Post[] | null;
   postDataFeedArray: Post[][];
@@ -121,6 +130,8 @@ export interface PostState {
   profilePhotoConfirm: string | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
+  deleteReactionConfirm: string | null;
+  deleteReactionError: PostError | null;
   otherUserProfilePhotoFile: string | null;
   followPhotoFileArray: PostFile[] | null;
   suggestionPhotoFileArray: PostFile[] | null;
@@ -253,6 +264,21 @@ export interface ArchivePostFailure {
   payload: Error;
 }
 
+export interface DeleteReactionStart {
+  type: typeof PostActions.DELETE_REACTION_START;
+  payload: DeleteReactionReq;
+}
+
+export interface DeleteReactionSuccess {
+  type: typeof PostActions.DELETE_REACTION_SUCCESS;
+  payload: string;
+}
+
+export interface DeleteReactionFailure {
+  type: typeof PostActions.DELETE_REACTION_FAILURE;
+  payload: PostError;
+}
+
 export interface ClearArchivePostStatuses {
   type: typeof PostActions.CLEAR_ARCHIVE_POST_STATUSES;
   payload: null;
@@ -324,6 +350,9 @@ export type PostActionTypes =
   | ArchivePostStart
   | ArchivePostSuccess
   | ArchivePostFailure
+  | DeleteReactionStart
+  | DeleteReactionSuccess
+  | DeleteReactionFailure
   | GetOtherUserProfilePhotoFileSuccess
   | GetUserPhotoForFollowArraySuccess
   | GetUserPhotoForSuggestionArraySuccess

@@ -9,7 +9,7 @@ router.delete(
   requireAuth,
   async (req: Request, res: Response) => {
     const reactingUserId = req.body.reactingUserId;
-    const isLikeRemoval: boolean = req.body.removeLike;
+    const isLikeRemoval: boolean = req.body.isLikeRemoval;
     const reactionId: string = req.body.reactionId;
 
     if (isLikeRemoval) {
