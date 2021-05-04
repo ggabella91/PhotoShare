@@ -19,6 +19,7 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 import {
   Reaction,
   ReactionReq,
+  DeleteReactionReq,
   PostError,
   PostFileReq,
   PostFile,
@@ -31,11 +32,14 @@ import {
   selectPostReactionError,
   selectGetPostReactionsConfirm,
   selectGetPostReactionsError,
+  selectDeleteReactionConfirm,
+  selectDeleteReactionError,
 } from '../../redux/post/post.selectors';
 import {
   createPostReactionStart,
   getPostReactionsStart,
   getPostFileStart,
+  deleteReactionStart,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -69,10 +73,13 @@ interface PostModalProps {
   reactorPhotoFileArray: PostFile[] | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
+  deleteReactionConfirm: string | null;
+  deleteReactionError: PostError | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
+  deleteReactionStart: typeof deleteReactionStart;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -93,6 +100,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   getPostReactionsStart,
   getOtherUserStart,
   getPostFileStart,
+  deleteReactionStart,
   ...props
 }) => {
   const [comment, setComment] = useState('');
@@ -309,6 +317,14 @@ export const PostModal: React.FC<PostModalProps> = ({
     });
   };
 
+  const handleSubmitRemoveLike = () => {
+    deleteReactionStart({
+      reactingUserId: currentUser!.id,
+      reactionId: '',
+      isLikeRemoval: true,
+    });
+  };
+
   useEffect(() => {
     if (commentingUserArray && commentingUserArray.length) {
       console.log(commentingUserArray);
@@ -364,7 +380,12 @@ export const PostModal: React.FC<PostModalProps> = ({
               />
             ) : null}
           </div>
-          <Button className='like-text-button' onClick={handleSubmitLike}>
+          <Button
+            className='like-text-button'
+            onClick={
+              alreadyLikedPost ? handleSubmitRemoveLike : handleSubmitLike
+            }
+          >
             <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
           </Button>
           <span className='post-date'>{postDate}</span>
@@ -402,6 +423,8 @@ interface LinkStateProps {
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
+  deleteReactionConfirm: string | null;
+  deleteReactionError: PostError | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -413,6 +436,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
   getPostReactionsError: selectGetPostReactionsError,
+  deleteReactionConfirm: selectDeleteReactionConfirm,
+  deleteReactionError: selectDeleteReactionError,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -424,6 +449,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostFileStart(postFileReq)),
   getOtherUserStart: (otherUserReq: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserReq)),
+  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
+    dispatch(deleteReactionStart(deleteReactionReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
