@@ -58,7 +58,7 @@ export function* createPostReaction({
   payload: ReactionReq;
 }): any {
   try {
-    const { data } = yield axios.post('/api/posts/reaction', reactionReq);
+    const { data } = yield axios.post('/api/reactions/new', reactionReq);
 
     yield put(createPostReactionSuccess(data));
   } catch (err) {
@@ -106,7 +106,7 @@ export function* getPostReactions({
   payload: string;
 }): any {
   try {
-    const { data } = yield axios.post('/api/posts/get-reactions', { postId });
+    const { data } = yield axios.post('/api/reactions', { postId });
 
     yield put(getPostReactionsSuccess(data));
   } catch (err) {
@@ -178,7 +178,7 @@ export function* deleteReaction({
   payload: DeleteReactionReq;
 }): any {
   try {
-    const { data } = yield axios.delete(`/api/posts/reaction`, {
+    const { data } = yield axios.delete(`/api/reactions`, {
       data: deleteReactionReq,
     });
 
