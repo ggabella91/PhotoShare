@@ -5,7 +5,7 @@ import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 const router = express.Router();
 
 router.post(
-  '/api/posts/reaction',
+  '/api/reactions/new',
   requireAuth,
   async (req: Request, res: Response) => {
     const comment: string = req.body.comment || '';

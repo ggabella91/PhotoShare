@@ -308,6 +308,21 @@ export const PostModal: React.FC<PostModalProps> = ({
     setComment('');
   };
 
+  const handleRenderLikedOrLikedButton = () => {
+    return (
+      <Button
+        className='like-text-button'
+        onClick={
+          alreadyLikedPost
+            ? () => handleSubmitRemoveLike()
+            : () => handleSubmitLike()
+        }
+      >
+        <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
+      </Button>
+    );
+  };
+
   const handleSubmitLike = () => {
     createPostReactionStart({
       reactingUserId: userId,
@@ -320,7 +335,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const handleSubmitRemoveLike = () => {
     deleteReactionStart({
       reactingUserId: currentUser!.id,
-      reactionId: '',
+      reactionId: 'none',
       isLikeRemoval: true,
     });
   };
@@ -380,14 +395,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               />
             ) : null}
           </div>
-          <Button
-            className='like-text-button'
-            onClick={
-              alreadyLikedPost ? handleSubmitRemoveLike : handleSubmitLike
-            }
-          >
-            <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
-          </Button>
+          {handleRenderLikedOrLikedButton()}
           <span className='post-date'>{postDate}</span>
           <form className='comment-form' onSubmit={handleSubmitComment}>
             <ExpandableFormInput
