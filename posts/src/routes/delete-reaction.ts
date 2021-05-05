@@ -8,8 +8,6 @@ router.delete(
   '/api/reactions',
   requireAuth,
   async (req: Request, res: Response) => {
-    console.log('Delete reaction - Request body: ', req.body);
-
     const reactingUserId: string = req.body.reactingUserId;
     const isLikeRemoval: boolean = req.body.isLikeRemoval;
     const reactionId: string = req.body.reactionId;
@@ -17,7 +15,7 @@ router.delete(
     if (isLikeRemoval) {
       await Reaction.findOneAndDelete({
         reactingUserId,
-        likedPost: { $eq: isLikeRemoval },
+        likedPost: isLikeRemoval,
       });
     } else {
       await Reaction.findByIdAndDelete(reactionId);
