@@ -335,7 +335,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const handleSubmitRemoveLike = () => {
     deleteReactionStart({
       reactingUserId: currentUser!.id,
-      reactionId: 'none',
+      reactionId: '',
       isLikeRemoval: true,
     });
   };
