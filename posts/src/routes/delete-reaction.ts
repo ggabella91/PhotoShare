@@ -5,7 +5,7 @@ import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 const router = express.Router();
 
 router.delete(
-  '/api/reactions',
+  '/api/posts/reactions',
   requireAuth,
   async (req: Request, res: Response) => {
     const reactingUserId: string = req.body.reactingUserId;
