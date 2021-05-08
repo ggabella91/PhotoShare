@@ -12,22 +12,16 @@ router.delete(
     const isLikeRemoval: boolean = req.body.isLikeRemoval;
     const reactionId: string = req.body.reactionId;
 
-    let responseMessage: string;
-
     if (isLikeRemoval) {
       await Reaction.findOneAndDelete({
         reactingUserId,
         likedPost: isLikeRemoval,
       });
-
-      responseMessage = 'Like removed successfully!';
     } else {
       await Reaction.findByIdAndDelete(reactionId);
-
-      responseMessage = 'Comment removed successfully!';
     }
 
-    res.status(204).send(responseMessage);
+    res.status(204);
   }
 );
 
