@@ -28,6 +28,7 @@ import {
 import {
   selectPostReactionsArray,
   selectReactorPhotoFileArray,
+  selectUsersProfilePhotoConfirm,
   selectPostReactionConfirm,
   selectPostReactionError,
   selectGetPostReactionsConfirm,
@@ -71,6 +72,7 @@ interface PostModalProps {
   postReactionError: PostError | null;
   postReactingUsers: User[] | null;
   reactorPhotoFileArray: PostFile[] | null;
+  usersProfilePhotoConfirm: string | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
   deleteReactionConfirm: string | null;
@@ -96,6 +98,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   postReactionsArray,
   postReactingUsers,
   reactorPhotoFileArray,
+  usersProfilePhotoConfirm,
   createPostReactionStart,
   getPostReactionsStart,
   getOtherUserStart,
@@ -172,6 +175,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
+      console.log('reactionsArray: ', reactionsArray);
       for (let el of reactionsArray) {
         if (
           currentUser &&
@@ -227,8 +231,9 @@ export const PostModal: React.FC<PostModalProps> = ({
       reactionsArray.length &&
       reactingUserInfoArray &&
       reactingUserInfoArray.length &&
-      userProfilePhotoArray &&
-      userProfilePhotoArray.length
+      ((userProfilePhotoArray && userProfilePhotoArray.length) ||
+        (!userProfilePhotoArray &&
+          usersProfilePhotoConfirm === 'User photo added to reactor array!'))
     ) {
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
@@ -249,9 +254,11 @@ export const PostModal: React.FC<PostModalProps> = ({
           }
         }
 
-        for (let photoEl of userProfilePhotoArray) {
-          if (photoEl.s3Key === photoKey!) {
-            fileString = photoEl.fileString;
+        if (userProfilePhotoArray) {
+          for (let photoEl of userProfilePhotoArray) {
+            if (photoEl.s3Key === photoKey!) {
+              fileString = photoEl.fileString;
+            }
           }
         }
 
@@ -427,6 +434,7 @@ interface LinkStateProps {
   postReactionsArray: Reaction[][];
   postReactingUsers: User[] | null;
   reactorPhotoFileArray: PostFile[] | null;
+  usersProfilePhotoConfirm: string | null;
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -440,6 +448,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   postReactionsArray: selectPostReactionsArray,
   postReactingUsers: selectPostReactingUsers,
   reactorPhotoFileArray: selectReactorPhotoFileArray,
+  usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,

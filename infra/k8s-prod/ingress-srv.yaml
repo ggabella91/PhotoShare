@@ -19,6 +19,10 @@ spec:
             backend:
               serviceName: posts-srv
               servicePort: 3000
+          - path: /api/reactions/?(.*)
+            backend:
+              serviceName: posts-srv
+              servicePort: 3000
           - path: /api/users/?(.*)
             backend:
               serviceName: auth-srv
