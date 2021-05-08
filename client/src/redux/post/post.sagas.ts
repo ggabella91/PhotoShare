@@ -182,7 +182,11 @@ export function* deleteReaction({
       data: deleteReactionReq,
     });
 
-    yield put(deleteReactionSuccess(data));
+    if (deleteReactionReq.isLikeRemoval) {
+      yield put(deleteReactionSuccess('Like removed successfully!'));
+    } else {
+      yield put(deleteReactionSuccess('Comment removed successfully!'));
+    }
   } catch (err) {
     yield put(deleteReactionFailure(err));
   }
