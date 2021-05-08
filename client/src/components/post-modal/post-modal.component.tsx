@@ -99,6 +99,8 @@ export const PostModal: React.FC<PostModalProps> = ({
   postReactingUsers,
   reactorPhotoFileArray,
   usersProfilePhotoConfirm,
+  postReactionConfirm,
+  deleteReactionConfirm,
   createPostReactionStart,
   getPostReactionsStart,
   getOtherUserStart,
@@ -187,6 +189,24 @@ export const PostModal: React.FC<PostModalProps> = ({
       }
     }
   }, [reactionsArray]);
+
+  useEffect(() => {
+    if (
+      postReactionConfirm &&
+      postReactionConfirm === 'Post liked successfully!'
+    ) {
+      setAlreadyLikedPost(true);
+    }
+  }, [postReactionConfirm]);
+
+  useEffect(() => {
+    if (
+      deleteReactionConfirm &&
+      deleteReactionConfirm === 'Like removed successfully!'
+    ) {
+      setAlreadyLikedPost(false);
+    }
+  }, [deleteReactionConfirm]);
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
