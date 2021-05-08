@@ -21,7 +21,7 @@ router.delete(
       await Reaction.findByIdAndDelete(reactionId);
     }
 
-    res.status(204).send();
+    res.status(204).send({});
   }
 );
 
