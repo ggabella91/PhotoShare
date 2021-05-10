@@ -58,6 +58,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
           ? 'Post liked successfully!'
           : 'Post comment created successfully!',
         postReactionError: null,
+        deleteReactionConfirm: null,
       };
     case PostActions.GET_POST_DATA_SUCCESS:
       return {
@@ -149,6 +150,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         deleteReactionConfirm: action.payload,
         deleteReactionError: null,
+        postReactionConfirm: null,
       };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
