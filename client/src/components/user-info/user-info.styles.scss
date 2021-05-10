@@ -4,6 +4,10 @@
   }
 }
 
+@mixin hideOptionsButton {
+  display: none;
+}
+
 .user-suggestion-container {
   display: flex;
   flex-direction: column;
@@ -407,6 +411,16 @@
         font-size: 12px;
         font-weight: 380;
         margin-top: 5px;
+      }
+    }
+
+    .comment-options {
+      display: flex;
+      position: relative;
+      z-index: 1000;
+
+      &.hide {
+        @include hideOptionsButton();
       }
     }
   }
