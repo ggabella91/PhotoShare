@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
 
 import './user-info.styles.scss';
@@ -28,6 +28,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   userInfoArray,
   styleType,
 }) => {
+  const [showCommentOptionsButton, setShowCommentOptionsButton] = useState(
+    false
+  );
+
   let history = useHistory();
 
   const userInfo = userInfoArray.map(
@@ -42,6 +46,8 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               }
             : () => {}
         }
+        onMouseEnter={() => setShowCommentOptionsButton(true)}
+        onMouseLeave={() => setShowCommentOptionsButton(false)}
       >
         <div className={`${styleType}-avatar`}>
           {el.profilePhotoFileString ? (
@@ -80,6 +86,15 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               {new Date(el.commentDate).toDateString()}
             </span>
           ) : null}
+        </div>
+        <div
+          className={`${
+            showCommentOptionsButton ? '' : 'hide'
+          } comment-options`}
+        >
+          <span className='comment-ellipsis-button' onClick={() => {}}>
+            ...
+          </span>
         </div>
       </div>
     )
