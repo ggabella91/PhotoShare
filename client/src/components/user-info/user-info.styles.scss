@@ -418,6 +418,7 @@
       display: flex;
       position: absolute;
       right: 5px;
+      width: 10%
       transform: translateY(25%);
       z-index: 1000;
       background-color: rgba(255, 255, 255, 0.7);
@@ -428,7 +429,8 @@
 
       .comment-ellipsis-button {
         font-size: 20px;
-        transform: translate(100%, -25%);
+        transform: translate(50%, -25%);
+        background-color: rgba(255, 255, 255, 0.7);
       }
     }
   }
