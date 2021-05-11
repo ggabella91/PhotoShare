@@ -28,9 +28,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   userInfoArray,
   styleType,
 }) => {
-  const [showCommentOptionsButton, setShowCommentOptionsButton] = useState(
-    false
-  );
+  const [
+    showCommentOptionsButtonForIdx,
+    setShowCommentOptionsButtonForIdx,
+  ] = useState({ show: false, idx: -1 });
 
   let history = useHistory();
 
@@ -46,8 +47,12 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               }
             : () => {}
         }
-        onMouseEnter={() => setShowCommentOptionsButton(true)}
-        onMouseLeave={() => setShowCommentOptionsButton(false)}
+        onMouseEnter={() =>
+          setShowCommentOptionsButtonForIdx({ show: true, idx })
+        }
+        onMouseLeave={() =>
+          setShowCommentOptionsButtonForIdx({ show: false, idx })
+        }
       >
         <div className={`${styleType}-avatar`}>
           {el.profilePhotoFileString ? (
@@ -89,7 +94,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         </div>
         <div
           className={`${
-            showCommentOptionsButton ? '' : 'hide'
+            showCommentOptionsButtonForIdx.show &&
+            showCommentOptionsButtonForIdx.idx === idx
+              ? ''
+              : 'hide'
           } comment-options`}
         >
           <span className='comment-ellipsis-button' onClick={() => {}}>
