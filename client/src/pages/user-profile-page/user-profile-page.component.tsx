@@ -51,7 +51,6 @@ import {
   archivePostStart,
   clearFollowPhotoFileArray,
   clearPostFilesAndData,
-  setCommentToDelete,
   setShowCommentOptionsModal,
 } from '../../redux/post/post.actions';
 
@@ -63,7 +62,6 @@ import {
 } from '../../redux/follower/follower.types';
 import {
   selectFollowConfirm,
-  selectFollowError,
   selectFollowers,
   selectCurrentUserUsersFollowing,
   selectOtherUserUsersFollowing,
@@ -124,7 +122,6 @@ interface UserProfilePageProps {
   clearPostFilesAndData: typeof clearPostFilesAndData;
   clearFollowState: typeof clearFollowState;
   setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
-  setCommentToDelete: typeof setCommentToDelete;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
 }
 
@@ -166,7 +163,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   clearPostFilesAndData,
   clearFollowState,
   setIsCurrentUserProfilePage,
-  setCommentToDelete,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
