@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { createStructuredSelector } from 'reselect';
+
+import { AppState } from '../../redux/root-reducer';
+
+import { DeleteReactionReq } from '../../redux/post/post.types';
+
+import {
+  setCommentToDelete,
+  setShowCommentOptionsModal,
+} from '../../redux/post/post.actions';
 
 import './user-info.styles.scss';
 
@@ -17,16 +29,22 @@ export interface UserInfoAndOtherData {
   location: string;
   comment: string;
   commentDate?: Date;
+  reactionId?: string;
+  reactingUserId?: string;
 }
 
 interface UserInfoProps {
   styleType: StyleType;
   userInfoArray: UserInfoAndOtherData[];
+  setCommentToDelete: typeof setCommentToDelete;
+  setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({
   userInfoArray,
   styleType,
+  setCommentToDelete,
+  setShowCommentOptionsModal,
 }) => {
   const [
     showCommentOptionsButtonForIdx,
@@ -34,6 +52,19 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   ] = useState({ show: false, idx: -1 });
 
   let history = useHistory();
+
+  const handleSetCommentToDelete = (idx: number) => {
+    const commentToDelete = userInfoArray[idx];
+    if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
+      setCommentToDelete({
+        reactionId: commentToDelete.reactionId,
+        reactingUserId: commentToDelete.reactingUserId,
+        isLikeRemoval: false,
+      });
+
+      setShowCommentOptionsModal(true);
+    }
+  };
 
   const userInfo = userInfoArray.map(
     (el: UserInfoAndOtherData, idx: number) => (
@@ -100,7 +131,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               : 'hide'
           } comment-options`}
         >
-          <span className='comment-ellipsis-button' onClick={() => {}}>
+          <span
+            className='comment-ellipsis-button'
+            onClick={() => handleSetCommentToDelete(idx)}
+          >
             ...
           </span>
         </div>
@@ -111,4 +145,15 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   return <div className={`user-${styleType}-container`}>{userInfo}</div>;
 };
 
-export default UserInfo;
+interface LinkStateProps {}
+
+const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  setCommentToDelete: (deleteReactionReq: DeleteReactionReq) =>
+    dispatch(setCommentToDelete(deleteReactionReq)),
+  setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
+    dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);

@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import PostOptionsModal from '../post-options-modal/post-options-modal.component';
+import PostOptionsModal from '../post-or-comment-options-modal/post-or-comment-options-modal.component';
 
 it('renders a post options modal', () => {
   const postOptionsModalWrapper = shallow(

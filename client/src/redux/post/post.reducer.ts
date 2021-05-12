@@ -34,6 +34,8 @@ const INITIAL_STATE: PostState = {
   suggestionPhotoFileArray: null,
   reactorPhotoFileArray: null,
   usersProfilePhotoConfirm: null,
+  commentToDelete: null,
+  showCommentOptionsModal: false,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -151,6 +153,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         deleteReactionConfirm: action.payload,
         deleteReactionError: null,
         postReactionConfirm: null,
+        commentToDelete: null,
       };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
@@ -199,6 +202,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         deleteReactionConfirm: null,
         deleteReactionError: action.payload,
+        commentToDelete: null,
       };
     case PostActions.CLEAR_POST_STATUSES:
       return {
@@ -238,6 +242,18 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.CLEAR_POST_STATE:
       return {
         ...INITIAL_STATE,
+      };
+    case PostActions.SET_COMMENT_TO_DELETE:
+      return {
+        ...state,
+        commentToDelete: action.payload,
+        deleteReactionConfirm: null,
+        deleteReactionError: null,
+      };
+    case PostActions.SET_SHOW_COMMENT_OPTIONS_MODAL:
+      return {
+        ...state,
+        showCommentOptionsModal: action.payload,
       };
     default:
       return state;

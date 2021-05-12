@@ -224,3 +224,17 @@ export const clearPostState = (): PostActionTypes => ({
   type: PostActions.CLEAR_POST_STATE,
   payload: null,
 });
+
+export const setCommentToDelete = (
+  deleteReactionReq: DeleteReactionReq
+): PostActionTypes => ({
+  type: PostActions.SET_COMMENT_TO_DELETE,
+  payload: deleteReactionReq,
+});
+
+export const setShowCommentOptionsModal = (
+  showCommentOptionsModal: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_SHOW_COMMENT_OPTIONS_MODAL,
+  payload: showCommentOptionsModal,
+});

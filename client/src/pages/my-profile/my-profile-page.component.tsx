@@ -26,6 +26,7 @@ import {
   PostFile,
   PostError,
   UserType,
+  DeleteReactionReq,
 } from '../../redux/post/post.types';
 import {
   selectProfilePhotoKey,
@@ -40,6 +41,8 @@ import {
   selectGetPostFileError,
   selectArchivePostConfirm,
   selectArchivePostError,
+  selectCommentToDelete,
+  selectShowCommentOptionsModal,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -49,6 +52,7 @@ import {
   clearFollowPhotoFileArray,
   clearPostFilesAndData,
   clearPostState,
+  setShowCommentOptionsModal,
 } from '../../redux/post/post.actions';
 
 import {
@@ -70,7 +74,7 @@ import {
 
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
-import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
+import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 import FollowersOrFollowingModal from '../../components/followers-or-following-modal/followers-or-following-modal.component';
 
 import './profile-page.styles.scss';
@@ -92,6 +96,8 @@ interface MyProfilePageProps {
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
   getUsersFollowingConfirm: string | null;
+  commentToDelete: DeleteReactionReq | null;
+  showCommentOptionsModal: boolean;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
@@ -105,6 +111,7 @@ interface MyProfilePageProps {
   clearPostFilesAndData: typeof clearPostFilesAndData;
   clearFollowState: typeof clearFollowState;
   setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
+  setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
 }
 
 interface PostModalProps {
@@ -139,6 +146,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   clearPostFilesAndData,
   clearFollowState,
   setIsCurrentUserProfilePage,
+  commentToDelete,
+  showCommentOptionsModal,
+  setShowCommentOptionsModal,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -171,6 +181,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     followersOrFollowingModalShow,
     setFollowersOrFollowingModalShow,
   ] = useState(false);
+
+  const [currentUserPostOrComment, setCurrentUserPostOrComment] = useState<
+    boolean | null
+  >(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -351,6 +365,23 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   };
 
+  useEffect(() => {
+    handleSetIsCurrentUserPostOrComment();
+  }, [showCommentOptionsModal]);
+
+  const handleSetIsCurrentUserPostOrComment = () => {
+    if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
+      if (
+        commentToDelete.reactingUserId === currentUser.id ||
+        user.id === currentUser.bio
+      ) {
+        setCurrentUserPostOrComment(true);
+      } else {
+        setCurrentUserPostOrComment(false);
+      }
+    }
+  };
+
   return (
     <div className='profile-page'>
       <div className='user-bio'>
@@ -450,16 +481,22 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         userName={user.username}
         userId={user.id}
       />
-      <PostOptionsModal
+      <PostOrCommentOptionsModal
         show={postOptionsModalShow}
         onHide={() => setPostOptionsModalShow(false)}
-        isCurrentUserPost={true}
+        isCurrentUserPostOrComment={true}
         archive={() =>
           archivePostStart({
             postId: postModalProps.id,
             s3Key: postModalProps.s3Key,
           })
         }
+      />
+      <PostOrCommentOptionsModal
+        show={showCommentOptionsModal}
+        onHide={() => setShowCommentOptionsModal(false)}
+        archive={() => {}}
+        isCurrentUserPostOrComment={currentUserPostOrComment}
       />
       <FollowersOrFollowingModal
         users={isFollowersModal ? followersArray : usersFollowingArray}
@@ -492,6 +529,8 @@ interface LinkStateProps {
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
   getUsersFollowingConfirm: string | null;
+  commentToDelete: DeleteReactionReq | null;
+  showCommentOptionsModal: boolean;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -511,6 +550,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   followers: selectFollowers,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
+  commentToDelete: selectCommentToDelete,
+  showCommentOptionsModal: selectShowCommentOptionsModal,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -533,6 +574,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearFollowState: () => dispatch(clearFollowState()),
   setIsCurrentUserProfilePage: (isCurrentUserProfilePage: boolean) =>
     dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
+  setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
+    dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);
