@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './post-options-modal.styles.scss';
+import './post-or-comment-options-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
 
 interface Props {
