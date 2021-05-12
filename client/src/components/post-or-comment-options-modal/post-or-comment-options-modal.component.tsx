@@ -7,13 +7,13 @@ interface Props {
   show: boolean;
   onHide: () => void;
   archive: () => void;
-  isCurrentUserPost: boolean;
+  isCurrentUserPostOrComment: boolean;
 }
 
-const PostOptionsModal: React.FC<Props> = ({
+const PostOrCommentOptionsModal: React.FC<Props> = ({
   archive,
   onHide,
-  isCurrentUserPost,
+  isCurrentUserPostOrComment,
   ...props
 }) => (
   <Modal
@@ -24,7 +24,7 @@ const PostOptionsModal: React.FC<Props> = ({
     centered
   >
     <Modal.Body className='post-options-modal-body'>
-      {isCurrentUserPost ? (
+      {isCurrentUserPostOrComment ? (
         <div className='archive' onClick={archive}>
           <span>Archive</span>
         </div>
@@ -36,4 +36,4 @@ const PostOptionsModal: React.FC<Props> = ({
   </Modal>
 );
 
-export default PostOptionsModal;
+export default PostOrCommentOptionsModal;

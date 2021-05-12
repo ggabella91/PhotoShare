@@ -70,7 +70,7 @@ import {
 
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
-import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
+import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 import FollowersOrFollowingModal from '../../components/followers-or-following-modal/followers-or-following-modal.component';
 
 import './profile-page.styles.scss';
@@ -164,6 +164,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   });
 
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
+
+  const [showCommentOptionsModal, setShowCommentOptionsModal] = useState(false);
 
   const [isFollowersModal, setIsFollowersModal] = useState(true);
 
@@ -450,16 +452,22 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         userName={user.username}
         userId={user.id}
       />
-      <PostOptionsModal
+      <PostOrCommentOptionsModal
         show={postOptionsModalShow}
         onHide={() => setPostOptionsModalShow(false)}
-        isCurrentUserPost={true}
+        isCurrentUserPostOrComment={true}
         archive={() =>
           archivePostStart({
             postId: postModalProps.id,
             s3Key: postModalProps.s3Key,
           })
         }
+      />
+      <PostOrCommentOptionsModal
+        show={showCommentOptionsModal}
+        onHide={() => setShowCommentOptionsModal(false)}
+        archive={() => {}}
+        isCurrentUserPostOrComment={true}
       />
       <FollowersOrFollowingModal
         users={isFollowersModal ? followersArray : usersFollowingArray}

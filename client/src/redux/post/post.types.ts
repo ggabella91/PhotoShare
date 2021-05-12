@@ -36,6 +36,9 @@ export enum PostActions {
   CLEAR_SUGGESTION_PHOTO_FILE_ARRAY = 'CLEAR_SUGGESTION_PHOTO_FILE_ARRAY',
   CLEAR_POST_FILES_AND_DATA = 'CLEAR_POST_FILES_AND_DATA',
   CLEAR_POST_STATE = 'CLEAR_POST_STATE',
+  SET_COMMENT_ID_TO_DELETE_START = 'SET_COMMENT_ID_TO_DELETE_START',
+  SET_COMMENT_ID_TO_DELETE_SUCCESS = 'SET_COMMENT_ID_TO_DELETE_SUCCESS',
+  SET_COMMENT_ID_TO_DELETE_FAILURE = 'SET_COMMENT_ID_TO_DELETE_FAILURE',
 }
 
 export interface PostError {
@@ -137,6 +140,7 @@ export interface PostState {
   suggestionPhotoFileArray: PostFile[] | null;
   reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
+  commentIdToDelete: number | null;
 }
 
 export interface CreatePostStart {

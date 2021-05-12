@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
 
+import PostOptionsModal from '../post-or-comment-options-modal/post-or-comment-options-modal.component';
+
 import './user-info.styles.scss';
 
 export enum StyleType {
@@ -100,7 +102,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               : 'hide'
           } comment-options`}
         >
-          <span className='comment-ellipsis-button' onClick={() => {}}>
+          <span
+            className='comment-ellipsis-button'
+            onClick={() => {} /*setShowCommentOptionsModal(true)*/}
+          >
             ...
           </span>
         </div>

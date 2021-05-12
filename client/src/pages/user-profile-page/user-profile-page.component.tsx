@@ -77,7 +77,7 @@ import {
 
 import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
-import PostOptionsModal from '../../components/post-options-modal/post-options-modal.component';
+import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 import NotFoundPage from '../../pages/not-found/not-found-page.component';
 import UnfollowModal from '../../components/unfollow-modal/unfollow-modal.component';
 import FollowersOrFollowingModal from '../../components/followers-or-following-modal/followers-or-following-modal.component';
@@ -515,10 +515,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         userName={user.username}
         userId={user.id}
       />
-      <PostOptionsModal
+      <PostOrCommentOptionsModal
         show={postOptionsModalShow}
         onHide={() => setPostOptionsModalShow(false)}
-        isCurrentUserPost={false}
+        isCurrentUserPostOrComment={false}
         archive={() =>
           archivePostStart({
             postId: postModalProps.id,
