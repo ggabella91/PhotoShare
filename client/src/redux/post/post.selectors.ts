@@ -139,3 +139,13 @@ export const selectDeleteReactionError = createSelector(
   [selectPostState],
   (postState: PostState) => postState.deleteReactionError
 );
+
+export const selectCommentToDelete = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.commentToDelete
+);
+
+export const selectShowCommentOptionsModal = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.showCommentOptionsModal
+);

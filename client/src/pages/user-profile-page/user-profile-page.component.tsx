@@ -30,6 +30,7 @@ import {
   PostFile,
   PostError,
   UserType,
+  DeleteReactionReq,
 } from '../../redux/post/post.types';
 import {
   selectPostData,
@@ -41,6 +42,8 @@ import {
   selectGetPostFileConfirm,
   selectGetPostFileError,
   selectOtherUserProfilePhotoFile,
+  selectCommentToDelete,
+  selectShowCommentOptionsModal,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -48,6 +51,8 @@ import {
   archivePostStart,
   clearFollowPhotoFileArray,
   clearPostFilesAndData,
+  setCommentToDelete,
+  setShowCommentOptionsModal,
 } from '../../redux/post/post.actions';
 
 import {
@@ -119,6 +124,8 @@ interface UserProfilePageProps {
   clearPostFilesAndData: typeof clearPostFilesAndData;
   clearFollowState: typeof clearFollowState;
   setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
+  setCommentToDelete: typeof setCommentToDelete;
+  setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
 }
 
 interface PostModalProps {
@@ -159,6 +166,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   clearPostFilesAndData,
   clearFollowState,
   setIsCurrentUserProfilePage,
+  setCommentToDelete,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -572,6 +580,8 @@ interface LinkStateProps {
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
   isCurrentUserProfilePage: boolean;
+  commentToDelete: DeleteReactionReq | null;
+  showCommentOptionsModal: boolean;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -596,6 +606,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   unfollowConfirm: selectUnfollowConfirm,
   unfollowError: selectUnfollowError,
   isCurrentUserProfilePage: selectIsCurrentUserProfilePage,
+  commentToDelete: selectCommentToDelete,
+  showCommentOptionsModal: selectShowCommentOptionsModal,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -617,6 +629,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearFollowState: () => dispatch(clearFollowState()),
   setIsCurrentUserProfilePage: (isCurrentUserProfilePage: boolean) =>
     dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
+  setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
+    dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

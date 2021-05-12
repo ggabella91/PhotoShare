@@ -36,9 +36,8 @@ export enum PostActions {
   CLEAR_SUGGESTION_PHOTO_FILE_ARRAY = 'CLEAR_SUGGESTION_PHOTO_FILE_ARRAY',
   CLEAR_POST_FILES_AND_DATA = 'CLEAR_POST_FILES_AND_DATA',
   CLEAR_POST_STATE = 'CLEAR_POST_STATE',
-  SET_COMMENT_ID_TO_DELETE_START = 'SET_COMMENT_ID_TO_DELETE_START',
-  SET_COMMENT_ID_TO_DELETE_SUCCESS = 'SET_COMMENT_ID_TO_DELETE_SUCCESS',
-  SET_COMMENT_ID_TO_DELETE_FAILURE = 'SET_COMMENT_ID_TO_DELETE_FAILURE',
+  SET_COMMENT_TO_DELETE = 'SET_COMMENT_TO_DELETE',
+  SET_SHOW_COMMENT_OPTIONS_MODAL = 'SET_SHOW_COMMENT_OPTIONS_MODAL',
 }
 
 export interface PostError {
@@ -58,6 +57,7 @@ export interface Post {
 }
 
 export interface Reaction {
+  reactionId: string;
   createdAt: Date;
   reactingUserId: string;
   postId: string;
@@ -140,7 +140,8 @@ export interface PostState {
   suggestionPhotoFileArray: PostFile[] | null;
   reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
-  commentIdToDelete: number | null;
+  commentToDelete: DeleteReactionReq | null;
+  showCommentOptionsModal: boolean;
 }
 
 export interface CreatePostStart {
@@ -328,6 +329,16 @@ export interface ClearPostState {
   payload: null;
 }
 
+export interface SetCommentToDelete {
+  type: typeof PostActions.SET_COMMENT_TO_DELETE;
+  payload: DeleteReactionReq;
+}
+
+export interface SetShowCommentOptionsModal {
+  type: typeof PostActions.SET_SHOW_COMMENT_OPTIONS_MODAL;
+  payload: boolean;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -365,4 +376,6 @@ export type PostActionTypes =
   | ClearFollowPhotoFileArray
   | ClearSuggestionPhotoFileArray
   | ClearPostFilesAndData
-  | ClearPostState;
+  | ClearPostState
+  | SetCommentToDelete
+  | SetShowCommentOptionsModal;
