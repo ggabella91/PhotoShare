@@ -52,6 +52,7 @@ import {
   clearFollowPhotoFileArray,
   clearPostFilesAndData,
   setShowCommentOptionsModal,
+  deleteReactionStart,
 } from '../../redux/post/post.actions';
 
 import {
@@ -110,6 +111,8 @@ interface UserProfilePageProps {
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
   isCurrentUserProfilePage: boolean;
+  commentToDelete: DeleteReactionReq | null;
+  showCommentOptionsModal: boolean;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
@@ -123,6 +126,7 @@ interface UserProfilePageProps {
   clearFollowState: typeof clearFollowState;
   setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
+  deleteReactionStart: typeof deleteReactionStart;
 }
 
 interface PostModalProps {
@@ -163,6 +167,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   clearPostFilesAndData,
   clearFollowState,
   setIsCurrentUserProfilePage,
+  commentToDelete,
+  showCommentOptionsModal,
+  setShowCommentOptionsModal,
+  deleteReactionStart,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -196,6 +204,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     followersOrFollowingModalShow,
     setFollowersOrFollowingModalShow,
   ] = useState(false);
+
+  const [currentUserPostOrComment, setCurrentUserPostOrComment] = useState<
+    boolean | null
+  >(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -420,6 +432,23 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     }
   };
 
+  useEffect(() => {
+    handleSetIsCurrentUserPostOrComment();
+  }, [showCommentOptionsModal]);
+
+  const handleSetIsCurrentUserPostOrComment = () => {
+    if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
+      if (
+        commentToDelete.reactingUserId === currentUser.id ||
+        user.id === currentUser.bio
+      ) {
+        setCurrentUserPostOrComment(true);
+      } else {
+        setCurrentUserPostOrComment(false);
+      }
+    }
+  };
+
   if (otherUserError) {
     return <NotFoundPage />;
   }
@@ -530,6 +559,16 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           })
         }
       />
+      <PostOrCommentOptionsModal
+        show={showCommentOptionsModal}
+        onHide={() => setShowCommentOptionsModal(false)}
+        archive={() => {
+          if (commentToDelete) {
+            deleteReactionStart(commentToDelete);
+          }
+        }}
+        isCurrentUserPostOrComment={currentUserPostOrComment}
+      />
       <UnfollowModal
         show={unfollowModalShow}
         onHide={() => setUnfollowModalShow(false)}
@@ -627,6 +666,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
   setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
+  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
+    dispatch(deleteReactionStart(deleteReactionReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

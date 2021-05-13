@@ -53,6 +53,7 @@ import {
   clearPostFilesAndData,
   clearPostState,
   setShowCommentOptionsModal,
+  deleteReactionStart,
 } from '../../redux/post/post.actions';
 
 import {
@@ -112,6 +113,7 @@ interface MyProfilePageProps {
   clearFollowState: typeof clearFollowState;
   setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
+  deleteReactionStart: typeof deleteReactionStart;
 }
 
 interface PostModalProps {
@@ -149,6 +151,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   commentToDelete,
   showCommentOptionsModal,
   setShowCommentOptionsModal,
+  deleteReactionStart,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -495,7 +498,11 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       <PostOrCommentOptionsModal
         show={showCommentOptionsModal}
         onHide={() => setShowCommentOptionsModal(false)}
-        archive={() => {}}
+        archive={() => {
+          if (commentToDelete) {
+            deleteReactionStart(commentToDelete);
+          }
+        }}
         isCurrentUserPostOrComment={currentUserPostOrComment}
       />
       <FollowersOrFollowingModal
@@ -576,6 +583,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
   setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
+  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
+    dispatch(deleteReactionStart(deleteReactionReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);
