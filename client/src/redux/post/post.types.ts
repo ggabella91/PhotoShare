@@ -57,7 +57,7 @@ export interface Post {
 }
 
 export interface Reaction {
-  reactionId: string;
+  id: string;
   createdAt: Date;
   reactingUserId: string;
   postId: string;
