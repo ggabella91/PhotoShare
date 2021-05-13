@@ -306,7 +306,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             comment,
             location: '',
             commentDate: reactionEl.createdAt,
-            reactionId: reactionEl.reactionId,
+            reactionId: reactionEl.id,
             reactingUserId: reactionEl.reactingUserId,
           });
         }

@@ -54,6 +54,8 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   let history = useHistory();
 
   const handleSetCommentToDelete = (idx: number) => {
+    console.log('This works: ', idx);
+
     const commentToDelete = userInfoArray[idx];
     if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
       setCommentToDelete({
