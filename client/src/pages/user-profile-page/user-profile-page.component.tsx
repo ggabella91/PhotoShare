@@ -565,6 +565,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         archive={() => {
           if (commentToDelete) {
             deleteReactionStart(commentToDelete);
+            setShowCommentOptionsModal(false);
           }
         }}
         isCurrentUserPostOrComment={currentUserPostOrComment}
