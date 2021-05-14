@@ -205,6 +205,9 @@ export const PostModal: React.FC<PostModalProps> = ({
       deleteReactionConfirm === 'Like removed successfully!'
     ) {
       setAlreadyLikedPost(false);
+      if (postId) {
+        getPostReactionsStart(postId);
+      }
     }
   }, [deleteReactionConfirm]);
 

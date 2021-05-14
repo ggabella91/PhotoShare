@@ -502,6 +502,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           if (commentToDelete) {
             deleteReactionStart(commentToDelete);
           }
+          setShowCommentOptionsModal(false);
         }}
         isCurrentUserPostOrComment={currentUserPostOrComment}
       />
