@@ -36,6 +36,7 @@ export interface UserInfoAndOtherData {
 interface UserInfoProps {
   styleType: StyleType;
   userInfoArray: UserInfoAndOtherData[];
+  deleteReactionConfirm: string | null;
   setCommentToDelete: typeof setCommentToDelete;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
 }
@@ -54,8 +55,6 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   let history = useHistory();
 
   const handleSetCommentToDelete = (idx: number) => {
-    console.log('This works: ', idx);
-
     const commentToDelete = userInfoArray[idx];
     if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
       setCommentToDelete({

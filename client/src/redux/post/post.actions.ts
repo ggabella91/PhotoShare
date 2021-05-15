@@ -238,3 +238,8 @@ export const setShowCommentOptionsModal = (
   type: PostActions.SET_SHOW_COMMENT_OPTIONS_MODAL,
   payload: showCommentOptionsModal,
 });
+
+export const clearPostReactions = (): PostActionTypes => ({
+  type: PostActions.CLEAR_POST_REACTIONS,
+  payload: null,
+});

@@ -41,6 +41,7 @@ import {
   getPostReactionsStart,
   getPostFileStart,
   deleteReactionStart,
+  clearPostReactions,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -82,6 +83,7 @@ interface PostModalProps {
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
   deleteReactionStart: typeof deleteReactionStart;
+  clearPostReactions: typeof clearPostReactions;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -101,6 +103,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   usersProfilePhotoConfirm,
   postReactionConfirm,
   deleteReactionConfirm,
+  clearPostReactions,
   createPostReactionStart,
   getPostReactionsStart,
   getOtherUserStart,
@@ -205,9 +208,28 @@ export const PostModal: React.FC<PostModalProps> = ({
       deleteReactionConfirm === 'Like removed successfully!'
     ) {
       setAlreadyLikedPost(false);
-      if (postId) {
-        getPostReactionsStart(postId);
-      }
+    }
+  }, [deleteReactionConfirm]);
+
+  useEffect(() => {
+    if (
+      postReactionConfirm &&
+      postReactionConfirm === 'Post comment created successfully!' &&
+      postId
+    ) {
+      clearPostReactions();
+      getPostReactionsStart(postId);
+    }
+  }, [postReactionConfirm]);
+
+  useEffect(() => {
+    if (
+      deleteReactionConfirm &&
+      deleteReactionConfirm === 'Comment removed successfully!' &&
+      postId
+    ) {
+      clearPostReactions();
+      getPostReactionsStart(postId);
     }
   }, [deleteReactionConfirm]);
 
@@ -493,6 +515,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getOtherUserStart(otherUserReq)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
     dispatch(deleteReactionStart(deleteReactionReq)),
+  clearPostReactions: () => dispatch(clearPostReactions()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);

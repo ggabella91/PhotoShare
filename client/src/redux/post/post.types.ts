@@ -38,6 +38,7 @@ export enum PostActions {
   CLEAR_POST_STATE = 'CLEAR_POST_STATE',
   SET_COMMENT_TO_DELETE = 'SET_COMMENT_TO_DELETE',
   SET_SHOW_COMMENT_OPTIONS_MODAL = 'SET_SHOW_COMMENT_OPTIONS_MODAL',
+  CLEAR_POST_REACTIONS = 'CLEAR_POST_REACTIONS',
 }
 
 export interface PostError {
@@ -339,6 +340,11 @@ export interface SetShowCommentOptionsModal {
   payload: boolean;
 }
 
+export interface ClearPostReactions {
+  type: typeof PostActions.CLEAR_POST_REACTIONS;
+  payload: null;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -378,4 +384,5 @@ export type PostActionTypes =
   | ClearPostFilesAndData
   | ClearPostState
   | SetCommentToDelete
-  | SetShowCommentOptionsModal;
+  | SetShowCommentOptionsModal
+  | ClearPostReactions;
