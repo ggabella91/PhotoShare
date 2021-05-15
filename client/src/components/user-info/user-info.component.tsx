@@ -36,7 +36,6 @@ export interface UserInfoAndOtherData {
 interface UserInfoProps {
   styleType: StyleType;
   userInfoArray: UserInfoAndOtherData[];
-  deleteReactionConfirm: string | null;
   setCommentToDelete: typeof setCommentToDelete;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
 }
