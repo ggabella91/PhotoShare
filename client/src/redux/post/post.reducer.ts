@@ -242,7 +242,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.CLEAR_POST_REACTIONS:
       return {
         ...state,
-        postReactionsArray: null,
+        postReactionsArray: [],
         postReactionConfirm: null,
         postReactionError: null,
         getPostReactionsConfirm: null,
