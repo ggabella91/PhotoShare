@@ -169,7 +169,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [postId]);
 
   useEffect(() => {
-    if (postReactionsArray.length) {
+    if (postReactionsArray && postReactionsArray.length) {
       for (let innerArray of postReactionsArray) {
         if (innerArray.length && innerArray[0].postId === postId) {
           setReactionsArray(innerArray);
@@ -393,12 +393,6 @@ export const PostModal: React.FC<PostModalProps> = ({
       isLikeRemoval: true,
     });
   };
-
-  useEffect(() => {
-    if (commentingUserArray && commentingUserArray.length) {
-      console.log(commentingUserArray);
-    }
-  }, [commentingUserArray]);
 
   return (
     <Modal {...props} dialogClassName='post-modal' animation={false} centered>
