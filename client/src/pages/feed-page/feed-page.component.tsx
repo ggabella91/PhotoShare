@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -24,7 +24,6 @@ import {
   DataRequestType,
   PostDataReq,
   PostFileReq,
-  ArchivePostReq,
   PostFile,
   PostError,
   UserType,
@@ -67,6 +66,7 @@ import FeedPostContainer from '../../components/feed-post-container/feed-post-co
 
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
+import { JsxElement } from 'typescript';
 
 export interface UserInfoAndPostFile {
   profilePhotoFileString: string;
@@ -118,27 +118,24 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
 
-  const [usersFollowingArray, setUsersFollowingArray] = useState<
-    Follower[] | null
-  >(null);
+  const [usersFollowingArray, setUsersFollowingArray] =
+    useState<Follower[] | null>(null);
 
-  const [followingInfoArray, setFollowingInfoArray] = useState<User[] | null>(
-    null
-  );
+  const [followingInfoArray, setFollowingInfoArray] =
+    useState<User[] | null>(null);
 
   const [dataFeedArray, setDataFeedArray] = useState<Post[][] | null>(null);
 
-  const [followingProfilePhotoArray, setFollowingProfilePhotoArray] = useState<
-    PostFile[] | null
-  >(null);
+  const [followingProfilePhotoArray, setFollowingProfilePhotoArray] =
+    useState<PostFile[] | null>(null);
 
-  const [postFileFeedArray, setPostFileFeedArray] = useState<PostFile[] | null>(
-    null
-  );
+  const [postFileFeedArray, setPostFileFeedArray] =
+    useState<PostFile[] | null>(null);
 
-  const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] = useState<
-    UserInfoAndPostFile[] | null
-  >(null);
+  const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] =
+    useState<UserInfoAndPostFile[] | null>(null);
+
+  const [pageToFetch, setPageToFetch] = useState(1);
 
   let postsBucket: string, profileBucket: string;
 
@@ -189,11 +186,30 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           getPostDataStart({
             userId: user.userId,
             dataReqType: DataRequestType.feed,
+            pageToShow: pageToFetch,
+            limit: 2,
           });
         }
       }
     }
   }, [usersFollowingArray]);
+
+  useEffect(() => {
+    // TODO: Add local state hook to check whether a current query is loading, using post redux state confirm/error values for getPostData
+
+    if (pageToFetch > 1 && usersFollowingArray) {
+      for (let user of usersFollowingArray) {
+        if (currentUser) {
+          getPostDataStart({
+            userId: user.userId,
+            dataReqType: DataRequestType.feed,
+            pageToShow: pageToFetch,
+            limit: 2,
+          });
+        }
+      }
+    }
+  }, [pageToFetch, usersFollowingArray]);
 
   useEffect(() => {
     if (postDataFeedArray.length) {
@@ -272,6 +288,24 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     postFileFeedArray,
   ]);
 
+  const observer = useRef<IntersectionObserver>();
+
+  const lastPostContainerElementRef = useCallback((node) => {
+    if (observer.current) {
+      observer.current.disconnect();
+    }
+
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setPageToFetch(pageToFetch + 1);
+      }
+    });
+
+    if (node) {
+      observer.current.observe(node);
+    }
+  }, []);
+
   return (
     <div className='feed-page'>
       {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
@@ -287,6 +321,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             fileString={el.postFileString}
             caption={el.caption}
             date={el.dateString}
+            ref={lastPostContainerElementRef}
           />
         ))
       ) : (
