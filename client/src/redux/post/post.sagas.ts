@@ -81,13 +81,15 @@ export function* updateProfilePhoto({
 }
 
 export function* getPostData({
-  payload: { userId, dataReqType },
+  payload: { userId, dataReqType, pagesToSkip, limit },
 }: {
   payload: PostDataReq;
 }): any {
   try {
     const { data }: { data: Post[] } = yield axios.post('/api/posts/data', {
       userId,
+      pagesToSkip,
+      limit,
     });
 
     if (dataReqType === DataRequestType.single) {
