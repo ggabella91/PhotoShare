@@ -16,6 +16,10 @@ export const addPostDataToFeedArray = (
 ) => {
   for (let el of postDataFeedArray) {
     if (el.length && el[0].s3Key === postData[0].s3Key) {
+      if (el[0].id !== postData[0].id) {
+        el = el.concat(...postData);
+      }
+
       return [...postDataFeedArray];
     }
   }
@@ -29,6 +33,10 @@ export const addPostReactionsToOuterReactionsArray = (
 ) => {
   for (let el of postReactionsOuterArray) {
     if (el.length && el[0].postId === postReactions[0].postId) {
+      if (el[0].id !== postReactions[0].id) {
+        el = el.concat(...postReactions);
+      }
+
       return [...postReactionsOuterArray];
     }
   }

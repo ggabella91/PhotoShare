@@ -89,7 +89,7 @@ export enum DataRequestType {
 export interface PostDataReq {
   userId: string;
   dataReqType: DataRequestType;
-  pagesToSkip?: number;
+  pageToShow?: number;
   limit?: number;
 }
 

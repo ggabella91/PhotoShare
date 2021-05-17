@@ -14,8 +14,8 @@ router.post(
   currentUser,
   async (req: Request, res: Response) => {
     const userId: string = req.body.userId;
-    const pagesToSkip = req.body.pagesToSkip || 0;
-    const limit = req.body.limit || 0;
+    const pageToShow = req.body.pageToShow || null;
+    const limit = req.body.limit || null;
 
     if (!userId) {
       throw new BadRequestError('No user ID was provided.');
@@ -23,19 +23,17 @@ router.post(
 
     let posts;
 
-    if (pagesToSkip && limit) {
+    if (pageToShow && limit) {
       posts = await Post.find({ userId, archived: { $ne: true } }, null, {
         sort: { _id: -1 },
       })
         .limit(limit)
-        .skip(pagesToSkip);
+        .skip((pageToShow - 1) * limit);
     } else {
       posts = await Post.find({ userId, archived: { $ne: true } }, null, {
         sort: { _id: -1 },
       });
     }
-
-    // posts = posts.reverse();
 
     console.log(posts);
 
