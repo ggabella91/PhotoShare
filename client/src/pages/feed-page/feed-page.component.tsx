@@ -309,7 +309,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   return (
     <div className='feed-page'>
       {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
-        userInfoAndPostFileArray.map((el) => (
+        userInfoAndPostFileArray.map((el, idx) => (
           <FeedPostContainer
             userInfo={{
               profilePhotoFileString: el.profilePhotoFileString,
@@ -321,7 +321,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             fileString={el.postFileString}
             caption={el.caption}
             date={el.dateString}
-            ref={lastPostContainerElementRef}
+            ref={
+              idx === userInfoAndPostFileArray.length - 1
+                ? lastPostContainerElementRef
+                : null
+            }
           />
         ))
       ) : (
