@@ -145,6 +145,7 @@ export interface PostState {
   usersProfilePhotoConfirm: string | null;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
+  isLoadingPostData: boolean;
 }
 
 export interface CreatePostStart {

@@ -38,6 +38,7 @@ import {
   selectGetPostDataError,
   selectGetPostFileConfirm,
   selectGetPostFileError,
+  selectIsLoadingPostData,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -66,7 +67,6 @@ import FeedPostContainer from '../../components/feed-post-container/feed-post-co
 
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
-import { JsxElement } from 'typescript';
 
 export interface UserInfoAndPostFile {
   profilePhotoFileString: string;
@@ -92,6 +92,7 @@ interface FeedPageProps {
   followingInfo: User[] | null;
   followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
+  isLoadingPostData: boolean;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearPostState: typeof clearPostState;
@@ -101,212 +102,214 @@ interface FeedPageProps {
   clearFollowState: typeof clearFollowState;
 }
 
-export const FeedPage: React.FC<FeedPageProps> = React.forwardRef(
-  (
-    {
-      currentUser,
-      postDataFeedArray,
-      postFiles,
-      currentUserUsersFollowing,
-      followingInfo,
-      followPhotoFileArray,
-      getPostDataStart,
-      getPostFileStart,
-      clearPostState,
-      getUsersFollowingStart,
-      getOtherUserStart,
-      clearFollowersAndFollowing,
-      clearFollowState,
-    },
-    ref
-  ) => {
-    const [user, setUser] = useState({
-      id: '',
-      name: '',
-      username: '',
-      bio: '',
-    });
+export const FeedPage: React.FC<FeedPageProps> = ({
+  currentUser,
+  postDataFeedArray,
+  postFiles,
+  currentUserUsersFollowing,
+  followingInfo,
+  followPhotoFileArray,
+  isLoadingPostData,
+  getPostDataStart,
+  getPostFileStart,
+  clearPostState,
+  getUsersFollowingStart,
+  getOtherUserStart,
+  clearFollowersAndFollowing,
+  clearFollowState,
+}) => {
+  const [user, setUser] = useState({
+    id: '',
+    name: '',
+    username: '',
+    bio: '',
+  });
 
-    const [usersFollowingArray, setUsersFollowingArray] =
-      useState<Follower[] | null>(null);
+  const [usersFollowingArray, setUsersFollowingArray] =
+    useState<Follower[] | null>(null);
 
-    const [followingInfoArray, setFollowingInfoArray] =
-      useState<User[] | null>(null);
+  const [followingInfoArray, setFollowingInfoArray] =
+    useState<User[] | null>(null);
 
-    const [dataFeedArray, setDataFeedArray] = useState<Post[][] | null>(null);
+  const [dataFeedArray, setDataFeedArray] = useState<Post[][] | null>(null);
 
-    const [followingProfilePhotoArray, setFollowingProfilePhotoArray] =
-      useState<PostFile[] | null>(null);
+  const [followingProfilePhotoArray, setFollowingProfilePhotoArray] =
+    useState<PostFile[] | null>(null);
 
-    const [postFileFeedArray, setPostFileFeedArray] =
-      useState<PostFile[] | null>(null);
+  const [postFileFeedArray, setPostFileFeedArray] =
+    useState<PostFile[] | null>(null);
 
-    const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] =
-      useState<UserInfoAndPostFile[] | null>(null);
+  const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] =
+    useState<UserInfoAndPostFile[] | null>(null);
 
-    const [pageToFetch, setPageToFetch] = useState(1);
+  const [pageToFetch, setPageToFetch] = useState(1);
 
-    let postsBucket: string, profileBucket: string;
+  let postsBucket: string, profileBucket: string;
 
-    if (process.env.NODE_ENV === 'production') {
-      postsBucket = 'photo-share-app';
-      profileBucket = 'photo-share-app-profile-photos';
-    } else {
-      postsBucket = 'photo-share-app-dev';
-      profileBucket = 'photo-share-app-profile-photos-dev';
+  if (process.env.NODE_ENV === 'production') {
+    postsBucket = 'photo-share-app';
+    profileBucket = 'photo-share-app-profile-photos';
+  } else {
+    postsBucket = 'photo-share-app-dev';
+    profileBucket = 'photo-share-app-profile-photos-dev';
+  }
+
+  useEffect(() => {
+    if (currentUser && !user.name) {
+      clearPostState();
+      clearFollowState();
+      clearFollowersAndFollowing();
+
+      setUser({
+        id: currentUser.id,
+        name: currentUser.name,
+        username: currentUser.username,
+        bio: currentUser.bio || '',
+      });
+      getUsersFollowingStart({
+        userId: currentUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+      });
     }
+  }, [currentUser]);
 
-    useEffect(() => {
-      if (currentUser && !user.name) {
-        clearPostState();
-        clearFollowState();
-        clearFollowersAndFollowing();
+  useEffect(() => {
+    if (currentUserUsersFollowing) {
+      setUsersFollowingArray(currentUserUsersFollowing);
+    } else {
+      setUsersFollowingArray(null);
+    }
+  }, [currentUserUsersFollowing]);
 
-        setUser({
-          id: currentUser.id,
-          name: currentUser.name,
-          username: currentUser.username,
-          bio: currentUser.bio || '',
-        });
-        getUsersFollowingStart({
-          userId: currentUser.id,
-          whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
-        });
-      }
-    }, [currentUser]);
+  useEffect(() => {
+    if (usersFollowingArray) {
+      for (let user of usersFollowingArray) {
+        if (currentUser) {
+          getOtherUserStart({
+            usernameOrId: user.userId,
+            type: OtherUserType.FOLLOWING,
+          });
 
-    useEffect(() => {
-      if (currentUserUsersFollowing) {
-        setUsersFollowingArray(currentUserUsersFollowing);
-      } else {
-        setUsersFollowingArray(null);
-      }
-    }, [currentUserUsersFollowing]);
-
-    useEffect(() => {
-      if (usersFollowingArray) {
-        for (let user of usersFollowingArray) {
-          if (currentUser) {
-            getOtherUserStart({
-              usernameOrId: user.userId,
-              type: OtherUserType.FOLLOWING,
-            });
-
-            getPostDataStart({
-              userId: user.userId,
-              dataReqType: DataRequestType.feed,
-              pageToShow: pageToFetch,
-              limit: 2,
-            });
-          }
+          getPostDataStart({
+            userId: user.userId,
+            dataReqType: DataRequestType.feed,
+            pageToShow: pageToFetch,
+            limit: 2,
+          });
         }
       }
-    }, [usersFollowingArray]);
+    }
+  }, [usersFollowingArray]);
 
-    useEffect(() => {
-      // TODO: Add local state hook to check whether a current query is loading, using post redux state confirm/error values for getPostData
+  useEffect(() => {
+    // TODO: Add local state hook to check whether a current query is loading, using post redux state confirm/error values for getPostData
 
-      if (pageToFetch > 1 && usersFollowingArray) {
-        for (let user of usersFollowingArray) {
-          if (currentUser) {
-            getPostDataStart({
-              userId: user.userId,
-              dataReqType: DataRequestType.feed,
-              pageToShow: pageToFetch,
-              limit: 2,
-            });
-          }
+    if (pageToFetch > 1 && usersFollowingArray) {
+      for (let user of usersFollowingArray) {
+        if (currentUser) {
+          getPostDataStart({
+            userId: user.userId,
+            dataReqType: DataRequestType.feed,
+            pageToShow: pageToFetch,
+            limit: 2,
+          });
         }
       }
-    }, [pageToFetch, usersFollowingArray]);
+    }
+  }, [pageToFetch, usersFollowingArray]);
 
-    useEffect(() => {
-      if (postDataFeedArray.length) {
-        setDataFeedArray(postDataFeedArray);
-      }
-    }, [postDataFeedArray]);
+  useEffect(() => {
+    if (postDataFeedArray.length) {
+      setDataFeedArray(postDataFeedArray);
+    }
+  }, [postDataFeedArray]);
 
-    useEffect(() => {
-      if (followingInfo) {
-        setFollowingInfoArray(followingInfo);
-      }
-    }, [followingInfo]);
+  useEffect(() => {
+    if (followingInfo) {
+      setFollowingInfoArray(followingInfo);
+    }
+  }, [followingInfo]);
 
-    useEffect(() => {
-      if (currentUser && followingInfoArray) {
-        for (let el of followingInfoArray) {
-          if (el.photo) {
-            getPostFileStart({
-              s3Key: el.photo,
-              bucket: profileBucket,
-              user: UserType.followArray,
-            });
-          }
+  useEffect(() => {
+    if (currentUser && followingInfoArray) {
+      for (let el of followingInfoArray) {
+        if (el.photo) {
+          getPostFileStart({
+            s3Key: el.photo,
+            bucket: profileBucket,
+            user: UserType.followArray,
+          });
         }
       }
-    }, [followingInfoArray]);
+    }
+  }, [followingInfoArray]);
 
-    useEffect(() => {
-      if (currentUser && dataFeedArray) {
-        for (let innerArray of dataFeedArray) {
-          for (let el of innerArray) {
-            getPostFileStart({
-              s3Key: el.s3Key,
-              bucket: postsBucket,
-              user: UserType.other,
-            });
-          }
+  useEffect(() => {
+    if (currentUser && dataFeedArray) {
+      for (let innerArray of dataFeedArray) {
+        for (let el of innerArray) {
+          getPostFileStart({
+            s3Key: el.s3Key,
+            bucket: postsBucket,
+            user: UserType.other,
+          });
         }
       }
-    }, [dataFeedArray]);
+    }
+  }, [dataFeedArray]);
 
-    useEffect(() => {
-      if (followPhotoFileArray) {
-        setFollowingProfilePhotoArray(followPhotoFileArray);
-      }
-    }, [followPhotoFileArray]);
+  useEffect(() => {
+    if (followPhotoFileArray) {
+      setFollowingProfilePhotoArray(followPhotoFileArray);
+    }
+  }, [followPhotoFileArray]);
 
-    useEffect(() => {
-      setPostFileFeedArray(postFiles);
-    }, [postFiles]);
+  useEffect(() => {
+    setPostFileFeedArray(postFiles);
+  }, [postFiles]);
 
-    useEffect(() => {
-      if (
-        followingInfoArray &&
-        dataFeedArray &&
-        followingProfilePhotoArray &&
+  useEffect(() => {
+    if (
+      followingInfoArray &&
+      dataFeedArray &&
+      followingProfilePhotoArray &&
+      postFileFeedArray
+    ) {
+      const userInfoAndPostObjArray = prepareUserInfoAndFileArray(
+        followingInfoArray,
+        dataFeedArray,
+        followingProfilePhotoArray,
         postFileFeedArray
-      ) {
-        const userInfoAndPostObjArray = prepareUserInfoAndFileArray(
-          followingInfoArray,
-          dataFeedArray,
-          followingProfilePhotoArray,
-          postFileFeedArray
-        );
+      );
 
-        const sortedUserInfoAndPostArray = userInfoAndPostObjArray.sort(
-          (a, b) => b.dateInt - a.dateInt
-        );
+      const sortedUserInfoAndPostArray = userInfoAndPostObjArray.sort(
+        (a, b) => b.dateInt - a.dateInt
+      );
 
-        setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
-      }
-    }, [
-      followingInfoArray,
-      dataFeedArray,
-      followingProfilePhotoArray,
-      postFileFeedArray,
-    ]);
+      setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
+    }
+  }, [
+    followingInfoArray,
+    dataFeedArray,
+    followingProfilePhotoArray,
+    postFileFeedArray,
+  ]);
 
-    const observer =
-      React.createRef<IntersectionObserver>() as React.MutableRefObject<IntersectionObserver>;
+  // const observer =
+  //   React.createRef<IntersectionObserver>() as React.MutableRefObject<IntersectionObserver>;
+  const observer = useRef<IntersectionObserver>();
 
-    const lastPostContainerElementRef = useCallback((node) => {
+  const lastPostContainerElementRef = useCallback(
+    (node) => {
+      if (isLoadingPostData) return;
+
       if (observer.current) {
         observer.current.disconnect();
       }
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
+          console.log('We out here!');
           setPageToFetch(pageToFetch + 1);
         }
       });
@@ -314,54 +317,57 @@ export const FeedPage: React.FC<FeedPageProps> = React.forwardRef(
       if (node) {
         observer.current.observe(node);
       }
-    }, []);
+    },
+    [isLoadingPostData]
+  );
 
-    return (
-      <div className='feed-page'>
-        {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
-          userInfoAndPostFileArray.map((el, idx) => {
-            if (idx === userInfoAndPostFileArray.length - 1) {
-              return (
-                <FeedPostContainer
-                  userInfo={{
-                    profilePhotoFileString: el.profilePhotoFileString,
-                    username: el.username,
-                    location: el.location,
-                    name: '',
-                    comment: '',
-                  }}
-                  fileString={el.postFileString}
-                  caption={el.caption}
-                  date={el.dateString}
-                  ref={lastPostContainerElementRef}
-                />
-              );
-            } else {
-              return (
-                <FeedPostContainer
-                  userInfo={{
-                    profilePhotoFileString: el.profilePhotoFileString,
-                    username: el.username,
-                    location: el.location,
-                    name: '',
-                    comment: '',
-                  }}
-                  fileString={el.postFileString}
-                  caption={el.caption}
-                  date={el.dateString}
-                />
-              );
-            }
-          })
-        ) : (
-          <div className='no-franz'>
-            Follow users to see their recent posts here
-          </div>
-        )}
-      </div>
-    );
-  }
-);
+  return (
+    <div className='feed-page'>
+      {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
+        userInfoAndPostFileArray.map((el, idx) => {
+          if (idx === userInfoAndPostFileArray.length - 1) {
+            return (
+              <FeedPostContainer
+                userInfo={{
+                  profilePhotoFileString: el.profilePhotoFileString,
+                  username: el.username,
+                  location: el.location,
+                  name: '',
+                  comment: '',
+                }}
+                fileString={el.postFileString}
+                caption={el.caption}
+                date={el.dateString}
+                key={Math.random()}
+                custRef={lastPostContainerElementRef}
+              />
+            );
+          } else {
+            return (
+              <FeedPostContainer
+                userInfo={{
+                  profilePhotoFileString: el.profilePhotoFileString,
+                  username: el.username,
+                  location: el.location,
+                  name: '',
+                  comment: '',
+                }}
+                fileString={el.postFileString}
+                caption={el.caption}
+                date={el.dateString}
+                key={Math.random()}
+              />
+            );
+          }
+        })
+      ) : (
+        <div className='no-franz'>
+          Follow users to see their recent posts here
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface LinkStateProps {
   currentUser: User | null;
@@ -377,6 +383,7 @@ interface LinkStateProps {
   followingInfo: User[] | null;
   followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
+  isLoadingPostData: boolean;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -393,6 +400,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   followingInfo: selectFollowingInfo,
   followPhotoFileArray: selectFollowPhotoFileArray,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
+  isLoadingPostData: selectIsLoadingPostData,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -409,4 +417,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearFollowState: () => dispatch(clearFollowState()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FeedPage);
+export default connect(mapStateToProps, mapDispatchToProps, null, {
+  forwardRef: true,
+})(FeedPage);

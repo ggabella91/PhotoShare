@@ -36,6 +36,7 @@ const INITIAL_STATE: PostState = {
   usersProfilePhotoConfirm: null,
   commentToDelete: null,
   showCommentOptionsModal: false,
+  isLoadingPostData: false,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -62,12 +63,18 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         postReactionError: null,
         deleteReactionConfirm: null,
       };
+    case PostActions.GET_POST_DATA_START:
+      return {
+        ...state,
+        isLoadingPostData: true,
+      };
     case PostActions.GET_POST_DATA_SUCCESS:
       return {
         ...state,
         postData: action.payload,
         getPostDataError: null,
         getPostDataConfirm: 'Post data fetched!',
+        isLoadingPostData: false,
       };
     case PostActions.GET_POST_REACTIONS_SUCCESS:
       return {
@@ -178,6 +185,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         getPostDataError: action.payload,
         getPostDataConfirm: null,
+        isLoadingPostData: false,
       };
     case PostActions.GET_POST_FILE_FAILURE:
       return {
