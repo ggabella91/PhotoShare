@@ -149,3 +149,8 @@ export const selectShowCommentOptionsModal = createSelector(
   [selectPostState],
   (postState: PostState) => postState.showCommentOptionsModal
 );
+
+export const selectIsLoadingPostData = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.isLoadingPostData
+);

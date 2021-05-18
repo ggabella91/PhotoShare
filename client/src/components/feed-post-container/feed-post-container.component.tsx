@@ -34,7 +34,8 @@ interface FeedPostContainerProps {
   getPostReactionsError: PostError | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
-  ref?: (node: any) => void;
+  custRef?: (node: any) => void;
+  key: number;
 }
 
 export interface UserInfoData {
