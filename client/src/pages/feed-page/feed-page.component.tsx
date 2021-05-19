@@ -300,8 +300,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const observer = useRef<IntersectionObserver>();
 
   const lastPostContainerElementRef = useCallback(
-    (node) => {
+    (node: HTMLDivElement | null) => {
       if (isLoadingPostData) return;
+
+      console.log('node: ', node);
 
       if (observer.current) {
         observer.current.disconnect();
@@ -320,6 +322,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     },
     [isLoadingPostData]
   );
+
+  useEffect(() => {
+    console.log('observer: ', observer);
+  }, [observer]);
 
   return (
     <div className='feed-page'>

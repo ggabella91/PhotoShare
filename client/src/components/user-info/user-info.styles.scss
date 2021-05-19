@@ -212,7 +212,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  width: inherit;
+  width: 600px;
   max-height: 338px;
   background-color: white;
   border-radius: 4px;
@@ -277,34 +277,38 @@
       }
     }
 
-    .feed-username-and-other-data {
-      display: flex;
-      position: relative;
-      flex-direction: column;
-      padding-top: 6px;
-      width: 75%;
-      height: 60px;
-      justify-self: flex-end;
-      text-align: left;
+    .user-data-and-date {
+      width: 200px;
 
-      .feed-username {
+      .feed-username-and-other-data {
         display: flex;
         position: relative;
-        font-size: 14px;
-        font-weight: 540;
-        color: black;
-      }
+        flex-direction: column;
+        padding-top: 6px;
+        width: 75%;
+        height: 60px;
+        justify-self: flex-end;
+        text-align: left;
 
-      .feed-name {
-        display: none;
-      }
+        .feed-username {
+          display: flex;
+          position: relative;
+          font-size: 14px;
+          font-weight: 540;
+          color: black;
+        }
 
-      .feed-location {
-        display: flex;
-        position: relative;
-        font-size: 12px;
-        font-weight: 380;
-        color: black;
+        .feed-name {
+          display: none;
+        }
+
+        .feed-location {
+          display: flex;
+          position: relative;
+          font-size: 12px;
+          font-weight: 380;
+          color: black;
+        }
       }
     }
   }

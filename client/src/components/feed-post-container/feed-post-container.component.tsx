@@ -34,7 +34,7 @@ interface FeedPostContainerProps {
   getPostReactionsError: PostError | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
-  custRef?: (node: any) => void;
+  custRef?: (node: HTMLDivElement | null) => void;
   key: number;
 }
 
@@ -51,9 +51,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   fileString,
   caption,
   date,
+  custRef,
 }) => {
   return (
-    <div className='feed-post-container'>
+    <div className='feed-post-container' ref={custRef}>
       <div className='profile-and-options'>
         <UserInfo styleType={StyleType.feed} userInfoArray={[userInfo]} />
       </div>

@@ -46,10 +46,8 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   setCommentToDelete,
   setShowCommentOptionsModal,
 }) => {
-  const [
-    showCommentOptionsButtonForIdx,
-    setShowCommentOptionsButtonForIdx,
-  ] = useState({ show: false, idx: -1 });
+  const [showCommentOptionsButtonForIdx, setShowCommentOptionsButtonForIdx] =
+    useState({ show: false, idx: -1 });
 
   let history = useHistory();
 
@@ -131,12 +129,14 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               : 'hide'
           } comment-options`}
         >
-          <span
-            className='comment-ellipsis-button'
-            onClick={() => handleSetCommentToDelete(idx)}
-          >
-            ...
-          </span>
+          {styleType === StyleType.comment ? (
+            <span
+              className='comment-ellipsis-button'
+              onClick={() => handleSetCommentToDelete(idx)}
+            >
+              ...
+            </span>
+          ) : null}
         </div>
       </div>
     )
