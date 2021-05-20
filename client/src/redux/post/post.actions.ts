@@ -10,6 +10,7 @@ import {
   PostError,
   PostActions,
   PostActionTypes,
+  PostMetaData,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -242,4 +243,11 @@ export const setShowCommentOptionsModal = (
 export const clearPostReactions = (): PostActionTypes => ({
   type: PostActions.CLEAR_POST_REACTIONS,
   payload: null,
+});
+
+export const setPostMetaDataForUser = (
+  postMetaData: PostMetaData
+): PostActionTypes => ({
+  type: PostActions.SET_POST_META_DATA_FOR_USER,
+  payload: postMetaData,
 });

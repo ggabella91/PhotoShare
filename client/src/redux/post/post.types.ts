@@ -39,6 +39,7 @@ export enum PostActions {
   SET_COMMENT_TO_DELETE = 'SET_COMMENT_TO_DELETE',
   SET_SHOW_COMMENT_OPTIONS_MODAL = 'SET_SHOW_COMMENT_OPTIONS_MODAL',
   CLEAR_POST_REACTIONS = 'CLEAR_POST_REACTIONS',
+  SET_POST_META_DATA_FOR_USER = 'SET_POST_META_DATA_FOR_USER',
 }
 
 export interface PostError {
@@ -115,6 +116,11 @@ export interface DeleteReactionReq {
   isLikeRemoval: boolean;
 }
 
+export interface PostMetaData {
+  queryLength: number;
+  userId: string;
+}
+
 export interface PostState {
   postData: Post[] | null;
   postDataFeedArray: Post[][];
@@ -146,6 +152,7 @@ export interface PostState {
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   isLoadingPostData: boolean;
+  postMetaDataForUser: PostMetaData | null;
 }
 
 export interface CreatePostStart {
@@ -348,6 +355,11 @@ export interface ClearPostReactions {
   payload: null;
 }
 
+export interface SetPostMetaDataForUser {
+  type: typeof PostActions.SET_POST_META_DATA_FOR_USER;
+  payload: PostMetaData;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -388,4 +400,5 @@ export type PostActionTypes =
   | ClearPostState
   | SetCommentToDelete
   | SetShowCommentOptionsModal
-  | ClearPostReactions;
+  | ClearPostReactions
+  | SetPostMetaDataForUser;

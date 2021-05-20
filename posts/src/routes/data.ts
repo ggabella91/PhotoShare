@@ -24,20 +24,36 @@ router.post(
     let posts;
 
     if (pageToShow && limit) {
+      let queryLength: number;
+
+      if (pageToShow === 1) {
+        queryLength = (
+          await Post.find({ userId, archived: { $ne: true } }, null, {
+            sort: { _id: -1 },
+          })
+        ).length;
+      }
+
       posts = await Post.find({ userId, archived: { $ne: true } }, null, {
         sort: { _id: -1 },
       })
         .limit(limit)
         .skip((pageToShow - 1) * limit);
+      console.log(posts);
+
+      if (queryLength!) {
+        res.status(200).send({ posts, queryLength });
+      } else {
+        res.status(200).send({ posts });
+      }
     } else {
       posts = await Post.find({ userId, archived: { $ne: true } }, null, {
         sort: { _id: -1 },
       });
+      console.log(posts);
+
+      res.status(200).send({ posts });
     }
-
-    console.log(posts);
-
-    res.status(200).send(posts);
   }
 );
 

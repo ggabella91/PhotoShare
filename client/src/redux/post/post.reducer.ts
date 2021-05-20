@@ -37,6 +37,7 @@ const INITIAL_STATE: PostState = {
   commentToDelete: null,
   showCommentOptionsModal: false,
   isLoadingPostData: false,
+  postMetaDataForUser: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -96,6 +97,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ),
         getPostDataError: null,
         getPostDataConfirm: 'Post data added to feed array!',
+        isLoadingPostData: false,
       };
     case PostActions.GET_POST_FILE_SUCCESS:
       return {
@@ -273,6 +275,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
       return {
         ...state,
         showCommentOptionsModal: action.payload,
+      };
+    case PostActions.SET_POST_META_DATA_FOR_USER:
+      return {
+        ...state,
+        postMetaDataForUser: action.payload,
       };
     default:
       return state;
