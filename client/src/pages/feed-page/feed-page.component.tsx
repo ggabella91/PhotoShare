@@ -27,6 +27,7 @@ import {
   PostFile,
   PostError,
   UserType,
+  PostMetaData,
 } from '../../redux/post/post.types';
 import {
   selectPostDataFeedArray,
@@ -39,6 +40,7 @@ import {
   selectGetPostFileConfirm,
   selectGetPostFileError,
   selectIsLoadingPostData,
+  selectPostMetaDataForUser,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -68,6 +70,12 @@ import FeedPostContainer from '../../components/feed-post-container/feed-post-co
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
 
+export interface PostDataArrayMap {
+  postData: Post[];
+  queryLength?: number;
+  userId: string;
+}
+
 export interface UserInfoAndPostFile {
   profilePhotoFileString: string;
   username: string;
@@ -93,6 +101,7 @@ interface FeedPageProps {
   followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
   isLoadingPostData: boolean;
+  postMetaDataForUser: PostMetaData | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearPostState: typeof clearPostState;
@@ -110,6 +119,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   followingInfo,
   followPhotoFileArray,
   isLoadingPostData,
+  postMetaDataForUser,
   getPostDataStart,
   getPostFileStart,
   clearPostState,
@@ -131,7 +141,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const [followingInfoArray, setFollowingInfoArray] =
     useState<User[] | null>(null);
 
-  const [dataFeedArray, setDataFeedArray] = useState<Post[][] | null>(null);
+  const [dataFeedMapArray, setDataFeedMapArray] =
+    useState<PostDataArrayMap[] | null>(null);
 
   const [followingProfilePhotoArray, setFollowingProfilePhotoArray] =
     useState<PostFile[] | null>(null);
@@ -202,13 +213,29 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [usersFollowingArray]);
 
   useEffect(() => {
-    // TODO: Add local state hook to check whether a current query is loading, using post redux state confirm/error values for getPostData
+    if (postMetaDataForUser && dataFeedMapArray) {
+      for (let el of dataFeedMapArray) {
+        if (postMetaDataForUser.userId === el.userId) {
+          el.queryLength = postMetaDataForUser.queryLength;
+        }
+      }
 
-    if (pageToFetch > 1 && usersFollowingArray) {
-      for (let user of usersFollowingArray) {
-        if (currentUser) {
+      // This assumes that properties in the dataFeedMapArray's
+      // objects were successfully changed
+      setDataFeedMapArray(dataFeedMapArray);
+    }
+  }, [postMetaDataForUser]);
+
+  useEffect(() => {
+    if (pageToFetch > 1 && dataFeedMapArray) {
+      for (let el of dataFeedMapArray) {
+        if (
+          el.queryLength &&
+          currentUser &&
+          pageToFetch <= el.queryLength / 2
+        ) {
           getPostDataStart({
-            userId: user.userId,
+            userId: el.userId,
             dataReqType: DataRequestType.feed,
             pageToShow: pageToFetch,
             limit: 2,
@@ -216,11 +243,31 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       }
     }
-  }, [pageToFetch, usersFollowingArray]);
+  }, [pageToFetch, dataFeedMapArray]);
 
   useEffect(() => {
     if (postDataFeedArray.length) {
-      setDataFeedArray(postDataFeedArray);
+      if (dataFeedMapArray) {
+        for (let el of postDataFeedArray) {
+          for (let mapEl of dataFeedMapArray) {
+            if (el[0].userId === mapEl.userId) {
+              mapEl.postData = el;
+            }
+          }
+        }
+
+        // This assumes that properties in the dataFeedMapArray's
+        // objects were successfully changed
+        setDataFeedMapArray(dataFeedMapArray);
+      } else {
+        let dataMapArray: PostDataArrayMap[] = [];
+
+        for (let el of postDataFeedArray) {
+          dataMapArray.push({ postData: el, userId: el[0].userId });
+        }
+
+        setDataFeedMapArray(dataMapArray);
+      }
     }
   }, [postDataFeedArray]);
 
@@ -245,9 +292,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [followingInfoArray]);
 
   useEffect(() => {
-    if (currentUser && dataFeedArray) {
-      for (let innerArray of dataFeedArray) {
-        for (let el of innerArray) {
+    if (currentUser && dataFeedMapArray) {
+      for (let innerObj of dataFeedMapArray) {
+        for (let el of innerObj.postData) {
           getPostFileStart({
             s3Key: el.s3Key,
             bucket: postsBucket,
@@ -256,7 +303,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       }
     }
-  }, [dataFeedArray]);
+  }, [dataFeedMapArray]);
 
   useEffect(() => {
     if (followPhotoFileArray) {
@@ -271,13 +318,19 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   useEffect(() => {
     if (
       followingInfoArray &&
-      dataFeedArray &&
+      dataFeedMapArray &&
       followingProfilePhotoArray &&
       postFileFeedArray
     ) {
+      let postDataArray: Post[][] = [];
+
+      for (let el of dataFeedMapArray) {
+        postDataArray.push(el.postData);
+      }
+
       const userInfoAndPostObjArray = prepareUserInfoAndFileArray(
         followingInfoArray,
-        dataFeedArray,
+        postDataArray,
         followingProfilePhotoArray,
         postFileFeedArray
       );
@@ -290,13 +343,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [
     followingInfoArray,
-    dataFeedArray,
+    dataFeedMapArray,
     followingProfilePhotoArray,
     postFileFeedArray,
   ]);
 
-  // const observer =
-  //   React.createRef<IntersectionObserver>() as React.MutableRefObject<IntersectionObserver>;
   const observer = useRef<IntersectionObserver>();
 
   const lastPostContainerElementRef = useCallback(
@@ -390,6 +441,7 @@ interface LinkStateProps {
   followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
   isLoadingPostData: boolean;
+  postMetaDataForUser: PostMetaData | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -407,6 +459,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   followPhotoFileArray: selectFollowPhotoFileArray,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   isLoadingPostData: selectIsLoadingPostData,
+  postMetaDataForUser: selectPostMetaDataForUser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -423,6 +476,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearFollowState: () => dispatch(clearFollowState()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps, null, {
-  forwardRef: true,
-})(FeedPage);
+export default connect(mapStateToProps, mapDispatchToProps)(FeedPage);

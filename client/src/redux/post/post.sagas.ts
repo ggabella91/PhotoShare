@@ -13,6 +13,7 @@ import {
   DeleteReactionReq,
   PostActions,
   UserType,
+  PostMetaData,
 } from './post.types';
 
 import {
@@ -38,6 +39,7 @@ import {
   getUserPhotoForFollowArraySuccess,
   getUserPhotoForSuggestionArraySuccess,
   getUserPhotoForReactorArraySuccess,
+  setPostMetaDataForUser,
 } from './post.actions';
 
 import axios from 'axios';
@@ -86,16 +88,24 @@ export function* getPostData({
   payload: PostDataReq;
 }): any {
   try {
-    const { data }: { data: Post[] } = yield axios.post('/api/posts/data', {
-      userId,
-      pageToShow,
-      limit,
-    });
+    const { data }: { data: { posts: Post[]; metaData?: PostMetaData } } =
+      yield axios.post('/api/posts/data', {
+        userId,
+        pageToShow,
+        limit,
+      });
 
     if (dataReqType === DataRequestType.single) {
-      yield put(getPostDataSuccess(data));
+      yield put(getPostDataSuccess(data.posts));
     } else if (dataReqType === DataRequestType.feed) {
-      yield put(addPostDataToFeedArray(data));
+      if (data.metaData) {
+        yield all([
+          put(addPostDataToFeedArray(data.posts)),
+          put(setPostMetaDataForUser(data.metaData)),
+        ]);
+      } else {
+        yield put(addPostDataToFeedArray(data.posts));
+      }
     }
   } catch (err) {
     yield put(getPostDataFailure(err));

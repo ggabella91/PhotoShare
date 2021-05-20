@@ -154,3 +154,8 @@ export const selectIsLoadingPostData = createSelector(
   [selectPostState],
   (postState: PostState) => postState.isLoadingPostData
 );
+
+export const selectPostMetaDataForUser = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postMetaDataForUser
+);
