@@ -213,16 +213,29 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [usersFollowingArray]);
 
   useEffect(() => {
-    if (postMetaDataForUser) {
+    if (postMetaDataForUser && dataFeedMapArray) {
+      for (let el of dataFeedMapArray) {
+        if (postMetaDataForUser.userId === el.userId) {
+          el.queryLength = postMetaDataForUser.queryLength;
+        }
+      }
+
+      // This assumes that properties in the dataFeedMapArray's
+      // objects were successfully changed
+      setDataFeedMapArray(dataFeedMapArray);
     }
   }, [postMetaDataForUser]);
 
   useEffect(() => {
-    if (pageToFetch > 1 && usersFollowingArray) {
-      for (let user of usersFollowingArray) {
-        if (currentUser) {
+    if (pageToFetch > 1 && dataFeedMapArray) {
+      for (let el of dataFeedMapArray) {
+        if (
+          el.queryLength &&
+          currentUser &&
+          pageToFetch <= el.queryLength / 2
+        ) {
           getPostDataStart({
-            userId: user.userId,
+            userId: el.userId,
             dataReqType: DataRequestType.feed,
             pageToShow: pageToFetch,
             limit: 2,
@@ -230,11 +243,22 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       }
     }
-  }, [pageToFetch, usersFollowingArray]);
+  }, [pageToFetch, dataFeedMapArray]);
 
   useEffect(() => {
     if (postDataFeedArray.length) {
       if (dataFeedMapArray) {
+        for (let el of postDataFeedArray) {
+          for (let mapEl of dataFeedMapArray) {
+            if (el[0].userId === mapEl.userId) {
+              mapEl.postData = el;
+            }
+          }
+        }
+
+        // This assumes that properties in the dataFeedMapArray's
+        // objects were successfully changed
+        setDataFeedMapArray(dataFeedMapArray);
       } else {
         let dataMapArray: PostDataArrayMap[] = [];
 
