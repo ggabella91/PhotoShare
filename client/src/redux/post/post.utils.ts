@@ -14,11 +14,16 @@ export const addPostDataToFeedArray = (
   postDataFeedArray: Post[][],
   postData: Post[]
 ) => {
-  for (let el of postDataFeedArray) {
-    if (el.length && el[0].s3Key === postData[0].s3Key) {
-      if (el[0].id !== postData[0].id) {
-        el = el.concat(...postData);
-      }
+  for (let i = 0; i < postDataFeedArray.length; i++) {
+    if (
+      postDataFeedArray[i].length &&
+      postDataFeedArray[i][0].s3Key === postData[0].s3Key
+    ) {
+      return [...postDataFeedArray];
+    }
+
+    if (postDataFeedArray[i][0].id !== postData[0].id) {
+      postDataFeedArray[i] = [...postDataFeedArray[i], ...postData];
 
       return [...postDataFeedArray];
     }
@@ -31,10 +36,16 @@ export const addPostReactionsToOuterReactionsArray = (
   postReactionsOuterArray: Reaction[][],
   postReactions: Reaction[]
 ) => {
-  for (let el of postReactionsOuterArray) {
-    if (el.length && el[0].postId === postReactions[0].postId) {
-      if (el[0].id !== postReactions[0].id) {
-        el = el.concat(...postReactions);
+  for (let i = 0; i < postReactionsOuterArray.length; i++) {
+    if (
+      postReactionsOuterArray[i].length &&
+      postReactionsOuterArray[i][0].postId === postReactions[0].postId
+    ) {
+      if (postReactionsOuterArray[i][0].id !== postReactions[0].id) {
+        postReactionsOuterArray[i] = [
+          ...postReactionsOuterArray[i],
+          ...postReactions,
+        ];
       }
 
       return [...postReactionsOuterArray];
