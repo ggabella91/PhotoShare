@@ -120,6 +120,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   followPhotoFileArray,
   isLoadingPostData,
   postMetaDataForUser,
+  getPostDataConfirm,
   getPostDataStart,
   getPostFileStart,
   clearPostState,
@@ -303,7 +304,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       }
     }
-  }, [dataFeedMapArray]);
+  }, [dataFeedMapArray, getPostDataConfirm]);
 
   useEffect(() => {
     if (followPhotoFileArray) {
@@ -346,6 +347,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     dataFeedMapArray,
     followingProfilePhotoArray,
     postFileFeedArray,
+    getPostDataConfirm,
   ]);
 
   const observer = useRef<IntersectionObserver>();
@@ -354,15 +356,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     (node: HTMLDivElement | null) => {
       if (isLoadingPostData) return;
 
-      console.log('node: ', node);
-
       if (observer.current) {
         observer.current.disconnect();
       }
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          console.log('We out here!');
           setPageToFetch(pageToFetch + 1);
         }
       });
@@ -373,10 +372,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     },
     [isLoadingPostData]
   );
-
-  useEffect(() => {
-    console.log('observer: ', observer);
-  }, [observer]);
 
   return (
     <div className='feed-page'>

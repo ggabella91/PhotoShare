@@ -13,7 +13,6 @@ import {
   DeleteReactionReq,
   PostActions,
   UserType,
-  PostMetaData,
 } from './post.types';
 
 import {
@@ -88,7 +87,7 @@ export function* getPostData({
   payload: PostDataReq;
 }): any {
   try {
-    const { data }: { data: { posts: Post[]; metaData?: PostMetaData } } =
+    const { data }: { data: { posts: Post[]; queryLength?: number } } =
       yield axios.post('/api/posts/data', {
         userId,
         pageToShow,
@@ -98,10 +97,15 @@ export function* getPostData({
     if (dataReqType === DataRequestType.single) {
       yield put(getPostDataSuccess(data.posts));
     } else if (dataReqType === DataRequestType.feed) {
-      if (data.metaData) {
+      if (data.queryLength) {
         yield all([
           put(addPostDataToFeedArray(data.posts)),
-          put(setPostMetaDataForUser(data.metaData)),
+          put(
+            setPostMetaDataForUser({
+              queryLength: data.queryLength,
+              userId: data.posts[0].userId,
+            })
+          ),
         ]);
       } else {
         yield put(addPostDataToFeedArray(data.posts));

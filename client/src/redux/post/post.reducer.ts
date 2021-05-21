@@ -68,6 +68,8 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
       return {
         ...state,
         isLoadingPostData: true,
+        getPostDataConfirm: null,
+        getPostDataError: null,
       };
     case PostActions.GET_POST_DATA_SUCCESS:
       return {
