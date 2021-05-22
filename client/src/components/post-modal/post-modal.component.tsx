@@ -62,6 +62,7 @@ interface PostModalProps {
   createdAt: Date;
   location: string;
   show: boolean;
+  clearLocalState: boolean;
   onHide: () => void;
   fileString: string;
   userName: string;
@@ -87,7 +88,7 @@ interface PostModalProps {
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
-  show,
+  clearLocalState,
   currentUser,
   postId,
   fileString,
@@ -144,12 +145,16 @@ export const PostModal: React.FC<PostModalProps> = ({
   }
 
   useEffect(() => {
-    if (reactionsArray || commentingUserArray || postLikingUserArray) {
+    if (
+      clearLocalState &&
+      (reactionsArray || commentingUserArray || postLikingUserArray)
+    ) {
       setReactionsArray([]);
       setCommentingUserArray([]);
       setPostLikingUserArray([]);
+      setAlreadyLikedPost(false);
     }
-  }, [show]);
+  }, [clearLocalState]);
 
   useEffect(() => {
     if (caption) {

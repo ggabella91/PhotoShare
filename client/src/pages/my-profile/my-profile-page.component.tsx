@@ -157,9 +157,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
 
   const [followersArray, setFollowersArray] = useState<Follower[] | null>(null);
-  const [usersFollowingArray, setUsersFollowingArray] = useState<
-    Follower[] | null
-  >(null);
+  const [usersFollowingArray, setUsersFollowingArray] =
+    useState<Follower[] | null>(null);
 
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -176,18 +175,18 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     fileString: '',
   });
 
+  const [clearPostModalLocalState, setClearPostModalLocalState] =
+    useState(false);
+
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
 
   const [isFollowersModal, setIsFollowersModal] = useState(true);
 
-  const [
-    followersOrFollowingModalShow,
-    setFollowersOrFollowingModalShow,
-  ] = useState(false);
+  const [followersOrFollowingModalShow, setFollowersOrFollowingModalShow] =
+    useState(false);
 
-  const [currentUserPostOrComment, setCurrentUserPostOrComment] = useState<
-    boolean | null
-  >(null);
+  const [currentUserPostOrComment, setCurrentUserPostOrComment] =
+    useState<boolean | null>(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -299,6 +298,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       clearArchivePostStatuses();
       setPostOptionsModalShow(false);
       setPostModalShow(false);
+      setClearPostModalLocalState(true);
 
       const newDataArray = postDataArray.filter(
         (el) => el.id !== postModalProps.id
@@ -329,6 +329,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         fileString: file.fileString,
       });
       setPostModalShow(true);
+      setClearPostModalLocalState(false);
     }
   };
 
@@ -478,11 +479,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         createdAt={
           postModalProps.createdAt || new Date('2021-01-09T22:39:39.945Z')
         }
-        onHide={() => setPostModalShow(false)}
+        onHide={() => {
+          setPostModalShow(false);
+          setClearPostModalLocalState(true);
+        }}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         userProfilePhotoFile={profilePhoto || ''}
         userName={user.username}
         userId={user.id}
+        clearLocalState={clearPostModalLocalState}
       />
       <PostOrCommentOptionsModal
         show={postOptionsModalShow}
