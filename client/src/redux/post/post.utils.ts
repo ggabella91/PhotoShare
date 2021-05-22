@@ -39,6 +39,7 @@ export const addPostReactionsToOuterReactionsArray = (
   for (let i = 0; i < postReactionsOuterArray.length; i++) {
     if (
       postReactionsOuterArray[i].length &&
+      postReactions.length &&
       postReactionsOuterArray[i][0].postId === postReactions[0].postId
     ) {
       if (postReactionsOuterArray[i][0].id !== postReactions[0].id) {
