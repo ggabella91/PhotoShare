@@ -87,6 +87,7 @@ interface PostModalProps {
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
+  show,
   currentUser,
   postId,
   fileString,
@@ -113,27 +114,22 @@ export const PostModal: React.FC<PostModalProps> = ({
 }) => {
   const [comment, setComment] = useState('');
 
-  const [captionInfoArray, setCaptionInfoArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [captionInfoArray, setCaptionInfoArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
-  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
-    User[] | null
-  >(null);
+  const [reactingUserInfoArray, setReactingUsersInfoArray] =
+    useState<User[] | null>(null);
 
-  const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
-    PostFile[] | null
-  >(null);
+  const [userProfilePhotoArray, setUserProfilePhotoArray] =
+    useState<PostFile[] | null>(null);
 
-  const [commentingUserArray, setCommentingUserArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [commentingUserArray, setCommentingUserArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
 
-  const [postLikingUserArray, setPostLikingUserArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [postLikingUserArray, setPostLikingUserArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
@@ -146,6 +142,14 @@ export const PostModal: React.FC<PostModalProps> = ({
   } else {
     bucket = 'photo-share-app-profile-photos-dev';
   }
+
+  useEffect(() => {
+    if (reactionsArray || commentingUserArray || postLikingUserArray) {
+      setReactionsArray([]);
+      setCommentingUserArray([]);
+      setPostLikingUserArray([]);
+    }
+  }, [show]);
 
   useEffect(() => {
     if (caption) {
