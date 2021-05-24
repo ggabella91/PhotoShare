@@ -58,11 +58,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       <div className='profile-and-options'>
         <UserInfo styleType={StyleType.feed} userInfoArray={[userInfo]} />
       </div>
-      <img
-        className='feed-post-photo'
-        src={`data:image/jpeg;base64,${fileString}`}
-        alt='user'
-      />
+      <div className='image-background'>
+        <img
+          className='feed-post-photo'
+          src={`data:image/jpeg;base64,${fileString}`}
+          alt='user'
+        />
+      </div>
       <div className='caption-and-reactions'>
         <div className='caption'>
           <span className='username'>{userInfo.username}</span>{' '}
