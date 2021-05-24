@@ -11,10 +11,19 @@
     display: flex;
   }
 
-  .feed-post-photo {
+  .image-background {
     display: flex;
-    height: auto;
+    flex-direction: column;
+    justify-content: center;
+    height: 750px;
     width: 600px;
+    background-color: black;
+
+    .feed-post-photo {
+      display: flex;
+      height: auto;
+      width: 600px;
+    }
   }
 
   .caption-and-reactions {
