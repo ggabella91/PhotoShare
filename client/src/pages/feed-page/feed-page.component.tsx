@@ -79,7 +79,9 @@ export interface PostDataArrayMap {
 export interface UserInfoAndPostFile {
   profilePhotoFileString: string;
   username: string;
+  userId: string;
   location: string;
+  postId: string;
   postFileString: string;
   caption?: string;
   dateString: string;
@@ -383,6 +385,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 userInfo={{
                   profilePhotoFileString: el.profilePhotoFileString,
                   username: el.username,
+                  userId: el.userId,
+                  postId: el.postId,
                   location: el.location,
                   name: '',
                   comment: '',
@@ -400,6 +404,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 userInfo={{
                   profilePhotoFileString: el.profilePhotoFileString,
                   username: el.username,
+                  userId: el.userId,
+                  postId: el.postId,
                   location: el.location,
                   name: '',
                   comment: '',

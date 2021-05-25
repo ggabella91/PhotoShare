@@ -154,7 +154,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       setPostLikingUserArray([]);
       setAlreadyLikedPost(false);
     }
-  }, [clearLocalState]);
+  }, [postId]);
 
   useEffect(() => {
     if (caption) {
