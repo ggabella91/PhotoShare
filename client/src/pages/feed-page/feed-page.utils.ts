@@ -16,6 +16,7 @@ export const prepareUserInfoAndFileArray = (
       let dateInt: number;
       let id: string;
       let username: string;
+      let postId: string;
       let photoS3Key: string;
       let profilePhotoString: string;
       let caption: string;
@@ -27,6 +28,7 @@ export const prepareUserInfoAndFileArray = (
 
             location = innerEl.postLocation || '';
             id = innerEl.userId;
+            postId = innerEl.id;
             caption = innerEl.caption || '';
             dateString = new Date(date).toDateString();
             dateInt = new Date(date).getTime();
@@ -68,8 +70,10 @@ export const prepareUserInfoAndFileArray = (
 
       return {
         username: username!,
+        userId: id!,
         profilePhotoFileString: profilePhotoString,
         location,
+        postId: postId!,
         postFileString: el.fileString,
         caption,
         dateString,

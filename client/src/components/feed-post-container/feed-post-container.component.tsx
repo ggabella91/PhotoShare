@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
 
-import { Reaction, ReactionReq, PostError } from '../../redux/post/post.types';
+import {
+  User,
+  OtherUserType,
+  OtherUserRequest,
+} from '../../redux/user/user.types';
+import {
+  selectCurrentUser,
+  selectPostReactingUsers,
+} from '../../redux/user/user.selectors';
+
+import {
+  Reaction,
+  ReactionReq,
+  PostError,
+  DeleteReactionReq,
+} from '../../redux/post/post.types';
 import {
   selectPostReactionsArray,
   selectPostReactionConfirm,
@@ -16,7 +31,10 @@ import {
 import {
   createPostReactionStart,
   getPostReactionsStart,
+  deleteReactionStart,
 } from '../../redux/post/post.actions';
+
+import Button from '../button/button.component';
 
 import UserInfo, { StyleType } from '../user-info/user-info.component';
 
@@ -27,6 +45,7 @@ interface FeedPostContainerProps {
   fileString: string;
   caption?: string;
   date: string;
+  currentUser: User | null;
   postReactionsArray: Reaction[][];
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
@@ -34,13 +53,16 @@ interface FeedPostContainerProps {
   getPostReactionsError: PostError | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
+  deleteReactionStart: typeof deleteReactionStart;
   custRef?: (node: HTMLDivElement | null) => void;
   key: number;
 }
 
 export interface UserInfoData {
   profilePhotoFileString: string;
+  userId: string;
   username: string;
+  postId: string;
   location: string;
   name: string;
   comment: string;
@@ -51,8 +73,43 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   fileString,
   caption,
   date,
+  currentUser,
   custRef,
 }) => {
+  const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
+
+  const handleRenderLikedOrLikedButton = () => {
+    return (
+      <Button
+        className='like-text-button'
+        onClick={
+          alreadyLikedPost
+            ? () => handleSubmitRemoveLike()
+            : () => handleSubmitLike()
+        }
+      >
+        <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
+      </Button>
+    );
+  };
+
+  const handleSubmitLike = () => {
+    createPostReactionStart({
+      reactingUserId: userInfo.userId,
+      postId: userInfo.postId,
+      likedPost: true,
+      comment: '',
+    });
+  };
+
+  const handleSubmitRemoveLike = () => {
+    deleteReactionStart({
+      reactingUserId: currentUser!.id,
+      reactionId: '',
+      isLikeRemoval: true,
+    });
+  };
+
   return (
     <div className='feed-post-container' ref={custRef}>
       <div className='profile-and-options'>
@@ -70,6 +127,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           <span className='username'>{userInfo.username}</span>{' '}
           {caption ? caption : ''}
         </div>
+        {handleRenderLikedOrLikedButton()}
         <span className='date'>{date}</span>
       </div>
     </div>
@@ -77,6 +135,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 };
 
 interface LinkStateProps {
+  currentUser: User | null;
   postReactionsArray: Reaction[][];
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
@@ -85,6 +144,7 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
+  currentUser: selectCurrentUser,
   postReactionsArray: selectPostReactionsArray,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
@@ -97,6 +157,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(createPostReactionStart(reactionReq)),
   getPostReactionsStart: (postId: string) =>
     dispatch(getPostReactionsStart(postId)),
+  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
+    dispatch(deleteReactionStart(deleteReactionReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPostContainer);
