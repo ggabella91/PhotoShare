@@ -333,6 +333,19 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   };
 
+  const handleHidePostModal = () => {
+    setPostModalProps({
+      id: '',
+      s3Key: '',
+      caption: '',
+      location: '',
+      createdAt: null,
+      fileString: '',
+    });
+    setPostModalShow(false);
+    setClearPostModalLocalState(true);
+  };
+
   useEffect(() => {
     if (currentUserUsersFollowing?.length) {
       for (let userFollowing of currentUserUsersFollowing) {
@@ -479,10 +492,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         createdAt={
           postModalProps.createdAt || new Date('2021-01-09T22:39:39.945Z')
         }
-        onHide={() => {
-          setPostModalShow(false);
-          setClearPostModalLocalState(true);
-        }}
+        onHide={() => handleHidePostModal()}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         userProfilePhotoFile={profilePhoto || ''}
         userName={user.username}
