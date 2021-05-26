@@ -357,9 +357,22 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         createdAt,
         fileString: file.fileString,
       });
-      setPostModalShow(true);
       setClearPostModalLocalState(false);
+      setPostModalShow(true);
     }
+  };
+
+  const handleHidePostModal = () => {
+    setPostModalProps({
+      id: '',
+      s3Key: '',
+      caption: '',
+      location: '',
+      createdAt: null,
+      fileString: '',
+    });
+    setPostModalShow(false);
+    setClearPostModalLocalState(true);
   };
 
   useEffect(() => {
@@ -542,10 +555,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         createdAt={
           postModalProps.createdAt || new Date('2021-01-09T22:39:39.945Z')
         }
-        onHide={() => {
-          setPostModalShow(false);
-          setClearPostModalLocalState(true);
-        }}
+        onHide={() => handleHidePostModal()}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         userProfilePhotoFile={profilePhoto || ''}
         userName={user.username}
