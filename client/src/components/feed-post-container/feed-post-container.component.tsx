@@ -18,6 +18,7 @@ import {
 import {
   Reaction,
   ReactionReq,
+  PostFile,
   PostError,
   DeleteReactionReq,
 } from '../../redux/post/post.types';
@@ -27,6 +28,7 @@ import {
   selectPostReactionError,
   selectGetPostReactionsConfirm,
   selectGetPostReactionsError,
+  selectDeleteReactionConfirm,
 } from '../../redux/post/post.selectors';
 import {
   createPostReactionStart,
@@ -36,7 +38,10 @@ import {
 
 import Button from '../button/button.component';
 
-import UserInfo, { StyleType } from '../user-info/user-info.component';
+import UserInfo, {
+  StyleType,
+  UserInfoAndOtherData,
+} from '../user-info/user-info.component';
 
 import './feed-post-container.styles.scss';
 
@@ -51,6 +56,7 @@ interface FeedPostContainerProps {
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
+  deleteReactionConfirm: string | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   deleteReactionStart: typeof deleteReactionStart;
@@ -74,9 +80,82 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   caption,
   date,
   currentUser,
+  postReactionsArray,
+  postReactionConfirm,
+  deleteReactionConfirm,
   custRef,
+  createPostReactionStart,
+  deleteReactionStart,
 }) => {
+  const [comment, setComment] = useState('');
+
+  const [captionInfoArray, setCaptionInfoArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
+
+  const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
+
+  const [reactingUserInfoArray, setReactingUsersInfoArray] =
+    useState<User[] | null>(null);
+
+  const [userProfilePhotoArray, setUserProfilePhotoArray] =
+    useState<PostFile[] | null>(null);
+
+  const [commentingUserArray, setCommentingUserArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
+
+  const [postLikingUserArray, setPostLikingUserArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
+
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
+
+  useEffect(() => {
+    if (userInfo.postId) {
+      getPostReactionsStart(userInfo.postId);
+    }
+  }, [userInfo.postId]);
+
+  useEffect(() => {
+    if (postReactionsArray && postReactionsArray.length) {
+      for (let innerArray of postReactionsArray) {
+        if (innerArray.length && innerArray[0].postId === userInfo.postId) {
+          setReactionsArray(innerArray);
+        }
+      }
+    }
+  }, [postReactionsArray]);
+
+  useEffect(() => {
+    if (reactionsArray && reactionsArray.length) {
+      console.log('reactionsArray: ', reactionsArray);
+      for (let el of reactionsArray) {
+        if (
+          currentUser &&
+          el.reactingUserId === currentUser.id &&
+          el.likedPost
+        ) {
+          setAlreadyLikedPost(true);
+        }
+      }
+    }
+  }, [reactionsArray]);
+
+  useEffect(() => {
+    if (
+      postReactionConfirm &&
+      postReactionConfirm === 'Post liked successfully!'
+    ) {
+      setAlreadyLikedPost(true);
+    }
+  }, [postReactionConfirm]);
+
+  useEffect(() => {
+    if (
+      deleteReactionConfirm &&
+      deleteReactionConfirm === 'Like removed successfully!'
+    ) {
+      setAlreadyLikedPost(false);
+    }
+  }, [deleteReactionConfirm]);
 
   const handleRenderLikedOrLikedButton = () => {
     return (
@@ -123,11 +202,11 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         />
       </div>
       <div className='caption-and-reactions'>
+        {handleRenderLikedOrLikedButton()}
         <div className='caption'>
           <span className='username'>{userInfo.username}</span>{' '}
           {caption ? caption : ''}
         </div>
-        {handleRenderLikedOrLikedButton()}
         <span className='date'>{date}</span>
       </div>
     </div>
@@ -141,6 +220,7 @@ interface LinkStateProps {
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
+  deleteReactionConfirm: string | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -150,6 +230,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
   getPostReactionsError: selectGetPostReactionsError,
+  deleteReactionConfirm: selectDeleteReactionConfirm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
