@@ -44,6 +44,30 @@
         font-weight: 540;
       }
     }
+
+    .like-text-button {
+      width: fit-content;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      background-color: white;
+      color: #074aaf;
+      border: none;
+      margin: 10px 0 5px 0;
+      padding-left: 0;
+      text-decoration: none;
+      border-radius: 15px;
+
+      span {
+        font-size: 14px;
+        font-weight: 520;
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
+        margin: auto;
+        font-family: 'Lato', sans-serif;
+      }
+    }
   }
 
   .date {
