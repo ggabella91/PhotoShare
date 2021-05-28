@@ -14,6 +14,7 @@ import {
   selectCurrentUser,
   selectPostReactingUsers,
 } from '../../redux/user/user.selectors';
+import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
   Reaction,
@@ -38,12 +39,16 @@ import {
 
 import Button from '../button/button.component';
 
-import UserInfo, {
-  StyleType,
-  UserInfoAndOtherData,
-} from '../user-info/user-info.component';
+import UserInfo, { StyleType } from '../user-info/user-info.component';
 
 import './feed-post-container.styles.scss';
+
+export interface UserInfoAndOtherDataLite {
+  username: string;
+  comment: string;
+  reactionId?: string;
+  reactingUserId?: string;
+}
 
 interface FeedPostContainerProps {
   userInfo: UserInfoData;
@@ -52,6 +57,7 @@ interface FeedPostContainerProps {
   date: string;
   currentUser: User | null;
   postReactionsArray: Reaction[][];
+  postReactingUsers: User[] | null;
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -59,6 +65,7 @@ interface FeedPostContainerProps {
   deleteReactionConfirm: string | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
+  getOtherUserStart: typeof getOtherUserStart;
   deleteReactionStart: typeof deleteReactionStart;
   custRef?: (node: HTMLDivElement | null) => void;
   key: number;
@@ -81,30 +88,26 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   date,
   currentUser,
   postReactionsArray,
+  postReactingUsers,
   postReactionConfirm,
   deleteReactionConfirm,
   custRef,
+  getOtherUserStart,
   createPostReactionStart,
   deleteReactionStart,
 }) => {
   const [comment, setComment] = useState('');
-
-  const [captionInfoArray, setCaptionInfoArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
   const [reactingUserInfoArray, setReactingUsersInfoArray] =
     useState<User[] | null>(null);
 
-  const [userProfilePhotoArray, setUserProfilePhotoArray] =
-    useState<PostFile[] | null>(null);
-
   const [commentingUserArray, setCommentingUserArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+    useState<UserInfoAndOtherDataLite[] | null>(null);
 
   const [postLikingUserArray, setPostLikingUserArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+    useState<UserInfoAndOtherDataLite[] | null>(null);
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
@@ -126,7 +129,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
-      console.log('reactionsArray: ', reactionsArray);
       for (let el of reactionsArray) {
         if (
           currentUser &&
@@ -156,6 +158,68 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       setAlreadyLikedPost(false);
     }
   }, [deleteReactionConfirm]);
+
+  useEffect(() => {
+    if (reactionsArray && reactionsArray.length) {
+      for (let el of reactionsArray) {
+        getOtherUserStart({
+          type: OtherUserType.POST_REACTOR,
+          usernameOrId: el.reactingUserId,
+        });
+      }
+    }
+  }, [reactionsArray]);
+
+  useEffect(() => {
+    if (postReactingUsers && postReactingUsers.length) {
+      setReactingUsersInfoArray(postReactingUsers);
+    }
+  }, [postReactingUsers]);
+
+  useEffect(() => {
+    if (
+      reactionsArray &&
+      reactionsArray.length &&
+      reactingUserInfoArray &&
+      reactingUserInfoArray.length
+    ) {
+      let commentsArray: UserInfoAndOtherDataLite[] = [];
+      let likesArray: UserInfoAndOtherDataLite[] = [];
+
+      for (let reactionEl of reactionsArray) {
+        const userId = reactionEl.reactingUserId;
+        let username: string;
+        let comment = reactionEl.comment;
+
+        for (let infoEl of reactingUserInfoArray) {
+          if (infoEl.id === userId) {
+            username = infoEl.username;
+          }
+        }
+
+        if (!comment) {
+          comment = '';
+        }
+
+        if (reactionEl.likedPost) {
+          likesArray.push({
+            username: username!,
+            comment: '',
+          });
+        } else {
+          commentsArray.push({
+            username: username!,
+            comment,
+            reactionId: reactionEl.id,
+            reactingUserId: reactionEl.reactingUserId,
+          });
+        }
+      }
+
+      setCommentingUserArray(commentsArray);
+      setPostLikingUserArray(likesArray);
+    }
+  }, [reactionsArray, reactingUserInfoArray]);
 
   const handleRenderLikedOrLikedButton = () => {
     return (
@@ -216,6 +280,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 interface LinkStateProps {
   currentUser: User | null;
   postReactionsArray: Reaction[][];
+  postReactingUsers: User[] | null;
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -226,6 +291,7 @@ interface LinkStateProps {
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   postReactionsArray: selectPostReactionsArray,
+  postReactingUsers: selectPostReactingUsers,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
@@ -238,6 +304,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(createPostReactionStart(reactionReq)),
   getPostReactionsStart: (postId: string) =>
     dispatch(getPostReactionsStart(postId)),
+  getOtherUserStart: (otherUserReq: OtherUserRequest) =>
+    dispatch(getOtherUserStart(otherUserReq)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
     dispatch(deleteReactionStart(deleteReactionReq)),
 });
