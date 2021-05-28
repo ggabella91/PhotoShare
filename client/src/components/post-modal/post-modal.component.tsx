@@ -189,7 +189,6 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
-      console.log('reactionsArray: ', reactionsArray);
       for (let el of reactionsArray) {
         if (
           currentUser &&
