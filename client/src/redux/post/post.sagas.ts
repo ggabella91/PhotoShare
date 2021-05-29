@@ -237,7 +237,7 @@ export function* onGetPostDataStart(): SagaIterator {
 }
 
 export function* onGetPostReactionsStart(): SagaIterator {
-  yield takeLatest<ActionPattern, Saga>(
+  yield takeEvery<ActionPattern, Saga>(
     PostActions.GET_POST_REACTIONS_START,
     getPostReactions
   );

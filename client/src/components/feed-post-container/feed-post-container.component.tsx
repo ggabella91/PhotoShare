@@ -92,6 +92,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   postReactionConfirm,
   deleteReactionConfirm,
   custRef,
+  getPostReactionsStart,
   getOtherUserStart,
   createPostReactionStart,
   deleteReactionStart,
@@ -119,6 +120,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (postReactionsArray && postReactionsArray.length) {
+      console.log('postReactionsArray: ', postReactionsArray);
       for (let innerArray of postReactionsArray) {
         if (innerArray.length && innerArray[0].postId === userInfo.postId) {
           setReactionsArray(innerArray);
@@ -267,10 +269,23 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       </div>
       <div className='caption-and-reactions'>
         {handleRenderLikedOrLikedButton()}
-        <div className='caption'>
+        <div className='caption-or-reaction'>
           <span className='username'>{userInfo.username}</span>{' '}
           {caption ? caption : ''}
         </div>
+        {commentingUserArray
+          ? commentingUserArray.map((el, idx) => {
+              if (idx >= commentingUserArray.length - 2) {
+                return (
+                  <div className='caption-or-reaction'>
+                    <span className='username'>{el.username}</span> {el.comment}
+                  </div>
+                );
+              } else {
+                return null;
+              }
+            })
+          : null}
         <span className='date'>{date}</span>
       </div>
     </div>
