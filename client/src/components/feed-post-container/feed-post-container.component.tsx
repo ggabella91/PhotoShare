@@ -226,7 +226,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const handleRenderLikedOrLikedButton = () => {
     return (
       <Button
-        className='like-text-button'
+        className='likes-text'
         onClick={
           alreadyLikedPost
             ? () => handleSubmitRemoveLike()
@@ -269,6 +269,11 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       </div>
       <div className='caption-and-reactions'>
         {handleRenderLikedOrLikedButton()}
+        {postLikingUserArray && postLikingUserArray.length ? (
+          <span className='likes-text'>
+            {`${postLikingUserArray.length} likes`}
+          </span>
+        ) : null}
         <div className='caption-or-reaction'>
           <span className='username'>{userInfo.username}</span>{' '}
           {caption ? caption : ''}

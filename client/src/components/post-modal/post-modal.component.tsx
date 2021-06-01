@@ -373,7 +373,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const handleRenderLikedOrLikedButton = () => {
     return (
       <Button
-        className='like-text-button'
+        className='likes-text'
         onClick={
           alreadyLikedPost
             ? () => handleSubmitRemoveLike()
@@ -401,6 +401,10 @@ export const PostModal: React.FC<PostModalProps> = ({
       isLikeRemoval: true,
     });
   };
+
+  useEffect(() => {
+    if (!postReactionConfirm) console.log('postReactionConfirm is now null');
+  }, [postReactionConfirm]);
 
   return (
     <Modal {...props} dialogClassName='post-modal' animation={false} centered>
@@ -452,6 +456,11 @@ export const PostModal: React.FC<PostModalProps> = ({
             ) : null}
           </div>
           {handleRenderLikedOrLikedButton()}
+          {postLikingUserArray && postLikingUserArray.length ? (
+            <span className='likes-text'>
+              {`${postLikingUserArray.length} likes`}
+            </span>
+          ) : null}
           <span className='post-date'>{postDate}</span>
           <form className='comment-form' onSubmit={handleSubmitComment}>
             <ExpandableFormInput
