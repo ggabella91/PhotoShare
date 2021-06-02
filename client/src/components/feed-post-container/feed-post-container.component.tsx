@@ -55,6 +55,9 @@ interface FeedPostContainerProps {
   fileString: string;
   caption?: string;
   date: string;
+  custRef?: (node: HTMLDivElement | null) => void;
+  key: number;
+  onPostLikingUsersClick?: () => void;
   currentUser: User | null;
   postReactionsArray: Reaction[][];
   postReactingUsers: User[] | null;
@@ -67,8 +70,6 @@ interface FeedPostContainerProps {
   getPostReactionsStart: typeof getPostReactionsStart;
   getOtherUserStart: typeof getOtherUserStart;
   deleteReactionStart: typeof deleteReactionStart;
-  custRef?: (node: HTMLDivElement | null) => void;
-  key: number;
 }
 
 export interface UserInfoData {
@@ -86,12 +87,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   fileString,
   caption,
   date,
+  custRef,
+  onPostLikingUsersClick,
   currentUser,
   postReactionsArray,
   postReactingUsers,
   postReactionConfirm,
   deleteReactionConfirm,
-  custRef,
   getPostReactionsStart,
   getOtherUserStart,
   createPostReactionStart,
@@ -111,6 +113,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     useState<UserInfoAndOtherDataLite[] | null>(null);
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
+
+  const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
+    useState(false);
 
   useEffect(() => {
     if (userInfo.postId) {
@@ -270,7 +275,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       <div className='caption-and-reactions'>
         {handleRenderLikedOrLikedButton()}
         {postLikingUserArray && postLikingUserArray.length ? (
-          <span className='likes-text'>
+          <span className='likes-text' onClick={onPostLikingUsersClick}>
             {`${postLikingUserArray.length} likes`}
           </span>
         ) : null}

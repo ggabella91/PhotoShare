@@ -68,6 +68,7 @@ interface PostModalProps {
   userName: string;
   userId: string;
   onOptionsClick: () => void;
+  onPostLikingUsersClick?: () => void;
   userProfilePhotoFile: string;
   postReactionsArray: Reaction[][];
   postReactionConfirm: string | null;
@@ -98,6 +99,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   userName,
   userId,
   onOptionsClick,
+  onPostLikingUsersClick,
   userProfilePhotoFile,
   postReactionsArray,
   postReactingUsers,
@@ -457,7 +459,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           </div>
           {handleRenderLikedOrLikedButton()}
           {postLikingUserArray && postLikingUserArray.length ? (
-            <span className='likes-text'>
+            <span className='likes-text' onClick={onPostLikingUsersClick}>
               {`${postLikingUserArray.length} likes`}
             </span>
           ) : null}

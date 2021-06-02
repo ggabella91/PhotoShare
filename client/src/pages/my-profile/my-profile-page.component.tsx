@@ -188,6 +188,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [currentUserPostOrComment, setCurrentUserPostOrComment] =
     useState<boolean | null>(null);
 
+  const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
+    useState(false);
+
   let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -494,6 +497,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         }
         onHide={() => handleHidePostModal()}
         onOptionsClick={() => setPostOptionsModalShow(true)}
+        onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
         userProfilePhotoFile={profilePhoto || ''}
         userName={user.username}
         userId={user.id}
