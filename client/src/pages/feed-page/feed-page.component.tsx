@@ -158,6 +158,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
+  const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
+    useState(false);
+
   let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -395,6 +398,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 caption={el.caption}
                 date={el.dateString}
                 key={Math.random()}
+                onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
                 custRef={lastPostContainerElementRef}
               />
             );
