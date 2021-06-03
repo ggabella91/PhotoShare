@@ -84,7 +84,7 @@ import PostModal from '../../components/post-modal/post-modal.component';
 import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 import NotFoundPage from '../../pages/not-found/not-found-page.component';
 import UnfollowModal from '../../components/unfollow-modal/unfollow-modal.component';
-import FollowersOrFollowingModal from '../../components/followers-or-following-modal/followers-or-following-modal.component';
+import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 
 import '../my-profile/profile-page.styles.scss';
 
@@ -598,7 +598,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         username={username}
         profilePhoto={profilePhotoFile}
       />
-      <FollowersOrFollowingModal
+      <FollowersOrFollowingOrLikesModal
         users={isFollowersModal ? followersArray : usersFollowingArray}
         show={followersOrFollowingModalShow}
         onHide={() => {

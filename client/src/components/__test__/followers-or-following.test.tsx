@@ -7,7 +7,7 @@ import {
   clearUsersPhotoFileArray,
 } from '../../redux/post/post.actions';
 
-import { FollowersOrFollowingModal } from '../followers-or-following-modal/followers-or-following-modal.component';
+import { FollowersOrFollowingModal } from '../followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 
 it('renders a user-suggestions component', () => {
   const followersOrFollowingModalWrapper = shallow(
