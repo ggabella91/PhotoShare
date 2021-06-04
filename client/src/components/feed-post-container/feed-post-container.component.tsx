@@ -275,9 +275,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       <div className='caption-and-reactions'>
         {handleRenderLikedOrLikedButton()}
         {postLikingUserArray && postLikingUserArray.length ? (
-          <span className='likes-text' onClick={onPostLikingUsersClick}>
-            {`${postLikingUserArray.length} likes`}
-          </span>
+          <Button className='likes-text' onClick={onPostLikingUsersClick}>
+            <span>{`${postLikingUserArray.length} likes`}</span>
+          </Button>
         ) : null}
         <div className='caption-or-reaction'>
           <span className='username'>{userInfo.username}</span>{' '}

@@ -459,9 +459,9 @@ export const PostModal: React.FC<PostModalProps> = ({
           </div>
           {handleRenderLikedOrLikedButton()}
           {postLikingUserArray && postLikingUserArray.length ? (
-            <span className='likes-text' onClick={onPostLikingUsersClick}>
-              {`${postLikingUserArray.length} likes`}
-            </span>
+            <Button className='likes-text' onClick={onPostLikingUsersClick}>
+              <span>{`${postLikingUserArray.length} likes`}</span>
+            </Button>
           ) : null}
           <span className='post-date'>{postDate}</span>
           <form className='comment-form' onSubmit={handleSubmitComment}>
