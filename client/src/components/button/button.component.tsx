@@ -4,7 +4,7 @@ import './button.styles.scss';
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   className: string;
-  onClick: React.FormEventHandler;
+  onClick: React.FormEventHandler | ((() => void) | undefined);
   disabled?: boolean;
   children?: any;
 }
