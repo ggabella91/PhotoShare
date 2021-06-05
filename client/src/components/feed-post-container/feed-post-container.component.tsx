@@ -19,12 +19,16 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 import {
   Reaction,
   ReactionReq,
+  PostFileReq,
   PostFile,
+  UserType,
   PostError,
   DeleteReactionReq,
 } from '../../redux/post/post.types';
 import {
   selectPostReactionsArray,
+  selectReactorPhotoFileArray,
+  selectUsersProfilePhotoConfirm,
   selectPostReactionConfirm,
   selectPostReactionError,
   selectGetPostReactionsConfirm,
@@ -34,21 +38,25 @@ import {
 import {
   createPostReactionStart,
   getPostReactionsStart,
+  getPostFileStart,
   deleteReactionStart,
 } from '../../redux/post/post.actions';
 
 import Button from '../button/button.component';
 
-import UserInfo, { StyleType } from '../user-info/user-info.component';
+import UserInfo, {
+  StyleType,
+  UserInfoAndOtherData,
+} from '../user-info/user-info.component';
 
 import './feed-post-container.styles.scss';
 
-export interface UserInfoAndOtherDataLite {
-  username: string;
-  comment: string;
-  reactionId?: string;
-  reactingUserId?: string;
-}
+// export interface UserInfoAndOtherDataLite {
+//   username: string;
+//   comment: string;
+//   reactionId?: string;
+//   reactingUserId?: string;
+// }
 
 interface FeedPostContainerProps {
   userInfo: UserInfoData;
@@ -61,6 +69,8 @@ interface FeedPostContainerProps {
   currentUser: User | null;
   postReactionsArray: Reaction[][];
   postReactingUsers: User[] | null;
+  reactorPhotoFileArray: PostFile[] | null;
+  usersProfilePhotoConfirm: string | null;
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -69,6 +79,7 @@ interface FeedPostContainerProps {
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getOtherUserStart: typeof getOtherUserStart;
+  getPostFileStart: typeof getPostFileStart;
   deleteReactionStart: typeof deleteReactionStart;
 }
 
@@ -92,10 +103,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   currentUser,
   postReactionsArray,
   postReactingUsers,
+  reactorPhotoFileArray,
+  usersProfilePhotoConfirm,
   postReactionConfirm,
   deleteReactionConfirm,
   getPostReactionsStart,
   getOtherUserStart,
+  getPostFileStart,
   createPostReactionStart,
   deleteReactionStart,
 }) => {
@@ -106,16 +120,27 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const [reactingUserInfoArray, setReactingUsersInfoArray] =
     useState<User[] | null>(null);
 
+  const [userProfilePhotoArray, setUserProfilePhotoArray] =
+    useState<PostFile[] | null>(null);
+
   const [commentingUserArray, setCommentingUserArray] =
-    useState<UserInfoAndOtherDataLite[] | null>(null);
+    useState<UserInfoAndOtherData[] | null>(null);
 
   const [postLikingUserArray, setPostLikingUserArray] =
-    useState<UserInfoAndOtherDataLite[] | null>(null);
+    useState<UserInfoAndOtherData[] | null>(null);
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
+
+  let bucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    bucket = 'photo-share-app-profile-photos';
+  } else {
+    bucket = 'photo-share-app-profile-photos-dev';
+  }
 
   useEffect(() => {
     if (userInfo.postId) {
@@ -184,24 +209,65 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [postReactingUsers]);
 
   useEffect(() => {
+    if (reactingUserInfoArray && reactingUserInfoArray.length) {
+      for (let el of reactingUserInfoArray) {
+        if (el.photo) {
+          getPostFileStart({
+            s3Key: el.photo,
+            bucket,
+            user: UserType.postReactorsArray,
+          });
+        }
+      }
+    }
+  }, [reactingUserInfoArray]);
+
+  useEffect(() => {
+    if (reactorPhotoFileArray) {
+      setUserProfilePhotoArray(reactorPhotoFileArray);
+    }
+  }, [reactorPhotoFileArray]);
+
+  useEffect(() => {
     if (
       reactionsArray &&
       reactionsArray.length &&
       reactingUserInfoArray &&
-      reactingUserInfoArray.length
+      reactingUserInfoArray.length &&
+      reactingUserInfoArray.length &&
+      ((userProfilePhotoArray && userProfilePhotoArray.length) ||
+        (!userProfilePhotoArray &&
+          usersProfilePhotoConfirm === 'User photo added to reactor array!'))
     ) {
-      let commentsArray: UserInfoAndOtherDataLite[] = [];
-      let likesArray: UserInfoAndOtherDataLite[] = [];
+      let commentsArray: UserInfoAndOtherData[] = [];
+      let likesArray: UserInfoAndOtherData[] = [];
 
       for (let reactionEl of reactionsArray) {
         const userId = reactionEl.reactingUserId;
         let username: string;
+        let name: string;
         let comment = reactionEl.comment;
+        let photoKey: string;
+        let fileString: string;
 
         for (let infoEl of reactingUserInfoArray) {
           if (infoEl.id === userId) {
             username = infoEl.username;
+            name = infoEl.name;
+            photoKey = infoEl.photo || '';
           }
+        }
+
+        if (userProfilePhotoArray) {
+          for (let photoEl of userProfilePhotoArray) {
+            if (photoEl.s3Key === photoKey!) {
+              fileString = photoEl.fileString;
+            }
+          }
+        }
+
+        if (!photoKey!) {
+          fileString = '';
         }
 
         if (!comment) {
@@ -211,12 +277,18 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         if (reactionEl.likedPost) {
           likesArray.push({
             username: username!,
+            name: name!,
             comment: '',
+            profilePhotoFileString: fileString!,
+            location: '',
           });
         } else {
           commentsArray.push({
             username: username!,
+            name: '',
             comment,
+            profilePhotoFileString: '',
+            location: '',
             reactionId: reactionEl.id,
             reactingUserId: reactionEl.reactingUserId,
           });
@@ -306,6 +378,8 @@ interface LinkStateProps {
   currentUser: User | null;
   postReactionsArray: Reaction[][];
   postReactingUsers: User[] | null;
+  reactorPhotoFileArray: PostFile[] | null;
+  usersProfilePhotoConfirm: string | null;
   postReactionConfirm: string | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -317,6 +391,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   postReactionsArray: selectPostReactionsArray,
   postReactingUsers: selectPostReactingUsers,
+  reactorPhotoFileArray: selectReactorPhotoFileArray,
+  usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
@@ -331,6 +407,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostReactionsStart(postId)),
   getOtherUserStart: (otherUserReq: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserReq)),
+  getPostFileStart: (postFileReq: PostFileReq) =>
+    dispatch(getPostFileStart(postFileReq)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
     dispatch(deleteReactionStart(deleteReactionReq)),
 });
