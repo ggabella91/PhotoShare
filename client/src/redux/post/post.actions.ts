@@ -1,3 +1,5 @@
+import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
+
 import {
   Post,
   PostDataReq,
@@ -250,4 +252,11 @@ export const setPostMetaDataForUser = (
 ): PostActionTypes => ({
   type: PostActions.SET_POST_META_DATA_FOR_USER,
   payload: postMetaData,
+});
+
+export const setPostLikingUsersArray = (
+  postLikingUsersArray: UserInfoAndOtherData[]
+): PostActionTypes => ({
+  type: PostActions.SET_POST_LIKING_USERS_ARRAY,
+  payload: postLikingUsersArray,
 });

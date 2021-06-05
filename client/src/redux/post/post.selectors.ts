@@ -159,3 +159,8 @@ export const selectPostMetaDataForUser = createSelector(
   [selectPostState],
   (postState: PostState) => postState.postMetaDataForUser
 );
+
+export const selectPostLikingUsersArray = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postLikingUsersArray
+);

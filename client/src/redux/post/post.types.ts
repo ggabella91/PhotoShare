@@ -1,3 +1,5 @@
+import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
+
 export enum PostActions {
   CREATE_POST_START = 'CREATE_POST_START',
   CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS',
@@ -40,6 +42,7 @@ export enum PostActions {
   SET_SHOW_COMMENT_OPTIONS_MODAL = 'SET_SHOW_COMMENT_OPTIONS_MODAL',
   CLEAR_POST_REACTIONS = 'CLEAR_POST_REACTIONS',
   SET_POST_META_DATA_FOR_USER = 'SET_POST_META_DATA_FOR_USER',
+  SET_POST_LIKING_USERS_ARRAY = 'SET_POST_LIKING_USERS_ARRAY',
 }
 
 export interface PostError {
@@ -153,6 +156,7 @@ export interface PostState {
   showCommentOptionsModal: boolean;
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
+  postLikingUsersArray: UserInfoAndOtherData[] | null;
 }
 
 export interface CreatePostStart {
@@ -360,6 +364,11 @@ export interface SetPostMetaDataForUser {
   payload: PostMetaData;
 }
 
+export interface SetPostLikingUsersArray {
+  type: typeof PostActions.SET_POST_LIKING_USERS_ARRAY;
+  payload: UserInfoAndOtherData[];
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -401,4 +410,5 @@ export type PostActionTypes =
   | SetCommentToDelete
   | SetShowCommentOptionsModal
   | ClearPostReactions
-  | SetPostMetaDataForUser;
+  | SetPostMetaDataForUser
+  | SetPostLikingUsersArray;
