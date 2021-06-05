@@ -38,6 +38,7 @@ const INITIAL_STATE: PostState = {
   showCommentOptionsModal: false,
   isLoadingPostData: false,
   postMetaDataForUser: null,
+  postLikingUsersArray: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -282,6 +283,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
       return {
         ...state,
         postMetaDataForUser: action.payload,
+      };
+    case PostActions.SET_POST_LIKING_USERS_ARRAY:
+      return {
+        ...state,
+        postLikingUsersArray: action.payload,
       };
     default:
       return state;
