@@ -42,6 +42,7 @@ import {
   getPostFileStart,
   deleteReactionStart,
   clearPostReactions,
+  setPostLikingUsersArray,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -85,6 +86,7 @@ interface PostModalProps {
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
   deleteReactionStart: typeof deleteReactionStart;
+  setPostLikingUsersArray: typeof setPostLikingUsersArray;
   clearPostReactions: typeof clearPostReactions;
 }
 
@@ -113,6 +115,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   getOtherUserStart,
   getPostFileStart,
   deleteReactionStart,
+  setPostLikingUsersArray,
   ...props
 }) => {
   const [comment, setComment] = useState('');
@@ -131,7 +134,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const [commentingUserArray, setCommentingUserArray] =
     useState<UserInfoAndOtherData[] | null>(null);
 
-  const [postLikingUserArray, setPostLikingUserArray] =
+  const [likingUsersArray, setLikingUsersArray] =
     useState<UserInfoAndOtherData[] | null>(null);
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
@@ -149,11 +152,11 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       clearLocalState &&
-      (reactionsArray || commentingUserArray || postLikingUserArray)
+      (reactionsArray || commentingUserArray || likingUsersArray)
     ) {
       setReactionsArray([]);
       setCommentingUserArray([]);
-      setPostLikingUserArray([]);
+      setLikingUsersArray([]);
       setAlreadyLikedPost(false);
     }
   }, [postId]);
@@ -348,7 +351,8 @@ export const PostModal: React.FC<PostModalProps> = ({
       }
 
       setCommentingUserArray(commentsArray);
-      setPostLikingUserArray(likesArray);
+      setLikingUsersArray(likesArray);
+      setPostLikingUsersArray(likesArray);
     }
   }, [reactionsArray, reactingUserInfoArray, userProfilePhotoArray]);
 
@@ -458,9 +462,9 @@ export const PostModal: React.FC<PostModalProps> = ({
             ) : null}
           </div>
           {handleRenderLikedOrLikedButton()}
-          {postLikingUserArray && postLikingUserArray.length ? (
+          {likingUsersArray && likingUsersArray.length ? (
             <Button className='likes-text' onClick={onPostLikingUsersClick}>
-              <span>{`${postLikingUserArray.length} likes`}</span>
+              <span>{`${likingUsersArray.length} likes`}</span>
             </Button>
           ) : null}
           <span className='post-date'>{postDate}</span>
@@ -529,6 +533,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
     dispatch(deleteReactionStart(deleteReactionReq)),
   clearPostReactions: () => dispatch(clearPostReactions()),
+  setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
+    dispatch(setPostLikingUsersArray(postLikingUsersArray)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);

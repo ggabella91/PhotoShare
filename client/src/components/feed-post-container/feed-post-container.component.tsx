@@ -40,6 +40,7 @@ import {
   getPostReactionsStart,
   getPostFileStart,
   deleteReactionStart,
+  setPostLikingUsersArray,
 } from '../../redux/post/post.actions';
 
 import Button from '../button/button.component';
@@ -50,13 +51,6 @@ import UserInfo, {
 } from '../user-info/user-info.component';
 
 import './feed-post-container.styles.scss';
-
-// export interface UserInfoAndOtherDataLite {
-//   username: string;
-//   comment: string;
-//   reactionId?: string;
-//   reactingUserId?: string;
-// }
 
 interface FeedPostContainerProps {
   userInfo: UserInfoData;
@@ -81,6 +75,7 @@ interface FeedPostContainerProps {
   getOtherUserStart: typeof getOtherUserStart;
   getPostFileStart: typeof getPostFileStart;
   deleteReactionStart: typeof deleteReactionStart;
+  setPostLikingUsersArray: typeof setPostLikingUsersArray;
 }
 
 export interface UserInfoData {
@@ -112,6 +107,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   getPostFileStart,
   createPostReactionStart,
   deleteReactionStart,
+  setPostLikingUsersArray,
 }) => {
   const [comment, setComment] = useState('');
 
@@ -126,7 +122,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const [commentingUserArray, setCommentingUserArray] =
     useState<UserInfoAndOtherData[] | null>(null);
 
-  const [postLikingUserArray, setPostLikingUserArray] =
+  const [likingUsersArray, setLikingUsersArray] =
     useState<UserInfoAndOtherData[] | null>(null);
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
@@ -296,7 +292,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       }
 
       setCommentingUserArray(commentsArray);
-      setPostLikingUserArray(likesArray);
+      setLikingUsersArray(likesArray);
+      setPostLikingUsersArray(likesArray);
     }
   }, [reactionsArray, reactingUserInfoArray]);
 
@@ -346,9 +343,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       </div>
       <div className='caption-and-reactions'>
         {handleRenderLikedOrLikedButton()}
-        {postLikingUserArray && postLikingUserArray.length ? (
+        {likingUsersArray && likingUsersArray.length ? (
           <Button className='likes-text' onClick={onPostLikingUsersClick}>
-            <span>{`${postLikingUserArray.length} likes`}</span>
+            <span>{`${likingUsersArray.length} likes`}</span>
           </Button>
         ) : null}
         <div className='caption-or-reaction'>
@@ -411,6 +408,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostFileStart(postFileReq)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
     dispatch(deleteReactionStart(deleteReactionReq)),
+  setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
+    dispatch(setPostLikingUsersArray(postLikingUsersArray)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPostContainer);
