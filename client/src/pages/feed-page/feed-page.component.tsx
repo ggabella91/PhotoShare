@@ -41,6 +41,7 @@ import {
   selectGetPostFileError,
   selectIsLoadingPostData,
   selectPostMetaDataForUser,
+  selectPostLikingUsersArray,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -66,6 +67,8 @@ import {
 } from '../../redux/follower/follower.actions';
 
 import FeedPostContainer from '../../components/feed-post-container/feed-post-container.component';
+
+import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
@@ -104,6 +107,7 @@ interface FeedPageProps {
   getUsersFollowingConfirm: string | null;
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
+  postLikingUsersArray: UserInfoAndOtherData[] | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearPostState: typeof clearPostState;
@@ -130,6 +134,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   getOtherUserStart,
   clearFollowersAndFollowing,
   clearFollowState,
+  postLikingUsersArray,
 }) => {
   const [user, setUser] = useState({
     id: '',
@@ -447,6 +452,7 @@ interface LinkStateProps {
   getUsersFollowingConfirm: string | null;
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
+  postLikingUsersArray: UserInfoAndOtherData[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -465,6 +471,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   isLoadingPostData: selectIsLoadingPostData,
   postMetaDataForUser: selectPostMetaDataForUser,
+  postLikingUsersArray: selectPostLikingUsersArray,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
