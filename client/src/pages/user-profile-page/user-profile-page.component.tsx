@@ -44,6 +44,7 @@ import {
   selectOtherUserProfilePhotoFile,
   selectCommentToDelete,
   selectShowCommentOptionsModal,
+  selectPostLikingUsersArray,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -85,6 +86,7 @@ import PostOrCommentOptionsModal from '../../components/post-or-comment-options-
 import NotFoundPage from '../../pages/not-found/not-found-page.component';
 import UnfollowModal from '../../components/unfollow-modal/unfollow-modal.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
+import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 import '../my-profile/profile-page.styles.scss';
 
@@ -113,6 +115,7 @@ interface UserProfilePageProps {
   isCurrentUserProfilePage: boolean;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
+  postLikingUsersArray: UserInfoAndOtherData[] | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
@@ -171,6 +174,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   showCommentOptionsModal,
   setShowCommentOptionsModal,
   deleteReactionStart,
+  postLikingUsersArray,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
@@ -636,6 +640,7 @@ interface LinkStateProps {
   isCurrentUserProfilePage: boolean;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
+  postLikingUsersArray: UserInfoAndOtherData[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -662,6 +667,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   isCurrentUserProfilePage: selectIsCurrentUserProfilePage,
   commentToDelete: selectCommentToDelete,
   showCommentOptionsModal: selectShowCommentOptionsModal,
+  postLikingUsersArray: selectPostLikingUsersArray,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
