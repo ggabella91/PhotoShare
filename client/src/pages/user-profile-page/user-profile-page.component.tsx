@@ -215,6 +215,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
 
+  const [postLikersArray, setPostLikersArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
+
   let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -469,6 +472,12 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (postLikingUsersArray) {
+      setPostLikersArray(postLikingUsersArray);
+    }
+  }, [postLikingUsersArray]);
+
   if (otherUserError) {
     return <NotFoundPage />;
   }
@@ -612,6 +621,16 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         }}
         isFollowersModal={isFollowersModal}
       />
+      {postLikersArray ? (
+        <FollowersOrFollowingOrLikesModal
+          users={null}
+          show={showPostLikingUsersModal}
+          onHide={() => setShowPostLikingUsersModal(false)}
+          isFollowersModal={false}
+          isPostLikingUsersModal={true}
+          postLikingUsersArray={postLikersArray}
+        />
+      ) : null}
     </div>
   );
 };

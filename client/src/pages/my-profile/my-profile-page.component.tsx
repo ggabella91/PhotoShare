@@ -195,6 +195,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
 
+  const [postLikersArray, setPostLikersArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
+
   let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -406,6 +409,12 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (postLikingUsersArray) {
+      setPostLikersArray(postLikingUsersArray);
+    }
+  }, [postLikingUsersArray]);
+
   return (
     <div className='profile-page'>
       <div className='user-bio'>
@@ -539,6 +548,16 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         }}
         isFollowersModal={isFollowersModal}
       />
+      {postLikersArray ? (
+        <FollowersOrFollowingOrLikesModal
+          users={null}
+          show={showPostLikingUsersModal}
+          onHide={() => setShowPostLikingUsersModal(false)}
+          isFollowersModal={false}
+          isPostLikingUsersModal={true}
+          postLikingUsersArray={postLikersArray}
+        />
+      ) : null}
     </div>
   );
 };
