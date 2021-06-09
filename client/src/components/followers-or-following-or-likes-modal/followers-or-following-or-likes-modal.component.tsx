@@ -27,7 +27,10 @@ import {
 
 import { Follower } from '../../redux/follower/follower.types';
 
-import UserInfo, { StyleType } from '../user-info/user-info.component';
+import UserInfo, {
+  StyleType,
+  UserInfoAndOtherData,
+} from '../user-info/user-info.component';
 
 import './followers-or-following-or-likes-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
@@ -38,6 +41,7 @@ interface FollowersOrFollowingOrLikesModalProps {
   onHide: () => void;
   isFollowersModal: boolean;
   isPostLikingUsersModal?: boolean;
+  postLikingUsersArray?: UserInfoAndOtherData[];
   followers: User[] | null;
   following: User[] | null;
   followPhotoFileArray: PostFile[] | null;
@@ -61,6 +65,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     users,
     isFollowersModal,
     isPostLikingUsersModal,
+    postLikingUsersArray,
     onHide,
     followers,
     following,
@@ -71,7 +76,6 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     clearFollowPhotoFileArray,
     ...props
   }) => {
-    const [usersArray, setUsersArray] = useState<User[]>([]);
     const [userInfoAndPhotoArray, setUserInfoAndPhotoArray] = useState<
       UserInfoData[]
     >([]);
@@ -107,10 +111,12 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     }, [users]);
 
     useEffect(() => {
-      if (isFollowersModal && followers) {
-        handleRenderFollowersOrFollowingInfoArray(followers);
-      } else if (!isFollowersModal && following) {
-        handleRenderFollowersOrFollowingInfoArray(following);
+      if (!isPostLikingUsersModal) {
+        if (isFollowersModal && followers) {
+          handleRenderFollowersOrFollowingInfoArray(followers);
+        } else if (!isFollowersModal && following) {
+          handleRenderFollowersOrFollowingInfoArray(following);
+        }
       }
     }, [followers, following, followPhotoFileArray, usersProfilePhotoConfirm]);
 
@@ -171,6 +177,25 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
         setUserInfoAndPhotoArray(followerOrFollowing);
       }
     };
+
+    useEffect(() => {
+      if (isPostLikingUsersModal && postLikingUsersArray) {
+        let postLikerArray: UserInfoData[];
+
+        postLikerArray = postLikingUsersArray.map((el) => {
+          return {
+            profilePhotoFileString: el.profilePhotoFileString,
+            username: el.username,
+            name: el.name,
+            photo: '',
+            location: '',
+            comment: '',
+          };
+        });
+
+        setUserInfoAndPhotoArray(postLikerArray);
+      }
+    }, [postLikingUsersArray]);
 
     return (
       <Modal
