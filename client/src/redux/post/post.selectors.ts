@@ -164,3 +164,8 @@ export const selectPostLikingUsersArray = createSelector(
   [selectPostState],
   (postState: PostState) => postState.postLikingUsersArray
 );
+
+export const selectShowPostLikingUsersModal = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.showPostLikingUsersModal
+);

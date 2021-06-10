@@ -39,6 +39,7 @@ const INITIAL_STATE: PostState = {
   isLoadingPostData: false,
   postMetaDataForUser: null,
   postLikingUsersArray: null,
+  showPostLikingUsersModal: false,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -288,6 +289,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
       return {
         ...state,
         postLikingUsersArray: action.payload,
+      };
+    case PostActions.SET_SHOW_POST_LIKING_USERS_MODAL:
+      return {
+        ...state,
+        showPostLikingUsersModal: action.payload,
       };
     default:
       return state;
