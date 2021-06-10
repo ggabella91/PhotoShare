@@ -43,6 +43,7 @@ export enum PostActions {
   CLEAR_POST_REACTIONS = 'CLEAR_POST_REACTIONS',
   SET_POST_META_DATA_FOR_USER = 'SET_POST_META_DATA_FOR_USER',
   SET_POST_LIKING_USERS_ARRAY = 'SET_POST_LIKING_USERS_ARRAY',
+  SET_SHOW_POST_LIKING_USERS_MODAL = 'SET_SHOW_POST_LIKING_USERS_MODAL',
 }
 
 export interface PostError {
@@ -157,6 +158,7 @@ export interface PostState {
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
+  showPostLikingUsersModal: boolean;
 }
 
 export interface CreatePostStart {
@@ -369,6 +371,11 @@ export interface SetPostLikingUsersArray {
   payload: UserInfoAndOtherData[];
 }
 
+export interface SetShowPostLikingUsersModal {
+  type: typeof PostActions.SET_SHOW_POST_LIKING_USERS_MODAL;
+  payload: boolean;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -411,4 +418,5 @@ export type PostActionTypes =
   | SetShowCommentOptionsModal
   | ClearPostReactions
   | SetPostMetaDataForUser
-  | SetPostLikingUsersArray;
+  | SetPostLikingUsersArray
+  | SetShowPostLikingUsersModal;

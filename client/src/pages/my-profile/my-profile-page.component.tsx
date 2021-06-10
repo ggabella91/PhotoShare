@@ -8,7 +8,6 @@ import { AppState } from '../../redux/root-reducer';
 import {
   User,
   OtherUserRequest,
-  OtherUserType,
 } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import {
@@ -59,7 +58,6 @@ import {
 
 import {
   Follower,
-  FollowError,
   WhoseUsersFollowing,
   UsersFollowingRequest,
 } from '../../redux/follower/follower.types';

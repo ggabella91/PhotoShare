@@ -42,18 +42,17 @@ import {
   selectIsLoadingPostData,
   selectPostMetaDataForUser,
   selectPostLikingUsersArray,
+  selectShowPostLikingUsersModal,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
   getPostFileStart,
-  archivePostStart,
-  clearFollowPhotoFileArray,
   clearPostState,
+  setShowPostLikingUsersModal,
 } from '../../redux/post/post.actions';
 
 import {
   Follower,
-  FollowError,
   WhoseUsersFollowing,
   UsersFollowingRequest,
 } from '../../redux/follower/follower.types';
@@ -67,6 +66,7 @@ import {
 } from '../../redux/follower/follower.actions';
 
 import FeedPostContainer from '../../components/feed-post-container/feed-post-container.component';
+import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
@@ -108,6 +108,7 @@ interface FeedPageProps {
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
+  showPostLikingUsersModal: boolean;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearPostState: typeof clearPostState;
@@ -115,6 +116,7 @@ interface FeedPageProps {
   getOtherUserStart: typeof getOtherUserStart;
   clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
   clearFollowState: typeof clearFollowState;
+  setShowPostLikingUsersModal: typeof setShowPostLikingUsersModal;
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
@@ -135,6 +137,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   clearFollowersAndFollowing,
   clearFollowState,
   postLikingUsersArray,
+  showPostLikingUsersModal,
+  setShowPostLikingUsersModal,
 }) => {
   const [user, setUser] = useState({
     id: '',
@@ -163,8 +167,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
-  const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
-    useState(false);
+  const [postLikersArray, setPostLikersArray] =
+    useState<UserInfoAndOtherData[] | null>(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -231,8 +235,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       }
 
-      // This assumes that properties in the dataFeedMapArray's
-      // objects were successfully changed
       setDataFeedMapArray(dataFeedMapArray);
     }
   }, [postMetaDataForUser]);
@@ -267,8 +269,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           }
         }
 
-        // This assumes that properties in the dataFeedMapArray's
-        // objects were successfully changed
         setDataFeedMapArray(dataFeedMapArray);
       } else {
         let dataMapArray: PostDataArrayMap[] = [];
@@ -383,6 +383,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     [isLoadingPostData]
   );
 
+  useEffect(() => {
+    if (postLikingUsersArray) {
+      setPostLikersArray(postLikingUsersArray);
+    }
+  }, [postLikingUsersArray]);
+
   return (
     <div className='feed-page'>
       {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
@@ -403,7 +409,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 caption={el.caption}
                 date={el.dateString}
                 key={Math.random()}
-                onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
                 custRef={lastPostContainerElementRef}
               />
             );
@@ -432,6 +437,16 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           Follow users to see their recent posts here
         </div>
       )}
+      {postLikersArray ? (
+        <FollowersOrFollowingOrLikesModal
+          users={null}
+          show={showPostLikingUsersModal}
+          onHide={() => setShowPostLikingUsersModal(false)}
+          isFollowersModal={false}
+          isPostLikingUsersModal={true}
+          postLikingUsersArray={postLikersArray}
+        />
+      ) : null}
     </div>
   );
 };
@@ -453,6 +468,7 @@ interface LinkStateProps {
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
+  showPostLikingUsersModal: boolean;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -472,6 +488,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   isLoadingPostData: selectIsLoadingPostData,
   postMetaDataForUser: selectPostMetaDataForUser,
   postLikingUsersArray: selectPostLikingUsersArray,
+  showPostLikingUsersModal: selectShowPostLikingUsersModal,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -486,6 +503,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getOtherUserStart(otherUserRequest)),
   clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
   clearFollowState: () => dispatch(clearFollowState()),
+  setShowPostLikingUsersModal: (showPostLikingUsersModal: boolean) =>
+    dispatch(setShowPostLikingUsersModal(showPostLikingUsersModal)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPage);

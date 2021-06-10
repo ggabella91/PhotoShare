@@ -260,3 +260,10 @@ export const setPostLikingUsersArray = (
   type: PostActions.SET_POST_LIKING_USERS_ARRAY,
   payload: postLikingUsersArray,
 });
+
+export const setShowPostLikingUsersModal = (
+  showPostLikingUsersModal: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_SHOW_POST_LIKING_USERS_MODAL,
+  payload: showPostLikingUsersModal,
+});

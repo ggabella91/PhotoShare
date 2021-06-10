@@ -41,6 +41,7 @@ import {
   getPostFileStart,
   deleteReactionStart,
   setPostLikingUsersArray,
+  setShowPostLikingUsersModal,
 } from '../../redux/post/post.actions';
 
 import Button from '../button/button.component';
@@ -59,7 +60,6 @@ interface FeedPostContainerProps {
   date: string;
   custRef?: (node: HTMLDivElement | null) => void;
   key: number;
-  onPostLikingUsersClick?: () => void;
   currentUser: User | null;
   postReactionsArray: Reaction[][];
   postReactingUsers: User[] | null;
@@ -76,6 +76,7 @@ interface FeedPostContainerProps {
   getPostFileStart: typeof getPostFileStart;
   deleteReactionStart: typeof deleteReactionStart;
   setPostLikingUsersArray: typeof setPostLikingUsersArray;
+  setShowPostLikingUsersModal: typeof setShowPostLikingUsersModal;
 }
 
 export interface UserInfoData {
@@ -94,7 +95,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   caption,
   date,
   custRef,
-  onPostLikingUsersClick,
   currentUser,
   postReactionsArray,
   postReactingUsers,
@@ -108,6 +108,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   createPostReactionStart,
   deleteReactionStart,
   setPostLikingUsersArray,
+  setShowPostLikingUsersModal,
 }) => {
   const [comment, setComment] = useState('');
 
@@ -127,8 +128,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
-  const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
-    useState(false);
+  // const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
+  //   useState(false);
 
   let bucket: string;
 
@@ -293,7 +294,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
       setCommentingUserArray(commentsArray);
       setLikingUsersArray(likesArray);
-      setPostLikingUsersArray(likesArray);
     }
   }, [reactionsArray, reactingUserInfoArray]);
 
@@ -329,6 +329,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     });
   };
 
+  const handlePostLikingUsersClick = () => {
+    setShowPostLikingUsersModal(true);
+
+    if (likingUsersArray) {
+      setPostLikingUsersArray(likingUsersArray);
+    }
+  };
+
   return (
     <div className='feed-post-container' ref={custRef}>
       <div className='profile-and-options'>
@@ -344,7 +352,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       <div className='caption-and-reactions'>
         {handleRenderLikedOrLikedButton()}
         {likingUsersArray && likingUsersArray.length ? (
-          <Button className='likes-text' onClick={onPostLikingUsersClick}>
+          <Button className='likes-text' onClick={handlePostLikingUsersClick}>
             <span>{`${likingUsersArray.length} likes`}</span>
           </Button>
         ) : null}
@@ -410,6 +418,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(deleteReactionStart(deleteReactionReq)),
   setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
     dispatch(setPostLikingUsersArray(postLikingUsersArray)),
+  setShowPostLikingUsersModal: (showPostLikingUsersModal: boolean) =>
+    dispatch(setShowPostLikingUsersModal(showPostLikingUsersModal)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPostContainer);
