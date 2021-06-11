@@ -67,6 +67,7 @@ import {
 
 import FeedPostContainer from '../../components/feed-post-container/feed-post-container.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
+import PostModal from '../../components/post-modal/post-modal.component';
 
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
@@ -389,6 +390,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [postLikingUsersArray]);
 
+  // TODO: Add state and effects need to organize and feed necessary data to post-modal component, add logic to determine when to render this when interacting with a particular feed-post-container component in this page
+
   return (
     <div className='feed-page'>
       {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
@@ -447,6 +450,21 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           postLikingUsersArray={postLikersArray}
         />
       ) : null}
+      <PostModal
+        postId={'null'}
+        show={false}
+        fileString={''}
+        caption={''}
+        location={''}
+        createdAt={'' || new Date('2021-01-09T22:39:39.945Z')}
+        onHide={() => {} /*handleHidePostModal()*/}
+        onOptionsClick={() => {} /*setPostOptionsModalShow(true)*/}
+        onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
+        userProfilePhotoFile={'' || ''}
+        userName={''}
+        userId={''}
+        clearLocalState={true}
+      />
     </div>
   );
 };
