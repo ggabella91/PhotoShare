@@ -60,7 +60,7 @@ interface PostModalProps {
   currentUser: User | null;
   postId: string;
   caption: string;
-  createdAt: Date;
+  createdAt: Date | string;
   location: string;
   show: boolean;
   clearLocalState: boolean;
@@ -139,7 +139,13 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
-  const postDate = new Date(createdAt).toDateString();
+  let postDate: string;
+
+  if (createdAt instanceof Date) {
+    postDate = new Date(createdAt).toDateString();
+  } else {
+    postDate = createdAt;
+  }
 
   let bucket: string;
 

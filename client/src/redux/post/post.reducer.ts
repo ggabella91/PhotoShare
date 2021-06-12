@@ -40,6 +40,7 @@ const INITIAL_STATE: PostState = {
   postMetaDataForUser: null,
   postLikingUsersArray: null,
   showPostLikingUsersModal: false,
+  feedPagePostModalData: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -294,6 +295,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
       return {
         ...state,
         showPostLikingUsersModal: action.payload,
+      };
+    case PostActions.SET_FEED_PAGE_POST_MODAL_DATA:
+      return {
+        ...state,
+        feedPagePostModalData: action.payload,
       };
     default:
       return state;

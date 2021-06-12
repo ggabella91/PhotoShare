@@ -42,6 +42,7 @@ import {
   deleteReactionStart,
   setPostLikingUsersArray,
   setShowPostLikingUsersModal,
+  setFeedPagePostModalData,
 } from '../../redux/post/post.actions';
 
 import Button from '../button/button.component';
@@ -77,6 +78,7 @@ interface FeedPostContainerProps {
   deleteReactionStart: typeof deleteReactionStart;
   setPostLikingUsersArray: typeof setPostLikingUsersArray;
   setShowPostLikingUsersModal: typeof setShowPostLikingUsersModal;
+  setFeedPagePostModalData: typeof setFeedPagePostModalData;
 }
 
 export interface UserInfoData {
@@ -89,13 +91,13 @@ export interface UserInfoData {
   comment: string;
 }
 
-interface PostModalPropsToFeed {
+export interface PostModalDataToFeed {
   id: string;
   postPhotoFileString: string;
   caption: string;
   location: string;
   date: string;
-  fileString: string;
+  profilePhotoFileString: string;
 }
 
 export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
@@ -118,6 +120,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   deleteReactionStart,
   setPostLikingUsersArray,
   setShowPostLikingUsersModal,
+  setFeedPagePostModalData,
 }) => {
   const [comment, setComment] = useState('');
 
@@ -137,13 +140,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
-  const [postModalProps, setPostModalProps] = useState<PostModalPropsToFeed>({
+  const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>({
     id: '',
     postPhotoFileString: '',
     caption: '',
     location: '',
     date: '',
-    fileString: '',
+    profilePhotoFileString: '',
   });
 
   let bucket: string;
@@ -260,7 +263,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         let name: string;
         let comment = reactionEl.comment;
         let photoKey: string;
-        let fileString: string;
+        let profilePhotoFileString: string;
 
         for (let infoEl of reactingUserInfoArray) {
           if (infoEl.id === userId) {
@@ -273,13 +276,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         if (userProfilePhotoArray) {
           for (let photoEl of userProfilePhotoArray) {
             if (photoEl.s3Key === photoKey!) {
-              fileString = photoEl.fileString;
+              profilePhotoFileString = photoEl.fileString;
             }
           }
         }
 
         if (!photoKey!) {
-          fileString = '';
+          profilePhotoFileString = '';
         }
 
         if (!comment) {
@@ -291,7 +294,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             username: username!,
             name: name!,
             comment: '',
-            profilePhotoFileString: fileString!,
+            profilePhotoFileString: profilePhotoFileString!,
             location: '',
           });
         } else {
@@ -361,11 +364,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postPhotoFileString: fileString,
       location: userInfo.location,
       date: date,
-      fileString: userInfo.profilePhotoFileString,
+      profilePhotoFileString: userInfo.profilePhotoFileString,
     });
-
-    //TODO: Create redux logic to pass the above local state data to feed page for populating post-modal component with that data
   };
+
+  useEffect(() => {
+    if (postModalProps) {
+      setFeedPagePostModalData(postModalProps);
+    }
+  }, [postModalProps]);
 
   return (
     <div className='feed-post-container' ref={custRef}>
@@ -458,6 +465,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setPostLikingUsersArray(postLikingUsersArray)),
   setShowPostLikingUsersModal: (showPostLikingUsersModal: boolean) =>
     dispatch(setShowPostLikingUsersModal(showPostLikingUsersModal)),
+  setFeedPagePostModalData: (postModalDataToFeed: PostModalDataToFeed) =>
+    dispatch(setFeedPagePostModalData(postModalDataToFeed)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPostContainer);

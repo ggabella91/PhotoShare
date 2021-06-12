@@ -169,3 +169,8 @@ export const selectShowPostLikingUsersModal = createSelector(
   [selectPostState],
   (postState: PostState) => postState.showPostLikingUsersModal
 );
+
+export const selectFeedPagePostModalData = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.feedPagePostModalData
+);

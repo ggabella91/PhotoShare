@@ -28,7 +28,7 @@ export interface UserInfoAndOtherData {
   name: string;
   location: string;
   comment: string;
-  commentDate?: Date;
+  commentDate?: Date | string;
   reactionId?: string;
   reactingUserId?: string;
 }
@@ -50,6 +50,18 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     useState({ show: false, idx: -1 });
 
   let history = useHistory();
+
+  const handleDateToString = (commentDate: Date | string): string => {
+    let commentDateString: string;
+
+    if (commentDate instanceof Date) {
+      commentDateString = new Date(commentDate).toDateString();
+    } else {
+      commentDateString = commentDate;
+    }
+
+    return commentDateString;
+  };
 
   const handleSetCommentToDelete = (idx: number) => {
     const commentToDelete = userInfoArray[idx];
@@ -117,7 +129,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           </div>
           {el.commentDate ? (
             <span className={`${styleType}-date`}>
-              {new Date(el.commentDate).toDateString()}
+              {handleDateToString(el.commentDate)}
             </span>
           ) : null}
         </div>

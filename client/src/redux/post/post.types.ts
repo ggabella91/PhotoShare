@@ -1,4 +1,5 @@
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
+import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 
 export enum PostActions {
   CREATE_POST_START = 'CREATE_POST_START',
@@ -44,6 +45,7 @@ export enum PostActions {
   SET_POST_META_DATA_FOR_USER = 'SET_POST_META_DATA_FOR_USER',
   SET_POST_LIKING_USERS_ARRAY = 'SET_POST_LIKING_USERS_ARRAY',
   SET_SHOW_POST_LIKING_USERS_MODAL = 'SET_SHOW_POST_LIKING_USERS_MODAL',
+  SET_FEED_PAGE_POST_MODAL_DATA = 'SET_FEED_PAGE_POST_MODAL_DATA',
 }
 
 export interface PostError {
@@ -159,6 +161,7 @@ export interface PostState {
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
+  feedPagePostModalData: PostModalDataToFeed | null;
 }
 
 export interface CreatePostStart {
@@ -376,6 +379,11 @@ export interface SetShowPostLikingUsersModal {
   payload: boolean;
 }
 
+export interface SetFeedPagePostModalData {
+  type: typeof PostActions.SET_FEED_PAGE_POST_MODAL_DATA;
+  payload: PostModalDataToFeed;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -419,4 +427,5 @@ export type PostActionTypes =
   | ClearPostReactions
   | SetPostMetaDataForUser
   | SetPostLikingUsersArray
-  | SetShowPostLikingUsersModal;
+  | SetShowPostLikingUsersModal
+  | SetFeedPagePostModalData;

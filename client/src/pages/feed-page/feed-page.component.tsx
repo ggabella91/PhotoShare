@@ -43,6 +43,7 @@ import {
   selectPostMetaDataForUser,
   selectPostLikingUsersArray,
   selectShowPostLikingUsersModal,
+  selectFeedPagePostModalData,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -65,7 +66,9 @@ import {
   clearFollowState,
 } from '../../redux/follower/follower.actions';
 
-import FeedPostContainer from '../../components/feed-post-container/feed-post-container.component';
+import FeedPostContainer, {
+  PostModalDataToFeed,
+} from '../../components/feed-post-container/feed-post-container.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 
@@ -110,6 +113,7 @@ interface FeedPageProps {
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
+  feedPagePostModalData: PostModalDataToFeed | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearPostState: typeof clearPostState;
@@ -140,6 +144,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   postLikingUsersArray,
   showPostLikingUsersModal,
   setShowPostLikingUsersModal,
+  feedPagePostModalData,
 }) => {
   const [user, setUser] = useState({
     id: '',
@@ -170,6 +175,18 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [postLikersArray, setPostLikersArray] =
     useState<UserInfoAndOtherData[] | null>(null);
+
+  const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>({
+    id: '',
+    postPhotoFileString: '',
+    caption: '',
+    location: '',
+    date: '',
+    profilePhotoFileString: '',
+  });
+
+  const [clearPostModalLocalState, setClearPostModalLocalState] =
+    useState(false);
 
   let postsBucket: string, profileBucket: string;
 
@@ -392,6 +409,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   // TODO: Add state and effects need to organize and feed necessary data to post-modal component, add logic to determine when to render this when interacting with a particular feed-post-container component in this page
 
+  useEffect(() => {
+    if (feedPagePostModalData) {
+      setPostModalProps(feedPagePostModalData);
+    }
+  }, [feedPagePostModalData]);
+
   return (
     <div className='feed-page'>
       {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
@@ -451,12 +474,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         />
       ) : null}
       <PostModal
-        postId={'null'}
+        postId={postModalProps.id}
         show={false}
-        fileString={''}
-        caption={''}
-        location={''}
-        createdAt={'' || new Date('2021-01-09T22:39:39.945Z')}
+        fileString={postModalProps.postPhotoFileString}
+        caption={postModalProps.caption}
+        location={postModalProps.location}
+        createdAt={postModalProps.date || new Date('2021-01-09T22:39:39.945Z')}
         onHide={() => {} /*handleHidePostModal()*/}
         onOptionsClick={() => {} /*setPostOptionsModalShow(true)*/}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
@@ -487,6 +510,7 @@ interface LinkStateProps {
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
+  feedPagePostModalData: PostModalDataToFeed | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -507,6 +531,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   postMetaDataForUser: selectPostMetaDataForUser,
   postLikingUsersArray: selectPostLikingUsersArray,
   showPostLikingUsersModal: selectShowPostLikingUsersModal,
+  feedPagePostModalData: selectFeedPagePostModalData,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
