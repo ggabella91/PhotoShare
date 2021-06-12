@@ -26,6 +26,7 @@ import {
   PostFileReq,
   PostFile,
   PostError,
+  ArchivePostReq,
   UserType,
   PostMetaData,
 } from '../../redux/post/post.types';
@@ -43,12 +44,19 @@ import {
   selectPostMetaDataForUser,
   selectPostLikingUsersArray,
   selectShowPostLikingUsersModal,
+  selectFeedPagePostModalData,
+  selectFeedPagePostModalShow,
+  selectFeedPagePostOptionsModalShow,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
   getPostFileStart,
+  archivePostStart,
   clearPostState,
   setShowPostLikingUsersModal,
+  setFeedPagePostModalShow,
+  setFeedPagePostOptionsModalShow,
+  setClearFeedPagePostModalState,
 } from '../../redux/post/post.actions';
 
 import {
@@ -65,9 +73,12 @@ import {
   clearFollowState,
 } from '../../redux/follower/follower.actions';
 
-import FeedPostContainer from '../../components/feed-post-container/feed-post-container.component';
+import FeedPostContainer, {
+  PostModalDataToFeed,
+} from '../../components/feed-post-container/feed-post-container.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 import PostModal from '../../components/post-modal/post-modal.component';
+import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
@@ -110,14 +121,21 @@ interface FeedPageProps {
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
+  feedPagePostModalData: PostModalDataToFeed | null;
+  feedPagePostModalShow: boolean;
+  feedPagePostOptionsModalShow: boolean;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
+  archivePostStart: typeof archivePostStart;
   clearPostState: typeof clearPostState;
   getUsersFollowingStart: typeof getUsersFollowingStart;
   getOtherUserStart: typeof getOtherUserStart;
   clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
   clearFollowState: typeof clearFollowState;
   setShowPostLikingUsersModal: typeof setShowPostLikingUsersModal;
+  setFeedPagePostModalShow: typeof setFeedPagePostModalShow;
+  setFeedPagePostOptionsModalShow: typeof setFeedPagePostOptionsModalShow;
+  setClearFeedPagePostModalState: typeof setClearFeedPagePostModalState;
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
@@ -140,6 +158,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   postLikingUsersArray,
   showPostLikingUsersModal,
   setShowPostLikingUsersModal,
+  feedPagePostModalData,
+  feedPagePostModalShow,
+  feedPagePostOptionsModalShow,
+  setFeedPagePostModalShow,
+  setFeedPagePostOptionsModalShow,
+  setClearFeedPagePostModalState,
 }) => {
   const [user, setUser] = useState({
     id: '',
@@ -170,6 +194,18 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [postLikersArray, setPostLikersArray] =
     useState<UserInfoAndOtherData[] | null>(null);
+
+  const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>({
+    id: '',
+    postPhotoFileString: '',
+    caption: '',
+    location: '',
+    date: '',
+    profilePhotoFileString: '',
+    postUserId: '',
+  });
+
+  const [currentUserPost, setCurrentUserPost] = useState<boolean | null>(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -390,7 +426,44 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [postLikingUsersArray]);
 
-  // TODO: Add state and effects need to organize and feed necessary data to post-modal component, add logic to determine when to render this when interacting with a particular feed-post-container component in this page
+  useEffect(() => {
+    if (feedPagePostModalData) {
+      setPostModalProps(feedPagePostModalData);
+    }
+  }, [feedPagePostModalData]);
+
+  const handleHidePostModal = () => {
+    setPostModalProps({
+      id: '',
+      postPhotoFileString: '',
+      caption: '',
+      location: '',
+      date: '',
+      profilePhotoFileString: '',
+      postUserId: '',
+    });
+
+    setFeedPagePostModalShow(false);
+    setClearFeedPagePostModalState(true);
+  };
+
+  useEffect(() => {
+    handleSetIsCurrentUserPost();
+  }, [feedPagePostModalShow]);
+
+  const handleSetIsCurrentUserPost = () => {
+    if (currentUser && postModalProps.postUserId) {
+      if (postModalProps.postUserId === user.id) {
+        setCurrentUserPost(true);
+      } else {
+        setCurrentUserPost(false);
+      }
+    }
+  };
+
+  // TODO: Add logic to get s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
+
+  // TODO: Add post-comment-options-modal component, add state and effects need to organize and feed necessary data to it, add logic to determine when to render this when interacting with a particular comment within a feed-post-container component in this page
 
   return (
     <div className='feed-page'>
@@ -451,19 +524,30 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         />
       ) : null}
       <PostModal
-        postId={'null'}
+        postId={postModalProps.id}
         show={false}
-        fileString={''}
-        caption={''}
-        location={''}
-        createdAt={'' || new Date('2021-01-09T22:39:39.945Z')}
-        onHide={() => {} /*handleHidePostModal()*/}
-        onOptionsClick={() => {} /*setPostOptionsModalShow(true)*/}
+        fileString={postModalProps.postPhotoFileString}
+        caption={postModalProps.caption}
+        location={postModalProps.location}
+        createdAt={postModalProps.date || new Date('2021-01-09T22:39:39.945Z')}
+        onHide={() => handleHidePostModal()}
+        onOptionsClick={() => setFeedPagePostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
         userProfilePhotoFile={'' || ''}
         userName={''}
         userId={''}
         clearLocalState={true}
+      />
+      <PostOrCommentOptionsModal
+        show={feedPagePostOptionsModalShow}
+        onHide={() => setFeedPagePostOptionsModalShow(false)}
+        isCurrentUserPostOrComment={true}
+        archive={() =>
+          archivePostStart({
+            postId: postModalProps.id,
+            s3Key: '', // see one of the above TODO items
+          })
+        }
       />
     </div>
   );
@@ -487,6 +571,9 @@ interface LinkStateProps {
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
+  feedPagePostModalData: PostModalDataToFeed | null;
+  feedPagePostModalShow: boolean;
+  feedPagePostOptionsModalShow: boolean;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -507,6 +594,9 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   postMetaDataForUser: selectPostMetaDataForUser,
   postLikingUsersArray: selectPostLikingUsersArray,
   showPostLikingUsersModal: selectShowPostLikingUsersModal,
+  feedPagePostModalData: selectFeedPagePostModalData,
+  feedPagePostModalShow: selectFeedPagePostModalShow,
+  feedPagePostOptionsModalShow: selectFeedPagePostOptionsModalShow,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -514,6 +604,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostDataStart(postDataReq)),
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
+  archivePostStart: (archiveReq: ArchivePostReq) =>
+    dispatch(archivePostStart(archiveReq)),
   clearPostState: () => dispatch(clearPostState()),
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
@@ -523,6 +615,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearFollowState: () => dispatch(clearFollowState()),
   setShowPostLikingUsersModal: (showPostLikingUsersModal: boolean) =>
     dispatch(setShowPostLikingUsersModal(showPostLikingUsersModal)),
+  setFeedPagePostModalShow: (feedPagePostModalShow: boolean) =>
+    dispatch(setFeedPagePostModalShow(feedPagePostModalShow)),
+  setFeedPagePostOptionsModalShow: (feedPagePostOptionsModalShow: boolean) =>
+    dispatch(setFeedPagePostOptionsModalShow(feedPagePostOptionsModalShow)),
+  setClearFeedPagePostModalState: (clearFeedPagePostModalState: boolean) =>
+    dispatch(setClearFeedPagePostModalState(clearFeedPagePostModalState)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPage);

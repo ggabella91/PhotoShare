@@ -1,4 +1,5 @@
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
+import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 
 import {
   Post,
@@ -266,4 +267,32 @@ export const setShowPostLikingUsersModal = (
 ): PostActionTypes => ({
   type: PostActions.SET_SHOW_POST_LIKING_USERS_MODAL,
   payload: showPostLikingUsersModal,
+});
+
+export const setFeedPagePostModalData = (
+  postModalDataToFeed: PostModalDataToFeed
+): PostActionTypes => ({
+  type: PostActions.SET_FEED_PAGE_POST_MODAL_DATA,
+  payload: postModalDataToFeed,
+});
+
+export const setFeedPagePostModalShow = (
+  postModalDataShow: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_FEED_PAGE_POST_MODAL_SHOW,
+  payload: postModalDataShow,
+});
+
+export const setFeedPagePostOptionsModalShow = (
+  postOptionsModalDataShow: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW,
+  payload: postOptionsModalDataShow,
+});
+
+export const setClearFeedPagePostModalState = (
+  clearFeedPagePostModalState: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_CLEAR_FEED_PAGE_POST_MODAL_STATE,
+  payload: clearFeedPagePostModalState,
 });
