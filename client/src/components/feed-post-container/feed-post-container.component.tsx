@@ -89,6 +89,15 @@ export interface UserInfoData {
   comment: string;
 }
 
+interface PostModalPropsToFeed {
+  id: string;
+  postPhotoFileString: string;
+  caption: string;
+  location: string;
+  date: string;
+  fileString: string;
+}
+
 export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   userInfo,
   fileString,
@@ -128,8 +137,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
-  // const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
-  //   useState(false);
+  const [postModalProps, setPostModalProps] = useState<PostModalPropsToFeed>({
+    id: '',
+    postPhotoFileString: '',
+    caption: '',
+    location: '',
+    date: '',
+    fileString: '',
+  });
 
   let bucket: string;
 
@@ -337,6 +352,21 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     }
   };
 
+  const handleClickViewAllComments = () => {
+    let postCaption = caption || '';
+
+    setPostModalProps({
+      id: userInfo.postId,
+      caption: postCaption,
+      postPhotoFileString: fileString,
+      location: userInfo.location,
+      date: date,
+      fileString: userInfo.profilePhotoFileString,
+    });
+
+    //TODO: Create redux logic to pass the above local state data to feed page for populating post-modal component with that data
+  };
+
   return (
     <div className='feed-post-container' ref={custRef}>
       <div className='profile-and-options'>
@@ -360,6 +390,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           <span className='username'>{userInfo.username}</span>{' '}
           {caption ? caption : ''}
         </div>
+        {commentingUserArray && commentingUserArray.length > 2 ? (
+          <span
+            className='view-all-comments'
+            onClick={() => {
+              handleClickViewAllComments();
+            }}
+          >{`View all ${commentingUserArray.length} comments`}</span>
+        ) : null}
         {commentingUserArray
           ? commentingUserArray.map((el, idx) => {
               if (idx >= commentingUserArray.length - 2) {
