@@ -43,6 +43,8 @@ import {
   setPostLikingUsersArray,
   setShowPostLikingUsersModal,
   setFeedPagePostModalData,
+  setFeedPagePostModalShow,
+  setClearFeedPagePostModalState,
 } from '../../redux/post/post.actions';
 
 import Button from '../button/button.component';
@@ -79,6 +81,8 @@ interface FeedPostContainerProps {
   setPostLikingUsersArray: typeof setPostLikingUsersArray;
   setShowPostLikingUsersModal: typeof setShowPostLikingUsersModal;
   setFeedPagePostModalData: typeof setFeedPagePostModalData;
+  setFeedPagePostModalShow: typeof setFeedPagePostModalShow;
+  setClearFeedPagePostModalState: typeof setClearFeedPagePostModalState;
 }
 
 export interface UserInfoData {
@@ -98,6 +102,7 @@ export interface PostModalDataToFeed {
   location: string;
   date: string;
   profilePhotoFileString: string;
+  postUserId: string;
 }
 
 export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
@@ -121,6 +126,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   setPostLikingUsersArray,
   setShowPostLikingUsersModal,
   setFeedPagePostModalData,
+  setFeedPagePostModalShow,
+  setClearFeedPagePostModalState,
 }) => {
   const [comment, setComment] = useState('');
 
@@ -147,6 +154,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     location: '',
     date: '',
     profilePhotoFileString: '',
+    postUserId: '',
   });
 
   let bucket: string;
@@ -365,12 +373,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       location: userInfo.location,
       date: date,
       profilePhotoFileString: userInfo.profilePhotoFileString,
+      postUserId: userInfo.userId,
     });
   };
 
   useEffect(() => {
     if (postModalProps) {
       setFeedPagePostModalData(postModalProps);
+      setFeedPagePostModalShow(true);
+      setClearFeedPagePostModalState(false);
     }
   }, [postModalProps]);
 
@@ -467,6 +478,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setShowPostLikingUsersModal(showPostLikingUsersModal)),
   setFeedPagePostModalData: (postModalDataToFeed: PostModalDataToFeed) =>
     dispatch(setFeedPagePostModalData(postModalDataToFeed)),
+  setFeedPagePostModalShow: (feedPagePostModalShow: boolean) =>
+    dispatch(setFeedPagePostModalShow(feedPagePostModalShow)),
+  setClearFeedPagePostModalState: (clearFeedPagePostModalState: boolean) =>
+    dispatch(setClearFeedPagePostModalState(clearFeedPagePostModalState)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPostContainer);

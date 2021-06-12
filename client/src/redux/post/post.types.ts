@@ -46,6 +46,9 @@ export enum PostActions {
   SET_POST_LIKING_USERS_ARRAY = 'SET_POST_LIKING_USERS_ARRAY',
   SET_SHOW_POST_LIKING_USERS_MODAL = 'SET_SHOW_POST_LIKING_USERS_MODAL',
   SET_FEED_PAGE_POST_MODAL_DATA = 'SET_FEED_PAGE_POST_MODAL_DATA',
+  SET_FEED_PAGE_POST_MODAL_SHOW = 'SET_FEED_PAGE_POST_MODAL_SHOW',
+  SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW = 'SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW',
+  SET_CLEAR_FEED_PAGE_POST_MODAL_STATE = 'SET_CLEAR_FEED_PAGE_POST_MODAL_STATE',
 }
 
 export interface PostError {
@@ -162,6 +165,9 @@ export interface PostState {
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
   feedPagePostModalData: PostModalDataToFeed | null;
+  feedPagePostModalShow: boolean;
+  feedPagePostOptionsModalShow: boolean;
+  clearFeedPagePostModalState: boolean;
 }
 
 export interface CreatePostStart {
@@ -384,6 +390,21 @@ export interface SetFeedPagePostModalData {
   payload: PostModalDataToFeed;
 }
 
+export interface SetFeedPagePostModalShow {
+  type: typeof PostActions.SET_FEED_PAGE_POST_MODAL_SHOW;
+  payload: boolean;
+}
+
+export interface SetFeedPagePostOptionsModalShow {
+  type: typeof PostActions.SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW;
+  payload: boolean;
+}
+
+export interface SetClearFeedPagePostModalState {
+  type: typeof PostActions.SET_CLEAR_FEED_PAGE_POST_MODAL_STATE;
+  payload: boolean;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -428,4 +449,7 @@ export type PostActionTypes =
   | SetPostMetaDataForUser
   | SetPostLikingUsersArray
   | SetShowPostLikingUsersModal
-  | SetFeedPagePostModalData;
+  | SetFeedPagePostModalData
+  | SetFeedPagePostModalShow
+  | SetFeedPagePostOptionsModalShow
+  | SetClearFeedPagePostModalState;

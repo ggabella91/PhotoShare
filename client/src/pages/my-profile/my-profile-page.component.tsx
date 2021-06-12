@@ -395,7 +395,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
       if (
         commentToDelete.reactingUserId === currentUser.id ||
-        user.id === currentUser.bio
+        user.id === currentUser.id
       ) {
         setCurrentUserPostOrComment(true);
       } else {

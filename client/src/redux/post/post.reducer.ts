@@ -41,6 +41,9 @@ const INITIAL_STATE: PostState = {
   postLikingUsersArray: null,
   showPostLikingUsersModal: false,
   feedPagePostModalData: null,
+  feedPagePostModalShow: false,
+  feedPagePostOptionsModalShow: false,
+  clearFeedPagePostModalState: false,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -300,6 +303,21 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
       return {
         ...state,
         feedPagePostModalData: action.payload,
+      };
+    case PostActions.SET_FEED_PAGE_POST_MODAL_SHOW:
+      return {
+        ...state,
+        feedPagePostModalShow: action.payload,
+      };
+    case PostActions.SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW:
+      return {
+        ...state,
+        feedPagePostOptionsModalShow: action.payload,
+      };
+    case PostActions.SET_CLEAR_FEED_PAGE_POST_MODAL_STATE:
+      return {
+        ...state,
+        clearFeedPagePostModalState: action.payload,
       };
     default:
       return state;

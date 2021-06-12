@@ -275,3 +275,24 @@ export const setFeedPagePostModalData = (
   type: PostActions.SET_FEED_PAGE_POST_MODAL_DATA,
   payload: postModalDataToFeed,
 });
+
+export const setFeedPagePostModalShow = (
+  postModalDataShow: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_FEED_PAGE_POST_MODAL_SHOW,
+  payload: postModalDataShow,
+});
+
+export const setFeedPagePostOptionsModalShow = (
+  postOptionsModalDataShow: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW,
+  payload: postOptionsModalDataShow,
+});
+
+export const setClearFeedPagePostModalState = (
+  clearFeedPagePostModalState: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_CLEAR_FEED_PAGE_POST_MODAL_STATE,
+  payload: clearFeedPagePostModalState,
+});
