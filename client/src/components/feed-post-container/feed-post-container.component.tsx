@@ -103,6 +103,7 @@ export interface PostModalDataToFeed {
   date: string;
   profilePhotoFileString: string;
   postUserId: string;
+  postUserName: string;
 }
 
 export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
@@ -155,6 +156,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     date: '',
     profilePhotoFileString: '',
     postUserId: '',
+    postUserName: '',
   });
 
   let bucket: string;
@@ -374,14 +376,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       date: date,
       profilePhotoFileString: userInfo.profilePhotoFileString,
       postUserId: userInfo.userId,
+      postUserName: userInfo.username,
     });
+    setFeedPagePostModalShow(true);
+    setClearFeedPagePostModalState(false);
   };
 
   useEffect(() => {
     if (postModalProps) {
       setFeedPagePostModalData(postModalProps);
-      setFeedPagePostModalShow(true);
-      setClearFeedPagePostModalState(false);
     }
   }, [postModalProps]);
 
@@ -400,7 +403,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       <div className='caption-and-reactions'>
         {handleRenderLikedOrLikedButton()}
         {likingUsersArray && likingUsersArray.length ? (
-          <Button className='likes-text' onClick={handlePostLikingUsersClick}>
+          <Button
+            className='likes-text'
+            onClick={() => handlePostLikingUsersClick()}
+          >
             <span>{`${likingUsersArray.length} likes`}</span>
           </Button>
         ) : null}
