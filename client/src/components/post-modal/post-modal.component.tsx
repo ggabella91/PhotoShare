@@ -139,13 +139,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
-  let postDate: string;
-
-  if (createdAt instanceof Date) {
-    postDate = new Date(createdAt).toDateString();
-  } else {
-    postDate = createdAt;
-  }
+  const postDate = new Date(createdAt).toDateString();
 
   let bucket: string;
 

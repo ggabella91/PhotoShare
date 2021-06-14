@@ -47,6 +47,7 @@ import {
   selectFeedPagePostModalData,
   selectFeedPagePostModalShow,
   selectFeedPagePostOptionsModalShow,
+  selectClearFeedPagePostModalState,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -124,6 +125,7 @@ interface FeedPageProps {
   feedPagePostModalData: PostModalDataToFeed | null;
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
+  clearFeedPagePostModalState: boolean;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
@@ -161,6 +163,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   feedPagePostModalData,
   feedPagePostModalShow,
   feedPagePostOptionsModalShow,
+  clearFeedPagePostModalState,
   setFeedPagePostModalShow,
   setFeedPagePostOptionsModalShow,
   setClearFeedPagePostModalState,
@@ -203,6 +206,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     date: '',
     profilePhotoFileString: '',
     postUserId: '',
+    postUserName: '',
   });
 
   const [currentUserPost, setCurrentUserPost] = useState<boolean | null>(null);
@@ -441,6 +445,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       date: '',
       profilePhotoFileString: '',
       postUserId: '',
+      postUserName: '',
     });
 
     setFeedPagePostModalShow(false);
@@ -525,23 +530,23 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       ) : null}
       <PostModal
         postId={postModalProps.id}
-        show={false}
+        show={feedPagePostModalShow}
         fileString={postModalProps.postPhotoFileString}
         caption={postModalProps.caption}
         location={postModalProps.location}
-        createdAt={postModalProps.date || new Date('2021-01-09T22:39:39.945Z')}
+        createdAt={postModalProps.date || ''}
         onHide={() => handleHidePostModal()}
         onOptionsClick={() => setFeedPagePostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
-        userProfilePhotoFile={'' || ''}
-        userName={''}
-        userId={''}
-        clearLocalState={true}
+        userProfilePhotoFile={postModalProps.profilePhotoFileString || ''}
+        userName={postModalProps.postUserName}
+        userId={postModalProps.postUserId}
+        clearLocalState={clearFeedPagePostModalState}
       />
       <PostOrCommentOptionsModal
         show={feedPagePostOptionsModalShow}
         onHide={() => setFeedPagePostOptionsModalShow(false)}
-        isCurrentUserPostOrComment={true}
+        isCurrentUserPostOrComment={currentUserPost}
         archive={() =>
           archivePostStart({
             postId: postModalProps.id,
@@ -574,6 +579,7 @@ interface LinkStateProps {
   feedPagePostModalData: PostModalDataToFeed | null;
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
+  clearFeedPagePostModalState: boolean;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -597,6 +603,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   feedPagePostModalData: selectFeedPagePostModalData,
   feedPagePostModalShow: selectFeedPagePostModalShow,
   feedPagePostOptionsModalShow: selectFeedPagePostOptionsModalShow,
+  clearFeedPagePostModalState: selectClearFeedPagePostModalState,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

@@ -26,18 +26,25 @@ $image-height: 62.5vw;
 
 .modal-content {
   border-radius: 0;
-  min-width: 225px;
+  min-width: 335px;
+  max-width: 335px;
+  margin-left: 62.5%;
 
   @include respond-medium-wide() {
     height: $image-height;
+    min-width: 225px;
   }
 
   @include respond-medium() {
     height: calc(#{$image-height} * 1.25);
-  }
-
-  @include respond-medium() {
+    // min-width: 225px;
+    // max-width: 225px;
+    width: 265px;
+    max-width: 265px;
     flex-direction: column;
+    margin-top: 50%;
+    margin-left: 100%;
+    transform: translateY(50%);
   }
 }
 
