@@ -169,13 +169,16 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (userInfo.postId) {
+      console.log(
+        "Shit's going down here ... userInfo.postId: ",
+        userInfo.postId
+      );
       getPostReactionsStart(userInfo.postId);
     }
   }, [userInfo.postId]);
 
   useEffect(() => {
     if (postReactionsArray && postReactionsArray.length) {
-      console.log('postReactionsArray: ', postReactionsArray);
       for (let innerArray of postReactionsArray) {
         if (innerArray.length && innerArray[0].postId === userInfo.postId) {
           setReactionsArray(innerArray);
@@ -417,9 +420,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         {commentingUserArray && commentingUserArray.length > 2 ? (
           <span
             className='view-all-comments'
-            onClick={() => {
-              handleClickViewAllComments();
-            }}
+            onClick={() => handleClickViewAllComments()}
           >{`View all ${commentingUserArray.length} comments`}</span>
         ) : null}
         {commentingUserArray

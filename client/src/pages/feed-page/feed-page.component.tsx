@@ -85,6 +85,7 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
+import { userInfo } from 'os';
 
 export interface PostDataArrayMap {
   postData: Post[];
@@ -465,6 +466,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       }
     }
   };
+
+  useEffect(() => {
+    console.log('postModalProps changed: ', postModalProps);
+  }, [postModalProps]);
 
   // TODO: Add logic to get s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
 
