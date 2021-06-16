@@ -467,10 +467,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log('postModalProps changed: ', postModalProps);
-  }, [postModalProps]);
-
   // TODO: Add logic to get s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
 
   // TODO: Add post-comment-options-modal component, add state and effects need to organize and feed necessary data to it, add logic to determine when to render this when interacting with a particular comment within a feed-post-container component in this page

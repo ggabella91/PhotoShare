@@ -169,10 +169,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (userInfo.postId) {
-      console.log(
-        "Shit's going down here ... userInfo.postId: ",
-        userInfo.postId
-      );
       getPostReactionsStart(userInfo.postId);
     }
   }, [userInfo.postId]);
@@ -386,10 +382,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   };
 
   useEffect(() => {
-    if (postModalProps) {
+    if (postModalProps.id) {
       setFeedPagePostModalData(postModalProps);
     }
-  }, [postModalProps]);
+  }, [postModalProps.id]);
 
   return (
     <div className='feed-post-container' ref={custRef}>
