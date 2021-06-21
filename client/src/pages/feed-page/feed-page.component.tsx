@@ -433,6 +433,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (feedPagePostModalData) {
+      console.log(feedPagePostModalData);
       setPostModalProps(feedPagePostModalData);
     }
   }, [feedPagePostModalData]);

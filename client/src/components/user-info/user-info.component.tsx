@@ -51,18 +51,6 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
   let history = useHistory();
 
-  const handleDateToString = (commentDate: Date | string): string => {
-    let commentDateString: string;
-
-    if (commentDate instanceof Date) {
-      commentDateString = new Date(commentDate).toDateString();
-    } else {
-      commentDateString = commentDate;
-    }
-
-    return commentDateString;
-  };
-
   const handleSetCommentToDelete = (idx: number) => {
     const commentToDelete = userInfoArray[idx];
     if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
@@ -129,7 +117,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           </div>
           {el.commentDate ? (
             <span className={`${styleType}-date`}>
-              {handleDateToString(el.commentDate)}
+              {new Date(el.commentDate).toDateString()}
             </span>
           ) : null}
         </div>
