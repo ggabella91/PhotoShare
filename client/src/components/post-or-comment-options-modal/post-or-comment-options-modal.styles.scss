@@ -1,3 +1,9 @@
+@mixin respond-medium {
+  @media (max-width: 736px) {
+    @content;
+  }
+}
+
 .post-options-modal {
   display: flex;
   flex-direction: column;
@@ -12,9 +18,15 @@
 
   .modal-content {
     width: 20vw;
-    max-width: inherit;
-    min-width: inherit;
+    max-width: 200px;
+    min-width: 120px;
     max-height: 120px;
+    flex-direction: column;
+    transform: translate(30%, 350%);
+
+    @include respond-medium() {
+      transform: translate(10%, 100%);
+    }
   }
 
   .post-options-modal-body {

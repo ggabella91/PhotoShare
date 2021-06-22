@@ -418,7 +418,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         <img
           className='post-modal-image-large'
           src={`data:image/jpeg;base64,${fileString}`}
-          alt='user'
+          alt='post-pic'
         />
       </div>
       <Modal.Header className='post-modal-header' closeButton />

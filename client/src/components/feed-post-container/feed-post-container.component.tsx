@@ -149,14 +149,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
   const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>({
-    id: '',
-    postPhotoFileString: '',
-    caption: '',
-    location: '',
-    date: '',
-    profilePhotoFileString: '',
-    postUserId: '',
-    postUserName: '',
+    id: userInfo.postId,
+    caption: caption || '',
+    postPhotoFileString: fileString,
+    location: userInfo.location,
+    date: date,
+    profilePhotoFileString: userInfo.profilePhotoFileString,
+    postUserId: userInfo.userId,
+    postUserName: userInfo.username,
   });
 
   let bucket: string;
@@ -365,27 +365,11 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   };
 
   const handleClickViewAllComments = () => {
-    let postCaption = caption || '';
-
-    setPostModalProps({
-      id: userInfo.postId,
-      caption: postCaption,
-      postPhotoFileString: fileString,
-      location: userInfo.location,
-      date: date,
-      profilePhotoFileString: userInfo.profilePhotoFileString,
-      postUserId: userInfo.userId,
-      postUserName: userInfo.username,
-    });
     setFeedPagePostModalShow(true);
     setClearFeedPagePostModalState(false);
-  };
 
-  useEffect(() => {
-    if (postModalProps.id) {
-      setFeedPagePostModalData(postModalProps);
-    }
-  }, [postModalProps.id]);
+    setFeedPagePostModalData(postModalProps);
+  };
 
   return (
     <div className='feed-post-container' ref={custRef}>
@@ -410,7 +394,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           </Button>
         ) : null}
         <div className='caption-or-reaction'>
-          <span className='username'>{userInfo.username}</span>{' '}
+          <span className='username'>{userInfo.username}</span>
           {caption ? caption : ''}
         </div>
         {commentingUserArray && commentingUserArray.length > 2 ? (

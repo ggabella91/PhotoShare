@@ -1,7 +1,8 @@
 .feed-post-container {
   display: flex;
   flex-direction: column;
-  height: 1000px;
+  height: fit-content;
+  min-height: 1000px;
   width: auto;
   margin-bottom: 40px;
   border: solid 1px rgb(180, 180, 180);
@@ -46,10 +47,21 @@
     }
 
     .caption-or-reaction {
-      display: flex;
+      display: inline-block;
+      position: relative;
       margin-top: 5px;
+      max-width: 580px;
+      text-align: left;
+      word-wrap: break-word;
 
       .username {
+        display: inline-flex;
+        position: relative;
+        font-size: 14px;
+        font-weight: 540;
+        color: black;
+        height: fit-content;
+        width: fit-content;
         margin-right: 5px;
         font-weight: 540;
       }
@@ -83,5 +95,6 @@
   .date {
     font-size: 12px;
     margin-top: 5px;
+    margin-bottom: 5px;
   }
 }
