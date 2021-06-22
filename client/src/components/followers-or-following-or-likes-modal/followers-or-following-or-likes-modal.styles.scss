@@ -27,8 +27,6 @@
 
     @include respond-medium() {
       flex-direction: column;
-      // margin-top: 50%;
-      // margin-left: 100%;
       transform: translateY(-40%);
     }
   }

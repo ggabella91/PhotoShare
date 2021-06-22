@@ -210,6 +210,16 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     postUserName: '',
   });
 
+  const [isPostModalDataFetched, setIsPostModalDataFetched] = useState(false);
+
+  const [showLikingUsersModal, setShowLikingUsersModal] = useState(false);
+
+  const [postModalShow, setPostModalShow] = useState(false);
+
+  const [clearPostModalState, setClearPostModalState] = useState(false);
+
+  const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
+
   const [currentUserPost, setCurrentUserPost] = useState<boolean | null>(null);
 
   let postsBucket: string, profileBucket: string;
@@ -432,11 +442,30 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [postLikingUsersArray]);
 
   useEffect(() => {
-    if (feedPagePostModalData) {
+    if (feedPagePostModalData && !isPostModalDataFetched) {
       console.log(feedPagePostModalData);
       setPostModalProps(feedPagePostModalData);
+      setIsPostModalDataFetched(true);
+    } else {
+      console.log('No feedPagePostModalData found...');
     }
   }, [feedPagePostModalData]);
+
+  useEffect(() => {
+    setShowLikingUsersModal(showPostLikingUsersModal);
+  }, [showPostLikingUsersModal]);
+
+  useEffect(() => {
+    setPostModalShow(feedPagePostModalShow);
+  }, [feedPagePostModalShow]);
+
+  useEffect(() => {
+    setClearPostModalState(clearFeedPagePostModalState);
+  }, [clearFeedPagePostModalState]);
+
+  useEffect(() => {
+    setPostOptionsModalShow(feedPagePostOptionsModalShow);
+  }, [feedPagePostOptionsModalShow]);
 
   const handleHidePostModal = () => {
     setPostModalProps({
@@ -456,7 +485,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     handleSetIsCurrentUserPost();
-  }, [feedPagePostModalShow]);
+  }, [postModalProps]);
 
   const handleSetIsCurrentUserPost = () => {
     if (currentUser && postModalProps.postUserId) {
@@ -467,12 +496,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       }
     }
   };
-
-  useEffect(() => {
-    if (feedPagePostModalShow) {
-      console.log(postModalProps);
-    }
-  }, [feedPagePostModalShow]);
 
   // TODO: Add logic to get s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
 
@@ -529,30 +552,32 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       {postLikersArray ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
-          show={showPostLikingUsersModal}
+          show={showLikingUsersModal}
           onHide={() => setShowPostLikingUsersModal(false)}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersArray={postLikersArray}
         />
       ) : null}
-      <PostModal
-        postId={postModalProps.id}
-        show={feedPagePostModalShow}
-        fileString={postModalProps.postPhotoFileString}
-        caption={postModalProps.caption}
-        location={postModalProps.location}
-        createdAt={postModalProps.date || ''}
-        onHide={() => handleHidePostModal()}
-        onOptionsClick={() => setFeedPagePostOptionsModalShow(true)}
-        onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
-        userProfilePhotoFile={postModalProps.profilePhotoFileString || ''}
-        userName={postModalProps.postUserName}
-        userId={postModalProps.postUserId}
-        clearLocalState={clearFeedPagePostModalState}
-      />
+      {feedPagePostModalData ? (
+        <PostModal
+          postId={postModalProps.id}
+          show={postModalShow}
+          fileString={postModalProps.postPhotoFileString}
+          caption={feedPagePostModalData.caption}
+          location={postModalProps.location}
+          createdAt={postModalProps.date || ''}
+          onHide={() => handleHidePostModal()}
+          onOptionsClick={() => setFeedPagePostOptionsModalShow(true)}
+          onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
+          userProfilePhotoFile={postModalProps.profilePhotoFileString || ''}
+          userName={postModalProps.postUserName}
+          userId={postModalProps.postUserId}
+          clearLocalState={clearPostModalState}
+        />
+      ) : null}
       <PostOrCommentOptionsModal
-        show={feedPagePostOptionsModalShow}
+        show={postOptionsModalShow}
         onHide={() => setFeedPagePostOptionsModalShow(false)}
         isCurrentUserPostOrComment={currentUserPost}
         archive={() =>
