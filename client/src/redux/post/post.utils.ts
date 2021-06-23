@@ -1,5 +1,7 @@
 import { Post, PostFile, Reaction } from './post.types';
 
+import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
+
 export const addPostFileToArray = (fileArray: PostFile[], file: PostFile) => {
   for (let el of fileArray) {
     if (el.s3Key === file.s3Key) {

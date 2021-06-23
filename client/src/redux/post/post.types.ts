@@ -130,6 +130,14 @@ export interface PostMetaData {
   userId: string;
 }
 
+// TODO: May need to create separate versions of following for post-modal and feed-post-container components:
+
+// postData, getPostDataConfirm, getPostDataError,
+// postFiles, getPostFileError, getPostFileConfirm
+// postReactionsArray, postReactionError, postReactionConfirm,
+// reactorPhotoFileArray, usersProfilePhotoConfirm
+// postLikingUsersArray
+
 export interface PostState {
   postData: Post[] | null;
   postDataFeedArray: Post[][];
@@ -164,10 +172,25 @@ export interface PostState {
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
-  feedPagePostModalData: PostModalDataToFeed | null;
+  feedPagePostModalData: PostModalDataToFeed;
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
+
+  // New props to be used for feed-post-container
+  // compononents in the feed-page component
+  feedPostData: Post[] | null;
+  getFeedPostDataConfirm: string | null;
+  getFeedPostDataError: PostError | null;
+  feedPostFiles: PostFile[];
+  getFeedPostFileError: PostError | null;
+  getFeedPostFileConfirm: string | null;
+  feedPostReactionsArray: Reaction[][];
+  feedPostReactionError: PostError | null;
+  feedPostReactionConfirm: string | null;
+  feedReactorPhotoFileArray: PostFile[] | null;
+  feedUsersProfilePhotoConfirm: string | null;
+  feedPostLikingUsersArray: UserInfoAndOtherData[] | null;
 }
 
 export interface CreatePostStart {
