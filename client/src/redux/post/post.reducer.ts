@@ -46,6 +46,21 @@ const INITIAL_STATE: PostState = {
   feedPagePostModalShow: false,
   feedPagePostOptionsModalShow: false,
   clearFeedPagePostModalState: false,
+
+  // New props to be used for feed-post-container
+  // compononents in the feed-page component
+  feedPostData: null,
+  getFeedPostDataConfirm: null,
+  getFeedPostDataError: null,
+  feedPostFiles: [],
+  getFeedPostFileError: null,
+  getFeedPostFileConfirm: null,
+  feedPostReactionsArray: [],
+  feedPostReactionError: null,
+  feedPostReactionConfirm: null,
+  feedReactorPhotoFileArray: null,
+  feedUsersProfilePhotoConfirm: null,
+  feedPostLikingUsersArray: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
