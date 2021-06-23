@@ -6,6 +6,8 @@ import {
   addPostReactionsToOuterReactionsArray,
 } from './post.utils';
 
+import { POST_MODAL_DATA_INITIAL_STATE } from '../../components/feed-post-container/feed-post-container.component';
+
 const INITIAL_STATE: PostState = {
   postData: null,
   postDataFeedArray: [],
@@ -40,7 +42,7 @@ const INITIAL_STATE: PostState = {
   postMetaDataForUser: null,
   postLikingUsersArray: null,
   showPostLikingUsersModal: false,
-  feedPagePostModalData: null,
+  feedPagePostModalData: POST_MODAL_DATA_INITIAL_STATE,
   feedPagePostModalShow: false,
   feedPagePostOptionsModalShow: false,
   clearFeedPagePostModalState: false,
@@ -302,7 +304,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.SET_FEED_PAGE_POST_MODAL_DATA:
       return {
         ...state,
-        feedPagePostModalData: action.payload,
+        feedPagePostModalData: { ...action.payload },
       };
     case PostActions.SET_FEED_PAGE_POST_MODAL_SHOW:
       return {

@@ -106,6 +106,17 @@ export interface PostModalDataToFeed {
   postUserName: string;
 }
 
+export const POST_MODAL_DATA_INITIAL_STATE = {
+  id: '',
+  caption: '',
+  postPhotoFileString: '',
+  location: '',
+  date: '',
+  profilePhotoFileString: '',
+  postUserId: '',
+  postUserName: '',
+};
+
 export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   userInfo,
   fileString,

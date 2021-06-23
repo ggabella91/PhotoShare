@@ -76,6 +76,7 @@ import {
 
 import FeedPostContainer, {
   PostModalDataToFeed,
+  POST_MODAL_DATA_INITIAL_STATE,
 } from '../../components/feed-post-container/feed-post-container.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 import PostModal from '../../components/post-modal/post-modal.component';
@@ -85,7 +86,6 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
-import { userInfo } from 'os';
 
 export interface PostDataArrayMap {
   postData: Post[];
@@ -123,7 +123,7 @@ interface FeedPageProps {
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
-  feedPagePostModalData: PostModalDataToFeed | null;
+  feedPagePostModalData: PostModalDataToFeed;
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
@@ -199,18 +199,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const [postLikersArray, setPostLikersArray] =
     useState<UserInfoAndOtherData[] | null>(null);
 
-  const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>({
-    id: '',
-    postPhotoFileString: '',
-    caption: '',
-    location: '',
-    date: '',
-    profilePhotoFileString: '',
-    postUserId: '',
-    postUserName: '',
-  });
-
-  const [isPostModalDataFetched, setIsPostModalDataFetched] = useState(false);
+  const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>(
+    POST_MODAL_DATA_INITIAL_STATE
+  );
 
   const [showLikingUsersModal, setShowLikingUsersModal] = useState(false);
 
@@ -442,14 +433,13 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [postLikingUsersArray]);
 
   useEffect(() => {
-    if (feedPagePostModalData && !isPostModalDataFetched) {
+    if (feedPagePostModalData.id.length) {
       console.log(feedPagePostModalData);
       setPostModalProps(feedPagePostModalData);
-      setIsPostModalDataFetched(true);
     } else {
       console.log('No feedPagePostModalData found...');
     }
-  }, [feedPagePostModalData]);
+  }, [feedPagePostModalData.id.length]);
 
   useEffect(() => {
     setShowLikingUsersModal(showPostLikingUsersModal);
@@ -468,24 +458,17 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [feedPagePostOptionsModalShow]);
 
   const handleHidePostModal = () => {
-    setPostModalProps({
-      id: '',
-      postPhotoFileString: '',
-      caption: '',
-      location: '',
-      date: '',
-      profilePhotoFileString: '',
-      postUserId: '',
-      postUserName: '',
-    });
+    setPostModalProps(POST_MODAL_DATA_INITIAL_STATE);
 
     setFeedPagePostModalShow(false);
     setClearFeedPagePostModalState(true);
   };
 
   useEffect(() => {
-    handleSetIsCurrentUserPost();
-  }, [postModalProps]);
+    if (postModalProps.postUserId.length) {
+      handleSetIsCurrentUserPost();
+    }
+  }, [postModalProps.postUserId.length]);
 
   const handleSetIsCurrentUserPost = () => {
     if (currentUser && postModalProps.postUserId) {
@@ -559,23 +542,21 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           postLikingUsersArray={postLikersArray}
         />
       ) : null}
-      {feedPagePostModalData ? (
-        <PostModal
-          postId={postModalProps.id}
-          show={postModalShow}
-          fileString={postModalProps.postPhotoFileString}
-          caption={feedPagePostModalData.caption}
-          location={postModalProps.location}
-          createdAt={postModalProps.date || ''}
-          onHide={() => handleHidePostModal()}
-          onOptionsClick={() => setFeedPagePostOptionsModalShow(true)}
-          onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
-          userProfilePhotoFile={postModalProps.profilePhotoFileString || ''}
-          userName={postModalProps.postUserName}
-          userId={postModalProps.postUserId}
-          clearLocalState={clearPostModalState}
-        />
-      ) : null}
+      <PostModal
+        postId={postModalProps.id}
+        show={postModalShow}
+        fileString={postModalProps.postPhotoFileString}
+        caption={postModalProps.caption}
+        location={postModalProps.location}
+        createdAt={postModalProps.date || ''}
+        onHide={() => handleHidePostModal()}
+        onOptionsClick={() => setFeedPagePostOptionsModalShow(true)}
+        onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
+        userProfilePhotoFile={postModalProps.profilePhotoFileString || ''}
+        userName={postModalProps.postUserName}
+        userId={postModalProps.postUserId}
+        clearLocalState={clearPostModalState}
+      />
       <PostOrCommentOptionsModal
         show={postOptionsModalShow}
         onHide={() => setFeedPagePostOptionsModalShow(false)}
@@ -609,7 +590,7 @@ interface LinkStateProps {
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
-  feedPagePostModalData: PostModalDataToFeed | null;
+  feedPagePostModalData: PostModalDataToFeed;
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
