@@ -296,3 +296,24 @@ export const setClearFeedPagePostModalState = (
   type: PostActions.SET_CLEAR_FEED_PAGE_POST_MODAL_STATE,
   payload: clearFeedPagePostModalState,
 });
+
+// Actions for feed-post-container
+
+export const getFeedPostFileSuccess = (file: PostFile): PostActionTypes => ({
+  type: PostActions.GET_FEED_POST_FILE_SUCCESS,
+  payload: file,
+});
+
+export const getFeedPostReactionsSuccess = (
+  reactions: Reaction[]
+): PostActionTypes => ({
+  type: PostActions.GET_FEED_POST_REACTIONS_SUCCESS,
+  payload: reactions,
+});
+
+export const getUserPhotoForFeedReactorArraySuccess = (
+  postFile: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS,
+  payload: postFile,
+});

@@ -22,6 +22,7 @@ import {
 import {
   Post,
   DataRequestType,
+  FileRequestType,
   PostDataReq,
   PostFileReq,
   PostFile,
@@ -32,7 +33,6 @@ import {
 } from '../../redux/post/post.types';
 import {
   selectPostDataFeedArray,
-  selectPostFiles,
   selectFollowPhotoFileArray,
   selectPostError,
   selectPostConfirm,
@@ -48,6 +48,7 @@ import {
   selectFeedPagePostModalShow,
   selectFeedPagePostOptionsModalShow,
   selectClearFeedPagePostModalState,
+  selectFeedPostFiles,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -339,6 +340,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             s3Key: el.photo,
             bucket: profileBucket,
             user: UserType.followArray,
+            fileRequestType: FileRequestType.feedPost,
           });
         }
       }
@@ -353,6 +355,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             s3Key: el.s3Key,
             bucket: postsBucket,
             user: UserType.other,
+            fileRequestType: FileRequestType.feedPost,
           });
         }
       }
@@ -599,7 +602,7 @@ interface LinkStateProps {
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   postDataFeedArray: selectPostDataFeedArray,
-  postFiles: selectPostFiles,
+  postFiles: selectFeedPostFiles,
   postConfirm: selectPostConfirm,
   postError: selectPostError,
   getPostDataConfirm: selectGetPostDataConfirm,

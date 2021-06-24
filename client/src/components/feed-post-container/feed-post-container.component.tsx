@@ -20,14 +20,15 @@ import {
   Reaction,
   ReactionReq,
   PostFileReq,
+  FileRequestType,
   PostFile,
   UserType,
   PostError,
   DeleteReactionReq,
 } from '../../redux/post/post.types';
 import {
-  selectPostReactionsArray,
-  selectReactorPhotoFileArray,
+  selectFeedPostReactionsArray,
+  selectFeedReactorPhotoFileArray,
   selectUsersProfilePhotoConfirm,
   selectPostReactionConfirm,
   selectPostReactionError,
@@ -251,6 +252,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             s3Key: el.photo,
             bucket,
             user: UserType.postReactorsArray,
+            fileRequestType: FileRequestType.feedPost,
           });
         }
       }
@@ -448,9 +450,9 @@ interface LinkStateProps {
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
-  postReactionsArray: selectPostReactionsArray,
+  postReactionsArray: selectFeedPostReactionsArray,
   postReactingUsers: selectPostReactingUsers,
-  reactorPhotoFileArray: selectReactorPhotoFileArray,
+  reactorPhotoFileArray: selectFeedReactorPhotoFileArray,
   usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,

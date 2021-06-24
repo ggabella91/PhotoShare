@@ -15,7 +15,12 @@ import {
 } from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
-import { PostFileReq, PostFile, UserType } from '../../redux/post/post.types';
+import {
+  FileRequestType,
+  PostFileReq,
+  PostFile,
+  UserType,
+} from '../../redux/post/post.types';
 import {
   selectFollowPhotoFileArray,
   selectUsersProfilePhotoConfirm,
@@ -134,6 +139,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
               user: UserType.followArray,
               s3Key: user.photo,
               bucket,
+              fileRequestType: FileRequestType.singlePost,
             });
           }
         }

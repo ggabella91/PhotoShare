@@ -49,6 +49,11 @@ export enum PostActions {
   SET_FEED_PAGE_POST_MODAL_SHOW = 'SET_FEED_PAGE_POST_MODAL_SHOW',
   SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW = 'SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW',
   SET_CLEAR_FEED_PAGE_POST_MODAL_STATE = 'SET_CLEAR_FEED_PAGE_POST_MODAL_STATE',
+
+  // Actions specific to data for feed-post-containers
+  GET_FEED_POST_FILE_SUCCESS = 'GET_FEED_POST_FILE_SUCCESS',
+  GET_FEED_POST_REACTIONS_SUCCESS = 'GET_FEED_POST_REACTIONS_SUCCESS',
+  GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS',
 }
 
 export interface PostError {
@@ -89,11 +94,17 @@ export enum UserType {
   followArray = 'followArray',
   suggestionArray = 'suggestionArray',
   postReactorsArray = 'postReactorsArray',
+  feedPostReactorsArray = 'feedPostReactorsArray',
 }
 
 export enum DataRequestType {
   single = 'single',
   feed = 'feed',
+}
+
+export enum FileRequestType {
+  singlePost = 'singlePost',
+  feedPost = 'feedPost',
 }
 
 export interface PostDataReq {
@@ -107,6 +118,7 @@ export interface PostFileReq {
   s3Key: string;
   bucket: string;
   user: UserType;
+  fileRequestType: FileRequestType;
 }
 
 export interface PostFile {
@@ -129,14 +141,6 @@ export interface PostMetaData {
   queryLength: number;
   userId: string;
 }
-
-// TODO: May need to create separate versions of following for post-modal and feed-post-container components:
-
-// postData, getPostDataConfirm, getPostDataError,
-// postFiles, getPostFileError, getPostFileConfirm
-// postReactionsArray, postReactionError, postReactionConfirm,
-// reactorPhotoFileArray, usersProfilePhotoConfirm
-// postLikingUsersArray
 
 export interface PostState {
   postData: Post[] | null;
@@ -179,18 +183,9 @@ export interface PostState {
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
-  feedPostData: Post[] | null;
-  getFeedPostDataConfirm: string | null;
-  getFeedPostDataError: PostError | null;
   feedPostFiles: PostFile[];
-  getFeedPostFileError: PostError | null;
-  getFeedPostFileConfirm: string | null;
   feedPostReactionsArray: Reaction[][];
-  feedPostReactionError: PostError | null;
-  feedPostReactionConfirm: string | null;
   feedReactorPhotoFileArray: PostFile[] | null;
-  feedUsersProfilePhotoConfirm: string | null;
-  feedPostLikingUsersArray: UserInfoAndOtherData[] | null;
 }
 
 export interface CreatePostStart {
@@ -428,6 +423,23 @@ export interface SetClearFeedPagePostModalState {
   payload: boolean;
 }
 
+// Interfaces related exclusively to feed-post-container data
+
+export interface GetFeedPostFileSuccess {
+  type: typeof PostActions.GET_FEED_POST_FILE_SUCCESS;
+  payload: PostFile;
+}
+
+export interface GetFeedPostReactionsSuccess {
+  type: typeof PostActions.GET_FEED_POST_REACTIONS_SUCCESS;
+  payload: Reaction[];
+}
+
+export interface GetUserPhotoForFeedReactorArraySuccess {
+  type: typeof PostActions.GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS;
+  payload: PostFile;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -475,4 +487,7 @@ export type PostActionTypes =
   | SetFeedPagePostModalData
   | SetFeedPagePostModalShow
   | SetFeedPagePostOptionsModalShow
-  | SetClearFeedPagePostModalState;
+  | SetClearFeedPagePostModalState
+  | GetFeedPostFileSuccess
+  | GetFeedPostReactionsSuccess
+  | GetUserPhotoForFeedReactorArraySuccess;

@@ -7,7 +7,11 @@ import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { signOutStart } from '../../redux/user/user.actions';
-import { PostFileReq, UserType } from '../../redux/post/post.types';
+import {
+  FileRequestType,
+  PostFileReq,
+  UserType,
+} from '../../redux/post/post.types';
 import {
   selectProfilePhotoKey,
   selectProfilePhotoFile,
@@ -54,12 +58,14 @@ export const Header: React.FC<HeaderProps> = ({
         s3Key: profilePhotoKey,
         bucket,
         user: UserType.self,
+        fileRequestType: FileRequestType.singlePost,
       });
     } else if (!profilePhotoFile && currentUser && currentUser.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket,
         user: UserType.self,
+        fileRequestType: FileRequestType.singlePost,
       });
     } else if (!currentUser && photoFile) {
       setPhotoFile(null);

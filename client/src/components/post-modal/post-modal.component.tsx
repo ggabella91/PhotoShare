@@ -22,6 +22,7 @@ import {
   DeleteReactionReq,
   PostError,
   PostFileReq,
+  FileRequestType,
   PostFile,
   UserType,
 } from '../../redux/post/post.types';
@@ -271,6 +272,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             s3Key: el.photo,
             bucket,
             user: UserType.postReactorsArray,
+            fileRequestType: FileRequestType.singlePost,
           });
         }
       }

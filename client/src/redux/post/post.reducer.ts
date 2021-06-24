@@ -49,18 +49,9 @@ const INITIAL_STATE: PostState = {
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
-  feedPostData: null,
-  getFeedPostDataConfirm: null,
-  getFeedPostDataError: null,
   feedPostFiles: [],
-  getFeedPostFileError: null,
-  getFeedPostFileConfirm: null,
   feedPostReactionsArray: [],
-  feedPostReactionError: null,
-  feedPostReactionConfirm: null,
   feedReactorPhotoFileArray: null,
-  feedUsersProfilePhotoConfirm: null,
-  feedPostLikingUsersArray: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -113,6 +104,17 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
           'Successfully fetched reactions for the requested post!',
         getPostReactionsError: null,
       };
+    case PostActions.GET_FEED_POST_REACTIONS_SUCCESS:
+      return {
+        ...state,
+        feedPostReactionsArray: addPostReactionsToOuterReactionsArray(
+          state.feedPostReactionsArray,
+          action.payload
+        ),
+        getPostReactionsConfirm:
+          'Successfully fetched reactions for the requested feed post container!',
+        getPostReactionsError: null,
+      };
     case PostActions.ADD_POST_DATA_TO_FEED_ARRAY:
       return {
         ...state,
@@ -130,6 +132,13 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         postFiles: addPostFileToArray(state.postFiles, action.payload),
         getPostFileError: null,
         getPostFileConfirm: 'Post file fetched!',
+      };
+    case PostActions.GET_FEED_POST_FILE_SUCCESS:
+      return {
+        ...state,
+        feedPostFiles: addPostFileToArray(state.feedPostFiles, action.payload),
+        getPostFileError: null,
+        getPostFileConfirm: 'Post feed file fetched!',
       };
     case PostActions.GET_PROFILE_PHOTO_FILE_SUCCESS:
       return {
@@ -174,6 +183,16 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ),
         getPostFileError: null,
         usersProfilePhotoConfirm: 'User photo added to reactor array!',
+      };
+    case PostActions.GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS:
+      return {
+        ...state,
+        feedReactorPhotoFileArray: addUserPhotoFileToArray(
+          state.feedReactorPhotoFileArray,
+          action.payload
+        ),
+        getPostFileError: null,
+        usersProfilePhotoConfirm: 'User photo added to feed reactor array!',
       };
     case PostActions.ARCHIVE_POST_SUCCESS:
       return {
