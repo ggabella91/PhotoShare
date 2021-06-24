@@ -189,3 +189,20 @@ export const selectClearFeedPagePostModalState = createSelector(
   [selectPostState],
   (postState: PostState) => postState.clearFeedPagePostModalState
 );
+
+// Selectors for feed-post-container components
+
+export const selectFeedPostFiles = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.feedPostFiles
+);
+
+export const selectFeedPostReactionsArray = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.feedPostReactionsArray
+);
+
+export const selectFeedReactorPhotoFileArray = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.feedReactorPhotoFileArray
+);

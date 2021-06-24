@@ -27,8 +27,8 @@ import {
   DeleteReactionReq,
 } from '../../redux/post/post.types';
 import {
-  selectPostReactionsArray,
-  selectReactorPhotoFileArray,
+  selectFeedPostReactionsArray,
+  selectFeedReactorPhotoFileArray,
   selectUsersProfilePhotoConfirm,
   selectPostReactionConfirm,
   selectPostReactionError,
@@ -450,9 +450,9 @@ interface LinkStateProps {
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
-  postReactionsArray: selectPostReactionsArray,
+  postReactionsArray: selectFeedPostReactionsArray,
   postReactingUsers: selectPostReactingUsers,
-  reactorPhotoFileArray: selectReactorPhotoFileArray,
+  reactorPhotoFileArray: selectFeedReactorPhotoFileArray,
   usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,

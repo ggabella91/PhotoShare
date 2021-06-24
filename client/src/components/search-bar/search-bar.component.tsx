@@ -16,7 +16,12 @@ import {
   clearUserSuggestions,
 } from '../../redux/user/user.actions';
 
-import { PostFile, PostFileReq, UserType } from '../../redux/post/post.types';
+import {
+  FileRequestType,
+  PostFile,
+  PostFileReq,
+  UserType,
+} from '../../redux/post/post.types';
 import {
   selectSuggestionPhotoFileArray,
   selectUsersProfilePhotoConfirm,
@@ -112,6 +117,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             user: UserType.suggestionArray,
             bucket,
             s3Key: user.photo,
+            fileRequestType: FileRequestType.singlePost,
           });
         }
       }

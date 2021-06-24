@@ -33,7 +33,6 @@ import {
 } from '../../redux/post/post.types';
 import {
   selectPostDataFeedArray,
-  selectPostFiles,
   selectFollowPhotoFileArray,
   selectPostError,
   selectPostConfirm,
@@ -49,6 +48,7 @@ import {
   selectFeedPagePostModalShow,
   selectFeedPagePostOptionsModalShow,
   selectClearFeedPagePostModalState,
+  selectFeedPostFiles,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -602,7 +602,7 @@ interface LinkStateProps {
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   postDataFeedArray: selectPostDataFeedArray,
-  postFiles: selectPostFiles,
+  postFiles: selectFeedPostFiles,
   postConfirm: selectPostConfirm,
   postError: selectPostError,
   getPostDataConfirm: selectGetPostDataConfirm,
