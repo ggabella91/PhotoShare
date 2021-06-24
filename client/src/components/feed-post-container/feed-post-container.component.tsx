@@ -20,6 +20,7 @@ import {
   Reaction,
   ReactionReq,
   PostFileReq,
+  FileRequestType,
   PostFile,
   UserType,
   PostError,
@@ -251,6 +252,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             s3Key: el.photo,
             bucket,
             user: UserType.postReactorsArray,
+            fileRequestType: FileRequestType.feedPost,
           });
         }
       }

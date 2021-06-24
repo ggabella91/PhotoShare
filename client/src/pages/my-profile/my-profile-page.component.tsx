@@ -16,6 +16,7 @@ import {
 import {
   Post,
   DataRequestType,
+  FileRequestType,
   PostDataReq,
   PostFileReq,
   ArchivePostReq,
@@ -248,12 +249,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         s3Key: profilePhotoKey,
         bucket: profileBucket,
         user: UserType.self,
+        fileRequestType: FileRequestType.singlePost,
       });
     } else if (!profilePhotoFile && currentUser && currentUser.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket: profileBucket,
         user: UserType.self,
+        fileRequestType: FileRequestType.singlePost,
       });
     }
   }, [profilePhotoKey]);
@@ -277,6 +280,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           s3Key: post.s3Key,
           bucket: postsBucket,
           user: UserType.self,
+          fileRequestType: FileRequestType.singlePost,
         });
       }
     }

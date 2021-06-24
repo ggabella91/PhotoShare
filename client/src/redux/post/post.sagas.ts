@@ -7,6 +7,7 @@ import {
   Reaction,
   ReactionReq,
   DataRequestType,
+  FileRequestType,
   PostDataReq,
   PostFileReq,
   ArchivePostReq,
@@ -39,6 +40,8 @@ import {
   getUserPhotoForSuggestionArraySuccess,
   getUserPhotoForReactorArraySuccess,
   setPostMetaDataForUser,
+  getFeedPostFileSuccess,
+  getUserPhotoForFeedReactorArraySuccess,
 } from './post.actions';
 
 import axios from 'axios';
@@ -131,7 +134,7 @@ export function* getPostReactions({
 }
 
 export function* getPostFile({
-  payload: { s3Key, bucket, user },
+  payload: { s3Key, bucket, user, fileRequestType },
 }: {
   payload: PostFileReq;
 }): any {
@@ -142,7 +145,11 @@ export function* getPostFile({
     });
 
     if (bucket === 'photo-share-app' || bucket === 'photo-share-app-dev') {
-      yield put(getPostFileSuccess({ s3Key, fileString: data }));
+      if (fileRequestType === FileRequestType.singlePost) {
+        yield put(getPostFileSuccess({ s3Key, fileString: data }));
+      } else if (fileRequestType === FileRequestType.feedPost) {
+        yield put(getFeedPostFileSuccess({ s3Key, fileString: data }));
+      }
     } else if (
       bucket === 'photo-share-app-profile-photos' ||
       bucket === 'photo-share-app-profile-photos-dev'
@@ -159,9 +166,19 @@ export function* getPostFile({
         yield put(
           getUserPhotoForSuggestionArraySuccess({ s3Key, fileString: data })
         );
-      } else if (user === UserType.postReactorsArray) {
+      } else if (
+        fileRequestType === FileRequestType.singlePost &&
+        user === UserType.postReactorsArray
+      ) {
         yield put(
           getUserPhotoForReactorArraySuccess({ s3Key, fileString: data })
+        );
+      } else if (
+        fileRequestType === FileRequestType.feedPost &&
+        user === UserType.postReactorsArray
+      ) {
+        yield put(
+          getUserPhotoForFeedReactorArraySuccess({ s3Key, fileString: data })
         );
       }
     }

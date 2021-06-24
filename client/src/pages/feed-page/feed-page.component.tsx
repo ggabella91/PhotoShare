@@ -22,6 +22,7 @@ import {
 import {
   Post,
   DataRequestType,
+  FileRequestType,
   PostDataReq,
   PostFileReq,
   PostFile,
@@ -339,6 +340,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             s3Key: el.photo,
             bucket: profileBucket,
             user: UserType.followArray,
+            fileRequestType: FileRequestType.feedPost,
           });
         }
       }
@@ -353,6 +355,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             s3Key: el.s3Key,
             bucket: postsBucket,
             user: UserType.other,
+            fileRequestType: FileRequestType.feedPost,
           });
         }
       }
