@@ -183,6 +183,7 @@ export interface PostState {
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
+  getFeedPostDataConfirm: string | null;
   feedPostFiles: PostFile[];
   feedPostReactionsArray: Reaction[][];
   feedReactorPhotoFileArray: PostFile[] | null;

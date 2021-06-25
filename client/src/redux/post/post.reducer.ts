@@ -49,6 +49,7 @@ const INITIAL_STATE: PostState = {
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
+  getFeedPostDataConfirm: null,
   feedPostFiles: [],
   feedPostReactionsArray: [],
   feedReactorPhotoFileArray: null,
@@ -123,7 +124,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
           action.payload
         ),
         getPostDataError: null,
-        getPostDataConfirm: 'Post data added to feed array!',
+        getFeedPostDataConfirm: 'Post data added to feed array!',
         isLoadingPostData: false,
       };
     case PostActions.GET_POST_FILE_SUCCESS:
@@ -231,6 +232,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         getPostDataError: action.payload,
         getPostDataConfirm: null,
+        getFeedPostDataConfirm: null,
         isLoadingPostData: false,
       };
     case PostActions.GET_POST_FILE_FAILURE:
