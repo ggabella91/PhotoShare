@@ -36,7 +36,7 @@ import {
   selectFollowPhotoFileArray,
   selectPostError,
   selectPostConfirm,
-  selectGetPostDataConfirm,
+  selectGetFeedPostDataConfirm,
   selectGetPostDataError,
   selectGetPostFileConfirm,
   selectGetPostFileError,
@@ -112,7 +112,7 @@ interface FeedPageProps {
   postFiles: PostFile[];
   postConfirm: string | null;
   postError: PostError | null;
-  getPostDataConfirm: string | null;
+  getFeedPostDataConfirm: string | null;
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
@@ -151,7 +151,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   followPhotoFileArray,
   isLoadingPostData,
   postMetaDataForUser,
-  getPostDataConfirm,
+  getFeedPostDataConfirm,
   getPostDataStart,
   getPostFileStart,
   clearPostState,
@@ -360,7 +360,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       }
     }
-  }, [dataFeedMapArray, getPostDataConfirm]);
+  }, [dataFeedMapArray, getFeedPostDataConfirm]);
 
   useEffect(() => {
     if (followPhotoFileArray) {
@@ -403,7 +403,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     dataFeedMapArray,
     followingProfilePhotoArray,
     postFileFeedArray,
-    getPostDataConfirm,
+    getFeedPostDataConfirm,
   ]);
 
   const observer = useRef<IntersectionObserver>();
@@ -581,7 +581,7 @@ interface LinkStateProps {
   postFiles: PostFile[];
   postConfirm: string | null;
   postError: PostError | null;
-  getPostDataConfirm: string | null;
+  getFeedPostDataConfirm: string | null;
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
@@ -605,7 +605,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   postFiles: selectFeedPostFiles,
   postConfirm: selectPostConfirm,
   postError: selectPostError,
-  getPostDataConfirm: selectGetPostDataConfirm,
+  getFeedPostDataConfirm: selectGetFeedPostDataConfirm,
   getPostDataError: selectGetPostDataError,
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,

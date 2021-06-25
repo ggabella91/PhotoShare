@@ -192,6 +192,11 @@ export const selectClearFeedPagePostModalState = createSelector(
 
 // Selectors for feed-post-container components
 
+export const selectGetFeedPostDataConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.getFeedPostDataConfirm
+);
+
 export const selectFeedPostFiles = createSelector(
   [selectPostState],
   (postState: PostState) => postState.feedPostFiles
