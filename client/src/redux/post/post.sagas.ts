@@ -6,6 +6,8 @@ import {
   Post,
   Reaction,
   ReactionReq,
+  ReactionRequestType,
+  GetPostReactionsReq,
   DataRequestType,
   FileRequestType,
   PostDataReq,
@@ -27,6 +29,7 @@ import {
   addPostDataToFeedArray,
   getPostDataFailure,
   getPostReactionsSuccess,
+  getFeedPostReactionsSuccess,
   getPostReactionsFailure,
   getPostFileSuccess,
   getProfilePhotoFileSuccess,
@@ -120,14 +123,18 @@ export function* getPostData({
 }
 
 export function* getPostReactions({
-  payload: postId,
+  payload: { postId, reactionReqType },
 }: {
-  payload: string;
+  payload: GetPostReactionsReq;
 }): any {
   try {
     const { data } = yield axios.post('/api/reactions', { postId });
 
-    yield put(getPostReactionsSuccess(data));
+    if (reactionReqType === ReactionRequestType.singlePost) {
+      yield put(getPostReactionsSuccess(data));
+    } else if (reactionReqType === ReactionRequestType.feedPost) {
+      yield put(getFeedPostReactionsSuccess(data));
+    }
   } catch (err) {
     yield put(getPostReactionsFailure(err));
   }

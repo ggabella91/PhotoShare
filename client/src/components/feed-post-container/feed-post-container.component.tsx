@@ -21,6 +21,8 @@ import {
   ReactionReq,
   PostFileReq,
   FileRequestType,
+  ReactionRequestType,
+  GetPostReactionsReq,
   PostFile,
   UserType,
   PostError,
@@ -181,12 +183,16 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (userInfo.postId) {
-      getPostReactionsStart(userInfo.postId);
+      getPostReactionsStart({
+        postId: userInfo.postId,
+        reactionReqType: ReactionRequestType.feedPost,
+      });
     }
   }, [userInfo.postId]);
 
   useEffect(() => {
     if (postReactionsArray && postReactionsArray.length) {
+      console.log('postReactionsArray: ', postReactionsArray);
       for (let innerArray of postReactionsArray) {
         if (innerArray.length && innerArray[0].postId === userInfo.postId) {
           setReactionsArray(innerArray);
@@ -197,6 +203,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
+      console.log('reactionsArray: ', reactionsArray);
       for (let el of reactionsArray) {
         if (
           currentUser &&
@@ -464,8 +471,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostReactionStart: (reactionReq: ReactionReq) =>
     dispatch(createPostReactionStart(reactionReq)),
-  getPostReactionsStart: (postId: string) =>
-    dispatch(getPostReactionsStart(postId)),
+  getPostReactionsStart: (getPostReactionsReq: GetPostReactionsReq) =>
+    dispatch(getPostReactionsStart(getPostReactionsReq)),
   getOtherUserStart: (otherUserReq: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserReq)),
   getPostFileStart: (postFileReq: PostFileReq) =>

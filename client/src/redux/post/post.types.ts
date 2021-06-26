@@ -88,6 +88,16 @@ export interface ReactionReq {
   comment?: string;
 }
 
+export enum ReactionRequestType {
+  singlePost = 'singlePost',
+  feedPost = 'singlePost',
+}
+
+export interface GetPostReactionsReq {
+  postId: string;
+  reactionReqType: ReactionRequestType;
+}
+
 export enum UserType {
   self = 'self',
   other = 'other',
@@ -221,7 +231,7 @@ export interface CreatePostReactionFailure {
 
 export interface GetPostReactionsStart {
   type: typeof PostActions.GET_POST_REACTIONS_START;
-  payload: string;
+  payload: GetPostReactionsReq;
 }
 
 export interface GetPostReactionsSuccess {
