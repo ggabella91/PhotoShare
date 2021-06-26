@@ -7,6 +7,7 @@ import {
   PostFileReq,
   Reaction,
   ReactionReq,
+  GetPostReactionsReq,
   ArchivePostReq,
   DeleteReactionReq,
   PostFile,
@@ -52,9 +53,11 @@ export const createPostReactionFailure = (
   payload: error,
 });
 
-export const getPostReactionsStart = (postId: string): PostActionTypes => ({
+export const getPostReactionsStart = (
+  getPostReactionsReq: GetPostReactionsReq
+): PostActionTypes => ({
   type: PostActions.GET_POST_REACTIONS_START,
-  payload: postId,
+  payload: getPostReactionsReq,
 });
 
 export const getPostReactionsSuccess = (

@@ -24,6 +24,8 @@ import {
   PostFileReq,
   FileRequestType,
   PostFile,
+  GetPostReactionsReq,
+  ReactionRequestType,
   UserType,
 } from '../../redux/post/post.types';
 import {
@@ -179,7 +181,10 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (postId) {
-      getPostReactionsStart(postId);
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.singlePost,
+      });
     }
   }, [postId]);
 
@@ -232,7 +237,10 @@ export const PostModal: React.FC<PostModalProps> = ({
       postId
     ) {
       clearPostReactions();
-      getPostReactionsStart(postId);
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.singlePost,
+      });
     }
   }, [postReactionConfirm]);
 
@@ -243,7 +251,10 @@ export const PostModal: React.FC<PostModalProps> = ({
       postId
     ) {
       clearPostReactions();
-      getPostReactionsStart(postId);
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.singlePost,
+      });
     }
   }, [deleteReactionConfirm]);
 
@@ -410,10 +421,6 @@ export const PostModal: React.FC<PostModalProps> = ({
     });
   };
 
-  useEffect(() => {
-    if (!postReactionConfirm) console.log('postReactionConfirm is now null');
-  }, [postReactionConfirm]);
-
   return (
     <Modal {...props} dialogClassName='post-modal' animation={false} centered>
       <div className='large-image-adjustments'>
@@ -526,8 +533,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostReactionStart: (reactionReq: ReactionReq) =>
     dispatch(createPostReactionStart(reactionReq)),
-  getPostReactionsStart: (postId: string) =>
-    dispatch(getPostReactionsStart(postId)),
+  getPostReactionsStart: (getPostReactionsReq: GetPostReactionsReq) =>
+    dispatch(getPostReactionsStart(getPostReactionsReq)),
   getPostFileStart: (postFileReq: PostFileReq) =>
     dispatch(getPostFileStart(postFileReq)),
   getOtherUserStart: (otherUserReq: OtherUserRequest) =>
