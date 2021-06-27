@@ -90,7 +90,7 @@ export interface ReactionReq {
 
 export enum ReactionRequestType {
   singlePost = 'singlePost',
-  feedPost = 'singlePost',
+  feedPost = 'feedPost',
 }
 
 export interface GetPostReactionsReq {
@@ -197,6 +197,7 @@ export interface PostState {
   feedPostFiles: PostFile[];
   feedPostReactionsArray: Reaction[][];
   feedReactorPhotoFileArray: PostFile[] | null;
+  feedUsersProfilePhotoConfirm: string | null;
 }
 
 export interface CreatePostStart {
