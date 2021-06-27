@@ -53,6 +53,7 @@ const INITIAL_STATE: PostState = {
   feedPostFiles: [],
   feedPostReactionsArray: [],
   feedReactorPhotoFileArray: null,
+  feedUsersProfilePhotoConfirm: null,
 };
 
 const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
@@ -193,7 +194,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
           action.payload
         ),
         getPostFileError: null,
-        usersProfilePhotoConfirm: 'User photo added to feed reactor array!',
+        feedUsersProfilePhotoConfirm: 'User photo added to feed reactor array!',
       };
     case PostActions.ARCHIVE_POST_SUCCESS:
       return {
@@ -293,7 +294,9 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         postFiles: [],
         postData: null,
+        feedPostFiles: [],
         postReactionsArray: [],
+        feedPostReactionsArray: [],
       };
     case PostActions.CLEAR_POST_REACTIONS:
       return {

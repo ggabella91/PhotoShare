@@ -211,3 +211,8 @@ export const selectFeedReactorPhotoFileArray = createSelector(
   [selectPostState],
   (postState: PostState) => postState.feedReactorPhotoFileArray
 );
+
+export const selectFeedUsersProfilePhotoConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.feedUsersProfilePhotoConfirm
+);

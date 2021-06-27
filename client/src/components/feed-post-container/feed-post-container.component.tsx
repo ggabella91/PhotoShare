@@ -31,7 +31,7 @@ import {
 import {
   selectFeedPostReactionsArray,
   selectFeedReactorPhotoFileArray,
-  selectUsersProfilePhotoConfirm,
+  selectFeedUsersProfilePhotoConfirm,
   selectPostReactionConfirm,
   selectPostReactionError,
   selectGetPostReactionsConfirm,
@@ -460,7 +460,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   postReactionsArray: selectFeedPostReactionsArray,
   postReactingUsers: selectPostReactingUsers,
   reactorPhotoFileArray: selectFeedReactorPhotoFileArray,
-  usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
+  usersProfilePhotoConfirm: selectFeedUsersProfilePhotoConfirm,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
