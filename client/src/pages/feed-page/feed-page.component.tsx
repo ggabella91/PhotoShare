@@ -77,6 +77,7 @@ import {
 
 import FeedPostContainer, {
   PostModalDataToFeed,
+  UserInfoData,
   POST_MODAL_DATA_INITIAL_STATE,
 } from '../../components/feed-post-container/feed-post-container.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
@@ -87,6 +88,7 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
+import { userInfo } from 'os';
 
 export interface PostDataArrayMap {
   postData: Post[];
@@ -369,7 +371,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [followPhotoFileArray]);
 
   useEffect(() => {
-    setPostFileFeedArray(postFiles);
+    if (postFiles) {
+      setPostFileFeedArray(postFiles);
+    }
   }, [postFiles]);
 
   useEffect(() => {
@@ -435,43 +439,57 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [postLikingUsersArray]);
 
-  useEffect(() => {
-    if (feedPagePostModalData.id.length) {
-      console.log(feedPagePostModalData);
-      setPostModalProps(feedPagePostModalData);
-    } else {
-      console.log('No feedPagePostModalData found...');
-    }
-  }, [feedPagePostModalData.id.length]);
+  // useEffect(() => {
+  //   if (feedPagePostModalData.id.length) {
+  //     console.log(feedPagePostModalData);
+  //     setPostModalProps(feedPagePostModalData);
+  //   } else {
+  //     console.log('No feedPagePostModalData found...');
+  //   }
+  // }, [feedPagePostModalData.id]);
 
   useEffect(() => {
-    setShowLikingUsersModal(showPostLikingUsersModal);
+    if (showPostLikingUsersModal) {
+      setShowLikingUsersModal(showPostLikingUsersModal);
+    }
   }, [showPostLikingUsersModal]);
 
   useEffect(() => {
-    setPostModalShow(feedPagePostModalShow);
+    if (feedPagePostModalShow) {
+      setPostModalShow(feedPagePostModalShow);
+      setFeedPagePostModalShow(false);
+    }
   }, [feedPagePostModalShow]);
 
-  useEffect(() => {
-    setClearPostModalState(clearFeedPagePostModalState);
-  }, [clearFeedPagePostModalState]);
+  // useEffect(() => {
+  //   if (clearFeedPagePostModalState) {
+  //     setClearPostModalState(clearFeedPagePostModalState);
+  //   }
+  // }, [clearFeedPagePostModalState]);
 
   useEffect(() => {
-    setPostOptionsModalShow(feedPagePostOptionsModalShow);
+    if (feedPagePostOptionsModalShow) {
+      setPostOptionsModalShow(feedPagePostOptionsModalShow);
+    }
   }, [feedPagePostOptionsModalShow]);
+
+  const handleClickViewAllComments = (postModalProps: PostModalDataToFeed) => {
+    setPostModalShow(true);
+    setPostModalProps(postModalProps);
+    setClearPostModalState(false);
+  };
 
   const handleHidePostModal = () => {
     setPostModalProps(POST_MODAL_DATA_INITIAL_STATE);
-
-    setFeedPagePostModalShow(false);
-    setClearFeedPagePostModalState(true);
+    setPostModalShow(false);
+    // setClearFeedPagePostModalState(true);
   };
 
   useEffect(() => {
-    if (postModalProps.postUserId.length) {
+    if (postModalProps.postUserId) {
       handleSetIsCurrentUserPost();
     }
-  }, [postModalProps.postUserId.length]);
+  }, [postModalProps]);
 
   const handleSetIsCurrentUserPost = () => {
     if (currentUser && postModalProps.postUserId) {
@@ -481,6 +499,26 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         setCurrentUserPost(false);
       }
     }
+  };
+
+  const setFeedContainerPostModalProps = (
+    userInfo: UserInfoData,
+    caption: string,
+    date: string,
+    fileString: string
+  ) => {
+    const props = {
+      id: userInfo.postId,
+      caption: caption || '',
+      postPhotoFileString: fileString,
+      location: userInfo.location,
+      date: date,
+      profilePhotoFileString: userInfo.profilePhotoFileString,
+      postUserId: userInfo.userId,
+      postUserName: userInfo.username,
+    };
+
+    return props;
   };
 
   // TODO: Add logic to get s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
@@ -507,6 +545,21 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 caption={el.caption}
                 date={el.dateString}
                 key={Math.random()}
+                postModalProps={setFeedContainerPostModalProps(
+                  {
+                    profilePhotoFileString: el.profilePhotoFileString,
+                    username: el.username,
+                    userId: el.userId,
+                    postId: el.postId,
+                    location: el.location,
+                    name: '',
+                    comment: '',
+                  },
+                  el.caption || '',
+                  el.dateString,
+                  el.postFileString
+                )}
+                handleViewAllComments={handleClickViewAllComments}
                 custRef={lastPostContainerElementRef}
               />
             );
@@ -526,6 +579,21 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 caption={el.caption}
                 date={el.dateString}
                 key={Math.random()}
+                postModalProps={setFeedContainerPostModalProps(
+                  {
+                    profilePhotoFileString: el.profilePhotoFileString,
+                    username: el.username,
+                    userId: el.userId,
+                    postId: el.postId,
+                    location: el.location,
+                    name: '',
+                    comment: '',
+                  },
+                  el.caption || '',
+                  el.dateString,
+                  el.postFileString
+                )}
+                handleViewAllComments={handleClickViewAllComments}
               />
             );
           }
