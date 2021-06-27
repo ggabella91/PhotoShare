@@ -76,6 +76,8 @@ interface FeedPostContainerProps {
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
   deleteReactionConfirm: string | null;
+  postModalProps: PostModalDataToFeed;
+  handleViewAllComments: (postModalProps: PostModalDataToFeed) => void;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -127,6 +129,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   date,
   custRef,
   currentUser,
+  postModalProps,
+  handleViewAllComments,
   postReactionsArray,
   postReactingUsers,
   reactorPhotoFileArray,
@@ -162,7 +166,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
-  const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>({
+  // const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>({
+  postModalProps = {
     id: userInfo.postId,
     caption: caption || '',
     postPhotoFileString: fileString,
@@ -171,7 +176,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     profilePhotoFileString: userInfo.profilePhotoFileString,
     postUserId: userInfo.userId,
     postUserName: userInfo.username,
-  });
+  };
 
   let bucket: string;
 
@@ -384,12 +389,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     }
   };
 
-  const handleClickViewAllComments = () => {
-    setFeedPagePostModalShow(true);
-    setClearFeedPagePostModalState(false);
+  // const handleClickViewAllComments = () => {
+  //   setFeedPagePostModalShow(true);
+  //   setClearFeedPagePostModalState(false);
 
-    setFeedPagePostModalData(postModalProps);
-  };
+  //   setFeedPagePostModalData(postModalProps);
+  // };
 
   return (
     <div className='feed-post-container' ref={custRef}>
@@ -420,7 +425,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         {commentingUserArray && commentingUserArray.length > 2 ? (
           <span
             className='view-all-comments'
-            onClick={() => handleClickViewAllComments()}
+            onClick={() => handleViewAllComments(postModalProps)}
           >{`View all ${commentingUserArray.length} comments`}</span>
         ) : null}
         {commentingUserArray
