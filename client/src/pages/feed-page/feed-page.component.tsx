@@ -400,6 +400,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         (a, b) => b.dateInt - a.dateInt
       );
 
+      console.log('setUserInfoAndPostFileArray');
       setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
     }
   }, [

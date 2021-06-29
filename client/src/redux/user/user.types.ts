@@ -39,6 +39,7 @@ export enum UserActions {
   CLEAR_USER_SUGGESTIONS = 'CLEAR_USER_SUGGESTIONS',
   CLEAR_FOLLOWERS_AND_FOLLOWING = 'CLEAR_FOLLOWERS_OR_FOLLOWING',
   SET_IS_CURRENT_USER_PROFILE_PAGE = 'SET_IS_CURRENT_USER_PROFILE_PAGE',
+  GET_FEED_POST_REACTOR_SUCCESS = 'GET_FEED_POST_REACTOR_SUCCESS',
 }
 
 export interface UserSignUp {
@@ -92,6 +93,7 @@ export enum OtherUserType {
   FOLLOWERS = 'FOLLOWERS',
   FOLLOWING = 'FOLLOWING',
   POST_REACTOR = 'POST_REACTOR',
+  FEED_POST_REACTOR = 'FEED_POST_REACTOR',
 }
 
 export interface OtherUserRequest {
@@ -130,6 +132,7 @@ export interface UserState {
   resetConfirm: null | string;
   resetError: null | Error;
   deleteAccountError: null | Error;
+  feedPostReactingUsers: User[] | null;
 }
 
 export interface SignUpStart {
@@ -332,6 +335,11 @@ export interface SetIsCurrentUserProfilePage {
   payload: boolean;
 }
 
+export interface GetFeedPostReactorsSuccess {
+  type: typeof UserActions.GET_FEED_POST_REACTOR_SUCCESS;
+  payload: User;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -373,4 +381,5 @@ export type UserActionTypes =
   | GetUserSuggestionsFailure
   | ClearUserSuggestions
   | ClearFollowersOrFollowing
-  | SetIsCurrentUserProfilePage;
+  | SetIsCurrentUserProfilePage
+  | GetFeedPostReactorsSuccess;

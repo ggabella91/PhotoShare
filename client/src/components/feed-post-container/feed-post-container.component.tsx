@@ -12,7 +12,7 @@ import {
 } from '../../redux/user/user.types';
 import {
   selectCurrentUser,
-  selectPostReactingUsers,
+  selectFeedPostReactingUsers,
 } from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
@@ -67,8 +67,8 @@ interface FeedPostContainerProps {
   custRef?: (node: HTMLDivElement | null) => void;
   key: number;
   currentUser: User | null;
-  postReactionsArray: Reaction[][];
-  postReactingUsers: User[] | null;
+  feedPostReactionsArray: Reaction[][];
+  feedPostReactingUsers: User[] | null;
   reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
   postReactionConfirm: string | null;
@@ -131,8 +131,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   currentUser,
   postModalProps,
   handleViewAllComments,
-  postReactionsArray,
-  postReactingUsers,
+  feedPostReactionsArray,
+  feedPostReactingUsers,
   reactorPhotoFileArray,
   usersProfilePhotoConfirm,
   postReactionConfirm,
@@ -196,15 +196,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [userInfo.postId]);
 
   useEffect(() => {
-    if (postReactionsArray && postReactionsArray.length) {
-      console.log('postReactionsArray: ', postReactionsArray);
-      for (let innerArray of postReactionsArray) {
+    if (feedPostReactionsArray && feedPostReactionsArray.length) {
+      console.log('feedPostReactionsArray: ', feedPostReactionsArray);
+      for (let innerArray of feedPostReactionsArray) {
         if (innerArray.length && innerArray[0].postId === userInfo.postId) {
           setReactionsArray(innerArray);
         }
       }
     }
-  }, [postReactionsArray]);
+  }, [feedPostReactionsArray]);
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
@@ -251,10 +251,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [reactionsArray]);
 
   useEffect(() => {
-    if (postReactingUsers && postReactingUsers.length) {
-      setReactingUsersInfoArray(postReactingUsers);
+    if (feedPostReactingUsers && feedPostReactingUsers.length) {
+      setReactingUsersInfoArray(feedPostReactingUsers);
     }
-  }, [postReactingUsers]);
+  }, [feedPostReactingUsers]);
 
   useEffect(() => {
     if (reactingUserInfoArray && reactingUserInfoArray.length) {
@@ -449,8 +449,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
 interface LinkStateProps {
   currentUser: User | null;
-  postReactionsArray: Reaction[][];
-  postReactingUsers: User[] | null;
+  feedPostReactionsArray: Reaction[][];
+  feedPostReactingUsers: User[] | null;
   reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
   postReactionConfirm: string | null;
@@ -462,8 +462,8 @@ interface LinkStateProps {
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
-  postReactionsArray: selectFeedPostReactionsArray,
-  postReactingUsers: selectPostReactingUsers,
+  feedPostReactionsArray: selectFeedPostReactionsArray,
+  feedPostReactingUsers: selectFeedPostReactingUsers,
   reactorPhotoFileArray: selectFeedReactorPhotoFileArray,
   usersProfilePhotoConfirm: selectFeedUsersProfilePhotoConfirm,
   postReactionConfirm: selectPostReactionConfirm,

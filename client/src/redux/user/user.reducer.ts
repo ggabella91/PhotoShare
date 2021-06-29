@@ -23,6 +23,7 @@ const INITIAL_STATE: UserState = {
   resetConfirm: null,
   resetError: null,
   deleteAccountError: null,
+  feedPostReactingUsers: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
@@ -64,6 +65,15 @@ const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
         ...state,
         postReactingUsers: addUserToUsersArray(
           state.postReactingUsers,
+          action.payload
+        ),
+        otherUserError: null,
+      };
+    case UserActions.GET_FEED_POST_REACTOR_SUCCESS:
+      return {
+        ...state,
+        feedPostReactingUsers: addUserToUsersArray(
+          state.feedPostReactingUsers,
           action.payload
         ),
         otherUserError: null,

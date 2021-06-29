@@ -104,3 +104,8 @@ export const selectIsCurrentUserProfilePage = createSelector(
   [selectUser],
   (user: UserState) => user.isCurrentUserProfilePage
 );
+
+export const selectFeedPostReactingUsers = createSelector(
+  [selectUser],
+  (user: UserState) => user.feedPostReactingUsers
+);
