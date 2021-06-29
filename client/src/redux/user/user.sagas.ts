@@ -35,10 +35,11 @@ import {
   getOtherUserSuccess,
   getFollowersSuccess,
   getFollowingSuccess,
-  getPostReactorSuccess,
+  getPostReactorsSuccess,
   getOtherUserFailure,
   getUserSuggestionsSuccess,
   getUserSuggestionsFailure,
+  getFeedPostReactorsSuccess,
 } from './user.actions';
 
 import { clearPostState } from '../post/post.actions';
@@ -102,23 +103,32 @@ export function* getOtherUser({
       const { data }: { data: User } = yield axios.get(
         `/api/users/${usernameOrId}`
       );
+
       yield put(getOtherUserSuccess(data));
     } else if (type === OtherUserType.FOLLOWERS) {
       const { data }: { data: User } = yield axios.get(
         `/api/users/id/${usernameOrId}`
       );
+
       yield put(getFollowersSuccess(data));
     } else if (type === OtherUserType.FOLLOWING) {
       const { data }: { data: User } = yield axios.get(
         `/api/users/id/${usernameOrId}`
       );
+
       yield put(getFollowingSuccess(data));
     } else if (type === OtherUserType.POST_REACTOR) {
       const { data }: { data: User } = yield axios.get(
         `/api/users/id/${usernameOrId}`
       );
 
-      yield put(getPostReactorSuccess(data));
+      yield put(getPostReactorsSuccess(data));
+    } else if (type === OtherUserType.FEED_POST_REACTOR) {
+      const { data }: { data: User } = yield axios.get(
+        `/api/users/id/${usernameOrId}`
+      );
+
+      yield put(getFeedPostReactorsSuccess(data));
     }
   } catch (err) {
     yield put(getOtherUserFailure(err));

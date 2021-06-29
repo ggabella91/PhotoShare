@@ -194,7 +194,7 @@ export const getFollowingSuccess = (user: User): UserActionTypes => ({
   payload: user,
 });
 
-export const getPostReactorSuccess = (user: User): UserActionTypes => ({
+export const getPostReactorsSuccess = (user: User): UserActionTypes => ({
   type: UserActions.GET_POST_REACTOR_SUCCESS,
   payload: user,
 });
@@ -234,4 +234,9 @@ export const setIsCurrentUserProfilePage = (
 ): UserActionTypes => ({
   type: UserActions.SET_IS_CURRENT_USER_PROFILE_PAGE,
   payload: isCurrentUserProfilePage,
+});
+
+export const getFeedPostReactorsSuccess = (user: User): UserActionTypes => ({
+  type: UserActions.GET_FEED_POST_REACTOR_SUCCESS,
+  payload: user,
 });
