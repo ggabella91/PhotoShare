@@ -85,6 +85,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         ...state,
         isLoadingPostData: true,
         getPostDataConfirm: null,
+        getFeedPostDataConfirm: null,
         getPostDataError: null,
       };
     case PostActions.GET_POST_DATA_SUCCESS:
