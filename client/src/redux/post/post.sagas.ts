@@ -131,10 +131,8 @@ export function* getPostReactions({
     const { data } = yield axios.post('/api/reactions', { postId });
 
     if (reactionReqType === ReactionRequestType.singlePost) {
-      console.log('Running getPostReactionsSuccess: ', reactionReqType);
       yield put(getPostReactionsSuccess(data));
     } else if (reactionReqType === ReactionRequestType.feedPost) {
-      console.log('Running getFeedPostReactionsSuccess: ', reactionReqType);
       yield put(getFeedPostReactionsSuccess(data));
     }
   } catch (err) {
@@ -179,11 +177,6 @@ export function* getPostFile({
         fileRequestType === FileRequestType.singlePost &&
         user === UserType.postReactorsArray
       ) {
-        console.log(
-          'getUserPhotoForReactorArraySuccess',
-          fileRequestType,
-          user
-        );
         yield put(
           getUserPhotoForReactorArraySuccess({ s3Key, fileString: data })
         );
@@ -191,11 +184,6 @@ export function* getPostFile({
         fileRequestType === FileRequestType.feedPost &&
         user === UserType.postReactorsArray
       ) {
-        console.log(
-          'getUserPhotoForFeedReactorArraySuccess',
-          fileRequestType,
-          user
-        );
         yield put(
           getUserPhotoForFeedReactorArraySuccess({ s3Key, fileString: data })
         );

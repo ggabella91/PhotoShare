@@ -76,8 +76,8 @@ interface FeedPostContainerProps {
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
   deleteReactionConfirm: string | null;
-  postModalProps: PostModalDataToFeed;
-  handleViewAllComments: (postModalProps: PostModalDataToFeed) => void;
+  // postModalProps: PostModalDataToFeed;
+  // handleViewAllComments: (postModalProps: PostModalDataToFeed) => void;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -129,8 +129,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   date,
   custRef,
   currentUser,
-  postModalProps,
-  handleViewAllComments,
   feedPostReactionsArray,
   feedPostReactingUsers,
   reactorPhotoFileArray,
@@ -166,8 +164,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
-  // const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>({
-  postModalProps = {
+  const postModalProps: PostModalDataToFeed = {
     id: userInfo.postId,
     caption: caption || '',
     postPhotoFileString: fileString,
@@ -197,7 +194,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (feedPostReactionsArray && feedPostReactionsArray.length) {
-      console.log('feedPostReactionsArray: ', feedPostReactionsArray);
       for (let innerArray of feedPostReactionsArray) {
         if (innerArray.length && innerArray[0].postId === userInfo.postId) {
           setReactionsArray(innerArray);
@@ -208,7 +204,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
-      console.log('reactionsArray: ', reactionsArray);
       for (let el of reactionsArray) {
         if (
           currentUser &&
@@ -243,7 +238,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (reactionsArray && reactionsArray.length) {
       for (let el of reactionsArray) {
         getOtherUserStart({
-          type: OtherUserType.POST_REACTOR,
+          type: OtherUserType.FEED_POST_REACTOR,
           usernameOrId: el.reactingUserId,
         });
       }
@@ -389,12 +384,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     }
   };
 
-  // const handleClickViewAllComments = () => {
-  //   setFeedPagePostModalShow(true);
-  //   setClearFeedPagePostModalState(false);
+  const handleClickViewAllComments = () => {
+    setFeedPagePostModalShow(true);
+    setClearFeedPagePostModalState(false);
 
-  //   setFeedPagePostModalData(postModalProps);
-  // };
+    setFeedPagePostModalData(postModalProps);
+  };
 
   return (
     <div className='feed-post-container' ref={custRef}>
@@ -425,7 +420,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         {commentingUserArray && commentingUserArray.length > 2 ? (
           <span
             className='view-all-comments'
-            onClick={() => handleViewAllComments(postModalProps)}
+            onClick={() => handleClickViewAllComments()}
           >{`View all ${commentingUserArray.length} comments`}</span>
         ) : null}
         {commentingUserArray

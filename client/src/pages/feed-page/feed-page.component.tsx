@@ -287,12 +287,16 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (pageToFetch > 1 && dataFeedMapArray) {
+      console.log('dataFeedMapArray: ', dataFeedMapArray);
+
       for (let el of dataFeedMapArray) {
         if (
           el.queryLength &&
           currentUser &&
           pageToFetch <= el.queryLength / 2
         ) {
+          console.log('About to fetch more post data');
+
           getPostDataStart({
             userId: el.userId,
             dataReqType: DataRequestType.feed,
@@ -400,7 +404,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         (a, b) => b.dateInt - a.dateInt
       );
 
-      console.log('setUserInfoAndPostFileArray');
       setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
     }
   }, [
@@ -424,6 +427,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           setPageToFetch(pageToFetch + 1);
+        } else {
+          console.log(entries);
         }
       });
 
@@ -440,14 +445,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [postLikingUsersArray]);
 
-  // useEffect(() => {
-  //   if (feedPagePostModalData.id.length) {
-  //     console.log(feedPagePostModalData);
-  //     setPostModalProps(feedPagePostModalData);
-  //   } else {
-  //     console.log('No feedPagePostModalData found...');
-  //   }
-  // }, [feedPagePostModalData.id]);
+  useEffect(() => {
+    if (feedPagePostModalData.id) {
+      setPostModalProps(feedPagePostModalData);
+    }
+  }, [feedPagePostModalData]);
 
   useEffect(() => {
     if (showPostLikingUsersModal) {
@@ -462,11 +464,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [feedPagePostModalShow]);
 
-  // useEffect(() => {
-  //   if (clearFeedPagePostModalState) {
-  //     setClearPostModalState(clearFeedPagePostModalState);
-  //   }
-  // }, [clearFeedPagePostModalState]);
+  useEffect(() => {
+    if (clearFeedPagePostModalState) {
+      setClearPostModalState(clearFeedPagePostModalState);
+    }
+  }, [clearFeedPagePostModalState]);
 
   useEffect(() => {
     if (feedPagePostOptionsModalShow) {
@@ -474,16 +476,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [feedPagePostOptionsModalShow]);
 
-  const handleClickViewAllComments = (postModalProps: PostModalDataToFeed) => {
-    setPostModalShow(true);
-    setPostModalProps(postModalProps);
-    setClearPostModalState(false);
-  };
-
   const handleHidePostModal = () => {
     setPostModalProps(POST_MODAL_DATA_INITIAL_STATE);
     setPostModalShow(false);
-    // setClearFeedPagePostModalState(true);
+    setClearFeedPagePostModalState(true);
   };
 
   useEffect(() => {
@@ -500,26 +496,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         setCurrentUserPost(false);
       }
     }
-  };
-
-  const setFeedContainerPostModalProps = (
-    userInfo: UserInfoData,
-    caption: string,
-    date: string,
-    fileString: string
-  ) => {
-    const props = {
-      id: userInfo.postId,
-      caption: caption || '',
-      postPhotoFileString: fileString,
-      location: userInfo.location,
-      date: date,
-      profilePhotoFileString: userInfo.profilePhotoFileString,
-      postUserId: userInfo.userId,
-      postUserName: userInfo.username,
-    };
-
-    return props;
   };
 
   // TODO: Add logic to get s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
@@ -546,21 +522,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 caption={el.caption}
                 date={el.dateString}
                 key={Math.random()}
-                postModalProps={setFeedContainerPostModalProps(
-                  {
-                    profilePhotoFileString: el.profilePhotoFileString,
-                    username: el.username,
-                    userId: el.userId,
-                    postId: el.postId,
-                    location: el.location,
-                    name: '',
-                    comment: '',
-                  },
-                  el.caption || '',
-                  el.dateString,
-                  el.postFileString
-                )}
-                handleViewAllComments={handleClickViewAllComments}
                 custRef={lastPostContainerElementRef}
               />
             );
@@ -580,21 +541,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 caption={el.caption}
                 date={el.dateString}
                 key={Math.random()}
-                postModalProps={setFeedContainerPostModalProps(
-                  {
-                    profilePhotoFileString: el.profilePhotoFileString,
-                    username: el.username,
-                    userId: el.userId,
-                    postId: el.postId,
-                    location: el.location,
-                    name: '',
-                    comment: '',
-                  },
-                  el.caption || '',
-                  el.dateString,
-                  el.postFileString
-                )}
-                handleViewAllComments={handleClickViewAllComments}
               />
             );
           }
