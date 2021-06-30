@@ -62,6 +62,7 @@ import './feed-post-container.styles.scss';
 interface FeedPostContainerProps {
   userInfo: UserInfoData;
   fileString: string;
+  s3Key: string;
   caption?: string;
   date: string;
   custRef?: (node: HTMLDivElement | null) => void;
@@ -76,8 +77,6 @@ interface FeedPostContainerProps {
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
   deleteReactionConfirm: string | null;
-  // postModalProps: PostModalDataToFeed;
-  // handleViewAllComments: (postModalProps: PostModalDataToFeed) => void;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -102,6 +101,7 @@ export interface UserInfoData {
 
 export interface PostModalDataToFeed {
   id: string;
+  postS3Key: string;
   postPhotoFileString: string;
   caption: string;
   location: string;
@@ -111,8 +111,9 @@ export interface PostModalDataToFeed {
   postUserName: string;
 }
 
-export const POST_MODAL_DATA_INITIAL_STATE = {
+export const POST_MODAL_DATA_INITIAL_STATE: PostModalDataToFeed = {
   id: '',
+  postS3Key: '',
   caption: '',
   postPhotoFileString: '',
   location: '',
@@ -124,6 +125,7 @@ export const POST_MODAL_DATA_INITIAL_STATE = {
 
 export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   userInfo,
+  s3Key,
   fileString,
   caption,
   date,
@@ -166,6 +168,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const postModalProps: PostModalDataToFeed = {
     id: userInfo.postId,
+    postS3Key: s3Key,
     caption: caption || '',
     postPhotoFileString: fileString,
     location: userInfo.location,

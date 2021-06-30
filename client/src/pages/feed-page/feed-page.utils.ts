@@ -17,7 +17,8 @@ export const prepareUserInfoAndFileArray = (
       let id: string;
       let username: string;
       let postId: string;
-      let photoS3Key: string;
+      let postS3Key: string;
+      let profilePhotoS3Key: string;
       let profilePhotoString: string;
       let caption: string;
 
@@ -29,6 +30,7 @@ export const prepareUserInfoAndFileArray = (
             location = innerEl.postLocation || '';
             id = innerEl.userId;
             postId = innerEl.id;
+            postS3Key = innerEl.s3Key;
             caption = innerEl.caption || '';
             dateString = new Date(date).toDateString();
             dateInt = new Date(date).getTime();
@@ -39,12 +41,12 @@ export const prepareUserInfoAndFileArray = (
       for (let userEl of followingInfoArray) {
         if (userEl.id === id!) {
           username = userEl.username;
-          photoS3Key = userEl.photo || '';
+          profilePhotoS3Key = userEl.photo || '';
         }
       }
 
       for (let userEl of followingProfilePhotoArray) {
-        if (photoS3Key! && userEl.s3Key === photoS3Key) {
+        if (profilePhotoS3Key! && userEl.s3Key === profilePhotoS3Key) {
           profilePhotoString = userEl.fileString;
         }
       }
@@ -74,6 +76,7 @@ export const prepareUserInfoAndFileArray = (
         profilePhotoFileString: profilePhotoString,
         location,
         postId: postId!,
+        postS3Key: postS3Key!,
         postFileString: el.fileString,
         caption,
         dateString,

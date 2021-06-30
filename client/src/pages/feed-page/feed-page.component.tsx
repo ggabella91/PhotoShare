@@ -88,7 +88,6 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
-import { userInfo } from 'os';
 
 export interface PostDataArrayMap {
   postData: Post[];
@@ -102,6 +101,7 @@ export interface UserInfoAndPostFile {
   userId: string;
   location: string;
   postId: string;
+  postS3Key: string;
   postFileString: string;
   caption?: string;
   dateString: string;
@@ -287,16 +287,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (pageToFetch > 1 && dataFeedMapArray) {
-      console.log('dataFeedMapArray: ', dataFeedMapArray);
-
       for (let el of dataFeedMapArray) {
         if (
           el.queryLength &&
           currentUser &&
           pageToFetch <= el.queryLength / 2
         ) {
-          console.log('About to fetch more post data');
-
           getPostDataStart({
             userId: el.userId,
             dataReqType: DataRequestType.feed,
@@ -427,8 +423,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           setPageToFetch(pageToFetch + 1);
-        } else {
-          console.log(entries);
         }
       });
 
@@ -471,9 +465,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [clearFeedPagePostModalState]);
 
   useEffect(() => {
-    if (feedPagePostOptionsModalShow) {
-      setPostOptionsModalShow(feedPagePostOptionsModalShow);
-    }
+    setPostOptionsModalShow(feedPagePostOptionsModalShow);
   }, [feedPagePostOptionsModalShow]);
 
   const handleHidePostModal = () => {
@@ -498,7 +490,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   };
 
-  // TODO: Add logic to get s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
+  // TODO: TEST logic that uses s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
 
   // TODO: Add post-comment-options-modal component, add state and effects need to organize and feed necessary data to it, add logic to determine when to render this when interacting with a particular comment within a feed-post-container component in this page
 
@@ -518,6 +510,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                   name: '',
                   comment: '',
                 }}
+                s3Key={el.postS3Key}
                 fileString={el.postFileString}
                 caption={el.caption}
                 date={el.dateString}
@@ -537,6 +530,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                   name: '',
                   comment: '',
                 }}
+                s3Key={el.postS3Key}
                 fileString={el.postFileString}
                 caption={el.caption}
                 date={el.dateString}
@@ -582,7 +576,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         archive={() =>
           archivePostStart({
             postId: postModalProps.id,
-            s3Key: '', // see one of the above TODO items
+            s3Key: postModalProps.postS3Key,
           })
         }
       />
