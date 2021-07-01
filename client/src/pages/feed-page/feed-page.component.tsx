@@ -30,6 +30,7 @@ import {
   ArchivePostReq,
   UserType,
   PostMetaData,
+  DeleteReactionReq,
 } from '../../redux/post/post.types';
 import {
   selectPostDataFeedArray,
@@ -49,6 +50,8 @@ import {
   selectFeedPagePostOptionsModalShow,
   selectClearFeedPagePostModalState,
   selectFeedPostFiles,
+  selectShowCommentOptionsModal,
+  selectCommentToDelete,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -59,6 +62,8 @@ import {
   setFeedPagePostModalShow,
   setFeedPagePostOptionsModalShow,
   setClearFeedPagePostModalState,
+  setShowCommentOptionsModal,
+  deleteReactionStart,
 } from '../../redux/post/post.actions';
 
 import {
@@ -77,7 +82,6 @@ import {
 
 import FeedPostContainer, {
   PostModalDataToFeed,
-  UserInfoData,
   POST_MODAL_DATA_INITIAL_STATE,
 } from '../../components/feed-post-container/feed-post-container.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
@@ -130,6 +134,8 @@ interface FeedPageProps {
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
+  showCommentOptionsModal: boolean;
+  commentToDelete: DeleteReactionReq | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
@@ -142,6 +148,8 @@ interface FeedPageProps {
   setFeedPagePostModalShow: typeof setFeedPagePostModalShow;
   setFeedPagePostOptionsModalShow: typeof setFeedPagePostOptionsModalShow;
   setClearFeedPagePostModalState: typeof setClearFeedPagePostModalState;
+  setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
+  deleteReactionStart: typeof deleteReactionStart;
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
@@ -168,9 +176,13 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   feedPagePostModalShow,
   feedPagePostOptionsModalShow,
   clearFeedPagePostModalState,
+  showCommentOptionsModal,
+  commentToDelete,
   setFeedPagePostModalShow,
   setFeedPagePostOptionsModalShow,
   setClearFeedPagePostModalState,
+  setShowCommentOptionsModal,
+  deleteReactionStart,
 }) => {
   const [user, setUser] = useState({
     id: '',
@@ -215,6 +227,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
 
   const [currentUserPost, setCurrentUserPost] = useState<boolean | null>(null);
+
+  const [currentUserPostOrComment, setCurrentUserPostOrComment] =
+    useState<boolean | null>(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -490,6 +505,23 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   };
 
+  useEffect(() => {
+    handleSetIsCurrentUserPostOrComment();
+  }, [showCommentOptionsModal]);
+
+  const handleSetIsCurrentUserPostOrComment = () => {
+    if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
+      if (
+        commentToDelete.reactingUserId === currentUser.id ||
+        user.id === currentUser.id
+      ) {
+        setCurrentUserPostOrComment(true);
+      } else {
+        setCurrentUserPostOrComment(false);
+      }
+    }
+  };
+
   // TODO: TEST logic that uses s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
 
   // TODO: Add post-comment-options-modal component, add state and effects need to organize and feed necessary data to it, add logic to determine when to render this when interacting with a particular comment within a feed-post-container component in this page
@@ -580,6 +612,17 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           })
         }
       />
+      <PostOrCommentOptionsModal
+        show={showCommentOptionsModal}
+        onHide={() => setShowCommentOptionsModal(false)}
+        archive={() => {
+          if (commentToDelete) {
+            deleteReactionStart(commentToDelete);
+          }
+          setShowCommentOptionsModal(false);
+        }}
+        isCurrentUserPostOrComment={currentUserPostOrComment}
+      />
     </div>
   );
 };
@@ -606,6 +649,8 @@ interface LinkStateProps {
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
+  showCommentOptionsModal: boolean;
+  commentToDelete: DeleteReactionReq | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -630,6 +675,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   feedPagePostModalShow: selectFeedPagePostModalShow,
   feedPagePostOptionsModalShow: selectFeedPagePostOptionsModalShow,
   clearFeedPagePostModalState: selectClearFeedPagePostModalState,
+  showCommentOptionsModal: selectShowCommentOptionsModal,
+  commentToDelete: selectCommentToDelete,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -654,6 +701,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setFeedPagePostOptionsModalShow(feedPagePostOptionsModalShow)),
   setClearFeedPagePostModalState: (clearFeedPagePostModalState: boolean) =>
     dispatch(setClearFeedPagePostModalState(clearFeedPagePostModalState)),
+  setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
+    dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
+  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
+    dispatch(deleteReactionStart(deleteReactionReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedPage);
