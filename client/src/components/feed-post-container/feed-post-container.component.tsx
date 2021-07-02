@@ -148,7 +148,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   setFeedPagePostModalShow,
   setClearFeedPagePostModalState,
 }) => {
-  const [comment, setComment] = useState('');
+  const [postId, setPostId] = useState('');
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
@@ -166,7 +166,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
-  const postModalProps: PostModalDataToFeed = {
+  let postModalProps: PostModalDataToFeed = {
     id: userInfo.postId,
     postS3Key: s3Key,
     caption: caption || '',
@@ -187,18 +187,24 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }
 
   useEffect(() => {
-    if (userInfo.postId) {
+    if (userInfo.postId !== postId) {
+      setPostId(userInfo.postId);
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    if (postId) {
       getPostReactionsStart({
-        postId: userInfo.postId,
+        postId: postId,
         reactionReqType: ReactionRequestType.feedPost,
       });
     }
-  }, [userInfo.postId]);
+  }, [postId]);
 
   useEffect(() => {
     if (feedPostReactionsArray && feedPostReactionsArray.length) {
       for (let innerArray of feedPostReactionsArray) {
-        if (innerArray.length && innerArray[0].postId === userInfo.postId) {
+        if (innerArray.length && innerArray[0].postId === postId) {
           setReactionsArray(innerArray);
         }
       }
@@ -365,7 +371,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const handleSubmitLike = () => {
     createPostReactionStart({
       reactingUserId: userInfo.userId,
-      postId: userInfo.postId,
+      postId: postId,
       likedPost: true,
       comment: '',
     });
