@@ -33,7 +33,7 @@ router.post(
   upload.single('profile-photo'),
   resizePhoto,
   async (req: Request, res: Response) => {
-    const key = req.file.filename;
+    const key = req.file!.filename;
 
     const existingPhotoKey = req.currentUser!.photo || '';
 
@@ -69,7 +69,7 @@ router.post(
       Body: '',
     };
 
-    const fileBuffer = req.file.buffer;
+    const fileBuffer = req.file!.buffer;
     const fileStream = buffToStream(fileBuffer);
 
     uploadParams.Body = fileStream;
@@ -86,7 +86,7 @@ router.post(
         console.log('Upload success!', location);
 
         const post = ProfilePhoto.build({
-          fileName: req.file.originalname,
+          fileName: req.file!.originalname,
           createdAt: new Date(),
           userId: req.currentUser!.id,
           s3Key: key,

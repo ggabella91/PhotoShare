@@ -35,7 +35,7 @@ router.post(
     const caption = req.body.caption || '';
     const postLocation = req.body.location || '';
 
-    const key = generateKey(req.file.originalname);
+    const key = generateKey(req.file!.originalname);
 
     const s3 = new AWS.S3();
 
@@ -53,7 +53,7 @@ router.post(
       Body: '',
     };
 
-    const fileBuffer = req.file.buffer;
+    const fileBuffer = req.file!.buffer;
     const fileStream = buffToStream(fileBuffer);
 
     uploadParams.Body = fileStream;
@@ -70,7 +70,7 @@ router.post(
         console.log('Upload success!', location);
 
         const post = Post.build({
-          fileName: req.file.originalname,
+          fileName: req.file!.originalname,
           caption,
           postLocation,
           createdAt: new Date(),

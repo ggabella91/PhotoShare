@@ -90,7 +90,7 @@ import PostOrCommentOptionsModal from '../../components/post-or-comment-options-
 
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
-import { prepareUserInfoAndFileArray } from './feed-page.utils';
+import { prepareUserInfoAndFileArray, compareArrays } from './feed-page.utils';
 import './feed-page.styles.scss';
 
 export interface PostDataArrayMap {
@@ -261,9 +261,15 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [currentUser]);
 
   useEffect(() => {
-    if (currentUserUsersFollowing) {
+    if (currentUserUsersFollowing && !usersFollowingArray) {
       setUsersFollowingArray(currentUserUsersFollowing);
-    } else {
+    } else if (
+      currentUserUsersFollowing &&
+      usersFollowingArray &&
+      !compareArrays(currentUserUsersFollowing, usersFollowingArray)
+    ) {
+      setUsersFollowingArray(currentUserUsersFollowing);
+    } else if (!currentUserUsersFollowing) {
       setUsersFollowingArray(null);
     }
   }, [currentUserUsersFollowing]);
@@ -518,13 +524,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         setCurrentUserPostOrComment(true);
       } else {
         setCurrentUserPostOrComment(false);
+        console.log('else');
       }
     }
   };
-
-  // TODO: TEST logic that uses s3Key of a post to send archive requests when a feed-post-container has data for a post belonging to the current user
-
-  // TODO: Add post-comment-options-modal component, add state and effects need to organize and feed necessary data to it, add logic to determine when to render this when interacting with a particular comment within a feed-post-container component in this page
 
   return (
     <div className='feed-page'>
