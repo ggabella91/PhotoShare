@@ -1,7 +1,8 @@
+import { Follower } from '../../redux/follower/follower.types';
 import { User } from '../../redux/user/user.types';
 import { Post, PostFile } from '../../redux/post/post.types';
 
-import { UserInfoAndPostFile } from './feed-page.component';
+import { UserInfoAndPostFile, PostDataArrayMap } from './feed-page.component';
 
 export const prepareUserInfoAndFileArray = (
   followingInfoArray: User[],
@@ -88,12 +89,42 @@ export const prepareUserInfoAndFileArray = (
   return userInfoAndPostObjArray;
 };
 
-export const compareArrays = (array1: any[], array2: any[]) => {
-  if (array1.length !== array2.length) return false;
-
-  for (let i = 0; i < array1.length; i++) {
-    if (array1[i] !== array2[i]) return false;
+export const compareFollowerArrays = (
+  array1: Follower[],
+  array2: Follower[]
+) => {
+  if (array1.length !== array2.length) {
+    console.log('Follower array comparison returning false');
+    return false;
   }
 
+  for (let i = 0; i < array1.length; i++) {
+    if (array1[i].followerId !== array2[i].followerId) {
+      console.log('Follower array comparison returning false');
+      return false;
+    }
+  }
+
+  console.log('Follower array comparison returning true');
+  return true;
+};
+
+export const compareUserOrPostArrays = (
+  array1: User[] | Post[],
+  array2: User[] | Post[]
+) => {
+  if (array1.length !== array2.length) {
+    console.log('User/Post array comparison returning false');
+    return false;
+  }
+
+  for (let i = 0; i < array1.length; i++) {
+    if (array1[i].id !== array2[i].id) {
+      console.log('User/Post array comparison returning false');
+      return false;
+    }
+  }
+
+  console.log('User/Post array comparison returning true');
   return true;
 };
