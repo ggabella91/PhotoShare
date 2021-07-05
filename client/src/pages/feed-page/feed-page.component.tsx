@@ -90,7 +90,11 @@ import PostOrCommentOptionsModal from '../../components/post-or-comment-options-
 
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
-import { prepareUserInfoAndFileArray, compareArrays } from './feed-page.utils';
+import {
+  prepareUserInfoAndFileArray,
+  compareFollowerArrays,
+  compareUserOrPostArrays,
+} from './feed-page.utils';
 import './feed-page.styles.scss';
 
 export interface PostDataArrayMap {
@@ -266,7 +270,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     } else if (
       currentUserUsersFollowing &&
       usersFollowingArray &&
-      !compareArrays(currentUserUsersFollowing, usersFollowingArray)
+      !compareFollowerArrays(currentUserUsersFollowing, usersFollowingArray)
     ) {
       setUsersFollowingArray(currentUserUsersFollowing);
     } else if (!currentUserUsersFollowing) {
@@ -350,7 +354,13 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [postDataFeedArray]);
 
   useEffect(() => {
-    if (followingInfo) {
+    if (followingInfo && !followingInfoArray) {
+      setFollowingInfoArray(followingInfo);
+    } else if (
+      followingInfo &&
+      followingInfoArray &&
+      !compareUserOrPostArrays(followingInfo, followingInfoArray)
+    ) {
       setFollowingInfoArray(followingInfo);
     }
   }, [followingInfo]);
