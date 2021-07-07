@@ -93,7 +93,8 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 import {
   prepareUserInfoAndFileArray,
   compareFollowerArrays,
-  compareUserOrPostArrays,
+  compareUserOrPostOrReactionArrays,
+  comparePostFileArrays,
 } from './feed-page.utils';
 import './feed-page.styles.scss';
 
@@ -359,7 +360,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     } else if (
       followingInfo &&
       followingInfoArray &&
-      !compareUserOrPostArrays(followingInfo, followingInfoArray)
+      !compareUserOrPostOrReactionArrays(followingInfo, followingInfoArray)
     ) {
       setFollowingInfoArray(followingInfo);
     }
@@ -396,13 +397,25 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [dataFeedMapArray, getFeedPostDataConfirm]);
 
   useEffect(() => {
-    if (followPhotoFileArray) {
+    if (followPhotoFileArray && !followingProfilePhotoArray) {
+      setFollowingProfilePhotoArray(followPhotoFileArray);
+    } else if (
+      followPhotoFileArray &&
+      followingProfilePhotoArray &&
+      !comparePostFileArrays(followPhotoFileArray, followingProfilePhotoArray)
+    ) {
       setFollowingProfilePhotoArray(followPhotoFileArray);
     }
   }, [followPhotoFileArray]);
 
   useEffect(() => {
-    if (postFiles) {
+    if (postFiles && !postFileFeedArray) {
+      setPostFileFeedArray(postFiles);
+    } else if (
+      postFiles &&
+      postFileFeedArray &&
+      !comparePostFileArrays(postFiles, postFileFeedArray)
+    ) {
       setPostFileFeedArray(postFiles);
     }
   }, [postFiles]);

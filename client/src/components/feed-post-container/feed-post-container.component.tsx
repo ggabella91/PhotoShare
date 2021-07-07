@@ -57,6 +57,11 @@ import UserInfo, {
   UserInfoAndOtherData,
 } from '../user-info/user-info.component';
 
+import {
+  compareUserOrPostOrReactionArrays,
+  comparePostFileArrays,
+} from '../../pages/feed-page/feed-page.utils';
+
 import './feed-post-container.styles.scss';
 
 interface FeedPostContainerProps {
@@ -205,7 +210,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (feedPostReactionsArray && feedPostReactionsArray.length) {
       for (let innerArray of feedPostReactionsArray) {
         if (innerArray.length && innerArray[0].postId === postId) {
-          setReactionsArray(innerArray);
+          if (!reactionsArray) {
+            setReactionsArray(innerArray);
+          } else if (
+            reactionsArray &&
+            !compareUserOrPostOrReactionArrays(innerArray, reactionsArray)
+          ) {
+            setReactionsArray(innerArray);
+          }
         }
       }
     }
@@ -255,7 +267,21 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [reactionsArray]);
 
   useEffect(() => {
-    if (feedPostReactingUsers && feedPostReactingUsers.length) {
+    if (
+      feedPostReactingUsers &&
+      feedPostReactingUsers.length &&
+      !reactingUserInfoArray
+    ) {
+      setReactingUsersInfoArray(feedPostReactingUsers);
+    } else if (
+      feedPostReactingUsers &&
+      feedPostReactingUsers.length &&
+      reactingUserInfoArray &&
+      !compareUserOrPostOrReactionArrays(
+        feedPostReactingUsers,
+        reactingUserInfoArray
+      )
+    ) {
       setReactingUsersInfoArray(feedPostReactingUsers);
     }
   }, [feedPostReactingUsers]);
@@ -276,7 +302,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [reactingUserInfoArray]);
 
   useEffect(() => {
-    if (reactorPhotoFileArray) {
+    if (reactorPhotoFileArray && !userProfilePhotoArray) {
+      setUserProfilePhotoArray(reactorPhotoFileArray);
+    } else if (
+      reactorPhotoFileArray &&
+      userProfilePhotoArray &&
+      !comparePostFileArrays(reactorPhotoFileArray, userProfilePhotoArray)
+    ) {
       setUserProfilePhotoArray(reactorPhotoFileArray);
     }
   }, [reactorPhotoFileArray]);
