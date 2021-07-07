@@ -1,8 +1,8 @@
 import { Follower } from '../../redux/follower/follower.types';
 import { User } from '../../redux/user/user.types';
-import { Post, PostFile } from '../../redux/post/post.types';
+import { Post, PostFile, Reaction } from '../../redux/post/post.types';
 
-import { UserInfoAndPostFile, PostDataArrayMap } from './feed-page.component';
+import { UserInfoAndPostFile } from './feed-page.component';
 
 export const prepareUserInfoAndFileArray = (
   followingInfoArray: User[],
@@ -109,9 +109,9 @@ export const compareFollowerArrays = (
   return true;
 };
 
-export const compareUserOrPostArrays = (
-  array1: User[] | Post[],
-  array2: User[] | Post[]
+export const compareUserOrPostOrReactionArrays = (
+  array1: User[] | Post[] | Reaction[],
+  array2: User[] | Post[] | Reaction[]
 ) => {
   if (array1.length !== array2.length) {
     console.log('User/Post array comparison returning false');
@@ -126,5 +126,25 @@ export const compareUserOrPostArrays = (
   }
 
   console.log('User/Post array comparison returning true');
+  return true;
+};
+
+export const comparePostFileArrays = (
+  array1: PostFile[],
+  array2: PostFile[]
+) => {
+  if (array1.length !== array2.length) {
+    console.log('PostFile array comparison returning false');
+    return false;
+  }
+
+  for (let i = 0; i < array1.length; i++) {
+    if (array1[i].s3Key !== array2[i].s3Key) {
+      console.log('PostFile array comparison returning false');
+      return false;
+    }
+  }
+
+  console.log('PostFile array comparison returning true');
   return true;
 };
