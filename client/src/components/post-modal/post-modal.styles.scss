@@ -39,8 +39,8 @@ $image-height: 62.5vw;
     height: calc(#{$image-height} * 1.25);
     // min-width: 225px;
     // max-width: 225px;
-    width: 265px;
-    max-width: 265px;
+    width: 285px;
+    max-width: 285px;
     flex-direction: column;
     margin-top: 50%;
     margin-left: 100%;
@@ -143,6 +143,7 @@ $image-height: 62.5vw;
       flex-direction: column;
       height: calc(#{$image-height} * 1.4);
       align-items: center;
+      width: 100%;
     }
 
     .post-modal-details {
