@@ -1,3 +1,9 @@
+@mixin respond-medium-wide {
+  @media (max-width: 895px) {
+    @content;
+  }
+}
+
 @mixin respond-medium {
   @media (max-width: 736px) {
     @content;
@@ -323,6 +329,10 @@
   max-height: 338px;
   background-color: white;
   border-radius: 4px;
+
+  @include respond-medium-wide() {
+    width: 100%;
+  }
 
   @include respond-medium() {
     display: none;
