@@ -54,7 +54,12 @@ span {
       font-size: 14px;
       height: fit-content;
       width: inherit;
+      min-width: 120px;
       overflow-y: scroll;
+
+      @include respond-medium-wide() {
+        min-width: 150px;
+      }
 
       @include respond-medium-narrow-wide() {
         width: inherit;
