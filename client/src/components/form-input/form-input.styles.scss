@@ -5,6 +5,12 @@ $sub-color: #525252;
   display: none;
 }
 
+@mixin respond-medium-wide {
+  @media (max-width: 895px) {
+    @content;
+  }
+}
+
 @mixin respond-medium-narrow-wide {
   @media (max-width: 834px) {
     @content;
@@ -47,11 +53,16 @@ span {
     &.comment {
       font-size: 14px;
       height: fit-content;
-      width: 75%;
+      width: inherit;
+      min-width: 120px;
       overflow-y: scroll;
 
+      @include respond-medium-wide() {
+        min-width: 150px;
+      }
+
       @include respond-medium-narrow-wide() {
-        width: 75%;
+        width: inherit;
       }
     }
   }
@@ -123,5 +134,9 @@ span {
 
   &.comment {
     margin: 5px 0;
+
+    @include respond-medium-wide() {
+      width: inherit;
+    }
   }
 }

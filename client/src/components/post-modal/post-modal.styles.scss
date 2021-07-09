@@ -109,7 +109,7 @@ $image-height: 62.5vw;
     padding-top: 8px;
 
     @include respond-medium-wide() {
-      width: 40vw;
+      width: inherit;
     }
   }
 
@@ -135,8 +135,8 @@ $image-height: 62.5vw;
     }
 
     @include respond-medium-wide() {
-      width: 40vw;
-      height: $image-height;
+      width: inherit;
+      height: inherit;
     }
 
     @include respond-medium() {
@@ -152,7 +152,7 @@ $image-height: 62.5vw;
       flex-direction: column;
 
       @include respond-medium-wide() {
-        width: 35vw;
+        width: inherit;
       }
 
       .post-user-and-location {
@@ -216,6 +216,10 @@ $image-height: 62.5vw;
         flex-direction: column;
         overflow-y: scroll;
         overflow-x: hidden;
+
+        @include respond-medium-wide() {
+          width: 100%;
+        }
       }
 
       .likes-text {
@@ -250,6 +254,10 @@ $image-height: 62.5vw;
       .comment-form {
         display: flex;
         max-height: 65px;
+
+        @include respond-medium-wide() {
+          
+        }
 
         @include respond-medium-narrow-wide() {
           width: 75%;
