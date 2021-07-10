@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { app } from '../../app';
+import { global } from '../../test/setup';
 
 it('Throws 400 error if password is sent in the request', async () => {
   const signUp = await request(app).post('/api/users/signup').send({
