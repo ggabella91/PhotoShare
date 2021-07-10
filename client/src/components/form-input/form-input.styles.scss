@@ -59,6 +59,7 @@ span {
 
       @include respond-medium-wide() {
         min-width: 150px;
+        width: 100%;
       }
 
       @include respond-medium-narrow-wide() {
