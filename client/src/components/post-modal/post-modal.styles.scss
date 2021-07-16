@@ -24,6 +24,25 @@ $image-height: 62.5vw;
   }
 }
 
+@mixin respond-narrow {
+  @media (max-width: 576px) {
+    @content;
+  }
+}
+
+.modal-dialog {
+  @include respond-narrow() {
+    margin: 1.75rem 0 0 54%;
+  }
+}
+
+.modal-dialog-centered {
+  @include respond-narrow() {
+    min-height: calc(100% - 3.5rem);
+    transform: translate(-50%, -85%);
+  }
+}
+
 .modal-content {
   border-radius: 0;
   min-width: 335px;
@@ -323,7 +342,7 @@ $image-height: 62.5vw;
           }
 
           &.greyed-out {
-            opacity: 60%;
+            opacity: 0.6;
             cursor: default;
           }
         }
