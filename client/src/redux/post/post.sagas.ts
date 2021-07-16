@@ -4,7 +4,6 @@ import { ActionPattern, Saga } from '@redux-saga/types';
 
 import {
   Post,
-  Reaction,
   ReactionReq,
   ReactionRequestType,
   GetPostReactionsReq,
@@ -218,7 +217,7 @@ export function* deleteReaction({
   payload: DeleteReactionReq;
 }): any {
   try {
-    const { data } = yield axios.delete(`/api/reactions`, {
+    yield axios.delete(`/api/reactions`, {
       data: deleteReactionReq,
     });
 
