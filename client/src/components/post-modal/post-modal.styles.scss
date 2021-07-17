@@ -31,8 +31,13 @@ $image-height: 62.5vw;
 }
 
 .modal-dialog {
+  position: relative;
+  width: auto;
+  pointer-events: none;
+
   @include respond-narrow() {
-    margin: 1.75rem 0 0 54%;
+    max-width: 500px;
+    margin-left: 54%;
   }
 }
 
@@ -40,6 +45,7 @@ $image-height: 62.5vw;
   @include respond-narrow() {
     min-height: calc(100% - 3.5rem);
     transform: translate(-50%, -85%);
+    margin-left: 54%;
   }
 }
 

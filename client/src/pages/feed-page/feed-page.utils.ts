@@ -94,18 +94,15 @@ export const compareFollowerArrays = (
   array2: Follower[]
 ) => {
   if (array1.length !== array2.length) {
-    console.log('Follower array comparison returning false');
     return false;
   }
 
   for (let i = 0; i < array1.length; i++) {
     if (array1[i].followerId !== array2[i].followerId) {
-      console.log('Follower array comparison returning false');
       return false;
     }
   }
 
-  console.log('Follower array comparison returning true');
   return true;
 };
 
@@ -114,18 +111,15 @@ export const compareUserOrPostOrReactionArrays = (
   array2: User[] | Post[] | Reaction[]
 ) => {
   if (array1.length !== array2.length) {
-    console.log('User/Post array comparison returning false');
     return false;
   }
 
   for (let i = 0; i < array1.length; i++) {
     if (array1[i].id !== array2[i].id) {
-      console.log('User/Post array comparison returning false');
       return false;
     }
   }
 
-  console.log('User/Post array comparison returning true');
   return true;
 };
 
@@ -134,17 +128,14 @@ export const comparePostFileArrays = (
   array2: PostFile[]
 ) => {
   if (array1.length !== array2.length) {
-    console.log('PostFile array comparison returning false');
     return false;
   }
 
   for (let i = 0; i < array1.length; i++) {
     if (array1[i].s3Key !== array2[i].s3Key) {
-      console.log('PostFile array comparison returning false');
       return false;
     }
   }
 
-  console.log('PostFile array comparison returning true');
   return true;
 };
