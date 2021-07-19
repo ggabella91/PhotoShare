@@ -53,7 +53,7 @@ $image-height: 62.5vw;
   border-radius: 0;
   min-width: 335px;
   max-width: 335px;
-  margin-left: 62.5%;
+  // margin-left: 62.5%;
 
   @include respond-medium-wide() {
     height: $image-height;
@@ -68,7 +68,7 @@ $image-height: 62.5vw;
     flex-direction: column;
     margin-top: 50%;
     margin-left: 100%;
-    transform: translateY(50%);
+    // transform: translateY(50%);
   }
 }
 
