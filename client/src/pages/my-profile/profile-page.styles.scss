@@ -114,7 +114,7 @@
 
           .user-username {
             width: 180px;
-            font-size: 3vh;
+            font-size: calc(1vw + 10px);
             font-weight: 460;
             text-align: start;
             margin-right: 30px;
