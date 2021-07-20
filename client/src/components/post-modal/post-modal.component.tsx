@@ -123,22 +123,27 @@ export const PostModal: React.FC<PostModalProps> = ({
 }) => {
   const [comment, setComment] = useState('');
 
-  const [captionInfoArray, setCaptionInfoArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+  const [captionInfoArray, setCaptionInfoArray] = useState<
+    UserInfoAndOtherData[] | null
+  >(null);
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
-  const [reactingUserInfoArray, setReactingUsersInfoArray] =
-    useState<User[] | null>(null);
+  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
+    User[] | null
+  >(null);
 
-  const [userProfilePhotoArray, setUserProfilePhotoArray] =
-    useState<PostFile[] | null>(null);
+  const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
+    PostFile[] | null
+  >(null);
 
-  const [commentingUserArray, setCommentingUserArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+  const [commentingUserArray, setCommentingUserArray] = useState<
+    UserInfoAndOtherData[] | null
+  >(null);
 
-  const [likingUsersArray, setLikingUsersArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+  const [likingUsersArray, setLikingUsersArray] = useState<
+    UserInfoAndOtherData[] | null
+  >(null);
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
@@ -215,18 +220,32 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       postReactionConfirm &&
-      postReactionConfirm === 'Post liked successfully!'
+      postReactionConfirm === 'Post liked successfully!' &&
+      postId
     ) {
       setAlreadyLikedPost(true);
+      setLikingUsersArray([]);
+      clearPostReactions();
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.singlePost,
+      });
     }
   }, [postReactionConfirm]);
 
   useEffect(() => {
     if (
       deleteReactionConfirm &&
-      deleteReactionConfirm === 'Like removed successfully!'
+      deleteReactionConfirm === 'Like removed successfully!' &&
+      postId
     ) {
       setAlreadyLikedPost(false);
+      setLikingUsersArray([]);
+      clearPostReactions();
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.singlePost,
+      });
     }
   }, [deleteReactionConfirm]);
 
