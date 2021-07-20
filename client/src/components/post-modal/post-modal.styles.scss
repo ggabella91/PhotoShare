@@ -79,11 +79,16 @@ $image-height: 62.5vw;
   width: 335px;
   height: 600px;
   position: relative;
-  margin-left: 54%;
+  margin-left: 54vw;
+
+  @include respond-wide() {
+    margin-left: 57vw;
+  }
 
   @include respond-medium-wide() {
     width: 40vw;
     height: 70vh;
+    margin-left: 54vw;
   }
 
   @include respond-medium() {
@@ -91,7 +96,7 @@ $image-height: 62.5vw;
     justify-content: space-between;
     align-items: center;
     margin-top: 50%;
-    margin-left: 50%;
+    margin-left: 30%;
     transform: translate(-50%, -50%);
   }
 
