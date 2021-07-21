@@ -157,17 +157,21 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
-  const [reactingUserInfoArray, setReactingUsersInfoArray] =
-    useState<User[] | null>(null);
+  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
+    User[] | null
+  >(null);
 
-  const [userProfilePhotoArray, setUserProfilePhotoArray] =
-    useState<PostFile[] | null>(null);
+  const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
+    PostFile[] | null
+  >(null);
 
-  const [commentingUserArray, setCommentingUserArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+  const [commentingUserArray, setCommentingUserArray] = useState<
+    UserInfoAndOtherData[] | null
+  >(null);
 
-  const [likingUsersArray, setLikingUsersArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+  const [likingUsersArray, setLikingUsersArray] = useState<
+    UserInfoAndOtherData[] | null
+  >(null);
 
   const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
 
@@ -240,18 +244,30 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   useEffect(() => {
     if (
       postReactionConfirm &&
-      postReactionConfirm === 'Post liked successfully!'
+      postReactionConfirm === 'Post liked successfully!' &&
+      postModalProps.id
     ) {
       setAlreadyLikedPost(true);
+      setLikingUsersArray([]);
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.feedPost,
+      });
     }
   }, [postReactionConfirm]);
 
   useEffect(() => {
     if (
       deleteReactionConfirm &&
-      deleteReactionConfirm === 'Like removed successfully!'
+      deleteReactionConfirm === 'Like removed successfully!' &&
+      postModalProps.id
     ) {
       setAlreadyLikedPost(false);
+      setLikingUsersArray([]);
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.feedPost,
+      });
     }
   }, [deleteReactionConfirm]);
 
