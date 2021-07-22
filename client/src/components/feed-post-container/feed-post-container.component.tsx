@@ -19,6 +19,7 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 import {
   Reaction,
   ReactionReq,
+  ReactionConfirm,
   PostFileReq,
   FileRequestType,
   ReactionRequestType,
@@ -27,6 +28,7 @@ import {
   UserType,
   PostError,
   DeleteReactionReq,
+  DeleteReactionConfirm,
 } from '../../redux/post/post.types';
 import {
   selectFeedPostReactionsArray,
@@ -77,11 +79,11 @@ interface FeedPostContainerProps {
   feedPostReactingUsers: User[] | null;
   reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
-  postReactionConfirm: string | null;
+  postReactionConfirm: ReactionConfirm | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
-  deleteReactionConfirm: string | null;
+  deleteReactionConfirm: DeleteReactionConfirm | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -173,7 +175,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     UserInfoAndOtherData[] | null
   >(null);
 
-  const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
+  const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
+    useState({ alreadyLikedPost: false, reactionId: '' });
 
   let postModalProps: PostModalDataToFeed = {
     id: userInfo.postId,
@@ -235,7 +238,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           el.reactingUserId === currentUser.id &&
           el.likedPost
         ) {
-          setAlreadyLikedPost(true);
+          setAlreadyLikedPostAndReactionId({
+            alreadyLikedPost: true,
+            reactionId: el.id,
+          });
         }
       }
     }
@@ -244,10 +250,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   useEffect(() => {
     if (
       postReactionConfirm &&
-      postReactionConfirm === 'Post liked successfully!' &&
+      postReactionConfirm.message === 'Post liked successfully!' &&
       postModalProps.id
     ) {
-      setAlreadyLikedPost(true);
+      setAlreadyLikedPostAndReactionId({
+        alreadyLikedPost: true,
+        reactionId: postReactionConfirm.reactionId,
+      });
       setLikingUsersArray([]);
       getPostReactionsStart({
         postId,
@@ -259,10 +268,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   useEffect(() => {
     if (
       deleteReactionConfirm &&
-      deleteReactionConfirm === 'Like removed successfully!' &&
+      deleteReactionConfirm.message === 'Like removed successfully!' &&
       postModalProps.id
     ) {
-      setAlreadyLikedPost(false);
+      setAlreadyLikedPostAndReactionId({
+        alreadyLikedPost: false,
+        reactionId: '',
+      });
       setLikingUsersArray([]);
       getPostReactionsStart({
         postId,
@@ -401,17 +413,25 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     }
   }, [reactionsArray, reactingUserInfoArray]);
 
-  const handleRenderLikedOrLikedButton = () => {
+  const handleRenderLikeOrLikedButton = () => {
     return (
       <Button
         className='likes-text'
         onClick={
-          alreadyLikedPost
-            ? () => handleSubmitRemoveLike()
-            : () => handleSubmitLike()
+          alreadyLikedPostAndReactionId.alreadyLikedPost
+            ? () => {
+                console.log('handleSubmitRemoveLike');
+                handleSubmitRemoveLike();
+              }
+            : () => {
+                console.log('handleSubmitLike');
+                handleSubmitLike();
+              }
         }
       >
-        <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
+        <span>
+          {alreadyLikedPostAndReactionId.alreadyLikedPost ? 'Liked' : 'Like'}
+        </span>
       </Button>
     );
   };
@@ -461,7 +481,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         />
       </div>
       <div className='caption-and-reactions'>
-        {handleRenderLikedOrLikedButton()}
+        {handleRenderLikeOrLikedButton()}
         {likingUsersArray && likingUsersArray.length ? (
           <Button
             className='likes-text'
@@ -505,11 +525,11 @@ interface LinkStateProps {
   feedPostReactingUsers: User[] | null;
   reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
-  postReactionConfirm: string | null;
+  postReactionConfirm: ReactionConfirm | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
-  deleteReactionConfirm: string | null;
+  deleteReactionConfirm: DeleteReactionConfirm | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({

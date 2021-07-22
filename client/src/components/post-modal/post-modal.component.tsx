@@ -19,7 +19,9 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 import {
   Reaction,
   ReactionReq,
+  ReactionConfirm,
   DeleteReactionReq,
+  DeleteReactionConfirm,
   PostError,
   PostFileReq,
   FileRequestType,
@@ -75,14 +77,14 @@ interface PostModalProps {
   onPostLikingUsersClick?: () => void;
   userProfilePhotoFile: string;
   postReactionsArray: Reaction[][];
-  postReactionConfirm: string | null;
+  postReactionConfirm: ReactionConfirm | null;
   postReactionError: PostError | null;
   postReactingUsers: User[] | null;
   reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
-  deleteReactionConfirm: string | null;
+  deleteReactionConfirm: DeleteReactionConfirm | null;
   deleteReactionError: PostError | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
@@ -145,7 +147,8 @@ export const PostModal: React.FC<PostModalProps> = ({
     UserInfoAndOtherData[] | null
   >(null);
 
-  const [alreadyLikedPost, setAlreadyLikedPost] = useState(false);
+  const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
+    useState({ alreadyLikedPost: false, reactionId: '' });
 
   const postDate = new Date(createdAt).toDateString();
 
@@ -165,7 +168,10 @@ export const PostModal: React.FC<PostModalProps> = ({
       setReactionsArray([]);
       setCommentingUserArray([]);
       setLikingUsersArray([]);
-      setAlreadyLikedPost(false);
+      setAlreadyLikedPostAndReactionId({
+        alreadyLikedPost: false,
+        reactionId: '',
+      });
     }
   }, [postId]);
 
@@ -211,7 +217,10 @@ export const PostModal: React.FC<PostModalProps> = ({
           el.reactingUserId === currentUser.id &&
           el.likedPost
         ) {
-          setAlreadyLikedPost(true);
+          setAlreadyLikedPostAndReactionId({
+            alreadyLikedPost: true,
+            reactionId: el.id,
+          });
         }
       }
     }
@@ -220,10 +229,13 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       postReactionConfirm &&
-      postReactionConfirm === 'Post liked successfully!' &&
+      postReactionConfirm.message === 'Post liked successfully!' &&
       postId
     ) {
-      setAlreadyLikedPost(true);
+      setAlreadyLikedPostAndReactionId({
+        alreadyLikedPost: true,
+        reactionId: postReactionConfirm.reactionId,
+      });
       setLikingUsersArray([]);
       clearPostReactions();
       getPostReactionsStart({
@@ -236,10 +248,13 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       deleteReactionConfirm &&
-      deleteReactionConfirm === 'Like removed successfully!' &&
+      deleteReactionConfirm.message === 'Like removed successfully!' &&
       postId
     ) {
-      setAlreadyLikedPost(false);
+      setAlreadyLikedPostAndReactionId({
+        alreadyLikedPost: false,
+        reactionId: '',
+      });
       setLikingUsersArray([]);
       clearPostReactions();
       getPostReactionsStart({
@@ -252,7 +267,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       postReactionConfirm &&
-      postReactionConfirm === 'Post comment created successfully!' &&
+      postReactionConfirm.message === 'Post comment created successfully!' &&
       postId
     ) {
       clearPostReactions();
@@ -266,7 +281,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       deleteReactionConfirm &&
-      deleteReactionConfirm === 'Comment removed successfully!' &&
+      deleteReactionConfirm.message === 'Comment removed successfully!' &&
       postId
     ) {
       clearPostReactions();
@@ -367,6 +382,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             profilePhotoFileString: fileString!,
             comment: '',
             location: '',
+            reactionId: reactionEl.id,
           });
         } else {
           commentsArray.push({
@@ -408,17 +424,19 @@ export const PostModal: React.FC<PostModalProps> = ({
     setComment('');
   };
 
-  const handleRenderLikedOrLikedButton = () => {
+  const handleRenderLikeOrLikedButton = () => {
     return (
       <Button
         className='likes-text'
         onClick={
-          alreadyLikedPost
+          alreadyLikedPostAndReactionId.alreadyLikedPost
             ? () => handleSubmitRemoveLike()
             : () => handleSubmitLike()
         }
       >
-        <span>{alreadyLikedPost ? 'Liked' : 'Like'}</span>
+        <span>
+          {alreadyLikedPostAndReactionId.alreadyLikedPost ? 'Liked' : 'Like'}
+        </span>
       </Button>
     );
   };
@@ -434,8 +452,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const handleSubmitRemoveLike = () => {
     deleteReactionStart({
-      reactingUserId: currentUser!.id,
-      reactionId: '',
+      reactionId: alreadyLikedPostAndReactionId.reactionId,
       isLikeRemoval: true,
     });
   };
@@ -489,7 +506,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               />
             ) : null}
           </div>
-          {handleRenderLikedOrLikedButton()}
+          {handleRenderLikeOrLikedButton()}
           {likingUsersArray && likingUsersArray.length ? (
             <Button className='likes-text' onClick={onPostLikingUsersClick}>
               <span>{`${likingUsersArray.length} likes`}</span>
@@ -527,11 +544,11 @@ interface LinkStateProps {
   postReactingUsers: User[] | null;
   reactorPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
-  postReactionConfirm: string | null;
+  postReactionConfirm: ReactionConfirm | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
-  deleteReactionConfirm: string | null;
+  deleteReactionConfirm: DeleteReactionConfirm | null;
   deleteReactionError: PostError | null;
 }
 

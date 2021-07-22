@@ -7,9 +7,11 @@ import {
   PostFileReq,
   Reaction,
   ReactionReq,
+  ReactionConfirm,
   GetPostReactionsReq,
   ArchivePostReq,
   DeleteReactionReq,
+  DeleteReactionConfirm,
   PostFile,
   PostError,
   PostActions,
@@ -40,10 +42,10 @@ export const createPostReactionStart = (
 });
 
 export const createPostReactionSuccess = (
-  reaction: Reaction
+  reactionConfirm: ReactionConfirm
 ): PostActionTypes => ({
   type: PostActions.CREATE_POST_REACTION_SUCCESS,
-  payload: reaction,
+  payload: reactionConfirm,
 });
 
 export const createPostReactionFailure = (
@@ -169,9 +171,11 @@ export const deleteReactionStart = (
   payload: deleteReactionReq,
 });
 
-export const deleteReactionSuccess = (message: string): PostActionTypes => ({
+export const deleteReactionSuccess = (
+  deleteReactionConfirm: DeleteReactionConfirm
+): PostActionTypes => ({
   type: PostActions.DELETE_REACTION_SUCCESS,
-  payload: message,
+  payload: deleteReactionConfirm,
 });
 
 export const deleteReactionFailure = (error: PostError): PostActionTypes => ({

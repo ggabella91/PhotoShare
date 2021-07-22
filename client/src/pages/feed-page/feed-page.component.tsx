@@ -196,28 +196,35 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     bio: '',
   });
 
-  const [usersFollowingArray, setUsersFollowingArray] =
-    useState<Follower[] | null>(null);
+  const [usersFollowingArray, setUsersFollowingArray] = useState<
+    Follower[] | null
+  >(null);
 
-  const [followingInfoArray, setFollowingInfoArray] =
-    useState<User[] | null>(null);
+  const [followingInfoArray, setFollowingInfoArray] = useState<User[] | null>(
+    null
+  );
 
-  const [dataFeedMapArray, setDataFeedMapArray] =
-    useState<PostDataArrayMap[] | null>(null);
+  const [dataFeedMapArray, setDataFeedMapArray] = useState<
+    PostDataArrayMap[] | null
+  >(null);
 
-  const [followingProfilePhotoArray, setFollowingProfilePhotoArray] =
-    useState<PostFile[] | null>(null);
+  const [followingProfilePhotoArray, setFollowingProfilePhotoArray] = useState<
+    PostFile[] | null
+  >(null);
 
-  const [postFileFeedArray, setPostFileFeedArray] =
-    useState<PostFile[] | null>(null);
+  const [postFileFeedArray, setPostFileFeedArray] = useState<PostFile[] | null>(
+    null
+  );
 
-  const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] =
-    useState<UserInfoAndPostFile[] | null>(null);
+  const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] = useState<
+    UserInfoAndPostFile[] | null
+  >(null);
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
-  const [postLikersArray, setPostLikersArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+  const [postLikersArray, setPostLikersArray] = useState<
+    UserInfoAndOtherData[] | null
+  >(null);
 
   const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>(
     POST_MODAL_DATA_INITIAL_STATE
@@ -233,8 +240,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [currentUserPost, setCurrentUserPost] = useState<boolean | null>(null);
 
-  const [currentUserPostOrComment, setCurrentUserPostOrComment] =
-    useState<boolean | null>(null);
+  const [currentUserPostOrComment, setCurrentUserPostOrComment] = useState<
+    boolean | null
+  >(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -490,9 +498,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [feedPagePostModalData]);
 
   useEffect(() => {
-    if (showPostLikingUsersModal) {
-      setShowLikingUsersModal(showPostLikingUsersModal);
-    }
+    setShowLikingUsersModal(showPostLikingUsersModal);
   }, [showPostLikingUsersModal]);
 
   useEffect(() => {

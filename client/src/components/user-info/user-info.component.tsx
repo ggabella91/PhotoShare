@@ -56,7 +56,6 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
       setCommentToDelete({
         reactionId: commentToDelete.reactionId,
-        reactingUserId: commentToDelete.reactingUserId,
         isLikeRemoval: false,
       });
 

@@ -11,7 +11,7 @@ router.post(
     const comment: string = req.body.comment || '';
     const likedPost: boolean = req.body.likedPost;
 
-    const post = Reaction.build({
+    const reaction = Reaction.build({
       comment,
       likedPost,
       createdAt: new Date(),
@@ -19,9 +19,9 @@ router.post(
       reactingUserId: req.currentUser!.id,
     });
 
-    await post.save();
+    await reaction.save();
 
-    res.status(201).send(post);
+    res.status(201).send(reaction);
   }
 );
 

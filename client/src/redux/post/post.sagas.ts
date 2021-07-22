@@ -66,7 +66,13 @@ export function* createPostReaction({
   try {
     const { data } = yield axios.post('/api/reactions/new', reactionReq);
 
-    yield put(createPostReactionSuccess(data));
+    yield put(
+      createPostReactionSuccess({
+        reactionId: data.id,
+        likedPost: data.likedPost,
+        message: '',
+      })
+    );
   } catch (err) {
     yield put(createPostReactionFailure(err));
   }
@@ -217,14 +223,24 @@ export function* deleteReaction({
   payload: DeleteReactionReq;
 }): any {
   try {
-    yield axios.delete(`/api/reactions`, {
+    const { data } = yield axios.delete(`/api/reactions`, {
       data: deleteReactionReq,
     });
 
     if (deleteReactionReq.isLikeRemoval) {
-      yield put(deleteReactionSuccess('Like removed successfully!'));
+      yield put(
+        deleteReactionSuccess({
+          reactionId: data.reactionId,
+          message: 'Like removed successfully!',
+        })
+      );
     } else {
-      yield put(deleteReactionSuccess('Comment removed successfully!'));
+      yield put(
+        deleteReactionSuccess({
+          reactionId: data.reactionId,
+          message: 'Comment removed successfully!',
+        })
+      );
     }
   } catch (err) {
     yield put(deleteReactionFailure(err));

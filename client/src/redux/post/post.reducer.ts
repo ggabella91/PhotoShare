@@ -74,9 +74,12 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
     case PostActions.CREATE_POST_REACTION_SUCCESS:
       return {
         ...state,
-        postReactionConfirm: action.payload.likedPost
-          ? 'Post liked successfully!'
-          : 'Post comment created successfully!',
+        postReactionConfirm: {
+          ...action.payload,
+          message: action.payload.likedPost
+            ? 'Post liked successfully!'
+            : 'Post comment created successfully!',
+        },
         postReactionError: null,
         deleteReactionConfirm: null,
       };
