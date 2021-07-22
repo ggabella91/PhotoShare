@@ -88,6 +88,12 @@ export interface ReactionReq {
   comment?: string;
 }
 
+export interface ReactionConfirm {
+  reactionId: string;
+  message: string;
+  likedPost: boolean;
+}
+
 export enum ReactionRequestType {
   singlePost = 'singlePost',
   feedPost = 'feedPost',
@@ -143,8 +149,13 @@ export interface ArchivePostReq {
 
 export interface DeleteReactionReq {
   reactionId: string;
-  reactingUserId: string;
   isLikeRemoval: boolean;
+  reactingUserId?: string;
+}
+
+export interface DeleteReactionConfirm {
+  reactionId: string;
+  message: string;
 }
 
 export interface PostMetaData {
@@ -157,7 +168,7 @@ export interface PostState {
   postDataFeedArray: Post[][];
   postReactionsArray: Reaction[][];
   postReactionError: PostError | null;
-  postReactionConfirm: string | null;
+  postReactionConfirm: ReactionConfirm | null;
   postFiles: PostFile[];
   getPostDataError: PostError | null;
   getPostDataConfirm: string | null;
@@ -173,7 +184,7 @@ export interface PostState {
   profilePhotoConfirm: string | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
-  deleteReactionConfirm: string | null;
+  deleteReactionConfirm: DeleteReactionConfirm | null;
   deleteReactionError: PostError | null;
   otherUserProfilePhotoFile: string | null;
   followPhotoFileArray: PostFile[] | null;
@@ -222,7 +233,7 @@ export interface CreatePostReactionStart {
 
 export interface CreatePostReactionSuccess {
   type: typeof PostActions.CREATE_POST_REACTION_SUCCESS;
-  payload: Reaction;
+  payload: ReactionConfirm;
 }
 
 export interface CreatePostReactionFailure {
@@ -332,7 +343,7 @@ export interface DeleteReactionStart {
 
 export interface DeleteReactionSuccess {
   type: typeof PostActions.DELETE_REACTION_SUCCESS;
-  payload: string;
+  payload: DeleteReactionConfirm;
 }
 
 export interface DeleteReactionFailure {
