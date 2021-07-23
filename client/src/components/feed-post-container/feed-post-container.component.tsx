@@ -45,6 +45,7 @@ import {
   getPostReactionsStart,
   getPostFileStart,
   deleteReactionStart,
+  clearPostReactions,
   setPostLikingUsersArray,
   setShowPostLikingUsersModal,
   setFeedPagePostModalData,
@@ -94,6 +95,7 @@ interface FeedPostContainerProps {
   setFeedPagePostModalData: typeof setFeedPagePostModalData;
   setFeedPagePostModalShow: typeof setFeedPagePostModalShow;
   setClearFeedPagePostModalState: typeof setClearFeedPagePostModalState;
+  clearPostReactions: typeof clearPostReactions;
 }
 
 export interface UserInfoData {
@@ -149,6 +151,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   getPostFileStart,
   createPostReactionStart,
   deleteReactionStart,
+  clearPostReactions,
   setPostLikingUsersArray,
   setShowPostLikingUsersModal,
   setFeedPagePostModalData,
@@ -258,6 +261,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         reactionId: postReactionConfirm.reactionId,
       });
       setLikingUsersArray([]);
+      clearPostReactions();
       getPostReactionsStart({
         postId,
         reactionReqType: ReactionRequestType.feedPost,
@@ -276,6 +280,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         reactionId: '',
       });
       setLikingUsersArray([]);
+      clearPostReactions();
       getPostReactionsStart({
         postId,
         reactionReqType: ReactionRequestType.feedPost,
@@ -419,14 +424,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         className='likes-text'
         onClick={
           alreadyLikedPostAndReactionId.alreadyLikedPost
-            ? () => {
-                console.log('handleSubmitRemoveLike');
-                handleSubmitRemoveLike();
-              }
-            : () => {
-                console.log('handleSubmitLike');
-                handleSubmitLike();
-              }
+            ? () => handleSubmitRemoveLike()
+            : () => handleSubmitLike()
         }
       >
         <span>
@@ -448,7 +447,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const handleSubmitRemoveLike = () => {
     deleteReactionStart({
       reactingUserId: currentUser!.id,
-      reactionId: '',
+      reactionId: alreadyLikedPostAndReactionId.reactionId,
       isLikeRemoval: true,
     });
   };
@@ -556,6 +555,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(getPostFileStart(postFileReq)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
     dispatch(deleteReactionStart(deleteReactionReq)),
+  clearPostReactions: () => dispatch(clearPostReactions()),
   setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
     dispatch(setPostLikingUsersArray(postLikingUsersArray)),
   setShowPostLikingUsersModal: (showPostLikingUsersModal: boolean) =>
