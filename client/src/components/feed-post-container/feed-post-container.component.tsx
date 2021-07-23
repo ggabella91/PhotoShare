@@ -53,8 +53,6 @@ import {
   setClearFeedPagePostModalState,
 } from '../../redux/post/post.actions';
 
-import Button from '../button/button.component';
-
 import UserInfo, {
   StyleType,
   UserInfoAndOtherData,
@@ -64,6 +62,9 @@ import {
   compareUserOrPostOrReactionArrays,
   comparePostFileArrays,
 } from '../../pages/feed-page/feed-page.utils';
+
+import Button from '../button/button.component';
+import { ExpandableFormInput } from '../form-input/form-input.component';
 
 import './feed-post-container.styles.scss';
 
@@ -159,6 +160,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   setClearFeedPagePostModalState,
 }) => {
   const [postId, setPostId] = useState('');
+
+  const [comment, setComment] = useState('');
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
@@ -418,6 +421,26 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     }
   }, [reactionsArray, reactingUserInfoArray]);
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setComment(value);
+  };
+
+  const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (comment && currentUser) {
+      createPostReactionStart({
+        reactingUserId: currentUser.id,
+        postId: postId,
+        likedPost: false,
+        comment,
+      });
+    }
+    setComment('');
+  };
+
   const handleRenderLikeOrLikedButton = () => {
     return (
       <Button
@@ -514,6 +537,23 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           : null}
         <span className='date'>{date}</span>
       </div>
+      <form className='comment-form' onSubmit={handleSubmitComment}>
+        <ExpandableFormInput
+          tall={true}
+          onChange={handleChange}
+          name='comment'
+          type='textarea'
+          value={comment}
+          label='Add a comment...'
+        />
+        <Button
+          className={`${!comment ? 'greyed-out' : ''} submit-comment-button`}
+          disabled={comment ? false : true}
+          onClick={handleSubmitComment}
+        >
+          <span>Post</span>
+        </Button>
+      </form>
     </div>
   );
 };

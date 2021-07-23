@@ -57,9 +57,9 @@ import UserInfo, {
 
 import Modal from 'react-bootstrap/Modal';
 import Button from '../button/button.component';
+import { ExpandableFormInput } from '../form-input/form-input.component';
 
 import './post-modal.styles.scss';
-import { ExpandableFormInput } from '../form-input/form-input.component';
 
 interface PostModalProps {
   currentUser: User | null;
