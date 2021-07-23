@@ -312,6 +312,7 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
         getPostReactionsError: null,
         deleteReactionError: null,
         deleteReactionConfirm: null,
+        feedPostReactionsArray: [],
       };
     case PostActions.CLEAR_POST_STATE:
       return {
