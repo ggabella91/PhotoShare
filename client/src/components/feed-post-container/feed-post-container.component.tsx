@@ -292,6 +292,34 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
+    if (
+      postReactionConfirm &&
+      postReactionConfirm.message === 'Post comment created successfully!' &&
+      postId
+    ) {
+      clearPostReactions();
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.feedPost,
+      });
+    }
+  }, [postReactionConfirm]);
+
+  useEffect(() => {
+    if (
+      deleteReactionConfirm &&
+      deleteReactionConfirm.message === 'Comment removed successfully!' &&
+      postId
+    ) {
+      clearPostReactions();
+      getPostReactionsStart({
+        postId,
+        reactionReqType: ReactionRequestType.feedPost,
+      });
+    }
+  }, [deleteReactionConfirm]);
+
+  useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
       for (let el of reactionsArray) {
         getOtherUserStart({
@@ -354,7 +382,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       reactionsArray &&
       reactionsArray.length &&
       reactingUserInfoArray &&
-      reactingUserInfoArray.length &&
       reactingUserInfoArray.length &&
       ((userProfilePhotoArray && userProfilePhotoArray.length) ||
         (!userProfilePhotoArray &&
@@ -419,7 +446,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       setCommentingUserArray(commentsArray);
       setLikingUsersArray(likesArray);
     }
-  }, [reactionsArray, reactingUserInfoArray]);
+  }, [
+    reactionsArray,
+    reactingUserInfoArray,
+    userProfilePhotoArray,
+    usersProfilePhotoConfirm,
+  ]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;

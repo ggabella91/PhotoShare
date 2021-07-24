@@ -25,6 +25,7 @@
   margin-bottom: 40px;
   border: solid 1px rgb(180, 180, 180);
   border-radius: 2px;
+  padding-bottom: 10px;
 
   .profile-and-options {
     display: flex;
@@ -118,18 +119,15 @@
 
   .comment-form {
     display: flex;
+    margin-left: 10px;
     max-height: 65px;
+    max-width: 580px;
+    margin-bottom: 15px;
 
-    @include respond-medium-wide() {
-      width: 100%;
-    }
-
-    @include respond-medium-narrow-wide() {
-      width: 75%;
-    }
-
-    @include respond-medium() {
-      display: none;
+    .group.comment {
+      @include respond-medium-wide() {
+        width: 100%;
+      }
     }
 
     .post-text-button {
@@ -152,16 +150,6 @@
       text-transform: capitalize;
       text-decoration: none;
       border-radius: 15px;
-
-      @include respond-medium() {
-        width: 75%;
-        transform: translateX(-20%);
-      }
-
-      @include respond-medium-narrow-wide() {
-        width: 75%;
-        transform: translateX(80%);
-      }
 
       span {
         font-size: 14px;
