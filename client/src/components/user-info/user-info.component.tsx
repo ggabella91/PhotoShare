@@ -57,6 +57,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       setCommentToDelete({
         reactionId: commentToDelete.reactionId,
         isLikeRemoval: false,
+        reactingUserId: commentToDelete.reactingUserId,
       });
 
       setShowCommentOptionsModal(true);
