@@ -553,7 +553,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         setCurrentUserPostOrComment(true);
       } else {
         setCurrentUserPostOrComment(false);
-        console.log('else');
       }
     }
   };
