@@ -159,7 +159,7 @@ export const archivePostSuccess = (message: string): PostActionTypes => ({
   payload: message,
 });
 
-export const archivePostFailure = (error: Error): PostActionTypes => ({
+export const archivePostFailure = (error: PostError): PostActionTypes => ({
   type: PostActions.ARCHIVE_POST_FAILURE,
   payload: error,
 });

@@ -179,7 +179,7 @@ export interface PostState {
   postError: PostError | null;
   postConfirm: string | null;
   profilePhotoKey: string | null;
-  profilePhotoFile: string | null;
+  profilePhotoFile: PostFile | null;
   profilePhotoError: PostError | null;
   profilePhotoConfirm: string | null;
   archivePostConfirm: string | null;
@@ -333,7 +333,7 @@ export interface ArchivePostSuccess {
 
 export interface ArchivePostFailure {
   type: typeof PostActions.ARCHIVE_POST_FAILURE;
-  payload: Error;
+  payload: PostError;
 }
 
 export interface DeleteReactionStart {
