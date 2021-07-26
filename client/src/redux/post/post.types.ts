@@ -186,7 +186,7 @@ export interface PostState {
   archivePostError: PostError | null;
   deleteReactionConfirm: DeleteReactionConfirm | null;
   deleteReactionError: PostError | null;
-  otherUserProfilePhotoFile: string | null;
+  otherUserProfilePhotoFile: PostFile | null;
   followPhotoFileArray: PostFile[] | null;
   suggestionPhotoFileArray: PostFile[] | null;
   reactorPhotoFileArray: PostFile[] | null;
@@ -358,7 +358,7 @@ export interface ClearArchivePostStatuses {
 
 export interface GetOtherUserProfilePhotoFileSuccess {
   type: typeof PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS;
-  payload: string;
+  payload: PostFile;
 }
 
 export interface GetUserPhotoForFollowArraySuccess {

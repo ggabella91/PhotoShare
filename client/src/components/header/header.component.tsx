@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
   }, [profilePhotoKey, currentUser]);
 
   useEffect(() => {
-    if (profilePhotoFile) {
+    if (profilePhotoFile && profilePhotoFile.fileString) {
       setPhotoFileString(profilePhotoFile.fileString);
     }
   }, [profilePhotoFile]);
