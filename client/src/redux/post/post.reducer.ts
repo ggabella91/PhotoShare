@@ -56,7 +56,7 @@ const INITIAL_STATE: PostState = {
   feedUsersProfilePhotoConfirm: null,
 };
 
-const postReducer = (state = INITIAL_STATE, action: PostActionTypes) => {
+const postReducer = (state = INITIAL_STATE, action: PostActionTypes): PostState => {
   switch (action.type) {
     case PostActions.UPDATE_PROFILE_PHOTO_SUCCESS:
       return {

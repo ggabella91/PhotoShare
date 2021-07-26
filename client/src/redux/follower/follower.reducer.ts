@@ -21,7 +21,7 @@ const INITIAL_STATE: FollowerState = {
 const followerReducer = (
   state = INITIAL_STATE,
   action: FollowerActionTypes
-) => {
+): FollowerState => {
   switch (action.type) {
     case FollowerActions.FOLLOW_NEW_USER_SUCCESS:
       return {

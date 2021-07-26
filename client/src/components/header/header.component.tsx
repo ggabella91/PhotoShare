@@ -8,6 +8,7 @@ import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { signOutStart } from '../../redux/user/user.actions';
 import {
+  PostFile,
   FileRequestType,
   PostFileReq,
   UserType,
@@ -25,7 +26,7 @@ import './header.styles.scss';
 interface HeaderProps {
   currentUser: User | null;
   profilePhotoKey: string | null;
-  profilePhotoFile: string | null;
+  profilePhotoFile: PostFile | null;
   getPostFileStart: typeof getPostFileStart;
   signOutStart: typeof signOutStart;
 }
@@ -37,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
   getPostFileStart,
   signOutStart,
 }) => {
-  const [photoFile, setPhotoFile] = useState<string | null>(null);
+  const [photoFileString, setPhotoFileString] = useState<string | null>(null);
   const [searchBarKey, setSearchBarKey] = useState(Math.random());
 
   const path = useParams();
@@ -67,14 +68,14 @@ export const Header: React.FC<HeaderProps> = ({
         user: UserType.self,
         fileRequestType: FileRequestType.singlePost,
       });
-    } else if (!currentUser && photoFile) {
-      setPhotoFile(null);
+    } else if (!currentUser && photoFileString) {
+      setPhotoFileString(null);
     }
   }, [profilePhotoKey, currentUser]);
 
   useEffect(() => {
     if (profilePhotoFile) {
-      setPhotoFile(profilePhotoFile);
+      setPhotoFileString(profilePhotoFile.fileString);
     }
   }, [profilePhotoFile]);
 
@@ -87,14 +88,14 @@ export const Header: React.FC<HeaderProps> = ({
         <div>
           <SearchBar key={searchBarKey} />
           <NavLink to={`/${currentUser.username}`} className='avatar'>
-            {photoFile ? (
+            {photoFileString ? (
               <img
                 className='profile-photo'
-                src={`data:image/jpeg;base64,${photoFile}`}
+                src={`data:image/jpeg;base64,${photoFileString}`}
                 alt='profile-pic'
               />
             ) : null}
-            {!photoFile ? (
+            {!photoFileString ? (
               <div className='photo-placeholder'>
                 <span className='photo-placeholder-text'>No photo</span>
               </div>
@@ -120,7 +121,7 @@ export const Header: React.FC<HeaderProps> = ({
 interface LinkStateProps {
   currentUser: User | null;
   profilePhotoKey: string | null;
-  profilePhotoFile: string | null;
+  profilePhotoFile: PostFile | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({

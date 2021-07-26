@@ -26,7 +26,10 @@ const INITIAL_STATE: UserState = {
   feedPostReactingUsers: null,
 };
 
-const userReducer = (state = INITIAL_STATE, action: UserActionTypes) => {
+const userReducer = (
+  state = INITIAL_STATE,
+  action: UserActionTypes
+): UserState => {
   switch (action.type) {
     case UserActions.SET_CURRENT_USER:
       return {
