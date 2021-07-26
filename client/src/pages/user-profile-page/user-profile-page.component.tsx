@@ -95,7 +95,7 @@ interface UserProfilePageProps {
   username: string;
   otherUser: User | null;
   otherUserError: Error | null;
-  profilePhotoFile: string | null;
+  profilePhotoFile: PostFile | null;
   postData: Post[] | null;
   postFiles: PostFile[];
   postConfirm: string | null;
@@ -178,11 +178,12 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   postLikingUsersArray,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
-  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+  const [profilePhotoString, setProfilePhoto] = useState<string | null>(null);
 
   const [followersArray, setFollowersArray] = useState<Follower[] | null>(null);
-  const [usersFollowingArray, setUsersFollowingArray] =
-    useState<Follower[] | null>(null);
+  const [usersFollowingArray, setUsersFollowingArray] = useState<
+    Follower[] | null
+  >(null);
 
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -210,14 +211,16 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [followersOrFollowingModalShow, setFollowersOrFollowingModalShow] =
     useState(false);
 
-  const [currentUserPostOrComment, setCurrentUserPostOrComment] =
-    useState<boolean | null>(null);
+  const [currentUserPostOrComment, setCurrentUserPostOrComment] = useState<
+    boolean | null
+  >(null);
 
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
 
-  const [postLikersArray, setPostLikersArray] =
-    useState<UserInfoAndOtherData[] | null>(null);
+  const [postLikersArray, setPostLikersArray] = useState<
+    UserInfoAndOtherData[] | null
+  >(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -315,8 +318,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [otherUser]);
 
   useEffect(() => {
-    if (profilePhotoFile) {
-      setProfilePhoto(profilePhotoFile);
+    if (profilePhotoFile && profilePhotoFile.fileString) {
+      setProfilePhoto(profilePhotoFile.fileString);
     }
   }, [profilePhotoFile]);
 
@@ -491,14 +494,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       <div className='user-bio'>
         <div className='avatar-and-details'>
           <div className='avatar'>
-            {profilePhoto ? (
+            {profilePhotoString ? (
               <img
                 className='profile-photo'
-                src={`data:image/jpeg;base64,${profilePhoto}`}
+                src={`data:image/jpeg;base64,${profilePhotoString}`}
                 alt='profile-pic'
               />
             ) : null}
-            {!profilePhoto ? (
+            {!profilePhotoString ? (
               <div className='user-bio-photo-placeholder'>
                 <span className='user-bio-photo-placeholder-text'>
                   No photo
@@ -578,7 +581,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         onHide={() => handleHidePostModal()}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
-        userProfilePhotoFile={profilePhoto || ''}
+        userProfilePhotoFile={profilePhotoString || ''}
         userName={user.username}
         userId={user.id}
         clearLocalState={clearPostModalLocalState}
@@ -613,7 +616,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           setUnfollowModalShow(false);
         }}
         username={username}
-        profilePhoto={profilePhotoFile}
+        profilePhoto={profilePhotoString}
       />
       <FollowersOrFollowingOrLikesModal
         users={isFollowersModal ? followersArray : usersFollowingArray}
@@ -644,7 +647,7 @@ interface LinkStateProps {
   otherUserError: Error | null;
   postData: Post[] | null;
   postFiles: PostFile[];
-  profilePhotoFile: string | null;
+  profilePhotoFile: PostFile | null;
   postConfirm: string | null;
   postError: PostError | null;
   getPostDataConfirm: string | null;

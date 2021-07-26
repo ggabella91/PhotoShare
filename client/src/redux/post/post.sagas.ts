@@ -167,9 +167,11 @@ export function* getPostFile({
       bucket === 'photo-share-app-profile-photos-dev'
     ) {
       if (user === UserType.self) {
-        yield put(getProfilePhotoFileSuccess(data));
+        yield put(getProfilePhotoFileSuccess({ s3Key, fileString: data }));
       } else if (user === UserType.other) {
-        yield put(getOtherUserProfilePhotoFileSuccess(data));
+        yield put(
+          getOtherUserProfilePhotoFileSuccess({ s3Key, fileString: data })
+        );
       } else if (user === UserType.followArray) {
         yield put(
           getUserPhotoForFollowArraySuccess({ s3Key, fileString: data })

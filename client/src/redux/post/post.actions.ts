@@ -184,7 +184,7 @@ export const deleteReactionFailure = (error: PostError): PostActionTypes => ({
 });
 
 export const getOtherUserProfilePhotoFileSuccess = (
-  file: string
+  file: PostFile
 ): PostActionTypes => ({
   type: PostActions.GET_OTHER_USER_PROFILE_PHOTO_FILE_SUCCESS,
   payload: file,
