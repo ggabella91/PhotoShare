@@ -57,6 +57,27 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 
   const { name, email, username, bio } = userInfo;
 
+  useEffect(() => {
+    if (currentUser) {
+      setUserInfo({
+        name: currentUser.name,
+        email: currentUser.email,
+        username: currentUser.username,
+        bio: currentUser.bio || '',
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      if (changeInfoError) {
+        setStatusInfo({ ...statusInfo, error: true });
+      } else if (changeInfoConfirm) {
+        setStatusInfo({ ...statusInfo, success: true });
+      }
+    }
+  }, [changeInfoError, changeInfoConfirm]);
+
   const handleInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
 
@@ -78,16 +99,6 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
       setUserInfo({ name: '', email: '', username: '', bio: '' });
     }
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      if (changeInfoError) {
-        setStatusInfo({ ...statusInfo, error: true });
-      } else if (changeInfoConfirm) {
-        setStatusInfo({ ...statusInfo, success: true });
-      }
-    }
-  }, [changeInfoError, changeInfoConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
     if (currentUser) {
