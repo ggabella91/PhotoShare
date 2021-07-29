@@ -139,3 +139,25 @@ export const comparePostFileArrays = (
 
   return true;
 };
+
+export const compareUserInfoAndPostFileObjArrays = (
+  array1: UserInfoAndPostFile[],
+  array2: UserInfoAndPostFile[]
+) => {
+  if (array1.length !== array2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < array1.length; i++) {
+    let array1AtIdxValues = Object.values(array1[i]);
+    let array2AtIdxValues = Object.values(array2[i]);
+
+    for (let j = 0; j < array1AtIdxValues.length; j++) {
+      if (array1AtIdxValues[j] !== array2AtIdxValues[j]) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+};
