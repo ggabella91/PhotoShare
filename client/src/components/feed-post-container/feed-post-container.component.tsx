@@ -212,6 +212,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (postId) {
+      console.log("Post ID changed so we're fetching reactions again...");
       getPostReactionsStart({
         postId: postId,
         reactionReqType: ReactionRequestType.feedPost,

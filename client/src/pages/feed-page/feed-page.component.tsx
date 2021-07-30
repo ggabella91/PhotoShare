@@ -95,6 +95,7 @@ import {
   compareFollowerArrays,
   compareUserOrPostOrReactionArrays,
   comparePostFileArrays,
+  compareUserInfoAndDataObjArrays,
 } from './feed-page.utils';
 import './feed-page.styles.scss';
 
@@ -452,6 +453,17 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         (a, b) => b.dateInt - a.dateInt
       );
 
+      if (userInfoAndPostFileArray) {
+        const comparisonResult = compareUserInfoAndDataObjArrays(
+          sortedUserInfoAndPostArray,
+          userInfoAndPostFileArray
+        );
+
+        if (comparisonResult) {
+          return;
+        }
+      }
+
       setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
     }
   }, [
@@ -486,8 +498,16 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   );
 
   useEffect(() => {
-    if (postLikingUsersArray) {
+    if (
+      postLikingUsersArray &&
+      !(
+        postLikersArray &&
+        compareUserInfoAndDataObjArrays(postLikingUsersArray, postLikersArray)
+      )
+    ) {
       setPostLikersArray(postLikingUsersArray);
+    } else {
+      console.log('postLikingUsersArray and postLikersArray are the same');
     }
   }, [postLikingUsersArray]);
 
