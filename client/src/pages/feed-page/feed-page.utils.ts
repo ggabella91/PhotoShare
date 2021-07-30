@@ -3,6 +3,7 @@ import { User } from '../../redux/user/user.types';
 import { Post, PostFile, Reaction } from '../../redux/post/post.types';
 
 import { UserInfoAndPostFile } from './feed-page.component';
+import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 export const prepareUserInfoAndFileArray = (
   followingInfoArray: User[],
@@ -140,9 +141,9 @@ export const comparePostFileArrays = (
   return true;
 };
 
-export const compareUserInfoAndPostFileObjArrays = (
-  array1: UserInfoAndPostFile[],
-  array2: UserInfoAndPostFile[]
+export const compareUserInfoAndDataObjArrays = (
+  array1: UserInfoAndPostFile[] | UserInfoAndOtherData[],
+  array2: UserInfoAndPostFile[] | UserInfoAndOtherData[]
 ) => {
   if (array1.length !== array2.length) {
     return false;
