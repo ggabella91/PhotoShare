@@ -506,8 +506,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       )
     ) {
       setPostLikersArray(postLikingUsersArray);
-    } else {
-      console.log('postLikingUsersArray and postLikersArray are the same');
     }
   }, [postLikingUsersArray]);
 
