@@ -17,7 +17,7 @@ router.patch(
       throw new BadRequestError('No post id was provided.');
     }
 
-    const updatedPost = Post.findByIdAndUpdate(
+    const updatedPost = await Post.findByIdAndUpdate(
       postId,
       { caption, postLocation },
       {

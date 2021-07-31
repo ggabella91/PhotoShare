@@ -36,6 +36,8 @@ export interface UserInfoAndOtherData {
 interface UserInfoProps {
   styleType: StyleType;
   userInfoArray: UserInfoAndOtherData[];
+  isCaption?: boolean;
+  isCaptionOwner?: boolean;
   setCommentToDelete: typeof setCommentToDelete;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
 }
@@ -43,6 +45,8 @@ interface UserInfoProps {
 export const UserInfo: React.FC<UserInfoProps> = ({
   userInfoArray,
   styleType,
+  isCaption,
+  isCaptionOwner,
   setCommentToDelete,
   setShowCommentOptionsModal,
 }) => {
@@ -61,6 +65,12 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       });
 
       setShowCommentOptionsModal(true);
+    }
+  };
+
+  const handleClickCaptionOptions = () => {
+    if (isCaptionOwner) {
+      // TODO: set show edit post details to true
     }
   };
 
@@ -129,10 +139,18 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               : 'hide'
           } comment-options`}
         >
-          {styleType === StyleType.comment ? (
+          {styleType === StyleType.comment && !isCaption ? (
             <span
               className='comment-ellipsis-button'
               onClick={() => handleSetCommentToDelete(idx)}
+            >
+              ...
+            </span>
+          ) : null}
+          {styleType === StyleType.comment && isCaption ? (
+            <span
+              className='comment-ellipsis-button'
+              onClick={handleClickCaptionOptions}
             >
               ...
             </span>

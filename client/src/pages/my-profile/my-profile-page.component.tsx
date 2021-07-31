@@ -519,6 +519,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         userName={user.username}
         userId={user.id}
         clearLocalState={clearPostModalLocalState}
+        isCurrentUserPost
       />
       <PostOrCommentOptionsModal
         show={postOptionsModalShow}
