@@ -15,6 +15,7 @@ import { archivePostRouter } from './routes/archive';
 import { newReactionRouter } from './routes/new-reaction';
 import { getReactionsRouter } from './routes/get-post-reactions';
 import { deleteReactionRouter } from './routes/delete-reaction';
+import { updatePostDataRouter } from './routes/update-data';
 
 const app = express();
 app.set('trust proxy', true);
@@ -36,6 +37,7 @@ app.use(archivePostRouter);
 app.use(newReactionRouter);
 app.use(getReactionsRouter);
 app.use(deleteReactionRouter);
+app.use(updatePostDataRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
