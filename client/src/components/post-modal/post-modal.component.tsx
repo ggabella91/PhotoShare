@@ -63,6 +63,7 @@ import './post-modal.styles.scss';
 
 interface PostModalProps {
   currentUser: User | null;
+  isCurrentUserPost?: boolean;
   postId: string;
   caption: string;
   createdAt: Date | string;
@@ -98,6 +99,7 @@ interface PostModalProps {
 export const PostModal: React.FC<PostModalProps> = ({
   clearLocalState,
   currentUser,
+  isCurrentUserPost,
   postId,
   fileString,
   caption,
@@ -457,6 +459,20 @@ export const PostModal: React.FC<PostModalProps> = ({
     });
   };
 
+  const handleRenderEditPostDetails = () => {
+    if (isCurrentUserPost) {
+      // TODO: set show edit post details modal to true
+      return (
+        <span
+          className='edit-post'
+          onClick={() => console.log('setShowEditPostDetailsModal')}
+        >
+          Edit post details
+        </span>
+      );
+    } else return null;
+  };
+
   return (
     <Modal {...props} dialogClassName='post-modal' animation={false} centered>
       <div className='large-image-adjustments'>
@@ -497,8 +513,12 @@ export const PostModal: React.FC<PostModalProps> = ({
               <UserInfo
                 styleType={StyleType.comment}
                 userInfoArray={captionInfoArray}
+                isCaption
+                isCaptionOwner={isCurrentUserPost ? true : false}
               />
-            ) : null}
+            ) : (
+              handleRenderEditPostDetails()
+            )}
             {commentingUserArray && commentingUserArray.length ? (
               <UserInfo
                 styleType={StyleType.comment}
