@@ -49,6 +49,7 @@ export enum PostActions {
   SET_FEED_PAGE_POST_MODAL_SHOW = 'SET_FEED_PAGE_POST_MODAL_SHOW',
   SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW = 'SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW',
   SET_CLEAR_FEED_PAGE_POST_MODAL_STATE = 'SET_CLEAR_FEED_PAGE_POST_MODAL_STATE',
+  SET_SHOW_POST_EDIT_FORM = 'SET_SHOW_POST_EDIT_FORM',
 
   // Actions specific to data for feed-post-containers
   GET_FEED_POST_FILE_SUCCESS = 'GET_FEED_POST_FILE_SUCCESS',
@@ -201,6 +202,7 @@ export interface PostState {
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
+  showPostEditForm: boolean;
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
@@ -446,6 +448,11 @@ export interface SetClearFeedPagePostModalState {
   payload: boolean;
 }
 
+export interface SetShowPostEditForm {
+  type: typeof PostActions.SET_SHOW_POST_EDIT_FORM;
+  payload: boolean;
+}
+
 // Interfaces related exclusively to feed-post-container data
 
 export interface GetFeedPostFileSuccess {
@@ -511,6 +518,7 @@ export type PostActionTypes =
   | SetFeedPagePostModalShow
   | SetFeedPagePostOptionsModalShow
   | SetClearFeedPagePostModalState
+  | SetShowPostEditForm
   | GetFeedPostFileSuccess
   | GetFeedPostReactionsSuccess
   | GetUserPhotoForFeedReactorArraySuccess;

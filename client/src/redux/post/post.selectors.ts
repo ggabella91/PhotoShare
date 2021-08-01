@@ -190,6 +190,11 @@ export const selectClearFeedPagePostModalState = createSelector(
   (postState: PostState) => postState.clearFeedPagePostModalState
 );
 
+export const selectShowPostEditForm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.showPostEditForm
+);
+
 // Selectors for feed-post-container components
 
 export const selectGetFeedPostDataConfirm = createSelector(

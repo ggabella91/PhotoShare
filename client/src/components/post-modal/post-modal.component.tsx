@@ -40,6 +40,7 @@ import {
   selectGetPostReactionsError,
   selectDeleteReactionConfirm,
   selectDeleteReactionError,
+  selectShowPostEditForm,
 } from '../../redux/post/post.selectors';
 import {
   createPostReactionStart,
@@ -58,6 +59,7 @@ import UserInfo, {
 import Modal from 'react-bootstrap/Modal';
 import Button from '../button/button.component';
 import { ExpandableFormInput } from '../form-input/form-input.component';
+import EditPostForm from '../edit-post-form/edit-post-form.component';
 
 import './post-modal.styles.scss';
 
@@ -87,6 +89,7 @@ interface PostModalProps {
   getPostReactionsError: PostError | null;
   deleteReactionConfirm: DeleteReactionConfirm | null;
   deleteReactionError: PostError | null;
+  showPostEditForm: boolean;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getPostFileStart: typeof getPostFileStart;
@@ -116,6 +119,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   usersProfilePhotoConfirm,
   postReactionConfirm,
   deleteReactionConfirm,
+  showPostEditForm,
   clearPostReactions,
   createPostReactionStart,
   getPostReactionsStart,
@@ -151,6 +155,11 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
+
+  const [editPostDetails, setEditPostDetails] = useState({
+    editCaption: '',
+    editLocation: '',
+  });
 
   const postDate = new Date(createdAt).toDateString();
 
@@ -189,8 +198,16 @@ export const PostModal: React.FC<PostModalProps> = ({
           commentDate: createdAt,
         },
       ]);
+
+      setEditPostDetails({ ...editPostDetails, editCaption: caption });
     }
   }, [caption]);
+
+  useEffect(() => {
+    if (location) {
+      setEditPostDetails({ ...editPostDetails, editLocation: location });
+    }
+  }, [location]);
 
   useEffect(() => {
     if (postId) {
@@ -460,15 +477,22 @@ export const PostModal: React.FC<PostModalProps> = ({
   };
 
   const handleRenderEditPostDetails = () => {
-    if (isCurrentUserPost) {
-      // TODO: set show edit post details modal to true
+    if (isCurrentUserPost && !showPostEditForm) {
+      // TODO: set show edit post form to true
       return (
         <span
           className='edit-post'
-          onClick={() => console.log('setShowEditPostDetailsModal')}
+          onClick={() => console.log('setShowEditPostForm')}
         >
           Edit post details
         </span>
+      );
+    } else if (isCurrentUserPost && showPostEditForm) {
+      return (
+        <EditPostForm
+          editCaption={editPostDetails.editCaption}
+          editLocation={editPostDetails.editLocation}
+        />
       );
     } else return null;
   };
@@ -570,6 +594,7 @@ interface LinkStateProps {
   getPostReactionsError: PostError | null;
   deleteReactionConfirm: DeleteReactionConfirm | null;
   deleteReactionError: PostError | null;
+  showPostEditForm: boolean;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -584,6 +609,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostReactionsError: selectGetPostReactionsError,
   deleteReactionConfirm: selectDeleteReactionConfirm,
   deleteReactionError: selectDeleteReactionError,
+  showPostEditForm: selectShowPostEditForm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

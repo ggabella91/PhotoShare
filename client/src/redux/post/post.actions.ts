@@ -304,6 +304,13 @@ export const setClearFeedPagePostModalState = (
   payload: clearFeedPagePostModalState,
 });
 
+export const setShowPostEditForm = (
+  showPostEditForm: boolean
+): PostActionTypes => ({
+  type: PostActions.SET_SHOW_POST_EDIT_FORM,
+  payload: showPostEditForm,
+});
+
 // Actions for feed-post-container
 
 export const getFeedPostFileSuccess = (file: PostFile): PostActionTypes => ({

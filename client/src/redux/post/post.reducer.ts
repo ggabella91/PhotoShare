@@ -46,6 +46,7 @@ const INITIAL_STATE: PostState = {
   feedPagePostModalShow: false,
   feedPagePostOptionsModalShow: false,
   clearFeedPagePostModalState: false,
+  showPostEditForm: false,
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
@@ -56,7 +57,10 @@ const INITIAL_STATE: PostState = {
   feedUsersProfilePhotoConfirm: null,
 };
 
-const postReducer = (state = INITIAL_STATE, action: PostActionTypes): PostState => {
+const postReducer = (
+  state = INITIAL_STATE,
+  action: PostActionTypes
+): PostState => {
   switch (action.type) {
     case PostActions.UPDATE_PROFILE_PHOTO_SUCCESS:
       return {
@@ -364,6 +368,11 @@ const postReducer = (state = INITIAL_STATE, action: PostActionTypes): PostState 
       return {
         ...state,
         clearFeedPagePostModalState: action.payload,
+      };
+    case PostActions.SET_SHOW_POST_EDIT_FORM:
+      return {
+        ...state,
+        showPostEditForm: action.payload,
       };
     default:
       return state;
