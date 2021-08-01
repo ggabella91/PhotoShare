@@ -70,7 +70,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
   const handleClickCaptionOptions = () => {
     if (isCaptionOwner) {
-      // TODO: set show edit post details to true
+      // TODO: set show edit post form to true
     }
   };
 
