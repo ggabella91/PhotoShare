@@ -11,6 +11,7 @@ import { DeleteReactionReq } from '../../redux/post/post.types';
 import {
   setCommentToDelete,
   setShowCommentOptionsModal,
+  setShowPostEditForm,
 } from '../../redux/post/post.actions';
 
 import './user-info.styles.scss';
@@ -40,6 +41,7 @@ interface UserInfoProps {
   isCaptionOwner?: boolean;
   setCommentToDelete: typeof setCommentToDelete;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
+  setShowPostEditForm: typeof setShowPostEditForm;
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({
@@ -49,6 +51,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   isCaptionOwner,
   setCommentToDelete,
   setShowCommentOptionsModal,
+  setShowPostEditForm,
 }) => {
   const [showCommentOptionsButtonForIdx, setShowCommentOptionsButtonForIdx] =
     useState({ show: false, idx: -1 });
@@ -70,7 +73,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
   const handleClickCaptionOptions = () => {
     if (isCaptionOwner) {
-      // TODO: set show edit post form to true
+      setShowPostEditForm(true);
     }
   };
 
@@ -172,6 +175,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setCommentToDelete(deleteReactionReq)),
   setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
+  setShowPostEditForm: (showPostEditForm: boolean) =>
+    dispatch(setShowPostEditForm(showPostEditForm)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);

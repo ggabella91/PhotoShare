@@ -49,6 +49,7 @@ import {
   deleteReactionStart,
   clearPostReactions,
   setPostLikingUsersArray,
+  setShowPostEditForm,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -97,6 +98,7 @@ interface PostModalProps {
   deleteReactionStart: typeof deleteReactionStart;
   setPostLikingUsersArray: typeof setPostLikingUsersArray;
   clearPostReactions: typeof clearPostReactions;
+  setShowPostEditForm: typeof setShowPostEditForm;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -127,6 +129,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   getPostFileStart,
   deleteReactionStart,
   setPostLikingUsersArray,
+  setShowPostEditForm,
   ...props
 }) => {
   const [comment, setComment] = useState('');
@@ -480,10 +483,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (isCurrentUserPost && !showPostEditForm) {
       // TODO: set show edit post form to true
       return (
-        <span
-          className='edit-post'
-          onClick={() => console.log('setShowEditPostForm')}
-        >
+        <span className='edit-post' onClick={() => setShowPostEditForm(true)}>
           Edit post details
         </span>
       );
@@ -533,7 +533,9 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <div className='caption-and-comments-container'>
-            {captionInfoArray && captionInfoArray.length ? (
+            {captionInfoArray &&
+            captionInfoArray.length &&
+            !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.comment}
                 userInfoArray={captionInfoArray}
@@ -626,6 +628,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearPostReactions: () => dispatch(clearPostReactions()),
   setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
     dispatch(setPostLikingUsersArray(postLikingUsersArray)),
+  setShowPostEditForm: (showPostEditForm: boolean) =>
+    dispatch(setShowPostEditForm(showPostEditForm)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);

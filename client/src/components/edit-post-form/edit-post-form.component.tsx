@@ -13,7 +13,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
 }) => {
   return (
     <form
-      className=''
+      className='edit-post-form'
       onSubmit={() => {
         /* Add action creator and other refux logic for submitting edit-post request*/
       }}
@@ -30,7 +30,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
         value={editLocation}
         placeholder='Where was this taken?'
       />
-      <div>
+      <div className='buttons-container'>
         <button
           className='edit-post-button'
           onClick={() => {
