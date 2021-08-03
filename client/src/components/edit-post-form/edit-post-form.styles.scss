@@ -1,12 +1,38 @@
 .edit-post-form {
   display: flex;
   flex-direction: column;
+  height: fit-content;
+
+  .input {
+    font-size: 14px;
+    font-weight: 480;
+    margin: 0 4px 4px 0;
+  }
 
   .buttons-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 5px;
+
+    button {
+      height: 30px;
+      width: 80px;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 4px;
+      border: none;
+    }
+
     .edit-post-button {
+      background-color: #074aaf;
+      color: white;
+      width: fit-content;
     }
 
     .cancel-edit-button {
+      background-color: #808080a6;
+      color: white;
     }
   }
 }
