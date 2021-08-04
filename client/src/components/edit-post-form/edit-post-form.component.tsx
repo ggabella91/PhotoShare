@@ -26,7 +26,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
   });
 
   useEffect(() => {
-    if (editCaption && editLocation) {
+    if (editCaption || editLocation) {
       setEditPostDetails({ caption: editCaption, location: editLocation });
     }
   });

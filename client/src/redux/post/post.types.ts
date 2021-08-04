@@ -50,6 +50,9 @@ export enum PostActions {
   SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW = 'SET_FEED_PAGE_POST_OPTIONS_MODAL_SHOW',
   SET_CLEAR_FEED_PAGE_POST_MODAL_STATE = 'SET_CLEAR_FEED_PAGE_POST_MODAL_STATE',
   SET_SHOW_POST_EDIT_FORM = 'SET_SHOW_POST_EDIT_FORM',
+  EDIT_POST_DETAILS_START = 'EDIT_POST_DETAILS_START',
+  EDIT_POST_DETAILS_SUCCESS = 'EDIT_POST_DETAILS_SUCCESS',
+  EDIT_POST_DETAILS_FAILURE = 'EDIT_POST_DETAILS_FAILURE',
 
   // Actions specific to data for feed-post-containers
   GET_FEED_POST_FILE_SUCCESS = 'GET_FEED_POST_FILE_SUCCESS',
@@ -159,6 +162,12 @@ export interface DeleteReactionConfirm {
   message: string;
 }
 
+export interface EditPostDetailsReq {
+  postId: string;
+  caption: string;
+  location: string;
+}
+
 export interface PostMetaData {
   queryLength: number;
   userId: string;
@@ -203,6 +212,8 @@ export interface PostState {
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
   showPostEditForm: boolean;
+  editPostDetailsConfirm: string | null;
+  editPostDetailsFailure: string | null;
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
@@ -453,6 +464,21 @@ export interface SetShowPostEditForm {
   payload: boolean;
 }
 
+export interface EditPostDetailsStart {
+  type: typeof PostActions.EDIT_POST_DETAILS_START;
+  payload: EditPostDetailsReq;
+}
+
+export interface EditPostDetailsSuccess {
+  type: typeof PostActions.EDIT_POST_DETAILS_SUCCESS;
+  payload: Post;
+}
+
+export interface EditPostDetailsFailure {
+  type: typeof PostActions.EDIT_POST_DETAILS_FAILURE;
+  payload: PostError;
+}
+
 // Interfaces related exclusively to feed-post-container data
 
 export interface GetFeedPostFileSuccess {
@@ -519,6 +545,9 @@ export type PostActionTypes =
   | SetFeedPagePostOptionsModalShow
   | SetClearFeedPagePostModalState
   | SetShowPostEditForm
+  | EditPostDetailsStart
+  | EditPostDetailsSuccess
+  | EditPostDetailsFailure
   | GetFeedPostFileSuccess
   | GetFeedPostReactionsSuccess
   | GetUserPhotoForFeedReactorArraySuccess;

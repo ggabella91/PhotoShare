@@ -47,6 +47,8 @@ const INITIAL_STATE: PostState = {
   feedPagePostOptionsModalShow: false,
   clearFeedPagePostModalState: false,
   showPostEditForm: false,
+  editPostDetailsConfirm: null,
+  editPostDetailsFailure: null,
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
