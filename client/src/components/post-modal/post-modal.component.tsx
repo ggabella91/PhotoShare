@@ -177,14 +177,22 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       clearLocalState &&
-      (reactionsArray || commentingUserArray || likingUsersArray)
+      (reactionsArray ||
+        commentingUserArray ||
+        likingUsersArray ||
+        captionInfoArray)
     ) {
       setReactionsArray([]);
+      setCaptionInfoArray([]);
       setCommentingUserArray([]);
       setLikingUsersArray([]);
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
         reactionId: '',
+      });
+      setEditPostDetails({
+        editCaption: '',
+        editLocation: '',
       });
     }
   }, [postId]);
