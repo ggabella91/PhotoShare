@@ -17,6 +17,7 @@ import {
   PostActions,
   PostActionTypes,
   PostMetaData,
+  EditPostDetailsReq,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -309,6 +310,23 @@ export const setShowPostEditForm = (
 ): PostActionTypes => ({
   type: PostActions.SET_SHOW_POST_EDIT_FORM,
   payload: showPostEditForm,
+});
+
+export const editPostDetailsStart = (
+  editPostDetailsReq: EditPostDetailsReq
+): PostActionTypes => ({
+  type: PostActions.EDIT_POST_DETAILS_START,
+  payload: editPostDetailsReq,
+});
+
+export const editPostDetailsSuccess = (editedPost: Post): PostActionTypes => ({
+  type: PostActions.EDIT_POST_DETAILS_SUCCESS,
+  payload: editedPost,
+});
+
+export const editPostDetailsFailure = (error: PostError): PostActionTypes => ({
+  type: PostActions.EDIT_POST_DETAILS_FAILURE,
+  payload: error,
 });
 
 // Actions for feed-post-container

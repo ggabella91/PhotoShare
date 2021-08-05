@@ -15,6 +15,7 @@ import {
   DeleteReactionReq,
   PostActions,
   UserType,
+  EditPostDetailsReq,
 } from './post.types';
 
 import {
@@ -44,6 +45,8 @@ import {
   setPostMetaDataForUser,
   getFeedPostFileSuccess,
   getUserPhotoForFeedReactorArraySuccess,
+  editPostDetailsSuccess,
+  editPostDetailsFailure,
 } from './post.actions';
 
 import axios from 'axios';
@@ -249,6 +252,25 @@ export function* deleteReaction({
   }
 }
 
+export function* editPostDetails({
+  payload: { postId, caption, location },
+}: {
+  payload: EditPostDetailsReq;
+}): any {
+  try {
+    const { data }: { data: Post } = yield axios.patch(`/api/posts/${postId}`, {
+      data: {
+        caption,
+        location,
+      },
+    });
+
+    yield put(editPostDetailsSuccess(data));
+  } catch (err) {
+    yield put(editPostDetailsFailure(err));
+  }
+}
+
 export function* onCreatePostStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(
     PostActions.CREATE_POST_START,
@@ -302,6 +324,13 @@ export function* onDeleteReactionStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(
     PostActions.DELETE_REACTION_START,
     deleteReaction
+  );
+}
+
+export function* onEditPostDetailsStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    PostActions.EDIT_POST_DETAILS_START,
+    editPostDetails
   );
 }
 
