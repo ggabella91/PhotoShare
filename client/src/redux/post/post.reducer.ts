@@ -220,6 +220,12 @@ const postReducer = (
         postReactionConfirm: null,
         commentToDelete: null,
       };
+    case PostActions.EDIT_POST_DETAILS_SUCCESS:
+      return {
+        ...state,
+        editPostDetailsConfirm: `Post with id ${action.payload.id} edited successfully!`,
+        editPostDetailsFailure: null,
+      };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
         ...state,
@@ -270,6 +276,12 @@ const postReducer = (
         deleteReactionConfirm: null,
         deleteReactionError: action.payload,
         commentToDelete: null,
+      };
+    case PostActions.EDIT_POST_DETAILS_FAILURE:
+      return {
+        ...state,
+        editPostDetailsConfirm: null,
+        editPostDetailsFailure: action.payload,
       };
     case PostActions.CLEAR_POST_STATUSES:
       return {

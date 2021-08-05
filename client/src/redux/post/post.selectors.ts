@@ -195,6 +195,16 @@ export const selectShowPostEditForm = createSelector(
   (postState: PostState) => postState.showPostEditForm
 );
 
+export const selectEditPostDetailsConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.editPostDetailsConfirm
+);
+
+export const selectEditPostDetailsFailure = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.editPostDetailsFailure
+);
+
 // Selectors for feed-post-container components
 
 export const selectGetFeedPostDataConfirm = createSelector(
