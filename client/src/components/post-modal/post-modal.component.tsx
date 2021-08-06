@@ -498,6 +498,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     } else if (isCurrentUserPost && showPostEditForm) {
       return (
         <EditPostForm
+          postId={postId}
           editCaption={editPostDetails.editCaption}
           editLocation={editPostDetails.editLocation}
         />
