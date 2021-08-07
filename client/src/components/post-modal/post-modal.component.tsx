@@ -22,6 +22,7 @@ import {
   ReactionConfirm,
   DeleteReactionReq,
   DeleteReactionConfirm,
+  Post,
   PostError,
   PostFileReq,
   FileRequestType,
@@ -41,6 +42,7 @@ import {
   selectDeleteReactionConfirm,
   selectDeleteReactionError,
   selectShowPostEditForm,
+  selectEditPostDetailsConfirm,
 } from '../../redux/post/post.selectors';
 import {
   createPostReactionStart,
@@ -91,6 +93,7 @@ interface PostModalProps {
   deleteReactionConfirm: DeleteReactionConfirm | null;
   deleteReactionError: PostError | null;
   showPostEditForm: boolean;
+  editPostDetailsConfirm: Post | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getPostFileStart: typeof getPostFileStart;
@@ -122,6 +125,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   postReactionConfirm,
   deleteReactionConfirm,
   showPostEditForm,
+  editPostDetailsConfirm,
   clearPostReactions,
   createPostReactionStart,
   getPostReactionsStart,
@@ -216,7 +220,28 @@ export const PostModal: React.FC<PostModalProps> = ({
     setEditPostDetails({ editCaption: caption, editLocation: location });
   }, [caption, location]);
 
-  // TODO: create post route handler in posts service to fetch data for a single post when redux state property confirming successful edit of a post changes, in order to update just that post and not fetch data for all of a user's posts; add logic to handle requesting and updating that data on the client
+  useEffect(() => {
+    if (editPostDetailsConfirm) {
+      let newCaption = editPostDetailsConfirm.caption || '';
+      let newLocation = editPostDetailsConfirm.postLocation || '';
+
+      setCaptionInfoArray([
+        {
+          username: userName,
+          name: '',
+          profilePhotoFileString: userProfilePhotoFile,
+          comment: newCaption,
+          location: newLocation,
+          commentDate: createdAt,
+        },
+      ]);
+
+      setEditPostDetails({
+        editCaption: newCaption,
+        editLocation: newLocation,
+      });
+    }
+  }, [editPostDetailsConfirm]);
 
   useEffect(() => {
     if (postId) {
@@ -487,7 +512,6 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const handleRenderEditPostDetails = () => {
     if (isCurrentUserPost && !showPostEditForm) {
-      // TODO: set show edit post form to true
       return (
         <span className='edit-post' onClick={() => setShowPostEditForm(true)}>
           Edit post details
@@ -604,6 +628,7 @@ interface LinkStateProps {
   deleteReactionConfirm: DeleteReactionConfirm | null;
   deleteReactionError: PostError | null;
   showPostEditForm: boolean;
+  editPostDetailsConfirm: Post | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -619,6 +644,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   deleteReactionConfirm: selectDeleteReactionConfirm,
   deleteReactionError: selectDeleteReactionError,
   showPostEditForm: selectShowPostEditForm,
+  editPostDetailsConfirm: selectEditPostDetailsConfirm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
