@@ -209,16 +209,14 @@ export const PostModal: React.FC<PostModalProps> = ({
           commentDate: createdAt,
         },
       ]);
-
-      setEditPostDetails({ ...editPostDetails, editCaption: caption });
     }
   }, [caption]);
 
   useEffect(() => {
-    if (location) {
-      setEditPostDetails({ ...editPostDetails, editLocation: location });
-    }
-  }, [location]);
+    setEditPostDetails({ editCaption: caption, editLocation: location });
+  }, [caption, location]);
+
+  // TODO: create post route handler in posts service to fetch data for a single post when redux state property confirming successful edit of a post changes, in order to update just that post and not fetch data for all of a user's posts; add logic to handle requesting and updating that data on the client
 
   useEffect(() => {
     if (postId) {
