@@ -212,7 +212,7 @@ export interface PostState {
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
   showPostEditForm: boolean;
-  editPostDetailsConfirm: string | null;
+  editPostDetailsConfirm: Post | null;
   editPostDetailsFailure: PostError | null;
 
   // New props to be used for feed-post-container

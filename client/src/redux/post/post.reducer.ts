@@ -223,7 +223,7 @@ const postReducer = (
     case PostActions.EDIT_POST_DETAILS_SUCCESS:
       return {
         ...state,
-        editPostDetailsConfirm: `Post with id ${action.payload.id} edited successfully!`,
+        editPostDetailsConfirm: action.payload,
         editPostDetailsFailure: null,
       };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
