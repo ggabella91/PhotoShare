@@ -8,14 +8,14 @@ import { Post } from '../models/post';
 
 const router = express.Router();
 
-router.post(
+router.get(
   '/api/posts/data',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {
-    const userId: string = req.body.userId;
-    const pageToShow = req.body.pageToShow || null;
-    const limit = req.body.limit || null;
+    const userId: string = (req.query.userId as string) || '';
+    const pageToShow = parseInt(req.query.pageToShow as string) || null;
+    const limit = parseInt(req.query.limit as string) || null;
 
     if (!userId) {
       throw new BadRequestError('No user ID was provided.');
