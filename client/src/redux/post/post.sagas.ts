@@ -102,11 +102,9 @@ export function* getPostData({
 }): any {
   try {
     const { data }: { data: { posts: Post[]; queryLength?: number } } =
-      yield axios.post('/api/posts/data', {
-        userId,
-        pageToShow,
-        limit,
-      });
+      yield axios.get(
+        `/api/posts/data?userId=${userId}&pageToShow=${pageToShow}&limit=${limit}`
+      );
 
     if (dataReqType === DataRequestType.single) {
       yield put(getPostDataSuccess(data.posts));
