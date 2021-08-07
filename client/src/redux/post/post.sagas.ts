@@ -259,10 +259,8 @@ export function* editPostDetails({
 }): any {
   try {
     const { data }: { data: Post } = yield axios.patch(`/api/posts/${postId}`, {
-      data: {
-        caption,
-        location,
-      },
+      caption,
+      location,
     });
 
     yield put(editPostDetailsSuccess(data));
@@ -344,5 +342,6 @@ export function* postSagas(): SagaIterator {
     call(onGetPostFileStart),
     call(onArchivePostStart),
     call(onDeleteReactionStart),
+    call(onEditPostDetailsStart),
   ]);
 }

@@ -41,7 +41,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
     if (editCaption || editLocation) {
       setEditPostDetails({ caption: editCaption, location: editLocation });
     }
-  });
+  }, []);
 
   const { caption, location } = editPostDetails;
 
@@ -58,8 +58,8 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
 
     editPostDetailsStart({
       postId,
-      caption: editCaption,
-      location: editLocation,
+      caption,
+      location,
     });
     setShowPostEditForm(false);
   };
@@ -84,12 +84,14 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
       />
       <div className='buttons-container'>
         <button
+          type='submit'
           className='edit-post-button'
           onClick={() => handleEditPostFormSubmit}
         >
           Done Editing
         </button>
         <button
+          type='button'
           className='cancel-edit-button'
           onClick={() => setShowPostEditForm(false)}
         >
