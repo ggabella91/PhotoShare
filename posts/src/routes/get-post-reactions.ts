@@ -8,12 +8,12 @@ import { Reaction } from '../models/reaction';
 
 const router = express.Router();
 
-router.post(
-  '/api/reactions',
+router.get(
+  '/api/reactions/:postId',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {
-    const postId: string = req.body.postId;
+    const { postId } = req.params;
 
     if (!postId) {
       throw new BadRequestError('No post ID was provided.');

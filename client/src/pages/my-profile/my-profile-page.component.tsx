@@ -5,10 +5,9 @@ import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
-import { User, OtherUserRequest } from '../../redux/user/user.types';
+import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import {
-  getOtherUserStart,
   clearFollowersAndFollowing,
   setIsCurrentUserProfilePage,
 } from '../../redux/user/user.actions';
@@ -48,10 +47,10 @@ import {
   archivePostStart,
   clearArchivePostStatuses,
   clearFollowPhotoFileArray,
-  clearPostFilesAndData,
   clearPostState,
   setShowCommentOptionsModal,
   deleteReactionStart,
+  setShowPostEditForm,
 } from '../../redux/post/post.actions';
 
 import {
@@ -106,13 +105,12 @@ interface MyProfilePageProps {
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
   getFollowersStart: typeof getFollowersStart;
   getUsersFollowingStart: typeof getUsersFollowingStart;
-  getOtherUserStart: typeof getOtherUserStart;
   clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
-  clearPostFilesAndData: typeof clearPostFilesAndData;
   clearFollowState: typeof clearFollowState;
   setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
   deleteReactionStart: typeof deleteReactionStart;
+  setShowPostEditForm: typeof setShowPostEditForm;
 }
 
 interface PostModalProps {
@@ -142,9 +140,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   getFollowersStart,
   getUsersFollowingStart,
   getUsersFollowingConfirm,
-  getOtherUserStart,
   clearFollowersAndFollowing,
-  clearPostFilesAndData,
   clearFollowState,
   setIsCurrentUserProfilePage,
   commentToDelete,
@@ -152,6 +148,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   setShowCommentOptionsModal,
   deleteReactionStart,
   postLikingUsersArray,
+  setShowPostEditForm,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
   const [profilePhotoString, setProfilePhotoString] = useState<string | null>(
@@ -358,6 +355,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     });
     setPostModalShow(false);
     setClearPostModalLocalState(true);
+    setShowPostEditForm(false);
   };
 
   useEffect(() => {
@@ -624,10 +622,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
   clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
-  getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
-    dispatch(getOtherUserStart(otherUserRequest)),
   clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
-  clearPostFilesAndData: () => dispatch(clearPostFilesAndData()),
   clearFollowState: () => dispatch(clearFollowState()),
   setIsCurrentUserProfilePage: (isCurrentUserProfilePage: boolean) =>
     dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
@@ -635,6 +630,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
     dispatch(deleteReactionStart(deleteReactionReq)),
+  setShowPostEditForm: (showPostEditForm: boolean) =>
+    dispatch(setShowPostEditForm(showPostEditForm)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);
