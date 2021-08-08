@@ -134,7 +134,7 @@ export function* getPostReactions({
   payload: GetPostReactionsReq;
 }): any {
   try {
-    const { data } = yield axios.post('/api/reactions', { postId });
+    const { data } = yield axios.get(`/api/reactions/${postId}`);
 
     if (reactionReqType === ReactionRequestType.singlePost) {
       yield put(getPostReactionsSuccess(data));
@@ -152,10 +152,9 @@ export function* getPostFile({
   payload: PostFileReq;
 }): any {
   try {
-    const { data } = yield axios.post('/api/posts/files', {
-      s3Key,
-      bucket,
-    });
+    const { data } = yield axios.get(
+      `/api/posts/files?s3Key=${s3Key}&bucket=${bucket}`
+    );
 
     if (bucket === 'photo-share-app' || bucket === 'photo-share-app-dev') {
       if (fileRequestType === FileRequestType.singlePost) {

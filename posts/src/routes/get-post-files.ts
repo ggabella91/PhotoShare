@@ -11,14 +11,15 @@ import { encode } from '../utils/encode';
 
 const router = express.Router();
 
-router.post(
+router.get(
   '/api/posts/files',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {
     const user = req.currentUser;
 
-    const { bucket, s3Key } = req.body;
+    const bucket: string = (req.query.bucket as string) || '';
+    const s3Key = (req.query.s3Key as string) || '';
 
     if (!user) {
       throw new BadRequestError(

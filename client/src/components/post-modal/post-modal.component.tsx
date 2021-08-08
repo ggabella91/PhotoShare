@@ -225,16 +225,20 @@ export const PostModal: React.FC<PostModalProps> = ({
       let newCaption = editPostDetailsConfirm.caption || '';
       let newLocation = editPostDetailsConfirm.postLocation || '';
 
-      setCaptionInfoArray([
-        {
-          username: userName,
-          name: '',
-          profilePhotoFileString: userProfilePhotoFile,
-          comment: newCaption,
-          location: newLocation,
-          commentDate: createdAt,
-        },
-      ]);
+      if (newCaption) {
+        setCaptionInfoArray([
+          {
+            username: userName,
+            name: '',
+            profilePhotoFileString: userProfilePhotoFile,
+            comment: newCaption,
+            location: newLocation,
+            commentDate: createdAt,
+          },
+        ]);
+      } else {
+        setCaptionInfoArray([]);
+      }
 
       setEditPostDetails({
         editCaption: newCaption,
@@ -554,7 +558,9 @@ export const PostModal: React.FC<PostModalProps> = ({
             <div className='text-and-options'>
               <div className='user-and-location'>
                 <span className='user-name'>{userName}</span>
-                <span className='post-location'>{location}</span>
+                <span className='post-location'>
+                  {editPostDetails.editLocation}
+                </span>
               </div>
               <div className='post-options'>
                 <span className='ellipsis' onClick={onOptionsClick}>
