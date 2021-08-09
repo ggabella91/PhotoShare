@@ -59,10 +59,7 @@ import UserInfo, {
   UserInfoAndOtherData,
 } from '../user-info/user-info.component';
 
-import {
-  compareUserOrPostOrReactionArrays,
-  comparePostFileArrays,
-} from '../../pages/feed-page/feed-page.utils';
+import { comparePostFileArrays } from '../../pages/feed-page/feed-page.utils';
 
 import Button from '../button/button.component';
 import { ExpandableFormInput } from '../form-input/form-input.component';
@@ -168,21 +165,17 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     null
   );
 
-  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
-    User[] | null
-  >(null);
+  const [reactingUserInfoList, setReactingUsersInfoList] =
+    useState<List<User> | null>(null);
 
-  const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
-    PostFile[] | null
-  >(null);
+  const [userProfilePhotoList, setUserProfilePhotoList] =
+    useState<List<PostFile> | null>(null);
 
-  const [commentingUserArray, setCommentingUserArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [commentingUserList, setCommentingUserList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
-  const [likingUsersArray, setLikingUsersArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [likingUsersList, setLikingUsersList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
@@ -233,9 +226,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             !reactionsList ||
             (reactionsList && !innerArrayAsList.equals(reactionsList))
           ) {
-            console.log('Setting reactions list');
-            console.log('reactionsList: ', reactionsList);
-            console.log('innerArrayAsList: ', innerArrayAsList);
             setReactionsList(innerArrayAsList);
           }
         }
@@ -279,7 +269,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         alreadyLikedPost: true,
         reactionId: postReactionConfirm.reactionId,
       });
-      setLikingUsersArray([]);
+      setLikingUsersList(List([]));
       clearPostReactions();
       getPostReactionsStart({
         postId,
@@ -299,7 +289,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         alreadyLikedPost: false,
         reactionId: '',
       });
-      setLikingUsersArray([]);
+      setLikingUsersList(List([]));
       clearPostReactions();
       getPostReactionsStart({
         postId,
@@ -348,28 +338,28 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [reactionsList]);
 
   useEffect(() => {
-    if (
-      feedPostReactingUsers &&
-      feedPostReactingUsers.length &&
-      !reactingUserInfoArray
-    ) {
-      setReactingUsersInfoArray(feedPostReactingUsers);
+    let feedPostReactingUsersList;
+
+    if (feedPostReactingUsers) {
+      feedPostReactingUsersList = List(feedPostReactingUsers);
+    } else {
+      feedPostReactingUsersList = List([]);
+    }
+
+    if (feedPostReactingUsersList.size && !reactingUserInfoList) {
+      setReactingUsersInfoList(feedPostReactingUsersList);
     } else if (
-      feedPostReactingUsers &&
-      feedPostReactingUsers.length &&
-      reactingUserInfoArray &&
-      !compareUserOrPostOrReactionArrays(
-        feedPostReactingUsers,
-        reactingUserInfoArray
-      )
+      feedPostReactingUsersList.size &&
+      reactingUserInfoList &&
+      !reactingUserInfoList.equals(feedPostReactingUsersList)
     ) {
-      setReactingUsersInfoArray(feedPostReactingUsers);
+      setReactingUsersInfoList(feedPostReactingUsersList);
     }
   }, [feedPostReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoArray && reactingUserInfoArray.length) {
-      reactingUserInfoArray.forEach((el) => {
+    if (reactingUserInfoList && reactingUserInfoList.size) {
+      reactingUserInfoList.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -380,17 +370,24 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
     }
-  }, [reactingUserInfoArray]);
+  }, [reactingUserInfoList]);
 
   useEffect(() => {
-    if (reactorPhotoFileArray && !userProfilePhotoArray) {
-      setUserProfilePhotoArray(reactorPhotoFileArray);
+    let reactorPhotoFileList;
+
+    if (reactorPhotoFileArray) {
+      reactorPhotoFileList = List(reactorPhotoFileArray);
+    } else {
+      reactorPhotoFileList = List([]);
+    }
+
+    if (!userProfilePhotoList) {
+      setUserProfilePhotoList(reactorPhotoFileList);
     } else if (
-      reactorPhotoFileArray &&
-      userProfilePhotoArray &&
-      !comparePostFileArrays(reactorPhotoFileArray, userProfilePhotoArray)
+      userProfilePhotoList &&
+      !userProfilePhotoList.equals(reactorPhotoFileList)
     ) {
-      setUserProfilePhotoArray(reactorPhotoFileArray);
+      setUserProfilePhotoList(reactorPhotoFileList);
     }
   }, [reactorPhotoFileArray]);
 
@@ -398,10 +395,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       reactionsList &&
       reactionsList.size &&
-      reactingUserInfoArray &&
-      reactingUserInfoArray.length &&
-      ((userProfilePhotoArray && userProfilePhotoArray.length) ||
-        (!userProfilePhotoArray &&
+      reactingUserInfoList &&
+      reactingUserInfoList.size &&
+      ((userProfilePhotoList && userProfilePhotoList.size) ||
+        (!userProfilePhotoList &&
           usersProfilePhotoConfirm === 'User photo added to reactor array!'))
     ) {
       let commentsArray: UserInfoAndOtherData[] = [];
@@ -415,7 +412,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         let photoKey: string;
         let profilePhotoFileString: string;
 
-        reactingUserInfoArray.forEach((infoEl) => {
+        reactingUserInfoList.forEach((infoEl) => {
           if (infoEl.id === userId) {
             username = infoEl.username;
             name = infoEl.name;
@@ -423,8 +420,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           }
         });
 
-        if (userProfilePhotoArray) {
-          userProfilePhotoArray.forEach((photoEl) => {
+        if (userProfilePhotoList) {
+          userProfilePhotoList.forEach((photoEl) => {
             if (photoEl.s3Key === photoKey!) {
               profilePhotoFileString = photoEl.fileString;
             }
@@ -460,13 +457,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
 
-      setCommentingUserArray(commentsArray);
-      setLikingUsersArray(likesArray);
+      setCommentingUserList(List(commentsArray));
+      setLikingUsersList(List(likesArray));
     }
   }, [
     reactionsList,
-    reactingUserInfoArray,
-    userProfilePhotoArray,
+    reactingUserInfoList,
+    userProfilePhotoList,
     usersProfilePhotoConfirm,
   ]);
 
@@ -528,8 +525,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const handlePostLikingUsersClick = () => {
     setShowPostLikingUsersModal(true);
 
-    if (likingUsersArray) {
-      setPostLikingUsersArray(likingUsersArray);
+    if (likingUsersList) {
+      setPostLikingUsersArray(likingUsersList.toArray());
     }
   };
 
@@ -554,27 +551,27 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       </div>
       <div className='caption-and-reactions'>
         {handleRenderLikeOrLikedButton()}
-        {likingUsersArray && likingUsersArray.length ? (
+        {likingUsersList && likingUsersList.size ? (
           <Button
             className='likes-text'
             onClick={() => handlePostLikingUsersClick()}
           >
-            <span>{`${likingUsersArray.length} likes`}</span>
+            <span>{`${likingUsersList.size} likes`}</span>
           </Button>
         ) : null}
         <div className='caption-or-reaction'>
           <span className='username'>{userInfo.username}</span>
           {caption ? caption : ''}
         </div>
-        {commentingUserArray && commentingUserArray.length > 2 ? (
+        {commentingUserList && commentingUserList.size > 2 ? (
           <span
             className='view-all-comments'
             onClick={() => handleClickViewAllComments()}
-          >{`View all ${commentingUserArray.length} comments`}</span>
+          >{`View all ${commentingUserList.size} comments`}</span>
         ) : null}
-        {commentingUserArray
-          ? commentingUserArray.map((el, idx) => {
-              if (idx >= commentingUserArray.length - 2) {
+        {commentingUserList
+          ? commentingUserList.map((el, idx) => {
+              if (idx >= commentingUserList.size - 2) {
                 return (
                   <div className='caption-or-reaction'>
                     <span className='username'>{el.username}</span> {el.comment}
