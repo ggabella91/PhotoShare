@@ -32,6 +32,7 @@ export interface UserInfoAndOtherData {
   commentDate?: Date | string;
   reactionId?: string;
   reactingUserId?: string;
+  postId?: string;
 }
 
 interface UserInfoProps {
@@ -65,6 +66,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         reactionId: commentToDelete.reactionId,
         isLikeRemoval: false,
         reactingUserId: commentToDelete.reactingUserId,
+        postId: commentToDelete.postId || '',
       });
 
       setShowCommentOptionsModal(true);

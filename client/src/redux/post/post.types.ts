@@ -96,6 +96,7 @@ export interface ReactionConfirm {
   reactionId: string;
   message: string;
   likedPost: boolean;
+  postId: string;
 }
 
 export enum ReactionRequestType {
@@ -152,6 +153,7 @@ export interface ArchivePostReq {
 }
 
 export interface DeleteReactionReq {
+  postId: string;
   reactionId: string;
   isLikeRemoval: boolean;
   reactingUserId?: string;
@@ -160,6 +162,7 @@ export interface DeleteReactionReq {
 export interface DeleteReactionConfirm {
   reactionId: string;
   message: string;
+  postId: string;
 }
 
 export interface EditPostDetailsReq {
