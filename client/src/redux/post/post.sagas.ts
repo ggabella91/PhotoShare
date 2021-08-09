@@ -16,6 +16,7 @@ import {
   PostActions,
   UserType,
   EditPostDetailsReq,
+  Reaction,
 } from './post.types';
 
 import {
@@ -67,13 +68,17 @@ export function* createPostReaction({
   payload: ReactionReq;
 }): any {
   try {
-    const { data } = yield axios.post('/api/reactions/new', reactionReq);
+    const { data }: { data: Reaction } = yield axios.post(
+      '/api/reactions/new',
+      reactionReq
+    );
 
     yield put(
       createPostReactionSuccess({
         reactionId: data.id,
         likedPost: data.likedPost,
         message: '',
+        postId: data.postId,
       })
     );
   } catch (err) {
@@ -234,6 +239,7 @@ export function* deleteReaction({
         deleteReactionSuccess({
           reactionId: data.reactionId,
           message: 'Like removed successfully!',
+          postId: deleteReactionReq.postId,
         })
       );
     } else {
@@ -241,6 +247,7 @@ export function* deleteReaction({
         deleteReactionSuccess({
           reactionId: data.reactionId,
           message: 'Comment removed successfully!',
+          postId: deleteReactionReq.postId,
         })
       );
     }

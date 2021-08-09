@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { List, Map } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -440,6 +441,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             comment: '',
             location: '',
             reactionId: reactionEl.id,
+            postId: postId,
           });
         } else {
           commentsArray.push({
@@ -451,6 +453,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             commentDate: reactionEl.createdAt,
             reactionId: reactionEl.id,
             reactingUserId: reactionEl.reactingUserId,
+            postId: postId,
           });
         }
       }
@@ -511,6 +514,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     deleteReactionStart({
       reactionId: alreadyLikedPostAndReactionId.reactionId,
       isLikeRemoval: true,
+      postId: postId,
     });
   };
 

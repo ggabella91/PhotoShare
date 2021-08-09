@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { List, Map } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -163,7 +164,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [comment, setComment] = useState('');
 
-  const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
+  const [reactionsList, setReactionsList] = useState<List<Reaction> | null>(
+    null
+  );
 
   const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
     User[] | null
@@ -222,42 +225,54 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (feedPostReactionsArray && feedPostReactionsArray.length) {
-      for (let innerArray of feedPostReactionsArray) {
+      feedPostReactionsArray.forEach((innerArray) => {
+        let innerArrayAsList = List(innerArray);
+
         if (innerArray.length && innerArray[0].postId === postId) {
-          if (!reactionsArray) {
-            setReactionsArray(innerArray);
-          } else if (
-            reactionsArray &&
-            !compareUserOrPostOrReactionArrays(innerArray, reactionsArray)
+          if (
+            !reactionsList ||
+            (reactionsList && !innerArrayAsList.equals(reactionsList))
           ) {
-            setReactionsArray(innerArray);
+            console.log('Setting reactions list');
+            console.log('reactionsList: ', reactionsList);
+            console.log('innerArrayAsList: ', innerArrayAsList);
+            setReactionsList(innerArrayAsList);
           }
         }
-      }
+      });
     }
   }, [feedPostReactionsArray]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.length) {
-      for (let el of reactionsArray) {
+    if (reactionsList) {
+      reactionsList.forEach((val, key) =>
+        console.log(`val at key ${key}: `, val)
+      );
+    }
+  }, [reactionsList]);
+
+  useEffect(() => {
+    if (reactionsList && reactionsList.size) {
+      reactionsList.forEach((val) => {
         if (
           currentUser &&
-          el.reactingUserId === currentUser.id &&
-          el.likedPost
+          val.reactingUserId === currentUser.id &&
+          val.likedPost
         ) {
           setAlreadyLikedPostAndReactionId({
             alreadyLikedPost: true,
-            reactionId: el.id,
+            reactionId: val.id,
           });
         }
-      }
+      });
     }
-  }, [reactionsArray]);
+  }, [reactionsList]);
 
   useEffect(() => {
     if (
       postReactionConfirm &&
       postReactionConfirm.message === 'Post liked successfully!' &&
+      postReactionConfirm.postId === postId &&
       postModalProps.id
     ) {
       setAlreadyLikedPostAndReactionId({
@@ -277,6 +292,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       deleteReactionConfirm &&
       deleteReactionConfirm.message === 'Like removed successfully!' &&
+      deleteReactionConfirm.postId === postId &&
       postModalProps.id
     ) {
       setAlreadyLikedPostAndReactionId({
@@ -321,15 +337,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.length) {
-      for (let el of reactionsArray) {
+    if (reactionsList && reactionsList.size) {
+      reactionsList.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.FEED_POST_REACTOR,
           usernameOrId: el.reactingUserId,
         });
-      }
+      });
     }
-  }, [reactionsArray]);
+  }, [reactionsList]);
 
   useEffect(() => {
     if (
@@ -353,7 +369,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (reactingUserInfoArray && reactingUserInfoArray.length) {
-      for (let el of reactingUserInfoArray) {
+      reactingUserInfoArray.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -362,7 +378,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             fileRequestType: FileRequestType.feedPost,
           });
         }
-      }
+      });
     }
   }, [reactingUserInfoArray]);
 
@@ -380,8 +396,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (
-      reactionsArray &&
-      reactionsArray.length &&
+      reactionsList &&
+      reactionsList.size &&
       reactingUserInfoArray &&
       reactingUserInfoArray.length &&
       ((userProfilePhotoArray && userProfilePhotoArray.length) ||
@@ -391,7 +407,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
 
-      for (let reactionEl of reactionsArray) {
+      reactionsList.forEach((reactionEl) => {
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
@@ -399,20 +415,20 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         let photoKey: string;
         let profilePhotoFileString: string;
 
-        for (let infoEl of reactingUserInfoArray) {
+        reactingUserInfoArray.forEach((infoEl) => {
           if (infoEl.id === userId) {
             username = infoEl.username;
             name = infoEl.name;
             photoKey = infoEl.photo || '';
           }
-        }
+        });
 
         if (userProfilePhotoArray) {
-          for (let photoEl of userProfilePhotoArray) {
+          userProfilePhotoArray.forEach((photoEl) => {
             if (photoEl.s3Key === photoKey!) {
               profilePhotoFileString = photoEl.fileString;
             }
-          }
+          });
         }
 
         if (!photoKey!) {
@@ -442,13 +458,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             reactingUserId: reactionEl.reactingUserId,
           });
         }
-      }
+      });
 
       setCommentingUserArray(commentsArray);
       setLikingUsersArray(likesArray);
     }
   }, [
-    reactionsArray,
+    reactionsList,
     reactingUserInfoArray,
     userProfilePhotoArray,
     usersProfilePhotoConfirm,
@@ -505,6 +521,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       reactingUserId: currentUser!.id,
       reactionId: alreadyLikedPostAndReactionId.reactionId,
       isLikeRemoval: true,
+      postId: postId,
     });
   };
 
