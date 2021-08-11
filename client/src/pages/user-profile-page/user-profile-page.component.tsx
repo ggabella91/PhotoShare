@@ -463,15 +463,12 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   };
 
   useEffect(() => {
-    handleSetIsCurrentUserPostOrComment();
+    handleSetIsCurrentUserComment();
   }, [showCommentOptionsModal]);
 
-  const handleSetIsCurrentUserPostOrComment = () => {
+  const handleSetIsCurrentUserComment = () => {
     if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
-      if (
-        commentToDelete.reactingUserId === currentUser.id ||
-        user.id === currentUser.bio
-      ) {
+      if (commentToDelete.reactingUserId === currentUser.id) {
         setCurrentUserPostOrComment(true);
       } else {
         setCurrentUserPostOrComment(false);
@@ -575,9 +572,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         fileString={postModalProps.fileString}
         caption={postModalProps.caption}
         location={postModalProps.location}
-        createdAt={
-          postModalProps.createdAt || new Date('2021-01-09T22:39:39.945Z')
-        }
+        createdAt={postModalProps.createdAt || ''}
         onHide={() => handleHidePostModal()}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
