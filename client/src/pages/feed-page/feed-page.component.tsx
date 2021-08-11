@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { List, Map } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -217,9 +218,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     null
   );
 
-  const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] = useState<
-    UserInfoAndPostFile[] | null
-  >(null);
+  const [userInfoAndPostFileList, setUserInfoAndPostFileList] =
+    useState<List<UserInfoAndPostFile> | null>(null);
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
@@ -290,7 +290,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (usersFollowingArray) {
-      for (let user of usersFollowingArray) {
+      usersFollowingArray.forEach((user) => {
         if (currentUser) {
           getOtherUserStart({
             usernameOrId: user.userId,
@@ -304,17 +304,17 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             limit: 2,
           });
         }
-      }
+      });
     }
   }, [usersFollowingArray]);
 
   useEffect(() => {
     if (postMetaDataForUser && dataFeedMapArray) {
-      for (let el of dataFeedMapArray) {
+      dataFeedMapArray.forEach((el) => {
         if (postMetaDataForUser.userId === el.userId) {
           el.queryLength = postMetaDataForUser.queryLength;
         }
-      }
+      });
 
       setDataFeedMapArray(dataFeedMapArray);
     }
@@ -322,7 +322,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (pageToFetch > 1 && dataFeedMapArray) {
-      for (let el of dataFeedMapArray) {
+      dataFeedMapArray.forEach((el) => {
         if (
           el.queryLength &&
           currentUser &&
@@ -335,28 +335,28 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             limit: 2,
           });
         }
-      }
+      });
     }
   }, [pageToFetch, dataFeedMapArray]);
 
   useEffect(() => {
     if (postDataFeedArray.length) {
       if (dataFeedMapArray) {
-        for (let el of postDataFeedArray) {
-          for (let mapEl of dataFeedMapArray) {
+        postDataFeedArray.forEach((el) => {
+          dataFeedMapArray.forEach((mapEl) => {
             if (el[0].userId === mapEl.userId) {
               mapEl.postData = el;
             }
-          }
-        }
+          });
+        });
 
         setDataFeedMapArray(dataFeedMapArray);
       } else {
         let dataMapArray: PostDataArrayMap[] = [];
 
-        for (let el of postDataFeedArray) {
+        postDataFeedArray.forEach((el) => {
           dataMapArray.push({ postData: el, userId: el[0].userId });
-        }
+        });
 
         setDataFeedMapArray(dataMapArray);
       }
@@ -377,7 +377,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (currentUser && followingInfoArray) {
-      for (let el of followingInfoArray) {
+      followingInfoArray.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -386,22 +386,22 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             fileRequestType: FileRequestType.feedPost,
           });
         }
-      }
+      });
     }
   }, [followingInfoArray]);
 
   useEffect(() => {
     if (currentUser && dataFeedMapArray) {
-      for (let innerObj of dataFeedMapArray) {
-        for (let el of innerObj.postData) {
+      dataFeedMapArray.forEach((innerObj) => {
+        innerObj.postData.forEach((el) => {
           getPostFileStart({
             s3Key: el.s3Key,
             bucket: postsBucket,
             user: UserType.other,
             fileRequestType: FileRequestType.feedPost,
           });
-        }
-      }
+        });
+      });
     }
   }, [dataFeedMapArray, getFeedPostDataConfirm]);
 
@@ -438,9 +438,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     ) {
       let postDataArray: Post[][] = [];
 
-      for (let el of dataFeedMapArray) {
+      dataFeedMapArray.forEach((el) => {
         postDataArray.push(el.postData);
-      }
+      });
 
       const userInfoAndPostObjArray = prepareUserInfoAndFileArray(
         followingInfoArray,
@@ -453,18 +453,16 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         (a, b) => b.dateInt - a.dateInt
       );
 
-      if (userInfoAndPostFileArray) {
-        const comparisonResult = compareUserInfoAndDataObjArrays(
-          sortedUserInfoAndPostArray,
-          userInfoAndPostFileArray
-        );
+      const sortedUserInfoAndPostList = List(sortedUserInfoAndPostArray);
 
-        if (comparisonResult) {
-          return;
-        }
+      if (
+        userInfoAndPostFileList &&
+        userInfoAndPostFileList.equals(sortedUserInfoAndPostList)
+      ) {
+        return;
       }
 
-      setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
+      setUserInfoAndPostFileList(sortedUserInfoAndPostList);
     }
   }, [
     followingInfoArray,
@@ -559,15 +557,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   };
 
   useEffect(() => {
-    handleSetIsCurrentUserPostOrComment();
+    handleSetIsCurrentUserComment();
   }, [showCommentOptionsModal]);
 
-  const handleSetIsCurrentUserPostOrComment = () => {
+  const handleSetIsCurrentUserComment = () => {
     if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
-      if (
-        commentToDelete.reactingUserId === currentUser.id ||
-        user.id === currentUser.id
-      ) {
+      if (commentToDelete.reactingUserId === currentUser.id) {
         setCurrentUserPostOrComment(true);
       } else {
         setCurrentUserPostOrComment(false);
@@ -575,11 +570,18 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   };
 
+  const handleArchiveComment = () => {
+    if (commentToDelete) {
+      deleteReactionStart(commentToDelete);
+    }
+    setShowCommentOptionsModal(false);
+  };
+
   return (
     <div className='feed-page'>
-      {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
-        userInfoAndPostFileArray.map((el, idx) => {
-          if (idx === userInfoAndPostFileArray.length - 1) {
+      {userInfoAndPostFileList && userInfoAndPostFileList.size ? (
+        userInfoAndPostFileList.map((el, idx) => {
+          if (idx === userInfoAndPostFileList.size - 1) {
             return (
               <FeedPostContainer
                 userInfo={{
@@ -664,12 +666,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       <PostOrCommentOptionsModal
         show={showCommentOptionsModal}
         onHide={() => setShowCommentOptionsModal(false)}
-        archive={() => {
-          if (commentToDelete) {
-            deleteReactionStart(commentToDelete);
-          }
-          setShowCommentOptionsModal(false);
-        }}
+        archive={handleArchiveComment}
         isCurrentUserPostOrComment={currentUserPostOrComment}
       />
     </div>

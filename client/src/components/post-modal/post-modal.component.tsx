@@ -137,6 +137,8 @@ export const PostModal: React.FC<PostModalProps> = ({
   setShowPostEditForm,
   ...props
 }) => {
+  const [localPostId, setLocalPostId] = useState(postId);
+
   const [comment, setComment] = useState('');
 
   const [captionInfoArray, setCaptionInfoArray] = useState<
@@ -180,6 +182,12 @@ export const PostModal: React.FC<PostModalProps> = ({
   }
 
   useEffect(() => {
+    if (postId !== localPostId) {
+      setLocalPostId(postId);
+    }
+  }, [postId]);
+
+  useEffect(() => {
     if (
       clearLocalState &&
       (reactionsArray ||
@@ -200,7 +208,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         editLocation: '',
       });
     }
-  }, [postId]);
+  }, [localPostId]);
 
   useEffect(() => {
     if (caption) {
@@ -249,27 +257,27 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [editPostDetailsConfirm]);
 
   useEffect(() => {
-    if (postId) {
+    if (localPostId) {
       getPostReactionsStart({
-        postId,
+        postId: localPostId,
         reactionReqType: ReactionRequestType.singlePost,
       });
     }
-  }, [postId]);
+  }, [localPostId]);
 
   useEffect(() => {
     if (postReactionsArray && postReactionsArray.length) {
-      for (let innerArray of postReactionsArray) {
-        if (innerArray.length && innerArray[0].postId === postId) {
+      postReactionsArray.forEach((innerArray) => {
+        if (innerArray.length && innerArray[0].postId === localPostId) {
           setReactionsArray(innerArray);
         }
-      }
+      });
     }
   }, [postReactionsArray]);
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
-      for (let el of reactionsArray) {
+      reactionsArray.forEach((el) => {
         if (
           currentUser &&
           el.reactingUserId === currentUser.id &&
@@ -280,7 +288,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             reactionId: el.id,
           });
         }
-      }
+      });
     }
   }, [reactionsArray]);
 
@@ -288,7 +296,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       postReactionConfirm &&
       postReactionConfirm.message === 'Post liked successfully!' &&
-      postId
+      localPostId
     ) {
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: true,
@@ -297,7 +305,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       setLikingUsersArray([]);
       clearPostReactions();
       getPostReactionsStart({
-        postId,
+        postId: localPostId,
         reactionReqType: ReactionRequestType.singlePost,
       });
     }
@@ -307,7 +315,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       deleteReactionConfirm &&
       deleteReactionConfirm.message === 'Like removed successfully!' &&
-      postId
+      localPostId
     ) {
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
@@ -316,7 +324,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       setLikingUsersArray([]);
       clearPostReactions();
       getPostReactionsStart({
-        postId,
+        postId: localPostId,
         reactionReqType: ReactionRequestType.singlePost,
       });
     }
@@ -326,11 +334,11 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       postReactionConfirm &&
       postReactionConfirm.message === 'Post comment created successfully!' &&
-      postId
+      localPostId
     ) {
       clearPostReactions();
       getPostReactionsStart({
-        postId,
+        postId: localPostId,
         reactionReqType: ReactionRequestType.singlePost,
       });
     }
@@ -340,11 +348,11 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       deleteReactionConfirm &&
       deleteReactionConfirm.message === 'Comment removed successfully!' &&
-      postId
+      localPostId
     ) {
       clearPostReactions();
       getPostReactionsStart({
-        postId,
+        postId: localPostId,
         reactionReqType: ReactionRequestType.singlePost,
       });
     }
@@ -352,12 +360,12 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactionsArray && reactionsArray.length) {
-      for (let el of reactionsArray) {
+      reactionsArray.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.POST_REACTOR,
           usernameOrId: el.reactingUserId,
         });
-      }
+      });
     }
   }, [reactionsArray]);
 
@@ -369,7 +377,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (reactingUserInfoArray && reactingUserInfoArray.length) {
-      for (let el of reactingUserInfoArray) {
+      reactingUserInfoArray.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -378,7 +386,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             fileRequestType: FileRequestType.singlePost,
           });
         }
-      }
+      });
     }
   }, [reactingUserInfoArray]);
 
@@ -401,7 +409,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
 
-      for (let reactionEl of reactionsArray) {
+      reactionsArray.forEach((reactionEl) => {
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
@@ -409,20 +417,20 @@ export const PostModal: React.FC<PostModalProps> = ({
         let photoKey: string;
         let fileString: string;
 
-        for (let infoEl of reactingUserInfoArray) {
+        reactingUserInfoArray.forEach((infoEl) => {
           if (infoEl.id === userId) {
             username = infoEl.username;
             name = infoEl.name;
             photoKey = infoEl.photo || '';
           }
-        }
+        });
 
         if (userProfilePhotoArray) {
-          for (let photoEl of userProfilePhotoArray) {
+          userProfilePhotoArray.forEach((photoEl) => {
             if (photoEl.s3Key === photoKey!) {
               fileString = photoEl.fileString;
             }
-          }
+          });
         }
 
         if (!photoKey!) {
@@ -441,7 +449,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             comment: '',
             location: '',
             reactionId: reactionEl.id,
-            postId: postId,
+            postId: localPostId,
           });
         } else {
           commentsArray.push({
@@ -453,10 +461,10 @@ export const PostModal: React.FC<PostModalProps> = ({
             commentDate: reactionEl.createdAt,
             reactionId: reactionEl.id,
             reactingUserId: reactionEl.reactingUserId,
-            postId: postId,
+            postId: localPostId,
           });
         }
-      }
+      });
 
       setCommentingUserArray(commentsArray);
       setLikingUsersArray(likesArray);
@@ -476,7 +484,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (comment) {
       createPostReactionStart({
         reactingUserId: userId,
-        postId: postId,
+        postId: localPostId,
         likedPost: false,
         comment,
       });
@@ -504,7 +512,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const handleSubmitLike = () => {
     createPostReactionStart({
       reactingUserId: userId,
-      postId: postId,
+      postId: localPostId,
       likedPost: true,
       comment: '',
     });
@@ -514,7 +522,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     deleteReactionStart({
       reactionId: alreadyLikedPostAndReactionId.reactionId,
       isLikeRemoval: true,
-      postId: postId,
+      postId: localPostId,
     });
   };
 
@@ -528,7 +536,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     } else if (isCurrentUserPost && showPostEditForm) {
       return (
         <EditPostForm
-          postId={postId}
+          postId={localPostId}
           editCaption={editPostDetails.editCaption}
           editLocation={editPostDetails.editLocation}
         />

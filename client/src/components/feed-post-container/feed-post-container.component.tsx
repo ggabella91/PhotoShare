@@ -159,6 +159,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 }) => {
   const [postId, setPostId] = useState('');
 
+  const [didFetchReactions, setDidFetchReactions] = useState(false);
+
   const [comment, setComment] = useState('');
 
   const [reactionsList, setReactionsList] = useState<List<Reaction> | null>(
@@ -207,12 +209,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [userInfo]);
 
   useEffect(() => {
-    if (postId) {
+    if (postId && !didFetchReactions) {
       console.log("Post ID changed so we're fetching reactions again...");
       getPostReactionsStart({
-        postId: postId,
+        postId,
         reactionReqType: ReactionRequestType.feedPost,
       });
+
+      setDidFetchReactions(true);
     }
   }, [postId]);
 
@@ -234,24 +238,16 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [feedPostReactionsArray]);
 
   useEffect(() => {
-    if (reactionsList) {
-      reactionsList.forEach((val, key) =>
-        console.log(`val at key ${key}: `, val)
-      );
-    }
-  }, [reactionsList]);
-
-  useEffect(() => {
     if (reactionsList && reactionsList.size) {
-      reactionsList.forEach((val) => {
+      reactionsList.forEach((el) => {
         if (
           currentUser &&
-          val.reactingUserId === currentUser.id &&
-          val.likedPost
+          el.reactingUserId === currentUser.id &&
+          el.likedPost
         ) {
           setAlreadyLikedPostAndReactionId({
             alreadyLikedPost: true,
-            reactionId: val.id,
+            reactionId: el.id,
           });
         }
       });
@@ -479,7 +475,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (comment && currentUser) {
       createPostReactionStart({
         reactingUserId: currentUser.id,
-        postId: postId,
+        postId,
         likedPost: false,
         comment,
       });
@@ -507,7 +503,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const handleSubmitLike = () => {
     createPostReactionStart({
       reactingUserId: userInfo.userId,
-      postId: postId,
+      postId,
       likedPost: true,
       comment: '',
     });
@@ -518,7 +514,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       reactingUserId: currentUser!.id,
       reactionId: alreadyLikedPostAndReactionId.reactionId,
       isLikeRemoval: true,
-      postId: postId,
+      postId,
     });
   };
 
@@ -559,10 +555,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             <span>{`${likingUsersList.size} likes`}</span>
           </Button>
         ) : null}
-        <div className='caption-or-reaction'>
-          <span className='username'>{userInfo.username}</span>
-          {caption ? caption : ''}
-        </div>
+        {caption ? (
+          <div className='caption-or-reaction'>
+            <span className='username'>{userInfo.username}</span>
+            {caption}
+          </div>
+        ) : null}
         {commentingUserList && commentingUserList.size > 2 ? (
           <span
             className='view-all-comments'
