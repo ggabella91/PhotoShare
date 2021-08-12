@@ -100,6 +100,17 @@ import {
 } from './feed-page.utils';
 import './feed-page.styles.scss';
 
+interface ImmutableMap<T> extends Map<string, any> {
+  get<K extends keyof T>(name: K): T[K];
+}
+
+export type UserLite = ImmutableMap<{
+  id: string;
+  name: string;
+  username: string;
+  bio: string;
+}>;
+
 export interface PostDataArrayMap {
   postData: Post[];
   queryLength?: number;
@@ -191,12 +202,14 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   setShowCommentOptionsModal,
   deleteReactionStart,
 }) => {
-  const [user, setUser] = useState({
-    id: '',
-    name: '',
-    username: '',
-    bio: '',
-  });
+  const [user, setUser] = useState<UserLite>(
+    Map({
+      id: '',
+      name: '',
+      username: '',
+      bio: '',
+    })
+  );
 
   const [usersFollowingArray, setUsersFollowingArray] = useState<
     Follower[] | null
@@ -256,19 +269,28 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }
 
   useEffect(() => {
-    if (currentUser && !user.name) {
+    let currentUserMap;
+    if (currentUser) {
+      currentUserMap = Map(currentUser);
+    } else {
+      return;
+    }
+
+    if (!user.equals(currentUserMap)) {
       clearPostState();
       clearFollowState();
       clearFollowersAndFollowing();
 
-      setUser({
-        id: currentUser.id,
-        name: currentUser.name,
-        username: currentUser.username,
-        bio: currentUser.bio || '',
-      });
+      setUser(
+        Map({
+          id: currentUserMap.get('id'),
+          name: currentUserMap.get('name'),
+          username: currentUserMap.get('username'),
+          bio: currentUserMap.get('bio') || '',
+        })
+      );
       getUsersFollowingStart({
-        userId: currentUser.id,
+        userId: currentUserMap.get('id')!,
         whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
       });
     }
@@ -548,7 +570,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const handleSetIsCurrentUserPost = () => {
     if (currentUser && postModalProps.postUserId) {
-      if (postModalProps.postUserId === user.id) {
+      if (postModalProps.postUserId === user.get('id')) {
         setCurrentUserPost(true);
       } else {
         setCurrentUserPost(false);
