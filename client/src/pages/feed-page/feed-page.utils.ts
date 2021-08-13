@@ -1,12 +1,13 @@
 import { Follower } from '../../redux/follower/follower.types';
 import { User } from '../../redux/user/user.types';
 import { Post, PostFile, Reaction } from '../../redux/post/post.types';
+import { List, Map } from 'immutable';
 
 import { UserInfoAndPostFile } from './feed-page.component';
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 export const prepareUserInfoAndFileArray = (
-  followingInfoArray: User[],
+  followingInfoArray: List<User>,
   dataFeedArray: Post[][],
   followingProfilePhotoArray: PostFile[],
   postFileFeedArray: PostFile[]
@@ -24,8 +25,8 @@ export const prepareUserInfoAndFileArray = (
       let profilePhotoString: string;
       let caption: string;
 
-      for (let innerArr of dataFeedArray) {
-        for (let innerEl of innerArr) {
+      dataFeedArray.forEach((innerArr) => {
+        innerArr.forEach((innerEl) => {
           if (innerEl.s3Key === el.s3Key) {
             let date = innerEl.createdAt;
 
@@ -37,21 +38,21 @@ export const prepareUserInfoAndFileArray = (
             dateString = new Date(date).toDateString();
             dateInt = new Date(date).getTime();
           }
-        }
-      }
+        });
+      });
 
-      for (let userEl of followingInfoArray) {
+      followingInfoArray.forEach((userEl) => {
         if (userEl.id === id!) {
           username = userEl.username;
           profilePhotoS3Key = userEl.photo || '';
         }
-      }
+      });
 
-      for (let userEl of followingProfilePhotoArray) {
+      followingProfilePhotoArray.forEach((userEl) => {
         if (profilePhotoS3Key! && userEl.s3Key === profilePhotoS3Key) {
           profilePhotoString = userEl.fileString;
         }
-      }
+      });
 
       if (!profilePhotoString!) {
         profilePhotoString = '';

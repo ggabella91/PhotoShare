@@ -93,8 +93,6 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 
 import {
   prepareUserInfoAndFileArray,
-  compareFollowerArrays,
-  compareUserOrPostOrReactionArrays,
   comparePostFileArrays,
   compareUserInfoAndDataObjArrays,
 } from './feed-page.utils';
@@ -211,17 +209,14 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     })
   );
 
-  const [usersFollowingArray, setUsersFollowingArray] = useState<
-    Follower[] | null
-  >(null);
+  const [usersFollowingArray, setUsersFollowingArray] =
+    useState<List<Follower> | null>(null);
 
-  const [followingInfoArray, setFollowingInfoArray] = useState<User[] | null>(
-    null
-  );
+  const [followingInfoArray, setFollowingInfoArray] =
+    useState<List<User> | null>(null);
 
-  const [dataFeedMapArray, setDataFeedMapArray] = useState<
-    PostDataArrayMap[] | null
-  >(null);
+  const [dataFeedMapArray, setDataFeedMapArray] =
+    useState<List<PostDataArrayMap> | null>(null);
 
   const [followingProfilePhotoArray, setFollowingProfilePhotoArray] = useState<
     PostFile[] | null
@@ -297,16 +292,22 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [currentUser]);
 
   useEffect(() => {
-    if (currentUserUsersFollowing && !usersFollowingArray) {
-      setUsersFollowingArray(currentUserUsersFollowing);
-    } else if (
-      currentUserUsersFollowing &&
-      usersFollowingArray &&
-      !compareFollowerArrays(currentUserUsersFollowing, usersFollowingArray)
-    ) {
-      setUsersFollowingArray(currentUserUsersFollowing);
-    } else if (!currentUserUsersFollowing) {
+    let currentUserUsersFollowingList;
+
+    if (currentUserUsersFollowing) {
+      currentUserUsersFollowingList = List(currentUserUsersFollowing);
+    } else {
       setUsersFollowingArray(null);
+      return;
+    }
+
+    if (!usersFollowingArray) {
+      setUsersFollowingArray(currentUserUsersFollowingList);
+    } else if (
+      usersFollowingArray &&
+      !usersFollowingArray.equals(currentUserUsersFollowingList)
+    ) {
+      setUsersFollowingArray(currentUserUsersFollowingList);
     }
   }, [currentUserUsersFollowing]);
 
@@ -380,20 +381,29 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           dataMapArray.push({ postData: el, userId: el[0].userId });
         });
 
-        setDataFeedMapArray(dataMapArray);
+        const dataMapList = List(dataMapArray);
+
+        setDataFeedMapArray(dataMapList);
       }
     }
   }, [postDataFeedArray]);
 
   useEffect(() => {
-    if (followingInfo && !followingInfoArray) {
-      setFollowingInfoArray(followingInfo);
+    let followInfoList: List<User>;
+
+    if (followingInfo) {
+      followInfoList = List(followingInfo);
+    } else {
+      return;
+    }
+
+    if (!followingInfoArray) {
+      setFollowingInfoArray(followInfoList);
     } else if (
-      followingInfo &&
       followingInfoArray &&
-      !compareUserOrPostOrReactionArrays(followingInfo, followingInfoArray)
+      !followingInfoArray.equals(followInfoList)
     ) {
-      setFollowingInfoArray(followingInfo);
+      setFollowingInfoArray(followInfoList);
     }
   }, [followingInfo]);
 
