@@ -7,12 +7,12 @@ import { UserInfoAndPostFile } from './feed-page.component';
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 export const prepareUserInfoAndFileArray = (
-  followingInfoArray: List<User>,
-  dataFeedArray: Post[][],
-  followingProfilePhotoArray: PostFile[],
-  postFileFeedArray: PostFile[]
+  followingInfoList: List<User>,
+  dataFeedList: List<List<Post>>,
+  followingProfilePhotoList: List<PostFile>,
+  postFileFeedList: List<PostFile>
 ) => {
-  let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
+  let userInfoAndPostObjArray: List<UserInfoAndPostFile> = postFileFeedList.map(
     (el) => {
       let location: string;
       let dateString: string;
@@ -25,8 +25,8 @@ export const prepareUserInfoAndFileArray = (
       let profilePhotoString: string;
       let caption: string;
 
-      dataFeedArray.forEach((innerArr) => {
-        innerArr.forEach((innerEl) => {
+      dataFeedList.forEach((innerList) => {
+        innerList.forEach((innerEl) => {
           if (innerEl.s3Key === el.s3Key) {
             let date = innerEl.createdAt;
 
@@ -41,14 +41,14 @@ export const prepareUserInfoAndFileArray = (
         });
       });
 
-      followingInfoArray.forEach((userEl) => {
+      followingInfoList.forEach((userEl) => {
         if (userEl.id === id!) {
           username = userEl.username;
           profilePhotoS3Key = userEl.photo || '';
         }
       });
 
-      followingProfilePhotoArray.forEach((userEl) => {
+      followingProfilePhotoList.forEach((userEl) => {
         if (profilePhotoS3Key! && userEl.s3Key === profilePhotoS3Key) {
           profilePhotoString = userEl.fileString;
         }
