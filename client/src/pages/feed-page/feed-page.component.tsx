@@ -228,9 +228,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
-  const [postLikersArray, setPostLikersArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [postLikersList, setPostLikersList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
   const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>(
     POST_MODAL_DATA_INITIAL_STATE
@@ -534,14 +533,16 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   );
 
   useEffect(() => {
-    if (
-      postLikingUsersArray &&
-      !(
-        postLikersArray &&
-        compareUserInfoAndDataObjArrays(postLikingUsersArray, postLikersArray)
-      )
-    ) {
-      setPostLikersArray(postLikingUsersArray);
+    let postLikingUsersList;
+
+    if (postLikingUsersArray) {
+      postLikingUsersList = List(postLikingUsersArray);
+    } else {
+      return;
+    }
+
+    if (!(postLikersList && postLikersList.equals(postLikingUsersList))) {
+      setPostLikersList(postLikingUsersList);
     }
   }, [postLikingUsersArray]);
 
@@ -665,14 +666,14 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           Follow users to see their recent posts here
         </div>
       )}
-      {postLikersArray ? (
+      {postLikersList ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showLikingUsersModal}
           onHide={() => setShowPostLikingUsersModal(false)}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
-          postLikingUsersArray={postLikersArray}
+          postLikingUsersList={postLikersList}
         />
       ) : null}
       <PostModal

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
+import { List } from 'immutable';
 
 import {
   User,
@@ -46,7 +47,7 @@ interface FollowersOrFollowingOrLikesModalProps {
   onHide: () => void;
   isFollowersModal: boolean;
   isPostLikingUsersModal?: boolean;
-  postLikingUsersArray?: UserInfoAndOtherData[];
+  postLikingUsersList?: List<UserInfoAndOtherData>;
   followers: User[] | null;
   following: User[] | null;
   followPhotoFileArray: PostFile[] | null;
@@ -70,7 +71,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     users,
     isFollowersModal,
     isPostLikingUsersModal,
-    postLikingUsersArray,
+    postLikingUsersList,
     onHide,
     followers,
     following,
@@ -81,9 +82,9 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     clearFollowPhotoFileArray,
     ...props
   }) => {
-    const [userInfoAndPhotoArray, setUserInfoAndPhotoArray] = useState<
-      UserInfoData[]
-    >([]);
+    const [userInfoAndPhotoArray, setUserInfoAndPhotoList] = useState<
+      List<UserInfoData>
+    >(List([]));
 
     let bucket: string;
 
@@ -128,12 +129,20 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     const handleRenderFollowersOrFollowingInfoArray = (
       followersOrFollowing: User[]
     ) => {
+      let followersOrFollowingList;
+
+      if (followersOrFollowing.length) {
+        followersOrFollowingList = List(followersOrFollowing);
+      } else {
+        followersOrFollowingList = List([]);
+      }
+
       if (
         users &&
-        followersOrFollowing.length === users.length &&
+        followersOrFollowingList.size === users.length &&
         !followPhotoFileArray
       ) {
-        for (let user of followersOrFollowing) {
+        followersOrFollowing.forEach((user) => {
           if (user.photo) {
             getPostFileStart({
               user: UserType.followArray,
@@ -142,17 +151,17 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
               fileRequestType: FileRequestType.singlePost,
             });
           }
-        }
+        });
       } else if (followPhotoFileArray && followPhotoFileArray.length) {
-        const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
-          (el: User) => {
+        const followerOrFollowing: List<UserInfoData> =
+          followersOrFollowingList.map((el: User) => {
             let photoFileString: string;
 
-            for (let file of followPhotoFileArray) {
+            followPhotoFileArray.forEach((file) => {
               if (el.photo === file.s3Key) {
                 photoFileString = file.fileString;
               }
-            }
+            });
 
             return {
               name: el.name,
@@ -162,13 +171,12 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
               location: '',
               comment: '',
             };
-          }
-        );
+          });
 
-        setUserInfoAndPhotoArray(followerOrFollowing);
+        setUserInfoAndPhotoList(followerOrFollowing);
       } else if (!followPhotoFileArray && usersProfilePhotoConfirm) {
-        const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
-          (el: User) => {
+        const followerOrFollowing: List<UserInfoData> =
+          followersOrFollowingList.map((el: User) => {
             return {
               name: el.name,
               username: el.username,
@@ -177,18 +185,17 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
               location: '',
               comment: '',
             };
-          }
-        );
+          });
 
-        setUserInfoAndPhotoArray(followerOrFollowing);
+        setUserInfoAndPhotoList(followerOrFollowing);
       }
     };
 
     useEffect(() => {
-      if (isPostLikingUsersModal && postLikingUsersArray) {
-        let postLikerArray: UserInfoData[];
+      if (isPostLikingUsersModal && postLikingUsersList) {
+        let postLikerArray: List<UserInfoData>;
 
-        postLikerArray = postLikingUsersArray.map((el) => {
+        postLikerArray = postLikingUsersList.map((el) => {
           return {
             profilePhotoFileString: el.profilePhotoFileString,
             username: el.username,
@@ -199,9 +206,9 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
           };
         });
 
-        setUserInfoAndPhotoArray(postLikerArray);
+        setUserInfoAndPhotoList(postLikerArray);
       }
-    }, [postLikingUsersArray]);
+    }, [postLikingUsersList]);
 
     return (
       <Modal
@@ -222,7 +229,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
         </Modal.Header>
         <Modal.Body className='followers-following-modal-body'>
           <UserInfo
-            userInfoArray={userInfoAndPhotoArray}
+            userInfoArray={userInfoAndPhotoArray.toArray()}
             styleType={StyleType.modal}
           />
         </Modal.Body>
