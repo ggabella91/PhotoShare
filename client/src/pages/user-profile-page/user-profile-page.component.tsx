@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { List } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 import {
@@ -218,9 +219,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
 
-  const [postLikersArray, setPostLikersArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [postLikersList, setPostLikersList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
   let postsBucket: string, profileBucket: string;
 
@@ -478,7 +478,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (postLikingUsersArray) {
-      setPostLikersArray(postLikingUsersArray);
+      setPostLikersList(List(postLikingUsersArray));
     }
   }, [postLikingUsersArray]);
 
@@ -623,14 +623,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         }}
         isFollowersModal={isFollowersModal}
       />
-      {postLikersArray ? (
+      {postLikersList ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showPostLikingUsersModal}
           onHide={() => setShowPostLikingUsersModal(false)}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
-          postLikingUsersArray={postLikersArray}
+          postLikingUsersList={postLikersList}
         />
       ) : null}
     </div>
