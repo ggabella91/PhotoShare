@@ -141,11 +141,12 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [comment, setComment] = useState('');
 
-  const [captionInfoArray, setCaptionInfoArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [captionInfoArray, setCaptionInfoArray] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
-  const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
+  const [reactionsArray, setReactionsArray] = useState<List<Reaction> | null>(
+    null
+  );
 
   const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
     User[] | null
@@ -195,8 +196,8 @@ export const PostModal: React.FC<PostModalProps> = ({
         likingUsersArray ||
         captionInfoArray)
     ) {
-      setReactionsArray([]);
-      setCaptionInfoArray([]);
+      setReactionsArray(null);
+      setCaptionInfoArray(null);
       setCommentingUserArray([]);
       setLikingUsersArray([]);
       setAlreadyLikedPostAndReactionId({
@@ -212,16 +213,18 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (caption) {
-      setCaptionInfoArray([
-        {
-          username: userName,
-          name: '',
-          profilePhotoFileString: userProfilePhotoFile,
-          comment: caption,
-          location: '',
-          commentDate: createdAt,
-        },
-      ]);
+      setCaptionInfoArray(
+        List([
+          {
+            username: userName,
+            name: '',
+            profilePhotoFileString: userProfilePhotoFile,
+            comment: caption,
+            location: '',
+            commentDate: createdAt,
+          },
+        ])
+      );
     }
   }, [caption]);
 
@@ -235,18 +238,20 @@ export const PostModal: React.FC<PostModalProps> = ({
       let newLocation = editPostDetailsConfirm.postLocation || '';
 
       if (newCaption) {
-        setCaptionInfoArray([
-          {
-            username: userName,
-            name: '',
-            profilePhotoFileString: userProfilePhotoFile,
-            comment: newCaption,
-            location: newLocation,
-            commentDate: createdAt,
-          },
-        ]);
+        setCaptionInfoArray(
+          List([
+            {
+              username: userName,
+              name: '',
+              profilePhotoFileString: userProfilePhotoFile,
+              comment: newCaption,
+              location: newLocation,
+              commentDate: createdAt,
+            },
+          ])
+        );
       } else {
-        setCaptionInfoArray([]);
+        setCaptionInfoArray(null);
       }
 
       setEditPostDetails({
@@ -269,14 +274,23 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (postReactionsArray && postReactionsArray.length) {
       postReactionsArray.forEach((innerArray) => {
         if (innerArray.length && innerArray[0].postId === localPostId) {
-          setReactionsArray(innerArray);
+          let innerList = List(innerArray);
+
+          if (
+            (reactionsArray && !reactionsArray.equals(innerList)) ||
+            !reactionsArray
+          ) {
+            setReactionsArray(innerList);
+          } else {
+            return;
+          }
         }
       });
     }
   }, [postReactionsArray]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.length) {
+    if (reactionsArray && reactionsArray.size) {
       reactionsArray.forEach((el) => {
         if (
           currentUser &&
@@ -359,7 +373,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.length) {
+    if (reactionsArray && reactionsArray.size) {
       reactionsArray.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.POST_REACTOR,
@@ -399,7 +413,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       reactionsArray &&
-      reactionsArray.length &&
+      reactionsArray.size &&
       reactingUserInfoArray &&
       reactingUserInfoArray.length &&
       ((userProfilePhotoArray && userProfilePhotoArray.length) ||
@@ -582,12 +596,10 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <div className='caption-and-comments-container'>
-            {captionInfoArray &&
-            captionInfoArray.length &&
-            !showPostEditForm ? (
+            {captionInfoArray && captionInfoArray.size && !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.comment}
-                userInfoArray={captionInfoArray}
+                userInfoArray={captionInfoArray.toArray()}
                 isCaption
                 isCaptionOwner={isCurrentUserPost ? true : false}
               />

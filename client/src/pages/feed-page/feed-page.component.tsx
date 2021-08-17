@@ -91,10 +91,7 @@ import PostOrCommentOptionsModal from '../../components/post-or-comment-options-
 
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
-import {
-  prepareUserInfoAndFileArray,
-  compareUserInfoAndDataObjArrays,
-} from './feed-page.utils';
+import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
 
 interface ImmutableMap<T> extends Map<string, any> {
