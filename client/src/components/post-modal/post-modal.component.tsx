@@ -141,28 +141,24 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [comment, setComment] = useState('');
 
-  const [captionInfoArray, setCaptionInfoArray] =
+  const [captionInfoList, setCaptionInfoList] =
     useState<List<UserInfoAndOtherData> | null>(null);
 
-  const [reactionsArray, setReactionsArray] = useState<List<Reaction> | null>(
+  const [reactionsList, setReactionsList] = useState<List<Reaction> | null>(
     null
   );
 
-  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
-    User[] | null
-  >(null);
+  const [reactingUserInfoList, setReactingUsersInfoList] =
+    useState<List<User> | null>(null);
 
-  const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
-    PostFile[] | null
-  >(null);
+  const [userProfilePhotoList, setUserProfilePhotoList] =
+    useState<List<PostFile> | null>(null);
 
-  const [commentingUserArray, setCommentingUserArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [commentingUserList, setCommentingUserList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
-  const [likingUsersArray, setLikingUsersArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [likingUsersList, setLikingUsersList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
@@ -191,15 +187,15 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       clearLocalState &&
-      (reactionsArray ||
-        commentingUserArray ||
-        likingUsersArray ||
-        captionInfoArray)
+      (reactionsList ||
+        commentingUserList ||
+        likingUsersList ||
+        captionInfoList)
     ) {
-      setReactionsArray(null);
-      setCaptionInfoArray(null);
-      setCommentingUserArray([]);
-      setLikingUsersArray([]);
+      setReactionsList(null);
+      setCaptionInfoList(null);
+      setCommentingUserList(null);
+      setLikingUsersList(null);
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
         reactionId: '',
@@ -213,7 +209,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (caption) {
-      setCaptionInfoArray(
+      setCaptionInfoList(
         List([
           {
             username: userName,
@@ -238,7 +234,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       let newLocation = editPostDetailsConfirm.postLocation || '';
 
       if (newCaption) {
-        setCaptionInfoArray(
+        setCaptionInfoList(
           List([
             {
               username: userName,
@@ -251,7 +247,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           ])
         );
       } else {
-        setCaptionInfoArray(null);
+        setCaptionInfoList(null);
       }
 
       setEditPostDetails({
@@ -277,10 +273,10 @@ export const PostModal: React.FC<PostModalProps> = ({
           let innerList = List(innerArray);
 
           if (
-            (reactionsArray && !reactionsArray.equals(innerList)) ||
-            !reactionsArray
+            (reactionsList && !reactionsList.equals(innerList)) ||
+            !reactionsList
           ) {
-            setReactionsArray(innerList);
+            setReactionsList(innerList);
           } else {
             return;
           }
@@ -290,8 +286,8 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [postReactionsArray]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.size) {
-      reactionsArray.forEach((el) => {
+    if (reactionsList && reactionsList.size) {
+      reactionsList.forEach((el) => {
         if (
           currentUser &&
           el.reactingUserId === currentUser.id &&
@@ -304,7 +300,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       });
     }
-  }, [reactionsArray]);
+  }, [reactionsList]);
 
   useEffect(() => {
     if (
@@ -316,7 +312,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         alreadyLikedPost: true,
         reactionId: postReactionConfirm.reactionId,
       });
-      setLikingUsersArray([]);
+      setLikingUsersList(null);
       clearPostReactions();
       getPostReactionsStart({
         postId: localPostId,
@@ -335,7 +331,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         alreadyLikedPost: false,
         reactionId: '',
       });
-      setLikingUsersArray([]);
+      setLikingUsersList(null);
       clearPostReactions();
       getPostReactionsStart({
         postId: localPostId,
@@ -373,25 +369,25 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.size) {
-      reactionsArray.forEach((el) => {
+    if (reactionsList && reactionsList.size) {
+      reactionsList.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.POST_REACTOR,
           usernameOrId: el.reactingUserId,
         });
       });
     }
-  }, [reactionsArray]);
+  }, [reactionsList]);
 
   useEffect(() => {
     if (postReactingUsers && postReactingUsers.length) {
-      setReactingUsersInfoArray(postReactingUsers);
+      setReactingUsersInfoList(List(postReactingUsers));
     }
   }, [postReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoArray && reactingUserInfoArray.length) {
-      reactingUserInfoArray.forEach((el) => {
+    if (reactingUserInfoList && reactingUserInfoList.size) {
+      reactingUserInfoList.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -402,28 +398,28 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       });
     }
-  }, [reactingUserInfoArray]);
+  }, [reactingUserInfoList]);
 
   useEffect(() => {
     if (reactorPhotoFileArray) {
-      setUserProfilePhotoArray(reactorPhotoFileArray);
+      setUserProfilePhotoList(List(reactorPhotoFileArray));
     }
   }, [reactorPhotoFileArray]);
 
   useEffect(() => {
     if (
-      reactionsArray &&
-      reactionsArray.size &&
-      reactingUserInfoArray &&
-      reactingUserInfoArray.length &&
-      ((userProfilePhotoArray && userProfilePhotoArray.length) ||
-        (!userProfilePhotoArray &&
+      reactionsList &&
+      reactionsList.size &&
+      reactingUserInfoList &&
+      reactingUserInfoList.size &&
+      ((userProfilePhotoList && userProfilePhotoList.size) ||
+        (!userProfilePhotoList &&
           usersProfilePhotoConfirm === 'User photo added to reactor array!'))
     ) {
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
 
-      reactionsArray.forEach((reactionEl) => {
+      reactionsList.forEach((reactionEl) => {
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
@@ -431,7 +427,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         let photoKey: string;
         let fileString: string;
 
-        reactingUserInfoArray.forEach((infoEl) => {
+        reactingUserInfoList.forEach((infoEl) => {
           if (infoEl.id === userId) {
             username = infoEl.username;
             name = infoEl.name;
@@ -439,8 +435,8 @@ export const PostModal: React.FC<PostModalProps> = ({
           }
         });
 
-        if (userProfilePhotoArray) {
-          userProfilePhotoArray.forEach((photoEl) => {
+        if (userProfilePhotoList) {
+          userProfilePhotoList.forEach((photoEl) => {
             if (photoEl.s3Key === photoKey!) {
               fileString = photoEl.fileString;
             }
@@ -480,11 +476,11 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       });
 
-      setCommentingUserArray(commentsArray);
-      setLikingUsersArray(likesArray);
+      setCommentingUserList(List(commentsArray));
+      setLikingUsersList(List(likesArray));
       setPostLikingUsersArray(likesArray);
     }
-  }, [reactionsArray, reactingUserInfoArray, userProfilePhotoArray]);
+  }, [reactionsList, reactingUserInfoList, userProfilePhotoList]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -596,27 +592,27 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <div className='caption-and-comments-container'>
-            {captionInfoArray && captionInfoArray.size && !showPostEditForm ? (
+            {captionInfoList && captionInfoList.size && !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.comment}
-                userInfoArray={captionInfoArray.toArray()}
+                userInfoArray={captionInfoList.toArray()}
                 isCaption
                 isCaptionOwner={isCurrentUserPost ? true : false}
               />
             ) : (
               handleRenderEditPostDetails()
             )}
-            {commentingUserArray && commentingUserArray.length ? (
+            {commentingUserList && commentingUserList.size ? (
               <UserInfo
                 styleType={StyleType.comment}
-                userInfoArray={commentingUserArray}
+                userInfoArray={commentingUserList.toArray()}
               />
             ) : null}
           </div>
           {handleRenderLikeOrLikedButton()}
-          {likingUsersArray && likingUsersArray.length ? (
+          {likingUsersList && likingUsersList.size ? (
             <Button className='likes-text' onClick={onPostLikingUsersClick}>
-              <span>{`${likingUsersArray.length} likes`}</span>
+              <span>{`${likingUsersList.size} likes`}</span>
             </Button>
           ) : null}
           <span className='post-date'>{postDate}</span>
