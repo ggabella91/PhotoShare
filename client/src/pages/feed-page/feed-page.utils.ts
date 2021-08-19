@@ -108,16 +108,16 @@ export const compareFollowerArrays = (
   return true;
 };
 
-export const compareUserOrPostOrReactionArrays = (
-  array1: User[] | Post[] | Reaction[],
-  array2: User[] | Post[] | Reaction[]
+export const compareUserOrPostOrReactionLists = (
+  list1: List<User> | List<Post> | List<Reaction>,
+  list2: List<User> | List<Post> | List<Reaction>
 ) => {
-  if (array1.length !== array2.length) {
+  if (list1.size !== list2.size) {
     return false;
   }
 
-  for (let i = 0; i < array1.length; i++) {
-    if (array1[i].id !== array2[i].id) {
+  for (let i = 0; i < list1.size; i++) {
+    if (list1.get(i)!.id !== list2.get(i)!.id) {
       return false;
     }
   }
@@ -125,16 +125,16 @@ export const compareUserOrPostOrReactionArrays = (
   return true;
 };
 
-export const comparePostFileArrays = (
-  array1: PostFile[],
-  array2: PostFile[]
+export const comparePostFileLists = (
+  list1: List<PostFile>,
+  list2: List<PostFile>
 ) => {
-  if (array1.length !== array2.length) {
+  if (list1.size !== list2.size) {
     return false;
   }
 
-  for (let i = 0; i < array1.length; i++) {
-    if (array1[i].s3Key !== array2[i].s3Key) {
+  for (let i = 0; i < list1.size; i++) {
+    if (list1.get(i)!.s3Key !== list2.get(i)!.s3Key) {
       return false;
     }
   }
