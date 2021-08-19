@@ -94,7 +94,7 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
 
-interface ImmutableMap<T> extends Map<string, any> {
+export interface ImmutableMap<T> extends Map<string, any> {
   get<K extends keyof T>(name: K): T[K];
 }
 

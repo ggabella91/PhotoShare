@@ -59,7 +59,10 @@ import UserInfo, {
   UserInfoAndOtherData,
 } from '../user-info/user-info.component';
 
-import { comparePostFileArrays } from '../../pages/feed-page/feed-page.utils';
+import {
+  comparePostFileLists,
+  compareUserOrPostOrReactionLists,
+} from '../../pages/feed-page/feed-page.utils';
 
 import Button from '../button/button.component';
 import { ExpandableFormInput } from '../form-input/form-input.component';
@@ -230,6 +233,18 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             !reactionsList ||
             (reactionsList && !innerArrayAsList.equals(reactionsList))
           ) {
+            console.log(
+              "reactionsList and innerArrayAsList don't equal with .equals() method"
+            );
+
+            if (
+              reactionsList &&
+              compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
+            ) {
+              console.log(
+                'But reactionsList and innerArrayAsList do equal with compareUserOrPostOrReactionLists() method'
+              );
+            }
             setReactionsList(innerArrayAsList);
           }
         }
@@ -383,6 +398,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       userProfilePhotoList &&
       !userProfilePhotoList.equals(reactorPhotoFileList)
     ) {
+      console.log(
+        "userProfilePhotoList and reactorPhotoFileList don't equal with .equals() method"
+      );
+
+      if (comparePostFileLists(userProfilePhotoList, reactorPhotoFileList)) {
+        console.log(
+          'But userProfilePhotoList and reactorPhotoFileList do equal with comparePostFileLists() method'
+        );
+      }
       setUserProfilePhotoList(reactorPhotoFileList);
     }
   }, [reactorPhotoFileArray]);
