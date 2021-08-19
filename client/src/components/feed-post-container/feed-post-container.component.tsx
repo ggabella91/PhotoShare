@@ -231,20 +231,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         if (innerArray.length && innerArray[0].postId === postId) {
           if (
             !reactionsList ||
-            (reactionsList && !innerArrayAsList.equals(reactionsList))
+            (reactionsList &&
+              !compareUserOrPostOrReactionLists(
+                reactionsList,
+                innerArrayAsList
+              ))
           ) {
-            console.log(
-              "reactionsList and innerArrayAsList don't equal with .equals() method"
-            );
-
-            if (
-              reactionsList &&
-              compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
-            ) {
-              console.log(
-                'But reactionsList and innerArrayAsList do equal with compareUserOrPostOrReactionLists() method'
-              );
-            }
             setReactionsList(innerArrayAsList);
           }
         }
@@ -362,7 +354,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     } else if (
       feedPostReactingUsersList.size &&
       reactingUserInfoList &&
-      !reactingUserInfoList.equals(feedPostReactingUsersList)
+      !compareUserOrPostOrReactionLists(
+        reactingUserInfoList,
+        feedPostReactingUsersList
+      )
     ) {
       setReactingUsersInfoList(feedPostReactingUsersList);
     }
