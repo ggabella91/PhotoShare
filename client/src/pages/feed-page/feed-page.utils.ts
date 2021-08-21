@@ -142,20 +142,20 @@ export const comparePostFileLists = (
   return true;
 };
 
-export const compareUserInfoAndDataObjArrays = (
-  array1: UserInfoAndPostFile[] | UserInfoAndOtherData[],
-  array2: UserInfoAndPostFile[] | UserInfoAndOtherData[]
+export const compareUserInfoAndDataObjLists = (
+  list1: List<UserInfoAndPostFile> | List<UserInfoAndOtherData>,
+  list2: List<UserInfoAndPostFile> | List<UserInfoAndOtherData>
 ) => {
-  if (array1.length !== array2.length) {
+  if (list1.size !== list2.size) {
     return false;
   }
 
-  for (let i = 0; i < array1.length; i++) {
-    let array1AtIdxValues = Object.values(array1[i]);
-    let array2AtIdxValues = Object.values(array2[i]);
+  for (let i = 0; i < list1.size; i++) {
+    let list1AtIdxValues = List(Object.values(list1.toArray()[i]));
+    let list2AtIdxValues = List(Object.values(list2.toArray()[i]));
 
-    for (let j = 0; j < array1AtIdxValues.length; j++) {
-      if (array1AtIdxValues[j] !== array2AtIdxValues[j]) {
+    for (let j = 0; j < list1AtIdxValues.size; j++) {
+      if (list1AtIdxValues.get(j) !== list2AtIdxValues.get(j)) {
         return false;
       }
     }

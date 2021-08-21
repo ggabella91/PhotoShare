@@ -65,6 +65,8 @@ import Button from '../button/button.component';
 import { ExpandableFormInput } from '../form-input/form-input.component';
 import EditPostForm from '../edit-post-form/edit-post-form.component';
 
+import { compareUserOrPostOrReactionLists } from '../../pages/feed-page/feed-page.utils';
+
 import './post-modal.styles.scss';
 
 interface PostModalProps {
@@ -273,7 +275,8 @@ export const PostModal: React.FC<PostModalProps> = ({
           let innerList = List(innerArray);
 
           if (
-            (reactionsList && !reactionsList.equals(innerList)) ||
+            (reactionsList &&
+              !compareUserOrPostOrReactionLists(reactionsList, innerList)) ||
             !reactionsList
           ) {
             setReactionsList(innerList);
