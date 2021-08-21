@@ -62,6 +62,7 @@ import UserInfo, {
 import {
   comparePostFileLists,
   compareUserOrPostOrReactionLists,
+  compareUserInfoAndDataObjLists,
 } from '../../pages/feed-page/feed-page.utils';
 
 import Button from '../button/button.component';
@@ -472,8 +473,25 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
 
-      setCommentingUserList(List(commentsArray));
-      setLikingUsersList(List(likesArray));
+      const commentsList = List(commentsArray);
+      const likesList = List(likesArray);
+
+      if (
+        !commentingUserList ||
+        (commentingUserList &&
+          !compareUserInfoAndDataObjLists(commentingUserList, commentsList))
+      ) {
+        setCommentingUserList(commentsList);
+      }
+
+      if (
+        !likingUsersList ||
+        (likingUsersList &&
+          !compareUserInfoAndDataObjLists(likingUsersList, likesList))
+      ) {
+        setLikingUsersList(likesList);
+        setPostLikingUsersArray(likesArray);
+      }
     }
   }, [
     reactionsList,

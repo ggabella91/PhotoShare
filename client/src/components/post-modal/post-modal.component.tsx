@@ -65,7 +65,10 @@ import Button from '../button/button.component';
 import { ExpandableFormInput } from '../form-input/form-input.component';
 import EditPostForm from '../edit-post-form/edit-post-form.component';
 
-import { compareUserOrPostOrReactionLists } from '../../pages/feed-page/feed-page.utils';
+import {
+  compareUserOrPostOrReactionLists,
+  compareUserInfoAndDataObjLists,
+} from '../../pages/feed-page/feed-page.utils';
 
 import './post-modal.styles.scss';
 
@@ -479,9 +482,25 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       });
 
-      setCommentingUserList(List(commentsArray));
-      setLikingUsersList(List(likesArray));
-      setPostLikingUsersArray(likesArray);
+      const commentsList = List(commentsArray);
+      const likesList = List(likesArray);
+
+      if (
+        !commentingUserList ||
+        (commentingUserList &&
+          !compareUserInfoAndDataObjLists(commentingUserList, commentsList))
+      ) {
+        setCommentingUserList(commentsList);
+      }
+
+      if (
+        !likingUsersList ||
+        (likingUsersList &&
+          !compareUserInfoAndDataObjLists(likingUsersList, likesList))
+      ) {
+        setLikingUsersList(likesList);
+        setPostLikingUsersArray(likesArray);
+      }
     }
   }, [reactionsList, reactingUserInfoList, userProfilePhotoList]);
 
