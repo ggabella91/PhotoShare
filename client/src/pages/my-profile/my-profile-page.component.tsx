@@ -41,6 +41,7 @@ import {
   selectCommentToDelete,
   selectShowCommentOptionsModal,
   selectPostLikingUsersArray,
+  selectGetSinglePostDataConfirm,
 } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
@@ -98,6 +99,7 @@ interface MyProfilePageProps {
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
+  getSinglePostDataConfirm: Post | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
@@ -149,6 +151,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   setShowCommentOptionsModal,
   deleteReactionStart,
   postLikingUsersArray,
+  getSinglePostDataConfirm,
   setShowPostEditForm,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
@@ -276,7 +279,25 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }, [postData]);
 
   useEffect(() => {
-    if (postData && postDataArray.length === postData.length) {
+    if (getSinglePostDataConfirm) {
+      const postDataArrayCopy = postDataArray.map((el) => {
+        if (el.id === getSinglePostDataConfirm.id) {
+          return getSinglePostDataConfirm;
+        } else {
+          return el;
+        }
+      });
+
+      setPostDataArray(postDataArrayCopy);
+    }
+  }, [getSinglePostDataConfirm]);
+
+  useEffect(() => {
+    if (
+      postData &&
+      postDataArray.length === postData.length &&
+      !getSinglePostDataConfirm
+    ) {
       for (let post of postDataArray) {
         getPostFileStart({
           s3Key: post.s3Key,
@@ -580,6 +601,7 @@ interface LinkStateProps {
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
+  getSinglePostDataConfirm: Post | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
@@ -602,6 +624,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   commentToDelete: selectCommentToDelete,
   showCommentOptionsModal: selectShowCommentOptionsModal,
   postLikingUsersArray: selectPostLikingUsersArray,
+  getSinglePostDataConfirm: selectGetSinglePostDataConfirm,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

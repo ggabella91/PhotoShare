@@ -205,6 +205,16 @@ export const selectEditPostDetailsFailure = createSelector(
   (postState: PostState) => postState.editPostDetailsFailure
 );
 
+export const selectGetSinglePostDataConfirm = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.getSinglePostDataConfirm
+);
+
+export const selectGetSinglePostDataError = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.getSinglePostDataError
+);
+
 // Selectors for feed-post-container components
 
 export const selectGetFeedPostDataConfirm = createSelector(

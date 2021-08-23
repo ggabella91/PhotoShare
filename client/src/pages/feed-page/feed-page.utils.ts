@@ -7,12 +7,12 @@ import { UserInfoAndPostFile } from './feed-page.component';
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 export const prepareUserInfoAndFileArray = (
-  followingInfoList: List<User>,
-  dataFeedList: List<List<Post>>,
-  followingProfilePhotoList: List<PostFile>,
-  postFileFeedList: List<PostFile>
+  followingInfoArray: User[],
+  dataFeedArray: Post[][],
+  followingProfilePhotoArray: PostFile[],
+  postFileFeedArray: PostFile[]
 ) => {
-  let userInfoAndPostObjArray: List<UserInfoAndPostFile> = postFileFeedList.map(
+  let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
     (el) => {
       let location: string;
       let dateString: string;
@@ -25,8 +25,8 @@ export const prepareUserInfoAndFileArray = (
       let profilePhotoString: string;
       let caption: string;
 
-      dataFeedList.forEach((innerList) => {
-        innerList.forEach((innerEl) => {
+      dataFeedArray.forEach((innerArray) => {
+        innerArray.forEach((innerEl) => {
           if (innerEl.s3Key === el.s3Key) {
             let date = innerEl.createdAt;
 
@@ -41,14 +41,14 @@ export const prepareUserInfoAndFileArray = (
         });
       });
 
-      followingInfoList.forEach((userEl) => {
+      followingInfoArray.forEach((userEl) => {
         if (userEl.id === id!) {
           username = userEl.username;
           profilePhotoS3Key = userEl.photo || '';
         }
       });
 
-      followingProfilePhotoList.forEach((userEl) => {
+      followingProfilePhotoArray.forEach((userEl) => {
         if (profilePhotoS3Key! && userEl.s3Key === profilePhotoS3Key) {
           profilePhotoString = userEl.fileString;
         }
@@ -125,6 +125,23 @@ export const compareUserOrPostOrReactionLists = (
   return true;
 };
 
+export const compareUserOrPostOrReactionArrays = (
+  array1: User[] | Post[] | Reaction[],
+  array2: User[] | Post[] | Reaction[]
+) => {
+  if (array1.length !== array2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < array1.length; i++) {
+    if (array1[i].id !== array2[i].id) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export const comparePostFileLists = (
   list1: List<PostFile>,
   list2: List<PostFile>
@@ -135,6 +152,23 @@ export const comparePostFileLists = (
 
   for (let i = 0; i < list1.size; i++) {
     if (list1.get(i)!.s3Key !== list2.get(i)!.s3Key) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export const comparePostFileArrays = (
+  array1: PostFile[],
+  array2: PostFile[]
+) => {
+  if (array1.length !== array2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < array1.length; i++) {
+    if (array1[i].s3Key !== array2[i].s3Key) {
       return false;
     }
   }
@@ -156,6 +190,28 @@ export const compareUserInfoAndDataObjLists = (
 
     for (let j = 0; j < list1AtIdxValues.size; j++) {
       if (list1AtIdxValues.get(j) !== list2AtIdxValues.get(j)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+};
+
+export const compareUserInfoAndDataObjArrays = (
+  array1: UserInfoAndPostFile[] | UserInfoAndOtherData[],
+  array2: UserInfoAndPostFile[] | UserInfoAndOtherData[]
+) => {
+  if (array1.length !== array2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < array1.length; i++) {
+    let array1AtIdxValues = Object.values(array1[i]);
+    let array2AtIdxValues = Object.values(array2[i]);
+
+    for (let j = 0; j < array1AtIdxValues.length; j++) {
+      if (array1AtIdxValues[i] !== array2AtIdxValues[j]) {
         return false;
       }
     }

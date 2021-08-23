@@ -53,6 +53,9 @@ export enum PostActions {
   EDIT_POST_DETAILS_START = 'EDIT_POST_DETAILS_START',
   EDIT_POST_DETAILS_SUCCESS = 'EDIT_POST_DETAILS_SUCCESS',
   EDIT_POST_DETAILS_FAILURE = 'EDIT_POST_DETAILS_FAILURE',
+  GET_SINGLE_POST_DATA_START = 'GET_SINGLE_POST_DATA_START',
+  GET_SINGLE_POST_DATA_SUCCESS = 'GET_SINGLE_POST_DATA_SUCCESS',
+  GET_SINGLE_POST_DATA_FAILURE = 'GET_SINGLE_POST_DATA_FAILURE',
 
   // Actions specific to data for feed-post-containers
   GET_FEED_POST_FILE_SUCCESS = 'GET_FEED_POST_FILE_SUCCESS',
@@ -133,6 +136,10 @@ export interface PostDataReq {
   dataReqType: DataRequestType;
   pageToShow?: number;
   limit?: number;
+}
+
+export interface SinglePostDataReq {
+  postId: string;
 }
 
 export interface PostFileReq {
@@ -217,6 +224,8 @@ export interface PostState {
   showPostEditForm: boolean;
   editPostDetailsConfirm: Post | null;
   editPostDetailsFailure: PostError | null;
+  getSinglePostDataConfirm: Post | null;
+  getSinglePostDataError: PostError | null;
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
@@ -482,6 +491,21 @@ export interface EditPostDetailsFailure {
   payload: PostError;
 }
 
+export interface GetSinglePostDataStart {
+  type: typeof PostActions.GET_SINGLE_POST_DATA_START;
+  payload: SinglePostDataReq;
+}
+
+export interface GetSinglePostDataSuccess {
+  type: typeof PostActions.GET_SINGLE_POST_DATA_SUCCESS;
+  payload: Post;
+}
+
+export interface GetSinglePostDataFailure {
+  type: typeof PostActions.GET_SINGLE_POST_DATA_FAILURE;
+  payload: PostError;
+}
+
 // Interfaces related exclusively to feed-post-container data
 
 export interface GetFeedPostFileSuccess {
@@ -551,6 +575,9 @@ export type PostActionTypes =
   | EditPostDetailsStart
   | EditPostDetailsSuccess
   | EditPostDetailsFailure
+  | GetSinglePostDataStart
+  | GetSinglePostDataSuccess
+  | GetSinglePostDataFailure
   | GetFeedPostFileSuccess
   | GetFeedPostReactionsSuccess
   | GetUserPhotoForFeedReactorArraySuccess;

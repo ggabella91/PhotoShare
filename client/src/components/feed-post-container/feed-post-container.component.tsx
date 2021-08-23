@@ -63,6 +63,7 @@ import {
   comparePostFileLists,
   compareUserOrPostOrReactionLists,
   compareUserInfoAndDataObjLists,
+  compareUserOrPostOrReactionArrays,
 } from '../../pages/feed-page/feed-page.utils';
 
 import Button from '../button/button.component';
@@ -224,26 +225,32 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     }
   }, [postId]);
 
-  useEffect(() => {
-    if (feedPostReactionsArray && feedPostReactionsArray.length) {
-      feedPostReactionsArray.forEach((innerArray) => {
-        let innerArrayAsList = List(innerArray);
+  useEffect(
+    () => {
+      if (feedPostReactionsArray && feedPostReactionsArray.length) {
+        feedPostReactionsArray.forEach((innerArray) => {
+          let innerArrayAsList = List(innerArray);
 
-        if (innerArray.length && innerArray[0].postId === postId) {
-          if (
-            !reactionsList ||
-            (reactionsList &&
-              !compareUserOrPostOrReactionLists(
-                reactionsList,
-                innerArrayAsList
-              ))
-          ) {
-            setReactionsList(innerArrayAsList);
+          if (innerArray.length && innerArray[0].postId === postId) {
+            if (!reactionsList) {
+              setReactionsList(innerArrayAsList);
+            } else if (
+              reactionsList &&
+              !compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
+            ) {
+              console.log('reactionsList & innerArrayAsList not equal');
+
+              setReactionsList(innerArrayAsList);
+            }
           }
-        }
-      });
-    }
-  }, [feedPostReactionsArray]);
+        });
+      }
+      // TODO: Figure out why this is causing the feed-post-container components to get re-rendered infinitely in feed-page component
+    },
+    [
+      /*feedPostReactionsArray*/
+    ]
+  );
 
   useEffect(() => {
     if (reactionsList && reactionsList.size) {
@@ -360,6 +367,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         feedPostReactingUsersList
       )
     ) {
+      console.log('reactingUserInfoList & feedPostReactingUsersList not equal');
+
       setReactingUsersInfoList(feedPostReactingUsersList);
     }
   }, [feedPostReactingUsers]);
