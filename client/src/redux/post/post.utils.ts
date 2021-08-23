@@ -16,6 +16,10 @@ export const addPostDataToFeedArray = (
   postDataFeedArray: Post[][],
   postData: Post[]
 ) => {
+  if (!postData.length) {
+    return [...postDataFeedArray];
+  }
+
   for (let i = 0; i < postDataFeedArray.length; i++) {
     if (
       postDataFeedArray[i].length &&
@@ -38,17 +42,18 @@ export const addPostReactionsToOuterReactionsArray = (
   postReactionsOuterArray: Reaction[][],
   postReactions: Reaction[]
 ) => {
+  if (!postReactions.length) {
+    return [...postReactionsOuterArray];
+  }
+
   for (let i = 0; i < postReactionsOuterArray.length; i++) {
     if (
       postReactionsOuterArray[i].length &&
       postReactions.length &&
       postReactionsOuterArray[i][0].postId === postReactions[0].postId
     ) {
-      if (postReactionsOuterArray[i][0].id !== postReactions[0].id) {
-        postReactionsOuterArray[i] = [
-          ...postReactionsOuterArray[i],
-          ...postReactions,
-        ];
+      if (postReactionsOuterArray[i].length !== postReactions.length) {
+        postReactionsOuterArray[i] = [...postReactions];
       }
 
       return [...postReactionsOuterArray];

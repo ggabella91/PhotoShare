@@ -639,7 +639,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 fileString={el.postFileString}
                 caption={el.caption}
                 date={el.dateString}
-                key={Math.random()}
+                key={el.postId}
                 custRef={lastPostContainerElementRef}
               />
             );
@@ -659,7 +659,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 fileString={el.postFileString}
                 caption={el.caption}
                 date={el.dateString}
-                key={Math.random()}
+                key={el.postId}
               />
             );
           }
