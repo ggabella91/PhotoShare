@@ -17,6 +17,7 @@ import {
   UserType,
   EditPostDetailsReq,
   Reaction,
+  SinglePostDataReq,
 } from './post.types';
 
 import {
@@ -48,6 +49,8 @@ import {
   getUserPhotoForFeedReactorArraySuccess,
   editPostDetailsSuccess,
   editPostDetailsFailure,
+  getSinglePostDataSuccess,
+  getSinglePostDataFailure,
 } from './post.actions';
 
 import axios from 'axios';
@@ -273,6 +276,22 @@ export function* editPostDetails({
   }
 }
 
+export function* getSinglePostData({
+  payload: { postId },
+}: {
+  payload: SinglePostDataReq;
+}): any {
+  try {
+    const { data }: { data: Post } = yield axios.get(
+      `/api/posts/data/${postId}`
+    );
+
+    yield put(getSinglePostDataSuccess(data));
+  } catch (err) {
+    yield put(getSinglePostDataFailure(err));
+  }
+}
+
 export function* onCreatePostStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(
     PostActions.CREATE_POST_START,
@@ -336,6 +355,13 @@ export function* onEditPostDetailsStart(): SagaIterator {
   );
 }
 
+export function* onGetSinglePostDataStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    PostActions.GET_SINGLE_POST_DATA_START,
+    getSinglePostData
+  );
+}
+
 export function* postSagas(): SagaIterator {
   yield all([
     call(onCreatePostStart),
@@ -347,5 +373,6 @@ export function* postSagas(): SagaIterator {
     call(onArchivePostStart),
     call(onDeleteReactionStart),
     call(onEditPostDetailsStart),
+    call(onGetSinglePostDataStart),
   ]);
 }

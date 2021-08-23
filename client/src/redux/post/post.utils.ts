@@ -78,3 +78,23 @@ export const addUserPhotoFileToArray = (
     }
   }
 };
+
+export const replaceSinglePostInDataArray = (
+  dataArray: Post[] | null,
+  singlePostData: Post
+) => {
+  if (dataArray) {
+    const newDataArray = dataArray.map((el) => {
+      if (el.id === singlePostData.id) {
+        return singlePostData;
+      } else {
+        return el;
+      }
+    });
+
+    console.log('newDataArray: ', newDataArray);
+    return newDataArray;
+  }
+
+  return [singlePostData];
+};

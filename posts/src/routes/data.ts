@@ -50,7 +50,7 @@ router.get(
       posts = await Post.find({ userId, archived: { $ne: true } }, null, {
         sort: { _id: -1 },
       });
-      console.log(posts);
+      console.log('Posts Data: ', posts);
 
       res.status(200).send({ posts });
     }

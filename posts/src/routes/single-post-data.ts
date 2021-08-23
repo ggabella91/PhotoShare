@@ -15,14 +15,19 @@ router.get(
   async (req: Request, res: Response) => {
     const { postId } = req.params;
 
+    console.log('postId: ', postId);
+
     if (!postId) {
       throw new BadRequestError('No post ID was provided.');
     }
 
-    const singlePost = await Post.findById({ postId, archived: { $ne: true } });
-    console.log(singlePost);
+    const singlePost = await Post.findOne({
+      _id: postId,
+      archived: { $ne: true },
+    });
+    console.log('Single Post Data: ', singlePost);
 
-    res.status(200).send({ singlePost });
+    res.status(200).send(singlePost);
   }
 );
 

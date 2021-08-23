@@ -49,6 +49,8 @@ const INITIAL_STATE: PostState = {
   showPostEditForm: false,
   editPostDetailsConfirm: null,
   editPostDetailsFailure: null,
+  getSinglePostDataConfirm: null,
+  getSinglePostDataError: null,
 
   // New props to be used for feed-post-container
   // compononents in the feed-page component
@@ -105,6 +107,13 @@ const postReducer = (
         getPostDataConfirm: 'Post data fetched!',
         isLoadingPostData: false,
       };
+    case PostActions.GET_SINGLE_POST_DATA_SUCCESS: {
+      return {
+        ...state,
+        getSinglePostDataConfirm: action.payload,
+        getSinglePostDataError: null,
+      };
+    }
     case PostActions.GET_POST_REACTIONS_SUCCESS:
       return {
         ...state,
@@ -319,6 +328,8 @@ const postReducer = (
         feedPostFiles: [],
         postReactionsArray: [],
         feedPostReactionsArray: [],
+        editPostDetailsConfirm: null,
+        getSinglePostDataConfirm: null,
       };
     case PostActions.CLEAR_POST_REACTIONS:
       return {

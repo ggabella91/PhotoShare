@@ -31,6 +31,7 @@ import {
   GetPostReactionsReq,
   ReactionRequestType,
   UserType,
+  SinglePostDataReq,
 } from '../../redux/post/post.types';
 import {
   selectPostReactionsArray,
@@ -53,6 +54,7 @@ import {
   clearPostReactions,
   setPostLikingUsersArray,
   setShowPostEditForm,
+  getSinglePostDataStart,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -108,6 +110,7 @@ interface PostModalProps {
   setPostLikingUsersArray: typeof setPostLikingUsersArray;
   clearPostReactions: typeof clearPostReactions;
   setShowPostEditForm: typeof setShowPostEditForm;
+  getSinglePostDataStart: typeof getSinglePostDataStart;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -140,6 +143,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   deleteReactionStart,
   setPostLikingUsersArray,
   setShowPostEditForm,
+  getSinglePostDataStart,
   ...props
 }) => {
   const [localPostId, setLocalPostId] = useState(postId);
@@ -254,6 +258,8 @@ export const PostModal: React.FC<PostModalProps> = ({
       } else {
         setCaptionInfoList(null);
       }
+
+      getSinglePostDataStart({ postId: editPostDetailsConfirm.id });
 
       setEditPostDetails({
         editCaption: newCaption,
@@ -711,6 +717,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setPostLikingUsersArray(postLikingUsersArray)),
   setShowPostEditForm: (showPostEditForm: boolean) =>
     dispatch(setShowPostEditForm(showPostEditForm)),
+  getSinglePostDataStart: (singlePostDataReq: SinglePostDataReq) =>
+    dispatch(getSinglePostDataStart(singlePostDataReq)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);

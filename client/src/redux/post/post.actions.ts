@@ -18,6 +18,7 @@ import {
   PostActionTypes,
   PostMetaData,
   EditPostDetailsReq,
+  SinglePostDataReq,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -326,6 +327,27 @@ export const editPostDetailsSuccess = (editedPost: Post): PostActionTypes => ({
 
 export const editPostDetailsFailure = (error: PostError): PostActionTypes => ({
   type: PostActions.EDIT_POST_DETAILS_FAILURE,
+  payload: error,
+});
+
+export const getSinglePostDataStart = (
+  singlePostDataReq: SinglePostDataReq
+): PostActionTypes => ({
+  type: PostActions.GET_SINGLE_POST_DATA_START,
+  payload: singlePostDataReq,
+});
+
+export const getSinglePostDataSuccess = (
+  singlePostData: Post
+): PostActionTypes => ({
+  type: PostActions.GET_SINGLE_POST_DATA_SUCCESS,
+  payload: singlePostData,
+});
+
+export const getSinglePostDataFailure = (
+  error: PostError
+): PostActionTypes => ({
+  type: PostActions.GET_SINGLE_POST_DATA_FAILURE,
   payload: error,
 });
 
