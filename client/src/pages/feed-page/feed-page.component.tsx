@@ -500,7 +500,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         return;
       }
 
-      console.log('Resetting sortedUserInfoAndPostArray');
       setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
     }
   }, [
@@ -552,7 +551,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     if (feedPagePostModalData.id) {
       setPostModalProps(feedPagePostModalData);
     }
-  }, [feedPagePostModalData]);
+  }, [feedPagePostModalData.id]);
 
   useEffect(() => {
     setShowLikingUsersModal(showPostLikingUsersModal);
@@ -566,17 +565,16 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [feedPagePostModalShow]);
 
   useEffect(() => {
-    if (clearFeedPagePostModalState) {
-      setClearPostModalState(clearFeedPagePostModalState);
+    if (clearPostModalState) {
+      setClearPostModalState(false);
     }
-  }, [clearFeedPagePostModalState]);
+  }, [clearPostModalState]);
 
   useEffect(() => {
     setPostOptionsModalShow(feedPagePostOptionsModalShow);
   }, [feedPagePostOptionsModalShow]);
 
   const handleHidePostModal = () => {
-    setPostModalProps(POST_MODAL_DATA_INITIAL_STATE);
     setPostModalShow(false);
     setClearFeedPagePostModalState(true);
   };
@@ -623,7 +621,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
         userInfoAndPostFileArray.map((el, idx) => {
           if (idx === userInfoAndPostFileArray.length - 1) {
-            // debugger;
             return (
               <FeedPostContainer
                 userInfo={{
