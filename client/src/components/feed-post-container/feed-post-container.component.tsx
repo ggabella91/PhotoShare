@@ -170,7 +170,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [comment, setComment] = useState('');
 
-  const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
+  const [reactionsList, setReactionsList] = useState<List<Reaction> | null>(
+    null
+  );
 
   const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
     User[] | null
@@ -219,7 +221,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (postId && !didFetchReactions) {
-      console.log("Post ID changed so we're fetching reactions again...");
       getPostReactionsStart({
         postId,
         reactionReqType: ReactionRequestType.feedPost,
@@ -231,29 +232,30 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (feedPostReactionsArray && feedPostReactionsArray.length) {
-      console.log('feedPostReactionsArray: ', feedPostReactionsArray);
+      let innerArrayAsList;
 
       feedPostReactionsArray.forEach((innerArray) => {
-        if (innerArray.length && innerArray[0].postId === postId) {
-          if (!reactionsArray) {
-            setReactionsArray(innerArray);
-          } else if (
-            reactionsArray &&
-            !compareUserOrPostOrReactionArrays(reactionsArray, innerArray)
-          ) {
-            console.log('reactionsArray & innerArray not equal');
+        innerArrayAsList = List(innerArray);
 
-            setReactionsArray(innerArray);
+        if (innerArray.length && innerArray[0].postId === postId) {
+          if (!reactionsList) {
+            setReactionsList(innerArrayAsList);
+          } else if (
+            reactionsList &&
+            !compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
+          ) {
+            console.log('reactionsList & innerArrayAsList not equal');
+
+            setReactionsList(innerArrayAsList);
           }
         }
       });
     }
-    // TODO: Figure out why this is causing the feed-post-container components to get re-rendered infinitely in feed-page component
   }, [feedPostReactionsArray]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.length) {
-      reactionsArray.forEach((el) => {
+    if (reactionsList && reactionsList.size) {
+      reactionsList.forEach((el) => {
         if (
           currentUser &&
           el.reactingUserId === currentUser.id &&
@@ -266,7 +268,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
     }
-  }, [reactionsArray]);
+  }, [reactionsList]);
 
   useEffect(() => {
     if (
@@ -337,15 +339,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.length) {
-      reactionsArray.forEach((el) => {
+    if (reactionsList && reactionsList.size) {
+      reactionsList.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.FEED_POST_REACTOR,
           usernameOrId: el.reactingUserId,
         });
       });
     }
-  }, [reactionsArray]);
+  }, [reactionsList]);
 
   useEffect(() => {
     if (!feedPostReactingUsers) {
@@ -400,8 +402,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (
-      reactionsArray &&
-      reactionsArray.length &&
+      reactionsList &&
+      reactionsList.size &&
       reactingUserInfoArray &&
       reactingUserInfoArray.length &&
       ((userProfilePhotoArray && userProfilePhotoArray.length) ||
@@ -411,7 +413,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
 
-      reactionsArray.forEach((reactionEl) => {
+      reactionsList.forEach((reactionEl) => {
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
@@ -482,7 +484,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       }
     }
   }, [
-    reactionsArray,
+    reactionsList,
     reactingUserInfoArray,
     userProfilePhotoArray,
     usersProfilePhotoConfirm,
