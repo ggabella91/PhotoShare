@@ -195,31 +195,12 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (postId !== localPostId) {
       setLocalPostId(postId);
-    }
-  }, [postId]);
-
-  useEffect(() => {
-    if (
-      clearLocalState &&
-      (reactionsArray ||
-        commentingUserArray ||
-        likingUsersArray ||
-        captionInfoArray)
-    ) {
-      setReactionsArray(null);
-      setCaptionInfoArray(null);
-      setCommentingUserArray(null);
-      setLikingUsersArray(null);
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
         reactionId: '',
       });
-      setEditPostDetails({
-        editCaption: '',
-        editLocation: '',
-      });
     }
-  }, [localPostId]);
+  }, [postId]);
 
   useEffect(() => {
     if (caption) {

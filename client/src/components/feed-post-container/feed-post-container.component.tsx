@@ -174,9 +174,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     null
   );
 
-  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
-    User[] | null
-  >(null);
+  const [reactingUserInfoList, setReactingUsersInfoList] =
+    useState<List<User> | null>(null);
 
   const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
     PostFile[] | null
@@ -350,29 +349,33 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [reactionsList]);
 
   useEffect(() => {
-    if (!feedPostReactingUsers) {
+    let feedPostReactingUsersList;
+
+    if (feedPostReactingUsers) {
+      feedPostReactingUsersList = List(feedPostReactingUsers);
+    } else {
       return;
     }
 
-    if (feedPostReactingUsers.length && !reactingUserInfoArray) {
-      setReactingUsersInfoArray(feedPostReactingUsers);
+    if (feedPostReactingUsersList.size && !reactingUserInfoList) {
+      setReactingUsersInfoList(feedPostReactingUsersList);
     } else if (
-      feedPostReactingUsers.length &&
-      reactingUserInfoArray &&
-      !compareUserOrPostOrReactionArrays(
-        reactingUserInfoArray,
-        feedPostReactingUsers
+      feedPostReactingUsersList.size &&
+      reactingUserInfoList &&
+      !compareUserOrPostOrReactionLists(
+        reactingUserInfoList,
+        feedPostReactingUsersList
       )
     ) {
-      console.log('reactingUserInfoArray & feedPostReactingUsers not equal');
+      console.log('reactingUserInfoList & feedPostReactingUsersList not equal');
 
-      setReactingUsersInfoArray(feedPostReactingUsers);
+      setReactingUsersInfoList(feedPostReactingUsersList);
     }
   }, [feedPostReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoArray && reactingUserInfoArray.length) {
-      reactingUserInfoArray.forEach((el) => {
+    if (reactingUserInfoList && reactingUserInfoList.size) {
+      reactingUserInfoList.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -383,7 +386,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
     }
-  }, [reactingUserInfoArray]);
+  }, [reactingUserInfoList]);
 
   useEffect(() => {
     if (!reactorPhotoFileArray) {
@@ -404,8 +407,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       reactionsList &&
       reactionsList.size &&
-      reactingUserInfoArray &&
-      reactingUserInfoArray.length &&
+      reactingUserInfoList &&
+      reactingUserInfoList.size &&
       ((userProfilePhotoArray && userProfilePhotoArray.length) ||
         (!userProfilePhotoArray &&
           usersProfilePhotoConfirm === 'User photo added to reactor array!'))
@@ -421,7 +424,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         let photoKey: string;
         let profilePhotoFileString: string;
 
-        reactingUserInfoArray.forEach((infoEl) => {
+        reactingUserInfoList.forEach((infoEl) => {
           if (infoEl.id === userId) {
             username = infoEl.username;
             name = infoEl.name;
@@ -485,7 +488,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     }
   }, [
     reactionsList,
-    reactingUserInfoArray,
+    reactingUserInfoList,
     userProfilePhotoArray,
     usersProfilePhotoConfirm,
   ]);
