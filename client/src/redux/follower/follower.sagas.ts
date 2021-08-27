@@ -52,7 +52,7 @@ export function* getFollowers({
 
     yield put(getFollowersSuccess(data));
   } catch (err) {
-    yield put(getFollowersFailure(err));
+    yield put(getFollowersFailure(err as FollowError));
   }
 }
 
