@@ -7,6 +7,7 @@ import {
   WhoseUsersFollowing,
   UsersFollowingRequest,
   FollowerActions,
+  FollowError,
 } from './follower.types';
 
 import {
@@ -35,7 +36,7 @@ export function* followNewUser({
 
     yield put(followNewUserSuccess(data));
   } catch (err) {
-    yield put(followNewUserFailure(err));
+    yield put(followNewUserFailure(err as FollowError));
   }
 }
 
