@@ -18,6 +18,7 @@ import {
   EditPostDetailsReq,
   Reaction,
   SinglePostDataReq,
+  PostError,
 } from './post.types';
 
 import {
@@ -61,7 +62,7 @@ export function* createPost({ payload: post }: { payload: FormData }): any {
 
     yield put(createPostSuccess(data));
   } catch (err) {
-    yield put(createPostFailure(err));
+    yield put(createPostFailure(err as PostError));
   }
 }
 
@@ -85,7 +86,7 @@ export function* createPostReaction({
       })
     );
   } catch (err) {
-    yield put(createPostReactionFailure(err));
+    yield put(createPostReactionFailure(err as PostError));
   }
 }
 
@@ -99,7 +100,7 @@ export function* updateProfilePhoto({
 
     yield put(updateProfilePhotoSuccess(data));
   } catch (err) {
-    yield put(updateProfilePhotoFailure(err));
+    yield put(updateProfilePhotoFailure(err as PostError));
   }
 }
 
@@ -132,7 +133,7 @@ export function* getPostData({
       }
     }
   } catch (err) {
-    yield put(getPostDataFailure(err));
+    yield put(getPostDataFailure(err as PostError));
   }
 }
 
@@ -150,7 +151,7 @@ export function* getPostReactions({
       yield put(getFeedPostReactionsSuccess(data));
     }
   } catch (err) {
-    yield put(getPostReactionsFailure(err));
+    yield put(getPostReactionsFailure(err as PostError));
   }
 }
 
@@ -205,7 +206,7 @@ export function* getPostFile({
       }
     }
   } catch (err) {
-    yield put(getPostFileFailure(err));
+    yield put(getPostFileFailure(err as PostError));
   }
 }
 
@@ -223,7 +224,7 @@ export function* archivePost({
 
     yield put(archivePostSuccess(data.message));
   } catch (err) {
-    yield put(archivePostFailure(err));
+    yield put(archivePostFailure(err as PostError));
   }
 }
 
@@ -255,7 +256,7 @@ export function* deleteReaction({
       );
     }
   } catch (err) {
-    yield put(deleteReactionFailure(err));
+    yield put(deleteReactionFailure(err as PostError));
   }
 }
 
@@ -272,7 +273,7 @@ export function* editPostDetails({
 
     yield put(editPostDetailsSuccess(data));
   } catch (err) {
-    yield put(editPostDetailsFailure(err));
+    yield put(editPostDetailsFailure(err as PostError));
   }
 }
 
@@ -288,7 +289,7 @@ export function* getSinglePostData({
 
     yield put(getSinglePostDataSuccess(data));
   } catch (err) {
-    yield put(getSinglePostDataFailure(err));
+    yield put(getSinglePostDataFailure(err as PostError));
   }
 }
 
