@@ -72,7 +72,7 @@ export function* getUsersFollowing({
       yield put(getOtherUserUsersFollowingSuccess(data));
     }
   } catch (err) {
-    yield put(getUsersFollowingFailure(err));
+    yield put(getUsersFollowingFailure(err as FollowError));
   }
 }
 
@@ -86,7 +86,7 @@ export function* unfollowUserStart({
 
     yield put(unfollowUserSuccess(data));
   } catch (err) {
-    yield put(unfollowUserFailure(err));
+    yield put(unfollowUserFailure(err as FollowError));
   }
 }
 
