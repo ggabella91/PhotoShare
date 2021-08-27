@@ -12,6 +12,7 @@ import {
   OtherUserRequest,
   ChangePassword,
   ResetPassword,
+  Error,
 } from './user.types';
 
 import {
@@ -61,7 +62,7 @@ export function* signUp({
 
     yield put(signUpSuccess(data));
   } catch (err) {
-    yield put(signUpFailure(err));
+    yield put(signUpFailure(err as Error));
   }
 }
 
@@ -78,7 +79,7 @@ export function* signIn({
 
     yield put(signInSuccess(data));
   } catch (err) {
-    yield put(signInFailure(err));
+    yield put(signInFailure(err as Error));
   }
 }
 
@@ -131,7 +132,7 @@ export function* getOtherUser({
       yield put(getFeedPostReactorsSuccess(data));
     }
   } catch (err) {
-    yield put(getOtherUserFailure(err));
+    yield put(getOtherUserFailure(err as Error));
   }
 }
 
@@ -146,7 +147,7 @@ export function* getUserSuggestions({
     );
     yield put(getUserSuggestionsSuccess(data));
   } catch (err) {
-    yield put(getUserSuggestionsFailure(err));
+    yield put(getUserSuggestionsFailure(err as Error));
   }
 }
 
@@ -155,7 +156,7 @@ export function* signOut(): any {
     yield axios.post('/api/users/signout');
     yield all([put(signOutSuccess()), put(clearPostState())]);
   } catch (err) {
-    yield put(signOutFailure(err));
+    yield put(signOutFailure(err as Error));
   }
 }
 
@@ -169,7 +170,7 @@ export function* changeInfo({
 
     yield all([put(changeInfoSuccess(data)), put(setCurrentUser(data))]);
   } catch (err) {
-    yield put(changeInfoFailure(err));
+    yield put(changeInfoFailure(err as Error));
   }
 }
 
@@ -187,7 +188,7 @@ export function* changePassword({
 
     yield put(changePasswordSuccess(data));
   } catch (err) {
-    yield put(changePasswordFailure(err));
+    yield put(changePasswordFailure(err as Error));
   }
 }
 
@@ -197,7 +198,7 @@ export function* forgotPassword({ payload: email }: { payload: string }): any {
 
     yield put(forgotPasswordSuccess('Reset token generated!'));
   } catch (err) {
-    yield put(forgotPasswordFailure(err));
+    yield put(forgotPasswordFailure(err as Error));
   }
 }
 
@@ -214,7 +215,7 @@ export function* resetPassword({
 
     yield put(resetPasswordSuccess('Password reset successfully!'));
   } catch (err) {
-    yield put(resetPasswordFailure(err));
+    yield put(resetPasswordFailure(err as Error));
   }
 }
 
@@ -224,7 +225,7 @@ export function* deleteAccount(): any {
 
     yield put(deleteAccountSuccess('Account deleted!'));
   } catch (err) {
-    yield put(deleteAccountFailure(err));
+    yield put(deleteAccountFailure(err as Error));
   }
 }
 
