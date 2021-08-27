@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { List, Map } from 'immutable';
+import { fromJS, List, Map } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -240,8 +240,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             reactionsList &&
             !compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
           ) {
-            console.log('reactionsList & innerArrayAsList not equal');
-
             setReactionsList(innerArrayAsList);
           }
         }
@@ -364,8 +362,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         feedPostReactingUsersList
       )
     ) {
-      console.log('reactingUserInfoList & feedPostReactingUsersList not equal');
-
       setReactingUsersInfoList(feedPostReactingUsersList);
     }
   }, [feedPostReactingUsers]);
@@ -469,9 +465,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           });
         }
       });
-
-      console.log('commentsList: ', commentsList);
-      console.log('likesList: ', likesList);
 
       if (
         !commentingUserList ||
