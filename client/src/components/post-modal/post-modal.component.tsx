@@ -152,9 +152,8 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [comment, setComment] = useState('');
 
-  const [captionInfoArray, setCaptionInfoArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [captionInfoList, setCaptionInfoList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
   const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
 
@@ -204,16 +203,18 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (caption) {
-      setCaptionInfoArray([
-        {
-          username: userName,
-          name: '',
-          profilePhotoFileString: userProfilePhotoFile,
-          comment: caption,
-          location: '',
-          commentDate: createdAt,
-        },
-      ]);
+      setCaptionInfoList(
+        List([
+          {
+            username: userName,
+            name: '',
+            profilePhotoFileString: userProfilePhotoFile,
+            comment: caption,
+            location: '',
+            commentDate: createdAt,
+          },
+        ])
+      );
     }
   }, [caption]);
 
@@ -227,18 +228,20 @@ export const PostModal: React.FC<PostModalProps> = ({
       let newLocation = editPostDetailsConfirm.postLocation || '';
 
       if (newCaption) {
-        setCaptionInfoArray([
-          {
-            username: userName,
-            name: '',
-            profilePhotoFileString: userProfilePhotoFile,
-            comment: newCaption,
-            location: newLocation,
-            commentDate: createdAt,
-          },
-        ]);
+        setCaptionInfoList(
+          List([
+            {
+              username: userName,
+              name: '',
+              profilePhotoFileString: userProfilePhotoFile,
+              comment: newCaption,
+              location: newLocation,
+              commentDate: createdAt,
+            },
+          ])
+        );
       } else {
-        setCaptionInfoArray(null);
+        setCaptionInfoList(null);
       }
 
       getSinglePostDataStart({ postId: editPostDetailsConfirm.id });
@@ -597,12 +600,10 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           </div>
           <div className='caption-and-comments-container'>
-            {captionInfoArray &&
-            captionInfoArray.length &&
-            !showPostEditForm ? (
+            {captionInfoList && captionInfoList.size && !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.comment}
-                userInfoArray={captionInfoArray}
+                userInfoArray={captionInfoList.toArray()}
                 isCaption
                 isCaptionOwner={isCurrentUserPost ? true : false}
               />
