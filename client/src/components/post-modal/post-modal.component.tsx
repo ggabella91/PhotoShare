@@ -155,23 +155,21 @@ export const PostModal: React.FC<PostModalProps> = ({
   const [captionInfoList, setCaptionInfoList] =
     useState<List<UserInfoAndOtherData> | null>(null);
 
-  const [reactionsArray, setReactionsArray] = useState<Reaction[] | null>(null);
+  const [reactionsList, setReactionsList] = useState<List<Reaction> | null>(
+    null
+  );
 
-  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<
-    User[] | null
-  >(null);
+  const [reactingUserInfoList, setReactingUsersInfoList] =
+    useState<List<User> | null>(null);
 
-  const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
-    PostFile[] | null
-  >(null);
+  const [userProfilePhotoList, setUserProfilePhotoList] =
+    useState<List<PostFile> | null>(null);
 
-  const [commentingUserArray, setCommentingUserArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [commentingUserList, setCommentingUserList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
-  const [likingUsersArray, setLikingUsersArray] = useState<
-    UserInfoAndOtherData[] | null
-  >(null);
+  const [likingUsersList, setLikingUsersList] =
+    useState<List<UserInfoAndOtherData> | null>(null);
 
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
@@ -215,6 +213,8 @@ export const PostModal: React.FC<PostModalProps> = ({
           },
         ])
       );
+    } else {
+      setCaptionInfoList(List());
     }
   }, [caption]);
 
@@ -240,16 +240,16 @@ export const PostModal: React.FC<PostModalProps> = ({
             },
           ])
         );
+
+        setEditPostDetails({
+          editCaption: newCaption,
+          editLocation: newLocation,
+        });
       } else {
-        setCaptionInfoList(null);
+        setCaptionInfoList(List());
       }
 
       getSinglePostDataStart({ postId: editPostDetailsConfirm.id });
-
-      setEditPostDetails({
-        editCaption: newCaption,
-        editLocation: newLocation,
-      });
     }
   }, [editPostDetailsConfirm]);
 
@@ -265,13 +265,21 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (postReactionsArray && postReactionsArray.length) {
       postReactionsArray.forEach((innerArray) => {
-        if (innerArray.length && innerArray[0].postId === localPostId) {
+        let innerArrayAsList = List(innerArray);
+
+        if (
+          innerArrayAsList.size &&
+          innerArrayAsList.get(0)!.postId === localPostId
+        ) {
           if (
-            (reactionsArray &&
-              !compareUserOrPostOrReactionArrays(reactionsArray, innerArray)) ||
-            !reactionsArray
+            (reactionsList &&
+              !compareUserOrPostOrReactionLists(
+                reactionsList,
+                innerArrayAsList
+              )) ||
+            !reactionsList
           ) {
-            setReactionsArray(innerArray);
+            setReactionsList(innerArrayAsList);
           } else {
             return;
           }
@@ -281,8 +289,8 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [postReactionsArray]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.length) {
-      reactionsArray.forEach((el) => {
+    if (reactionsList && reactionsList.size) {
+      reactionsList.forEach((el) => {
         if (
           currentUser &&
           el.reactingUserId === currentUser.id &&
@@ -295,7 +303,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       });
     }
-  }, [reactionsArray]);
+  }, [reactionsList]);
 
   useEffect(() => {
     if (
@@ -307,7 +315,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         alreadyLikedPost: true,
         reactionId: postReactionConfirm.reactionId,
       });
-      setLikingUsersArray(null);
+      setLikingUsersList(null);
       clearPostReactions();
       getPostReactionsStart({
         postId: localPostId,
@@ -326,7 +334,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         alreadyLikedPost: false,
         reactionId: '',
       });
-      setLikingUsersArray(null);
+      setLikingUsersList(null);
       clearPostReactions();
       getPostReactionsStart({
         postId: localPostId,
@@ -364,25 +372,25 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
-    if (reactionsArray && reactionsArray.length) {
-      reactionsArray.forEach((el) => {
+    if (reactionsList && reactionsList.size) {
+      reactionsList.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.POST_REACTOR,
           usernameOrId: el.reactingUserId,
         });
       });
     }
-  }, [reactionsArray]);
+  }, [reactionsList]);
 
   useEffect(() => {
     if (postReactingUsers && postReactingUsers.length) {
-      setReactingUsersInfoArray(postReactingUsers);
+      setReactingUsersInfoList(List(postReactingUsers));
     }
   }, [postReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoArray && reactingUserInfoArray.length) {
-      reactingUserInfoArray.forEach((el) => {
+    if (reactingUserInfoList && reactingUserInfoList.size) {
+      reactingUserInfoList.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -393,28 +401,28 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       });
     }
-  }, [reactingUserInfoArray]);
+  }, [reactingUserInfoList]);
 
   useEffect(() => {
     if (reactorPhotoFileArray) {
-      setUserProfilePhotoArray(reactorPhotoFileArray);
+      setUserProfilePhotoList(List(reactorPhotoFileArray));
     }
   }, [reactorPhotoFileArray]);
 
   useEffect(() => {
     if (
-      reactionsArray &&
-      reactionsArray.length &&
-      reactingUserInfoArray &&
-      reactingUserInfoArray.length &&
-      ((userProfilePhotoArray && userProfilePhotoArray.length) ||
-        (!userProfilePhotoArray &&
+      reactionsList &&
+      reactionsList.size &&
+      reactingUserInfoList &&
+      reactingUserInfoList.size &&
+      ((userProfilePhotoList && userProfilePhotoList.size) ||
+        (!userProfilePhotoList &&
           usersProfilePhotoConfirm === 'User photo added to reactor array!'))
     ) {
-      let commentsArray: UserInfoAndOtherData[] = [];
-      let likesArray: UserInfoAndOtherData[] = [];
+      let commentsList: List<UserInfoAndOtherData> = List();
+      let likesList: List<UserInfoAndOtherData> = List();
 
-      reactionsArray.forEach((reactionEl) => {
+      reactionsList.forEach((reactionEl) => {
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
@@ -422,7 +430,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         let photoKey: string;
         let fileString: string;
 
-        reactingUserInfoArray.forEach((infoEl) => {
+        reactingUserInfoList.forEach((infoEl) => {
           if (infoEl.id === userId) {
             username = infoEl.username;
             name = infoEl.name;
@@ -430,8 +438,8 @@ export const PostModal: React.FC<PostModalProps> = ({
           }
         });
 
-        if (userProfilePhotoArray) {
-          userProfilePhotoArray.forEach((photoEl) => {
+        if (userProfilePhotoList) {
+          userProfilePhotoList.forEach((photoEl) => {
             if (photoEl.s3Key === photoKey!) {
               fileString = photoEl.fileString;
             }
@@ -447,7 +455,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
 
         if (reactionEl.likedPost) {
-          likesArray.push({
+          likesList = likesList.push({
             username: username!,
             name: name!,
             profilePhotoFileString: fileString!,
@@ -457,7 +465,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             postId: localPostId,
           });
         } else {
-          commentsArray.push({
+          commentsList = commentsList.push({
             username: username!,
             name: name!,
             profilePhotoFileString: fileString!,
@@ -472,23 +480,23 @@ export const PostModal: React.FC<PostModalProps> = ({
       });
 
       if (
-        !commentingUserArray ||
-        (commentingUserArray &&
-          !compareUserInfoAndDataObjArrays(commentingUserArray, commentsArray))
+        !commentingUserList ||
+        (commentingUserList &&
+          !compareUserInfoAndDataObjLists(commentingUserList, commentsList))
       ) {
-        setCommentingUserArray(commentsArray);
+        setCommentingUserList(commentsList);
       }
 
       if (
-        !likingUsersArray ||
-        (likingUsersArray &&
-          !compareUserInfoAndDataObjArrays(likingUsersArray, likesArray))
+        !likingUsersList ||
+        (likingUsersList &&
+          !compareUserInfoAndDataObjLists(likingUsersList, likesList))
       ) {
-        setLikingUsersArray(likesArray);
-        setPostLikingUsersArray(likesArray);
+        setLikingUsersList(likesList);
+        setPostLikingUsersArray(likesList.toArray());
       }
     }
-  }, [reactionsArray, reactingUserInfoArray, userProfilePhotoArray]);
+  }, [reactionsList, reactingUserInfoList, userProfilePhotoList]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -610,17 +618,17 @@ export const PostModal: React.FC<PostModalProps> = ({
             ) : (
               handleRenderEditPostDetails()
             )}
-            {commentingUserArray && commentingUserArray.length ? (
+            {commentingUserList && commentingUserList.size ? (
               <UserInfo
                 styleType={StyleType.comment}
-                userInfoArray={commentingUserArray}
+                userInfoArray={commentingUserList.toArray()}
               />
             ) : null}
           </div>
           {handleRenderLikeOrLikedButton()}
-          {likingUsersArray && likingUsersArray.length ? (
+          {likingUsersList && likingUsersList.size ? (
             <Button className='likes-text' onClick={onPostLikingUsersClick}>
-              <span>{`${likingUsersArray.length} likes`}</span>
+              <span>{`${likingUsersList.size} likes`}</span>
             </Button>
           ) : null}
           <span className='post-date'>{postDate}</span>

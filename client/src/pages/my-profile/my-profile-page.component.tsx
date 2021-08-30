@@ -298,14 +298,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       postDataArray.length === postData.length &&
       !getSinglePostDataConfirm
     ) {
-      for (let post of postDataArray) {
+      postDataArray.forEach((post) => {
         getPostFileStart({
           s3Key: post.s3Key,
           bucket: postsBucket,
           user: UserType.self,
           fileRequestType: FileRequestType.singlePost,
         });
-      }
+      });
     }
   }, [postDataArray]);
 
@@ -313,13 +313,13 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     if (postData && postFiles.length === postData.length) {
       const orderedFiles: PostFile[] = [];
 
-      for (let post of postDataArray) {
+      postDataArray.forEach((post) => {
         const fileMatch = postFiles.find((el) => post.s3Key === el.s3Key);
 
         if (fileMatch) {
           orderedFiles.push(fileMatch);
         }
-      }
+      });
 
       setPostFileArray(orderedFiles);
     }
@@ -381,11 +381,11 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (currentUserUsersFollowing?.length) {
-      for (let userFollowing of currentUserUsersFollowing) {
+      currentUserUsersFollowing.forEach((userFollowing) => {
         if (userFollowing.userId === user.id) {
           setIsFollowing(true);
         }
-      }
+      });
     }
   }, [getUsersFollowingConfirm]);
 
