@@ -170,12 +170,11 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [comment, setComment] = useState('');
 
-  const [reactionsList, setReactionsList] = useState<List<Reaction> | null>(
-    null
-  );
+  const [reactionsList, setReactionsList] = useState<List<Reaction>>(List());
 
-  const [reactingUserInfoList, setReactingUsersInfoList] =
-    useState<List<User> | null>(null);
+  const [reactingUserInfoList, setReactingUsersInfoList] = useState<List<User>>(
+    List()
+  );
 
   const [userProfilePhotoList, setUserProfilePhotoList] =
     useState<List<PostFile> | null>(null);
@@ -234,9 +233,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         innerArrayAsList = List(innerArray);
 
         if (innerArray.length && innerArray[0].postId === postId) {
-          if (!reactionsList) {
-            setReactionsList(innerArrayAsList);
-          } else if (
+          if (
             reactionsList &&
             !compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
           ) {
@@ -248,7 +245,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [feedPostReactionsArray]);
 
   useEffect(() => {
-    if (reactionsList && reactionsList.size) {
+    if (reactionsList.size) {
       reactionsList.forEach((el) => {
         if (
           currentUser &&
@@ -333,7 +330,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
-    if (reactionsList && reactionsList.size) {
+    if (reactionsList.size) {
       reactionsList.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.FEED_POST_REACTOR,
@@ -352,11 +349,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       return;
     }
 
-    if (feedPostReactingUsersList.size && !reactingUserInfoList) {
-      setReactingUsersInfoList(feedPostReactingUsersList);
-    } else if (
+    if (
       feedPostReactingUsersList.size &&
-      reactingUserInfoList &&
       !compareUserOrPostOrReactionLists(
         reactingUserInfoList,
         feedPostReactingUsersList
@@ -367,7 +361,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [feedPostReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoList && reactingUserInfoList.size) {
+    if (reactingUserInfoList.size) {
       reactingUserInfoList.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
@@ -402,9 +396,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (
-      reactionsList &&
       reactionsList.size &&
-      reactingUserInfoList &&
       reactingUserInfoList.size &&
       ((userProfilePhotoList && userProfilePhotoList.size) ||
         (!userProfilePhotoList &&
