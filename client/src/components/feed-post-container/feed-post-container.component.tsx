@@ -73,13 +73,15 @@ import { ExpandableFormInput } from '../form-input/form-input.component';
 
 import './feed-post-container.styles.scss';
 
+type CustomRef = (node: HTMLDivElement | null) => void;
+
 interface FeedPostContainerProps {
   userInfo: UserInfoData;
   fileString: string;
   s3Key: string;
   caption?: string;
   date: string;
-  custRef?: (node: HTMLDivElement | null) => void;
+  custRef: CustomRef | null;
   key: string;
   currentUser: User | null;
   feedPostReactionsArray: Reaction[][];
@@ -176,14 +178,17 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     List()
   );
 
-  const [userProfilePhotoList, setUserProfilePhotoList] =
-    useState<List<PostFile> | null>(null);
+  const [userProfilePhotoList, setUserProfilePhotoList] = useState<
+    List<PostFile>
+  >(List());
 
-  const [commentingUserList, setCommentingUserList] =
-    useState<List<UserInfoAndOtherData> | null>(null);
+  const [commentingUserList, setCommentingUserList] = useState<
+    List<UserInfoAndOtherData>
+  >(List());
 
-  const [likingUsersList, setLikingUsersList] =
-    useState<List<UserInfoAndOtherData> | null>(null);
+  const [likingUsersList, setLikingUsersList] = useState<
+    List<UserInfoAndOtherData>
+  >(List());
 
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
@@ -272,7 +277,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         alreadyLikedPost: true,
         reactionId: postReactionConfirm.reactionId,
       });
-      setLikingUsersList(null);
+      setLikingUsersList(List());
       clearPostReactions();
       getPostReactionsStart({
         postId,
@@ -292,7 +297,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         alreadyLikedPost: false,
         reactionId: '',
       });
-      setLikingUsersList(null);
+      setLikingUsersList(List());
       clearPostReactions();
       getPostReactionsStart({
         postId,
@@ -384,9 +389,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       return;
     }
 
-    if (!userProfilePhotoList) {
-      setUserProfilePhotoList(reactorPhotoFileList);
-    } else if (
+    if (
       userProfilePhotoList &&
       !comparePostFileLists(userProfilePhotoList, reactorPhotoFileList)
     ) {
@@ -398,8 +401,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       reactionsList.size &&
       reactingUserInfoList.size &&
-      ((userProfilePhotoList && userProfilePhotoList.size) ||
-        (!userProfilePhotoList &&
+      (userProfilePhotoList.size ||
+        (!userProfilePhotoList.size &&
           usersProfilePhotoConfirm === 'User photo added to reactor array!'))
     ) {
       let commentsList: List<UserInfoAndOtherData> = List();
@@ -421,13 +424,11 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           }
         });
 
-        if (userProfilePhotoList) {
-          userProfilePhotoList.forEach((photoEl) => {
-            if (photoEl.s3Key === photoKey!) {
-              profilePhotoFileString = photoEl.fileString;
-            }
-          });
-        }
+        userProfilePhotoList.forEach((photoEl) => {
+          if (photoEl.s3Key === photoKey!) {
+            profilePhotoFileString = photoEl.fileString;
+          }
+        });
 
         if (!photoKey!) {
           profilePhotoFileString = '';
@@ -458,19 +459,11 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
 
-      if (
-        !commentingUserList ||
-        (commentingUserList &&
-          !compareUserInfoAndDataObjLists(commentingUserList, commentsList))
-      ) {
+      if (!compareUserInfoAndDataObjLists(commentingUserList, commentsList)) {
         setCommentingUserList(commentsList);
       }
 
-      if (
-        !likingUsersList ||
-        (likingUsersList &&
-          !compareUserInfoAndDataObjLists(likingUsersList, likesList))
-      ) {
+      if (!compareUserInfoAndDataObjLists(likingUsersList, likesList)) {
         setLikingUsersList(likesList);
         setPostLikingUsersArray(likesList.toArray());
       }
@@ -580,24 +573,20 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             {caption}
           </div>
         ) : null}
-        {commentingUserList && commentingUserList.size > 2 ? (
+        {commentingUserList.size > 2 ? (
           <span
             className='view-all-comments'
             onClick={() => handleClickViewAllComments()}
           >{`View all ${commentingUserList.size} comments`}</span>
         ) : null}
-        {commentingUserList
-          ? commentingUserList.map((el, idx) => {
-              if (idx >= commentingUserList.size - 2) {
-                return (
-                  <div className='caption-or-reaction'>
-                    <span className='username'>{el.username}</span> {el.comment}
-                  </div>
-                );
-              } else {
-                return null;
-              }
-            })
+        {commentingUserList.size
+          ? commentingUserList.map((el, idx) =>
+              idx >= commentingUserList.size - 2 ? (
+                <div className='caption-or-reaction'>
+                  <span className='username'>{el.username}</span> {el.comment}
+                </div>
+              ) : null
+            )
           : null}
         <span className='date'>{date}</span>
       </div>
