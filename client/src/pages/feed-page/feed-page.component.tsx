@@ -194,7 +194,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   feedPagePostModalData,
   feedPagePostModalShow,
   feedPagePostOptionsModalShow,
-  clearFeedPagePostModalState,
   showCommentOptionsModal,
   commentToDelete,
   setFeedPagePostModalShow,
@@ -619,48 +618,29 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   return (
     <div className='feed-page'>
       {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
-        userInfoAndPostFileArray.map((el, idx) => {
-          if (idx === userInfoAndPostFileArray.length - 1) {
-            return (
-              <FeedPostContainer
-                userInfo={{
-                  profilePhotoFileString: el.profilePhotoFileString,
-                  username: el.username,
-                  userId: el.userId,
-                  postId: el.postId,
-                  location: el.location,
-                  name: '',
-                  comment: '',
-                }}
-                s3Key={el.postS3Key}
-                fileString={el.postFileString}
-                caption={el.caption}
-                date={el.dateString}
-                key={el.postId}
-                custRef={lastPostContainerElementRef}
-              />
-            );
-          } else {
-            return (
-              <FeedPostContainer
-                userInfo={{
-                  profilePhotoFileString: el.profilePhotoFileString,
-                  username: el.username,
-                  userId: el.userId,
-                  postId: el.postId,
-                  location: el.location,
-                  name: '',
-                  comment: '',
-                }}
-                s3Key={el.postS3Key}
-                fileString={el.postFileString}
-                caption={el.caption}
-                date={el.dateString}
-                key={el.postId}
-              />
-            );
-          }
-        })
+        userInfoAndPostFileArray.map((el, idx) => (
+          <FeedPostContainer
+            userInfo={{
+              profilePhotoFileString: el.profilePhotoFileString,
+              username: el.username,
+              userId: el.userId,
+              postId: el.postId,
+              location: el.location,
+              name: '',
+              comment: '',
+            }}
+            s3Key={el.postS3Key}
+            fileString={el.postFileString}
+            caption={el.caption}
+            date={el.dateString}
+            key={el.postId}
+            custRef={
+              idx === userInfoAndPostFileArray.length - 1
+                ? lastPostContainerElementRef
+                : null
+            }
+          />
+        ))
       ) : (
         <div className='no-franz'>
           Follow users to see their recent posts here
