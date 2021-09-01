@@ -112,8 +112,8 @@ export type UserLite = ImmutableMap<{
   bio: string;
 }>;
 
-export interface PostDataArrayMap {
-  postData: Post[];
+export interface PostDataListMap {
+  postData: List<Post>;
   queryLength?: number;
   userId: string;
 }
@@ -214,13 +214,13 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const [usersFollowingList, setUsersFollowingList] =
     useState<List<Follower> | null>(null);
 
-  const [followingInfoArray, setFollowingInfoArray] = useState<User[] | null>(
-    null
+  const [followingInfoList, setFollowingInfoList] = useState<List<User>>(
+    List()
   );
 
-  const [dataFeedMapArray, setDataFeedMapArray] = useState<
-    PostDataArrayMap[] | null
-  >(null);
+  const [dataFeedMapList, setDataFeedMapList] = useState<List<PostDataListMap>>(
+    List()
+  );
 
   const [followingProfilePhotoArray, setFollowingProfilePhotoArray] = useState<
     PostFile[] | null
@@ -336,20 +336,26 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [usersFollowingList]);
 
   useEffect(() => {
-    if (postMetaDataForUser && dataFeedMapArray) {
-      dataFeedMapArray.forEach((el) => {
+    if (postMetaDataForUser) {
+      const newDataFeedMapList = dataFeedMapList.map((el) => {
         if (postMetaDataForUser.userId === el.userId) {
-          el.queryLength = postMetaDataForUser.queryLength;
+          let elCopy = { ...el };
+          elCopy.queryLength = postMetaDataForUser.queryLength;
+          return elCopy;
         }
+
+        return el;
       });
 
-      setDataFeedMapArray(dataFeedMapArray);
+      console.log('newDataFeedMapList: ', newDataFeedMapList);
+
+      setDataFeedMapList(newDataFeedMapList);
     }
   }, [postMetaDataForUser]);
 
   useEffect(() => {
-    if (pageToFetch > 1 && dataFeedMapArray) {
-      dataFeedMapArray.forEach((el) => {
+    if (pageToFetch > 1) {
+      dataFeedMapList.forEach((el) => {
         if (
           el.queryLength &&
           currentUser &&
@@ -364,50 +370,52 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       });
     }
-  }, [pageToFetch, dataFeedMapArray]);
+  }, [pageToFetch, dataFeedMapList]);
 
   useEffect(() => {
     if (postDataFeedArray.length) {
-      if (dataFeedMapArray) {
+      if (dataFeedMapList.size) {
         postDataFeedArray.forEach((el) => {
-          dataFeedMapArray.forEach((mapEl) => {
+          dataFeedMapList.forEach((mapEl) => {
             if (el[0].userId === mapEl.userId) {
-              mapEl.postData = el;
+              mapEl.postData = List(el);
             }
           });
         });
 
-        setDataFeedMapArray(dataFeedMapArray);
+        setDataFeedMapList(dataFeedMapList);
       } else {
-        let dataMapArray: PostDataArrayMap[] = [];
+        let dataMapList: List<PostDataListMap> = List();
 
         postDataFeedArray.forEach((el) => {
-          dataMapArray.push({ postData: el, userId: el[0].userId });
+          dataMapList = dataMapList.push({
+            postData: List(el),
+            userId: el[0].userId,
+          });
         });
 
-        setDataFeedMapArray(dataMapArray);
+        setDataFeedMapList(dataMapList);
       }
     }
   }, [postDataFeedArray]);
 
   useEffect(() => {
-    if (!followingInfo) {
+    let followingList;
+
+    if (followingInfo) {
+      followingList = List(followingInfo);
+    } else {
       return;
     }
 
-    if (!followingInfoArray) {
-      setFollowingInfoArray(followingInfo);
-    } else if (
-      followingInfoArray &&
-      !compareUserOrPostOrReactionArrays(followingInfoArray, followingInfo)
-    ) {
-      setFollowingInfoArray(followingInfo);
+    if (!compareUserOrPostOrReactionLists(followingInfoList, followingList)) {
+      setFollowingInfoList(followingList);
     }
   }, [followingInfo]);
 
   useEffect(() => {
-    if (currentUser && followingInfoArray) {
-      followingInfoArray.forEach((el) => {
+    if (currentUser) {
+      followingInfoList.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -418,11 +426,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       });
     }
-  }, [followingInfoArray]);
+  }, [followingInfoList]);
 
   useEffect(() => {
-    if (currentUser && dataFeedMapArray) {
-      dataFeedMapArray.forEach((innerObj) => {
+    if (currentUser) {
+      dataFeedMapList.forEach((innerObj) => {
         innerObj.postData.forEach((el) => {
           getPostFileStart({
             s3Key: el.s3Key,
@@ -433,7 +441,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         });
       });
     }
-  }, [dataFeedMapArray, getFeedPostDataConfirm]);
+  }, [dataFeedMapList, getFeedPostDataConfirm]);
 
   useEffect(() => {
     if (!followPhotoFileArray) {
@@ -467,20 +475,19 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (
-      followingInfoArray &&
-      dataFeedMapArray &&
+      dataFeedMapList.size &&
       followingProfilePhotoArray &&
       postFileFeedArray
     ) {
-      let postDataArray: Post[][] = [];
+      let postDataMultiList: List<List<Post>> = List();
 
-      dataFeedMapArray.forEach((el) => {
-        postDataArray.push(el.postData);
+      dataFeedMapList.forEach((el) => {
+        postDataMultiList = postDataMultiList.push(el.postData);
       });
 
       const userInfoAndPostObjArray = prepareUserInfoAndFileArray(
-        followingInfoArray,
-        postDataArray,
+        followingInfoList,
+        postDataMultiList,
         followingProfilePhotoArray,
         postFileFeedArray
       );
@@ -502,8 +509,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
     }
   }, [
-    followingInfoArray,
-    dataFeedMapArray,
+    followingInfoList,
+    dataFeedMapList,
     followingProfilePhotoArray,
     postFileFeedArray,
     getFeedPostDataConfirm,

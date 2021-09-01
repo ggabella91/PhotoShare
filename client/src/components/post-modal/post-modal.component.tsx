@@ -199,8 +199,13 @@ export const PostModal: React.FC<PostModalProps> = ({
         alreadyLikedPost: false,
         reactionId: '',
       });
+      setCaptionInfoList(List());
       setCommentingUserList(List());
       setLikingUsersList(List());
+      setEditPostDetails({
+        editCaption: '',
+        editLocation: '',
+      });
     }
   }, [postId]);
 

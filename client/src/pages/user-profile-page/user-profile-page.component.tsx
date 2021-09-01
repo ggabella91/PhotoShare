@@ -397,13 +397,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [getUsersFollowingConfirm]);
 
   const handleDetermineIfFollowing = () => {
-    if (currentUserUsersFollowing?.length) {
-      currentUserUsersFollowing.forEach((userFollowing) => {
+    if (currentUserUsersFollowing && currentUserUsersFollowing.length) {
+      for (let userFollowing of currentUserUsersFollowing) {
         if (userFollowing.userId === user.id) {
           setIsFollowing(true);
           return;
         }
-      });
+      }
+
       setIsFollowing(false);
       return;
     }

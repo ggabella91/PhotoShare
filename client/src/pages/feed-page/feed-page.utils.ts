@@ -7,8 +7,8 @@ import { UserInfoAndPostFile } from './feed-page.component';
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 export const prepareUserInfoAndFileArray = (
-  followingInfoArray: User[],
-  dataFeedArray: Post[][],
+  followingInfoList: List<User>,
+  dataFeedMultiList: List<List<Post>>,
   followingProfilePhotoArray: PostFile[],
   postFileFeedArray: PostFile[]
 ) => {
@@ -25,7 +25,7 @@ export const prepareUserInfoAndFileArray = (
       let profilePhotoString: string;
       let caption: string;
 
-      dataFeedArray.forEach((innerArray) => {
+      dataFeedMultiList.forEach((innerArray) => {
         innerArray.forEach((innerEl) => {
           if (innerEl.s3Key === el.s3Key) {
             let date = innerEl.createdAt;
@@ -41,7 +41,7 @@ export const prepareUserInfoAndFileArray = (
         });
       });
 
-      followingInfoArray.forEach((userEl) => {
+      followingInfoList.forEach((userEl) => {
         if (userEl.id === id!) {
           username = userEl.username;
           profilePhotoS3Key = userEl.photo || '';
