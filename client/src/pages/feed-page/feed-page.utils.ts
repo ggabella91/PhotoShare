@@ -6,13 +6,13 @@ import { List, Map } from 'immutable';
 import { UserInfoAndPostFile } from './feed-page.component';
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
-export const prepareUserInfoAndFileArray = (
+export const prepareUserInfoAndFileList = (
   followingInfoList: List<User>,
   dataFeedMultiList: List<List<Post>>,
-  followingProfilePhotoArray: PostFile[],
-  postFileFeedArray: PostFile[]
+  followingProfilePhotoList: List<PostFile>,
+  postFileFeedList: List<PostFile>
 ) => {
-  let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
+  let userInfoAndPostObjList: List<UserInfoAndPostFile> = postFileFeedList.map(
     (el) => {
       let location: string;
       let dateString: string;
@@ -48,7 +48,7 @@ export const prepareUserInfoAndFileArray = (
         }
       });
 
-      followingProfilePhotoArray.forEach((userEl) => {
+      followingProfilePhotoList.forEach((userEl) => {
         if (profilePhotoS3Key! && userEl.s3Key === profilePhotoS3Key) {
           profilePhotoString = userEl.fileString;
         }
@@ -88,7 +88,7 @@ export const prepareUserInfoAndFileArray = (
     }
   );
 
-  return userInfoAndPostObjArray;
+  return userInfoAndPostObjList;
 };
 
 export const compareFollowerArrays = (

@@ -92,12 +92,10 @@ import PostOrCommentOptionsModal from '../../components/post-or-comment-options-
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 import {
-  prepareUserInfoAndFileArray,
+  prepareUserInfoAndFileList,
   compareUserOrPostOrReactionLists,
   comparePostFileLists,
-  comparePostFileArrays,
-  compareUserOrPostOrReactionArrays,
-  compareUserInfoAndDataObjArrays,
+  compareUserInfoAndDataObjLists,
 } from './feed-page.utils';
 import './feed-page.styles.scss';
 
@@ -211,8 +209,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     })
   );
 
-  const [usersFollowingList, setUsersFollowingList] =
-    useState<List<Follower> | null>(null);
+  const [usersFollowingList, setUsersFollowingList] = useState<List<Follower>>(
+    List()
+  );
 
   const [followingInfoList, setFollowingInfoList] = useState<List<User>>(
     List()
@@ -222,17 +221,17 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     List()
   );
 
-  const [followingProfilePhotoArray, setFollowingProfilePhotoArray] = useState<
-    PostFile[] | null
-  >(null);
+  const [followingProfilePhotoList, setFollowingProfilePhotoList] = useState<
+    List<PostFile>
+  >(List());
 
-  const [postFileFeedArray, setPostFileFeedArray] = useState<PostFile[] | null>(
-    null
+  const [postFileFeedArray, setPostFileFeedArray] = useState<List<PostFile>>(
+    List()
   );
 
-  const [userInfoAndPostFileArray, setUserInfoAndPostFileArray] = useState<
-    UserInfoAndPostFile[] | null
-  >(null);
+  const [userInfoAndPostFileList, setUserInfoAndPostFileArray] = useState<
+    List<UserInfoAndPostFile>
+  >(List());
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
@@ -253,9 +252,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [currentUserPost, setCurrentUserPost] = useState<boolean | null>(null);
 
-  const [currentUserPostOrComment, setCurrentUserPostOrComment] = useState<
-    boolean | null
-  >(null);
+  const [currentUserPostOrComment, setCurrentUserPostOrComment] =
+    useState<boolean>(false);
 
   let postsBucket: string, profileBucket: string;
 
@@ -301,38 +299,31 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     if (currentUserUsersFollowing) {
       currentUserUsersFollowingList = List(currentUserUsersFollowing);
     } else {
-      setUsersFollowingList(null);
+      setUsersFollowingList(List());
       return;
     }
 
-    if (!usersFollowingList) {
-      setUsersFollowingList(currentUserUsersFollowingList);
-    } else if (
-      usersFollowingList &&
-      !usersFollowingList.equals(currentUserUsersFollowingList)
-    ) {
+    if (!usersFollowingList.equals(currentUserUsersFollowingList)) {
       setUsersFollowingList(currentUserUsersFollowingList);
     }
   }, [currentUserUsersFollowing]);
 
   useEffect(() => {
-    if (usersFollowingList) {
-      usersFollowingList.forEach((user) => {
-        if (currentUser) {
-          getOtherUserStart({
-            usernameOrId: user.userId,
-            type: OtherUserType.FOLLOWING,
-          });
+    usersFollowingList.forEach((user) => {
+      if (currentUser) {
+        getOtherUserStart({
+          usernameOrId: user.userId,
+          type: OtherUserType.FOLLOWING,
+        });
 
-          getPostDataStart({
-            userId: user.userId,
-            dataReqType: DataRequestType.feed,
-            pageToShow: pageToFetch,
-            limit: 2,
-          });
-        }
-      });
-    }
+        getPostDataStart({
+          userId: user.userId,
+          dataReqType: DataRequestType.feed,
+          pageToShow: pageToFetch,
+          limit: 2,
+        });
+      }
+    });
   }, [usersFollowingList]);
 
   useEffect(() => {
@@ -444,39 +435,37 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [dataFeedMapList, getFeedPostDataConfirm]);
 
   useEffect(() => {
-    if (!followPhotoFileArray) {
+    let followPhotoFileList;
+
+    if (followPhotoFileArray) {
+      followPhotoFileList = List(followPhotoFileArray);
+    } else {
       return;
     }
 
-    if (!followingProfilePhotoArray) {
-      setFollowingProfilePhotoArray(followPhotoFileArray);
-    } else if (
-      followingProfilePhotoArray &&
-      !comparePostFileArrays(followingProfilePhotoArray, followPhotoFileArray)
-    ) {
-      setFollowingProfilePhotoArray(followPhotoFileArray);
+    if (!comparePostFileLists(followingProfilePhotoList, followPhotoFileList)) {
+      setFollowingProfilePhotoList(followPhotoFileList);
     }
   }, [followPhotoFileArray]);
 
   useEffect(() => {
-    if (!postFiles) {
+    let postFilesList;
+
+    if (postFiles) {
+      postFilesList = List(postFiles);
+    } else {
       return;
     }
 
-    if (!postFileFeedArray) {
-      setPostFileFeedArray(postFiles);
-    } else if (
-      postFileFeedArray &&
-      !comparePostFileArrays(postFileFeedArray, postFiles)
-    ) {
-      setPostFileFeedArray(postFiles);
+    if (!comparePostFileLists(postFileFeedArray, postFilesList)) {
+      setPostFileFeedArray(postFilesList);
     }
   }, [postFiles]);
 
   useEffect(() => {
     if (
       dataFeedMapList.size &&
-      followingProfilePhotoArray &&
+      followingProfilePhotoList.size &&
       postFileFeedArray
     ) {
       let postDataMultiList: List<List<Post>> = List();
@@ -485,33 +474,32 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         postDataMultiList = postDataMultiList.push(el.postData);
       });
 
-      const userInfoAndPostObjArray = prepareUserInfoAndFileArray(
+      const userInfoAndPostObjList = prepareUserInfoAndFileList(
         followingInfoList,
         postDataMultiList,
-        followingProfilePhotoArray,
+        followingProfilePhotoList,
         postFileFeedArray
       );
 
-      const sortedUserInfoAndPostArray = userInfoAndPostObjArray.sort(
+      const sortedUserInfoAndPostList = userInfoAndPostObjList.sort(
         (a, b) => b.dateInt - a.dateInt
       );
 
       if (
-        userInfoAndPostFileArray &&
-        compareUserInfoAndDataObjArrays(
-          userInfoAndPostFileArray,
-          sortedUserInfoAndPostArray
+        compareUserInfoAndDataObjLists(
+          userInfoAndPostFileList,
+          sortedUserInfoAndPostList
         )
       ) {
         return;
       }
 
-      setUserInfoAndPostFileArray(sortedUserInfoAndPostArray);
+      setUserInfoAndPostFileArray(sortedUserInfoAndPostList);
     }
   }, [
     followingInfoList,
     dataFeedMapList,
-    followingProfilePhotoArray,
+    followingProfilePhotoList,
     postFileFeedArray,
     getFeedPostDataConfirm,
   ]);
@@ -624,8 +612,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   return (
     <div className='feed-page'>
-      {userInfoAndPostFileArray && userInfoAndPostFileArray.length ? (
-        userInfoAndPostFileArray.map((el, idx) => (
+      {userInfoAndPostFileList.size ? (
+        userInfoAndPostFileList.map((el, idx) => (
           <FeedPostContainer
             userInfo={{
               profilePhotoFileString: el.profilePhotoFileString,
@@ -642,7 +630,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             date={el.dateString}
             key={el.postId}
             custRef={
-              idx === userInfoAndPostFileArray.length - 1
+              idx === userInfoAndPostFileList.size - 1
                 ? lastPostContainerElementRef
                 : null
             }
