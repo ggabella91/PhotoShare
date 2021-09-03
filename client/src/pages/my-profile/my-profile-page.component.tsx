@@ -187,15 +187,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [followersOrFollowingModalShow, setFollowersOrFollowingModalShow] =
     useState(false);
 
-  const [currentUserPostOrComment, setCurrentUserPostOrComment] = useState<
-    boolean | null
-  >(null);
+  const [currentUserPostOrComment, setCurrentUserPostOrComment] =
+    useState<boolean>(false);
 
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
 
-  const [postLikersList, setPostLikersList] =
-    useState<List<UserInfoAndOtherData> | null>(null);
+  const [postLikersList, setPostLikersList] = useState<
+    List<UserInfoAndOtherData>
+  >(List());
 
   let postsBucket: string, profileBucket: string;
 
@@ -565,7 +565,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         }}
         isFollowersModal={isFollowersModal}
       />
-      {postLikersList ? (
+      {postLikersList.size ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showPostLikingUsersModal}
