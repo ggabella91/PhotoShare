@@ -158,14 +158,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [profilePhotoString, setProfilePhotoString] = useState<string>('');
 
   const [followersList, setFollowersList] = useState<List<Follower>>(List());
-  const [usersFollowingArray, setUsersFollowingArray] = useState<
-    Follower[] | null
-  >(null);
+  const [usersFollowingList, setUsersFollowingList] = useState<List<Follower>>(
+    List()
+  );
 
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const [postDataArray, setPostDataArray] = useState<Post[]>([]);
-  const [postFileArray, setPostFileArray] = useState<PostFile[]>([]);
+  const [postDataList, setPostDataList] = useState<List<Post>>(List());
+  const [postFileList, setPostFileList] = useState<List<PostFile>>(List());
 
   const [postModalShow, setPostModalShow] = useState(false);
   const [postModalProps, setPostModalProps] = useState<PostModalProps>({
@@ -240,9 +240,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
 
     if (currentUserUsersFollowing) {
-      setUsersFollowingArray(currentUserUsersFollowing);
+      setUsersFollowingList(List(currentUserUsersFollowing));
     } else {
-      setUsersFollowingArray(null);
+      setUsersFollowingList(List());
     }
   }, [followers, currentUserUsersFollowing]);
 
@@ -272,13 +272,13 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (postData && postData.length) {
-      setPostDataArray(postData);
+      setPostDataList(List(postData));
     }
   }, [postData]);
 
   useEffect(() => {
     if (getSinglePostDataConfirm) {
-      const postDataArrayCopy = postDataArray.map((el) => {
+      const postDataArrayCopy = postDataList.map((el) => {
         if (el.id === getSinglePostDataConfirm.id) {
           return getSinglePostDataConfirm;
         } else {
@@ -286,17 +286,17 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         }
       });
 
-      setPostDataArray(postDataArrayCopy);
+      setPostDataList(postDataArrayCopy);
     }
   }, [getSinglePostDataConfirm]);
 
   useEffect(() => {
     if (
       postData &&
-      postDataArray.length === postData.length &&
+      postDataList.size === postData.length &&
       !getSinglePostDataConfirm
     ) {
-      postDataArray.forEach((post) => {
+      postDataList.forEach((post) => {
         getPostFileStart({
           s3Key: post.s3Key,
           bucket: postsBucket,
@@ -305,21 +305,21 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         });
       });
     }
-  }, [postDataArray]);
+  }, [postDataList]);
 
   useEffect(() => {
     if (postData && postFiles.length === postData.length) {
-      const orderedFiles: PostFile[] = [];
+      let orderedFiles: List<PostFile> = List();
 
-      postDataArray.forEach((post) => {
+      postDataList.forEach((post) => {
         const fileMatch = postFiles.find((el) => post.s3Key === el.s3Key);
 
         if (fileMatch) {
-          orderedFiles.push(fileMatch);
+          orderedFiles = orderedFiles.push(fileMatch);
         }
       });
 
-      setPostFileArray(orderedFiles);
+      setPostFileList(orderedFiles);
     }
   }, [postFiles]);
 
@@ -330,20 +330,20 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       setPostModalShow(false);
       setClearPostModalLocalState(true);
 
-      const newDataArray = postDataArray.filter(
+      const newDataArray = postDataList.filter(
         (el) => el.id !== postModalProps.id
       );
-      setPostDataArray(newDataArray);
+      setPostDataList(newDataArray);
 
-      const newFileArray = postFileArray.filter(
+      const newFileArray = postFileList.filter(
         (el) => el.s3Key !== postModalProps.s3Key
       );
-      setPostFileArray(newFileArray);
+      setPostFileList(newFileArray);
     }
   }, [archivePostConfirm]);
 
   const handleRenderPostModal = (file: PostFile) => {
-    const postData = postDataArray.find((el) => el.s3Key === file.s3Key);
+    const postData = postDataList.find((el) => el.s3Key === file.s3Key);
 
     if (postData) {
       const caption = postData.caption || '';
@@ -395,7 +395,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   };
 
   const handleRenderFollowingModal = () => {
-    if (usersFollowingArray && usersFollowingArray.length) {
+    if (usersFollowingList.size) {
       setIsFollowersModal(false);
       setFollowersOrFollowingModalShow(true);
     }
@@ -407,7 +407,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         ? `${baseClassName} clickable`
         : `${baseClassName}`;
     } else if (type === 'following') {
-      return usersFollowingArray && usersFollowingArray.length
+      return usersFollowingList.size
         ? `${baseClassName} clickable`
         : `${baseClassName}`;
     }
@@ -464,7 +464,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               <span className='edit-narrow-text'>Edit profile</span>
             </NavLink>
             <div className='posts-followers-following-stats'>
-              <span className='user-stat'>{postDataArray.length} Posts</span>
+              <span className='user-stat'>{postDataList.size} Posts</span>
               <span
                 className={handleMakeStatClickable('followers', 'user-stat')}
                 onClick={handleRenderFollowersModal}
@@ -475,7 +475,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
                 className={handleMakeStatClickable('following', 'user-stat')}
                 onClick={handleRenderFollowingModal}
               >
-                {usersFollowingArray ? usersFollowingArray.length : 0} Following
+                {usersFollowingList.size ? usersFollowingList.size : 0}{' '}
+                Following
               </span>
             </div>
             <div className='name-and-bio'>
@@ -490,7 +491,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         </div>
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
-            <li className='stats-item'>{postDataArray.length} Posts</li>
+            <li className='stats-item'>{postDataList.size} Posts</li>
             <li
               className={handleMakeStatClickable('followers', 'stats-item')}
               onClick={handleRenderFollowersModal}
@@ -501,14 +502,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               className={handleMakeStatClickable('following', 'stats-item')}
               onClick={handleRenderFollowingModal}
             >
-              {usersFollowingArray ? usersFollowingArray.length : 0} Following
+              {usersFollowingList.size ? usersFollowingList.size : 0} Following
             </li>
           </ul>
         </div>
       </div>
       <div className='posts-grid'>
-        {postFileArray.length
-          ? postFileArray.map((file, idx) => (
+        {postFileList.size
+          ? postFileList.map((file, idx) => (
               <PostTile
                 fileString={file.fileString}
                 key={idx}
@@ -556,7 +557,11 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         isCurrentUserPostOrComment={currentUserPostOrComment}
       />
       <FollowersOrFollowingOrLikesModal
-        users={isFollowersModal ? followersList.toArray() : usersFollowingArray}
+        users={
+          isFollowersModal
+            ? followersList.toArray()
+            : usersFollowingList.toArray()
+        }
         show={followersOrFollowingModalShow}
         onHide={() => {
           setFollowersOrFollowingModalShow(false);
