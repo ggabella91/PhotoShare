@@ -155,11 +155,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   setShowPostEditForm,
 }) => {
   const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
-  const [profilePhotoString, setProfilePhotoString] = useState<string | null>(
-    null
-  );
+  const [profilePhotoString, setProfilePhotoString] = useState<string>('');
 
-  const [followersArray, setFollowersArray] = useState<Follower[] | null>(null);
+  const [followersList, setFollowersList] = useState<List<Follower>>(List());
   const [usersFollowingArray, setUsersFollowingArray] = useState<
     Follower[] | null
   >(null);
@@ -236,9 +234,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (followers) {
-      setFollowersArray(followers);
+      setFollowersList(List(followers));
     } else {
-      setFollowersArray(null);
+      setFollowersList(List());
     }
 
     if (currentUserUsersFollowing) {
@@ -390,7 +388,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }, [getUsersFollowingConfirm]);
 
   const handleRenderFollowersModal = () => {
-    if (followersArray && followersArray.length) {
+    if (followersList.size) {
       setIsFollowersModal(true);
       setFollowersOrFollowingModalShow(true);
     }
@@ -405,7 +403,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const handleMakeStatClickable = (type: string, baseClassName: string) => {
     if (type === 'followers') {
-      return followersArray && followersArray.length
+      return followersList.size
         ? `${baseClassName} clickable`
         : `${baseClassName}`;
     } else if (type === 'following') {
@@ -440,14 +438,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       <div className='user-bio'>
         <div className='avatar-and-details'>
           <div className='avatar'>
-            {profilePhotoString ? (
+            {profilePhotoString.length ? (
               <img
                 className='profile-photo'
                 src={`data:image/jpeg;base64,${profilePhotoString}`}
                 alt='profile-pic'
               />
             ) : null}
-            {!profilePhotoString ? (
+            {!profilePhotoString.length ? (
               <div className='user-bio-photo-placeholder'>
                 <span className='user-bio-photo-placeholder-text'>
                   No photo
@@ -471,7 +469,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
                 className={handleMakeStatClickable('followers', 'user-stat')}
                 onClick={handleRenderFollowersModal}
               >
-                {followersArray ? followersArray.length : 0} Followers
+                {followersList.size ? followersList.size : 0} Followers
               </span>
               <span
                 className={handleMakeStatClickable('following', 'user-stat')}
@@ -497,7 +495,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               className={handleMakeStatClickable('followers', 'stats-item')}
               onClick={handleRenderFollowersModal}
             >
-              {followersArray ? followersArray.length : 0} Followers
+              {followersList.size ? followersList.size : 0} Followers
             </li>
             <li
               className={handleMakeStatClickable('following', 'stats-item')}
@@ -529,7 +527,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         onHide={() => handleHidePostModal()}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
-        userProfilePhotoFile={profilePhotoString || ''}
+        userProfilePhotoFile={profilePhotoString}
         userName={user.username}
         userId={user.id}
         clearLocalState={clearPostModalLocalState}
@@ -558,7 +556,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         isCurrentUserPostOrComment={currentUserPostOrComment}
       />
       <FollowersOrFollowingOrLikesModal
-        users={isFollowersModal ? followersArray : usersFollowingArray}
+        users={isFollowersModal ? followersList.toArray() : usersFollowingArray}
         show={followersOrFollowingModalShow}
         onHide={() => {
           setFollowersOrFollowingModalShow(false);

@@ -63,9 +63,6 @@ import {
   comparePostFileLists,
   compareUserOrPostOrReactionLists,
   compareUserInfoAndDataObjLists,
-  compareUserOrPostOrReactionArrays,
-  compareUserInfoAndDataObjArrays,
-  comparePostFileArrays,
 } from '../../pages/feed-page/feed-page.utils';
 
 import Button from '../button/button.component';
