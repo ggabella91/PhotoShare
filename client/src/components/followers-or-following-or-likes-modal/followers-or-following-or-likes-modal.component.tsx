@@ -82,9 +82,9 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     clearFollowPhotoFileArray,
     ...props
   }) => {
-    const [userInfoAndPhotoArray, setUserInfoAndPhotoList] = useState<
+    const [userInfoAndPhotoList, setUserInfoAndPhotoList] = useState<
       List<UserInfoData>
-    >(List([]));
+    >(List());
 
     let bucket: string;
 
@@ -99,19 +99,19 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
         clearFollowPhotoFileArray();
 
         if (isFollowersModal) {
-          for (let user of users) {
+          users.forEach((user) => {
             getOtherUserStart({
               type: OtherUserType.FOLLOWERS,
               usernameOrId: user.followerId,
             });
-          }
+          });
         } else {
-          for (let user of users) {
+          users.forEach((user) => {
             getOtherUserStart({
               type: OtherUserType.FOLLOWING,
               usernameOrId: user.userId,
             });
-          }
+          });
         }
       }
     }, [users]);
@@ -129,12 +129,12 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     const handleRenderFollowersOrFollowingInfoArray = (
       followersOrFollowing: User[]
     ) => {
-      let followersOrFollowingList;
+      let followersOrFollowingList: List<User>;
 
       if (followersOrFollowing.length) {
         followersOrFollowingList = List(followersOrFollowing);
       } else {
-        followersOrFollowingList = List([]);
+        followersOrFollowingList = List();
       }
 
       if (
@@ -229,7 +229,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
         </Modal.Header>
         <Modal.Body className='followers-following-modal-body'>
           <UserInfo
-            userInfoArray={userInfoAndPhotoArray.toArray()}
+            userInfoArray={userInfoAndPhotoList.toArray()}
             styleType={StyleType.modal}
           />
         </Modal.Body>
