@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
+import { List } from 'immutable';
 
 import { User, Error } from '../../redux/user/user.types';
 import {
@@ -71,9 +72,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   clearSuggestionPhotoFileArray,
 }) => {
   const [searchString, setSearchString] = useState('');
-  const [userSuggestionsArray, setUserSuggestionsArray] = useState<
-    UserInfoData[]
-  >([]);
+  const [userSuggestionsList, setUserSuggestionsList] = useState<
+    List<UserInfoData>
+  >(List());
 
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
   const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
@@ -91,13 +92,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   ) => {
     const { value } = event.target;
 
-    setUserSuggestionsArray([]);
+    setUserSuggestionsList(List());
     setSearchString(value);
   };
 
   useEffect(() => {
     clearUserSuggestions();
-    setUserSuggestionsArray([]);
+    setUserSuggestionsList(List());
     clearSuggestionPhotoFileArray();
   }, [currentUser]);
 
@@ -130,43 +131,51 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       userSuggestionProfilePhotoFiles &&
       userSuggestionProfilePhotoFiles.length
     ) {
-      const suggestedUser: UserInfoData[] = userSuggestions.map((el: User) => {
-        let photoFileString: string;
+      const userSuggestionsAsList = List(userSuggestions);
 
-        for (let file of userSuggestionProfilePhotoFiles) {
-          if (el.photo === file.s3Key) {
-            photoFileString = file.fileString;
+      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
+        (el: User) => {
+          let photoFileString: string;
+
+          for (let file of userSuggestionProfilePhotoFiles) {
+            if (el.photo === file.s3Key) {
+              photoFileString = file.fileString;
+            }
           }
+
+          return {
+            name: el.name,
+            username: el.username,
+            photo: el.photo || '',
+            profilePhotoFileString: photoFileString!,
+            location: '',
+            comment: '',
+          };
         }
+      );
 
-        return {
-          name: el.name,
-          username: el.username,
-          photo: el.photo || '',
-          profilePhotoFileString: photoFileString!,
-          location: '',
-          comment: '',
-        };
-      });
-
-      setUserSuggestionsArray(suggestedUser);
+      setUserSuggestionsList(suggestedUser);
     } else if (
       userSuggestions &&
       !userSuggestionProfilePhotoFiles &&
       userSuggestionProfilePhotoConfirm
     ) {
-      const suggestedUser: UserInfoData[] = userSuggestions.map((el: User) => {
-        return {
-          name: el.name,
-          username: el.username,
-          photo: el.photo || '',
-          profilePhotoFileString: '',
-          location: '',
-          comment: '',
-        };
-      });
+      const userSuggestionsAsList = List(userSuggestions);
 
-      setUserSuggestionsArray(suggestedUser);
+      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
+        (el: User) => {
+          return {
+            name: el.name,
+            username: el.username,
+            photo: el.photo || '',
+            profilePhotoFileString: '',
+            location: '',
+            comment: '',
+          };
+        }
+      );
+
+      setUserSuggestionsList(suggestedUser);
     }
   }, [
     userSuggestions,
@@ -209,12 +218,12 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         />
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
           <UserInfo
-            userInfoArray={userSuggestionsArray}
+            userInfoArray={userSuggestionsList.toArray()}
             styleType={StyleType.suggestion}
           />
         )}
         {showUserSuggestions &&
-        !userSuggestionsArray.length &&
+        !userSuggestionsList.size &&
         userSuggestionsConfirm ? (
           <div className='no-matches'>
             <span className='no-matches-text'>No matches found</span>
