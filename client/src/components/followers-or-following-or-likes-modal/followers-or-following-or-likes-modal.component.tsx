@@ -229,7 +229,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
         </Modal.Header>
         <Modal.Body className='followers-following-modal-body'>
           <UserInfo
-            userInfoArray={userInfoAndPhotoList.toArray()}
+            userInfoList={userInfoAndPhotoList}
             styleType={StyleType.modal}
           />
         </Modal.Body>
