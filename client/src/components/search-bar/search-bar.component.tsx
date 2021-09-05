@@ -137,11 +137,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         (el: User) => {
           let photoFileString: string;
 
-          for (let file of userSuggestionProfilePhotoFiles) {
+          userSuggestionProfilePhotoFiles.forEach((file) => {
             if (el.photo === file.s3Key) {
               photoFileString = file.fileString;
             }
-          }
+          });
 
           return {
             name: el.name,
@@ -163,16 +163,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       const userSuggestionsAsList = List(userSuggestions);
 
       const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
-        (el: User) => {
-          return {
-            name: el.name,
-            username: el.username,
-            photo: el.photo || '',
-            profilePhotoFileString: '',
-            location: '',
-            comment: '',
-          };
-        }
+        (el: User) => ({
+          name: el.name,
+          username: el.username,
+          photo: el.photo || '',
+          profilePhotoFileString: '',
+          location: '',
+          comment: '',
+        })
       );
 
       setUserSuggestionsList(suggestedUser);
@@ -218,7 +216,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         />
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
           <UserInfo
-            userInfoArray={userSuggestionsList.toArray()}
+            userInfoList={userSuggestionsList}
             styleType={StyleType.suggestion}
           />
         )}

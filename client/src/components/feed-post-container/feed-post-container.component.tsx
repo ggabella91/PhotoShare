@@ -545,7 +545,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   return (
     <div className='feed-post-container' ref={custRef}>
       <div className='profile-and-options'>
-        <UserInfo styleType={StyleType.feed} userInfoArray={[userInfo]} />
+        <UserInfo styleType={StyleType.feed} userInfoList={List([userInfo])} />
       </div>
       <div className='image-background'>
         <img

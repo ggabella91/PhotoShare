@@ -604,7 +604,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             {captionInfoList.size && !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.comment}
-                userInfoArray={captionInfoList.toArray()}
+                userInfoList={captionInfoList}
                 isCaption
                 isCaptionOwner={isCurrentUserPost ? true : false}
               />
@@ -614,7 +614,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             {commentingUserList.size ? (
               <UserInfo
                 styleType={StyleType.comment}
-                userInfoArray={commentingUserList.toArray()}
+                userInfoList={commentingUserList}
               />
             ) : null}
           </div>
