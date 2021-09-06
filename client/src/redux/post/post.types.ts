@@ -1,5 +1,7 @@
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
+import { AlreadyLikedAndReactionId } from '../../components/post-modal/post-modal.component';
 import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
+import { List, Map } from 'immutable';
 
 export enum PostActions {
   CREATE_POST_START = 'CREATE_POST_START',
@@ -61,6 +63,10 @@ export enum PostActions {
   GET_FEED_POST_FILE_SUCCESS = 'GET_FEED_POST_FILE_SUCCESS',
   GET_FEED_POST_REACTIONS_SUCCESS = 'GET_FEED_POST_REACTIONS_SUCCESS',
   GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS',
+
+  // Actions specific to caching post modal reaction data
+  SAVE_POST_MODAL_DATA_TO_CACHE = 'SAVE_POST_MODAL_DATA_TO_CACHE',
+  REMOVE_POST_MODAL_DATA_FROM_CACHE = 'REMOVE_POST_MODAL_DATA_FROM_CACHE',
 }
 
 export interface PostError {
@@ -183,6 +189,13 @@ export interface PostMetaData {
   userId: string;
 }
 
+export interface PostModalDataToCache {
+  postId: string;
+  commentingUserList: List<UserInfoAndOtherData>;
+  likingUsersList: List<UserInfoAndOtherData>;
+  alreadyLikedPostAndReactionId: AlreadyLikedAndReactionId;
+}
+
 export interface PostState {
   postData: Post[] | null;
   postDataFeedArray: Post[][];
@@ -234,6 +247,9 @@ export interface PostState {
   feedPostReactionsArray: Reaction[][];
   feedReactorPhotoFileArray: PostFile[] | null;
   feedUsersProfilePhotoConfirm: string | null;
+
+  // Post modal data cache
+  postModalDataCache: Map<string, any>;
 }
 
 export interface CreatePostStart {
@@ -523,6 +539,18 @@ export interface GetUserPhotoForFeedReactorArraySuccess {
   payload: PostFile;
 }
 
+// Interfaces related to caching /uncaching post modal data
+
+export interface SavePostModalDataToCache {
+  type: typeof PostActions.SAVE_POST_MODAL_DATA_TO_CACHE;
+  payload: PostModalDataToCache;
+}
+
+export interface RemovePostModalDataFromCache {
+  type: typeof PostActions.REMOVE_POST_MODAL_DATA_FROM_CACHE;
+  payload: string;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -580,4 +608,6 @@ export type PostActionTypes =
   | GetSinglePostDataFailure
   | GetFeedPostFileSuccess
   | GetFeedPostReactionsSuccess
-  | GetUserPhotoForFeedReactorArraySuccess;
+  | GetUserPhotoForFeedReactorArraySuccess
+  | SavePostModalDataToCache
+  | RemovePostModalDataFromCache;

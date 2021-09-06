@@ -38,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
   getPostFileStart,
   signOutStart,
 }) => {
-  const [photoFileString, setPhotoFileString] = useState<string | null>(null);
+  const [photoFileString, setPhotoFileString] = useState<string>('');
   const [searchBarKey, setSearchBarKey] = useState(Math.random());
 
   const path = useParams();
@@ -68,8 +68,8 @@ export const Header: React.FC<HeaderProps> = ({
         user: UserType.self,
         fileRequestType: FileRequestType.singlePost,
       });
-    } else if (!currentUser && photoFileString) {
-      setPhotoFileString(null);
+    } else if (!currentUser && photoFileString.length) {
+      setPhotoFileString('');
     }
   }, [profilePhotoKey, currentUser]);
 
@@ -88,14 +88,14 @@ export const Header: React.FC<HeaderProps> = ({
         <div>
           <SearchBar key={searchBarKey} />
           <NavLink to={`/${currentUser.username}`} className='avatar'>
-            {photoFileString ? (
+            {photoFileString.length ? (
               <img
                 className='profile-photo'
                 src={`data:image/jpeg;base64,${photoFileString}`}
                 alt='profile-pic'
               />
             ) : null}
-            {!photoFileString ? (
+            {!photoFileString.length ? (
               <div className='photo-placeholder'>
                 <span className='photo-placeholder-text'>No photo</span>
               </div>
