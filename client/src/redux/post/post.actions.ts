@@ -19,6 +19,7 @@ import {
   PostMetaData,
   EditPostDetailsReq,
   SinglePostDataReq,
+  PostModalDataToCache,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -370,4 +371,18 @@ export const getUserPhotoForFeedReactorArraySuccess = (
 ): PostActionTypes => ({
   type: PostActions.GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS,
   payload: postFile,
+});
+
+export const SavePostModalDataToCache = (
+  postModalDataToCache: PostModalDataToCache
+): PostActionTypes => ({
+  type: PostActions.SAVE_POST_MODAL_DATA_TO_CACHE,
+  payload: postModalDataToCache,
+});
+
+export const RemovePostModalDataFromCache = (
+  postId: string
+): PostActionTypes => ({
+  type: PostActions.REMOVE_POST_MODAL_DATA_FROM_CACHE,
+  payload: postId,
 });

@@ -70,11 +70,14 @@ import EditPostForm from '../edit-post-form/edit-post-form.component';
 import {
   compareUserOrPostOrReactionLists,
   compareUserInfoAndDataObjLists,
-  compareUserOrPostOrReactionArrays,
-  compareUserInfoAndDataObjArrays,
 } from '../../pages/feed-page/feed-page.utils';
 
 import './post-modal.styles.scss';
+
+export interface AlreadyLikedAndReactionId {
+  alreadyLikedPost: boolean;
+  reactionId: string;
+}
 
 interface PostModalProps {
   currentUser: User | null;
@@ -175,7 +178,10 @@ export const PostModal: React.FC<PostModalProps> = ({
   >(List());
 
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
-    useState({ alreadyLikedPost: false, reactionId: '' });
+    useState<AlreadyLikedAndReactionId>({
+      alreadyLikedPost: false,
+      reactionId: '',
+    });
 
   const [editPostDetails, setEditPostDetails] = useState({
     editCaption: '',

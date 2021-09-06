@@ -1,3 +1,5 @@
+import { Map } from 'immutable';
+
 import { PostActions, PostActionTypes, PostState } from './post.types';
 import {
   addPostFileToArray,
@@ -7,6 +9,7 @@ import {
 } from './post.utils';
 
 import { POST_MODAL_DATA_INITIAL_STATE } from '../../components/feed-post-container/feed-post-container.component';
+import { act } from 'react-dom/test-utils';
 
 const INITIAL_STATE: PostState = {
   postData: null,
@@ -59,6 +62,9 @@ const INITIAL_STATE: PostState = {
   feedPostReactionsArray: [],
   feedReactorPhotoFileArray: null,
   feedUsersProfilePhotoConfirm: null,
+
+  // Post modal data cache
+  postModalDataCache: Map<string, any>(),
 };
 
 const postReducer = (
@@ -398,6 +404,24 @@ const postReducer = (
       return {
         ...state,
         showPostEditForm: action.payload,
+      };
+    case PostActions.SAVE_POST_MODAL_DATA_TO_CACHE:
+      return {
+        ...state,
+        postModalDataCache: state.postModalDataCache.set(
+          action.payload.postId,
+          {
+            commentingUserList: action.payload.commentingUserList,
+            likingUsersList: action.payload.likingUsersList,
+            alreadyLikedPostAndReactionId:
+              action.payload.alreadyLikedPostAndReactionId,
+          }
+        ),
+      };
+    case PostActions.REMOVE_POST_MODAL_DATA_FROM_CACHE:
+      return {
+        ...state,
+        postModalDataCache: state.postModalDataCache.delete(action.payload),
       };
     default:
       return state;

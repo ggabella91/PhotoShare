@@ -241,3 +241,8 @@ export const selectFeedUsersProfilePhotoConfirm = createSelector(
   [selectPostState],
   (postState: PostState) => postState.feedUsersProfilePhotoConfirm
 );
+
+export const selectPostModalDataCache = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postModalDataCache
+);
