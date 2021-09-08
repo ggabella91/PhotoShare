@@ -191,6 +191,10 @@ export interface PostMetaData {
 
 export interface PostModalDataToCache {
   postId: string;
+  cacheObj: PostModalCacheObj;
+}
+
+export interface PostModalCacheObj {
   commentingUserList: List<UserInfoAndOtherData>;
   likingUsersList: List<UserInfoAndOtherData>;
   alreadyLikedPostAndReactionId: AlreadyLikedAndReactionId;

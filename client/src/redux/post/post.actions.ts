@@ -373,14 +373,14 @@ export const getUserPhotoForFeedReactorArraySuccess = (
   payload: postFile,
 });
 
-export const SavePostModalDataToCache = (
+export const savePostModalDataToCache = (
   postModalDataToCache: PostModalDataToCache
 ): PostActionTypes => ({
   type: PostActions.SAVE_POST_MODAL_DATA_TO_CACHE,
   payload: postModalDataToCache,
 });
 
-export const RemovePostModalDataFromCache = (
+export const removePostModalDataFromCache = (
   postId: string
 ): PostActionTypes => ({
   type: PostActions.REMOVE_POST_MODAL_DATA_FROM_CACHE,
