@@ -273,14 +273,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postReactionConfirm.postId === postId &&
       postModalProps.id
     ) {
-      dispatch(removePostModalDataFromCache(postId));
+      clearPostReactions();
 
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: true,
         reactionId: postReactionConfirm.reactionId,
       });
       setLikingUsersList(List());
-      clearPostReactions();
+      dispatch(removePostModalDataFromCache(postId));
       getPostReactionsStart({
         postId,
         reactionReqType: ReactionRequestType.feedPost,
@@ -295,14 +295,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       deleteReactionConfirm.postId === postId &&
       postModalProps.id
     ) {
-      dispatch(removePostModalDataFromCache(postId));
+      clearPostReactions();
 
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
         reactionId: '',
       });
       setLikingUsersList(List());
-      clearPostReactions();
+      dispatch(removePostModalDataFromCache(postId));
       getPostReactionsStart({
         postId,
         reactionReqType: ReactionRequestType.feedPost,
@@ -316,9 +316,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postReactionConfirm.message === 'Post comment created successfully!' &&
       postId
     ) {
-      dispatch(removePostModalDataFromCache(postId));
-
       clearPostReactions();
+
+      dispatch(removePostModalDataFromCache(postId));
       getPostReactionsStart({
         postId,
         reactionReqType: ReactionRequestType.feedPost,
@@ -332,9 +332,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       deleteReactionConfirm.message === 'Comment removed successfully!' &&
       postId
     ) {
-      dispatch(removePostModalDataFromCache(postId));
-
       clearPostReactions();
+
+      dispatch(removePostModalDataFromCache(postId));
       getPostReactionsStart({
         postId,
         reactionReqType: ReactionRequestType.feedPost,
