@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { fromJS, List, Map } from 'immutable';
+import { List } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -52,6 +52,7 @@ import {
   setFeedPagePostModalData,
   setFeedPagePostModalShow,
   setClearFeedPagePostModalState,
+  removePostModalDataFromCache,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -190,6 +191,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
 
+  const dispatch = useDispatch();
+
   let postModalProps: PostModalDataToFeed = {
     id: userInfo.postId,
     postS3Key: s3Key,
@@ -270,6 +273,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postReactionConfirm.postId === postId &&
       postModalProps.id
     ) {
+      dispatch(removePostModalDataFromCache(postId));
+
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: true,
         reactionId: postReactionConfirm.reactionId,
@@ -290,6 +295,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       deleteReactionConfirm.postId === postId &&
       postModalProps.id
     ) {
+      dispatch(removePostModalDataFromCache(postId));
+
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
         reactionId: '',
@@ -309,6 +316,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postReactionConfirm.message === 'Post comment created successfully!' &&
       postId
     ) {
+      dispatch(removePostModalDataFromCache(postId));
+
       clearPostReactions();
       getPostReactionsStart({
         postId,
@@ -323,6 +332,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       deleteReactionConfirm.message === 'Comment removed successfully!' &&
       postId
     ) {
+      dispatch(removePostModalDataFromCache(postId));
+
       clearPostReactions();
       getPostReactionsStart({
         postId,

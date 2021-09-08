@@ -1,6 +1,11 @@
 import { Map } from 'immutable';
 
-import { PostActions, PostActionTypes, PostState } from './post.types';
+import {
+  PostActions,
+  PostActionTypes,
+  PostState,
+  PostModalCacheObj,
+} from './post.types';
 import {
   addPostFileToArray,
   addPostDataToFeedArray,
@@ -9,7 +14,6 @@ import {
 } from './post.utils';
 
 import { POST_MODAL_DATA_INITIAL_STATE } from '../../components/feed-post-container/feed-post-container.component';
-import { act } from 'react-dom/test-utils';
 
 const INITIAL_STATE: PostState = {
   postData: null,
@@ -64,7 +68,7 @@ const INITIAL_STATE: PostState = {
   feedUsersProfilePhotoConfirm: null,
 
   // Post modal data cache
-  postModalDataCache: Map<string, any>(),
+  postModalDataCache: Map<string, PostModalCacheObj>(),
 };
 
 const postReducer = (
@@ -411,10 +415,7 @@ const postReducer = (
         postModalDataCache: state.postModalDataCache.set(
           action.payload.postId,
           {
-            commentingUserList: action.payload.commentingUserList,
-            likingUsersList: action.payload.likingUsersList,
-            alreadyLikedPostAndReactionId:
-              action.payload.alreadyLikedPostAndReactionId,
+            ...action.payload.cacheObj,
           }
         ),
       };

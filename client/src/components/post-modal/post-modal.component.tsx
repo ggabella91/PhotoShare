@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -55,6 +55,8 @@ import {
   setPostLikingUsersArray,
   setShowPostEditForm,
   getSinglePostDataStart,
+  savePostModalDataToCache,
+  removePostModalDataFromCache,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -188,6 +190,15 @@ export const PostModal: React.FC<PostModalProps> = ({
     editLocation: '',
   });
 
+  const [areReactionsReadyForRendering, setAreReactionsReadyForRendering] =
+    useState(false);
+
+  const postModalDataCache = useSelector(
+    (state: AppState) => state.post.postModalDataCache
+  );
+
+  const dispatch = useDispatch();
+
   const postDate = new Date(createdAt).toDateString();
 
   let bucket: string;
@@ -208,6 +219,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       setCaptionInfoList(List());
       setCommentingUserList(List());
       setLikingUsersList(List());
+      setAreReactionsReadyForRendering(false);
       setEditPostDetails({
         editCaption: '',
         editLocation: '',
@@ -270,7 +282,25 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [editPostDetailsConfirm]);
 
   useEffect(() => {
-    if (localPostId) {
+    if (postModalDataCache.get(localPostId) && !areReactionsReadyForRendering) {
+      setCommentingUserList(
+        postModalDataCache.get(localPostId).commentingUserList
+      );
+
+      const likersList = postModalDataCache.get(localPostId).likingUsersList;
+
+      setLikingUsersList(likersList);
+      setPostLikingUsersArray(likersList.toArray());
+      setAlreadyLikedPostAndReactionId(
+        postModalDataCache.get(localPostId).alreadyLikedPostAndReactionId
+      );
+
+      setAreReactionsReadyForRendering(true);
+    }
+  }, [postModalDataCache, localPostId]);
+
+  useEffect(() => {
+    if (!areReactionsReadyForRendering) {
       getPostReactionsStart({
         postId: localPostId,
         reactionReqType: ReactionRequestType.singlePost,
@@ -279,7 +309,11 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [localPostId]);
 
   useEffect(() => {
-    if (postReactionsArray && postReactionsArray.length) {
+    if (
+      postReactionsArray &&
+      postReactionsArray.length &&
+      !areReactionsReadyForRendering
+    ) {
       postReactionsArray.forEach((innerArray) => {
         let innerArrayAsList = List(innerArray);
 
@@ -300,19 +334,22 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [postReactionsArray]);
 
   useEffect(() => {
-    if (reactionsList.size) {
-      reactionsList.forEach((el) => {
-        if (
-          currentUser &&
-          el.reactingUserId === currentUser.id &&
-          el.likedPost
-        ) {
-          setAlreadyLikedPostAndReactionId({
-            alreadyLikedPost: true,
-            reactionId: el.id,
-          });
-        }
-      });
+    if (currentUser && reactionsList.size && !areReactionsReadyForRendering) {
+      const foundPost = reactionsList.find(
+        (el) => el.reactingUserId === currentUser.id && el.likedPost
+      );
+
+      if (foundPost) {
+        setAlreadyLikedPostAndReactionId({
+          alreadyLikedPost: true,
+          reactionId: foundPost.id,
+        });
+      } else {
+        setAlreadyLikedPostAndReactionId({
+          alreadyLikedPost: false,
+          reactionId: 'no-post-found',
+        });
+      }
     }
   }, [reactionsList]);
 
@@ -322,11 +359,15 @@ export const PostModal: React.FC<PostModalProps> = ({
       postReactionConfirm.message === 'Post liked successfully!' &&
       localPostId
     ) {
+      dispatch(removePostModalDataFromCache(localPostId));
+
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: true,
         reactionId: postReactionConfirm.reactionId,
       });
+
       setLikingUsersList(List());
+      setAreReactionsReadyForRendering(false);
       clearPostReactions();
       getPostReactionsStart({
         postId: localPostId,
@@ -341,11 +382,15 @@ export const PostModal: React.FC<PostModalProps> = ({
       deleteReactionConfirm.message === 'Like removed successfully!' &&
       localPostId
     ) {
+      dispatch(removePostModalDataFromCache(localPostId));
+
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
         reactionId: '',
       });
+
       setLikingUsersList(List());
+      setAreReactionsReadyForRendering(false);
       clearPostReactions();
       getPostReactionsStart({
         postId: localPostId,
@@ -360,7 +405,10 @@ export const PostModal: React.FC<PostModalProps> = ({
       postReactionConfirm.message === 'Post comment created successfully!' &&
       localPostId
     ) {
+      dispatch(removePostModalDataFromCache(localPostId));
+
       clearPostReactions();
+      setAreReactionsReadyForRendering(false);
       getPostReactionsStart({
         postId: localPostId,
         reactionReqType: ReactionRequestType.singlePost,
@@ -374,7 +422,10 @@ export const PostModal: React.FC<PostModalProps> = ({
       deleteReactionConfirm.message === 'Comment removed successfully!' &&
       localPostId
     ) {
+      dispatch(removePostModalDataFromCache(localPostId));
+
       clearPostReactions();
+      setAreReactionsReadyForRendering(false);
       getPostReactionsStart({
         postId: localPostId,
         reactionReqType: ReactionRequestType.singlePost,
@@ -383,7 +434,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
-    if (reactionsList.size) {
+    if (reactionsList.size && !areReactionsReadyForRendering) {
       reactionsList.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.POST_REACTOR,
@@ -400,7 +451,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [postReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoList.size) {
+    if (reactingUserInfoList.size && !areReactionsReadyForRendering) {
       reactingUserInfoList.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
@@ -426,7 +477,8 @@ export const PostModal: React.FC<PostModalProps> = ({
       reactingUserInfoList.size &&
       (userProfilePhotoList.size ||
         (!userProfilePhotoList.size &&
-          usersProfilePhotoConfirm === 'User photo added to reactor array!'))
+          usersProfilePhotoConfirm === 'User photo added to reactor array!')) &&
+      !areReactionsReadyForRendering
     ) {
       let commentsList: List<UserInfoAndOtherData> = List();
       let likesList: List<UserInfoAndOtherData> = List();
@@ -496,6 +548,39 @@ export const PostModal: React.FC<PostModalProps> = ({
       }
     }
   }, [reactionsList, reactingUserInfoList, userProfilePhotoList]);
+
+  useEffect(() => {
+    if (
+      reactionsList.size &&
+      commentingUserList.size + likingUsersList.size === reactionsList.size &&
+      !postModalDataCache.get(localPostId)
+    ) {
+      setAreReactionsReadyForRendering(true);
+    }
+  }, [commentingUserList, likingUsersList]);
+
+  useEffect(() => {
+    if (
+      areReactionsReadyForRendering &&
+      alreadyLikedPostAndReactionId.reactionId
+    ) {
+      dispatch(
+        savePostModalDataToCache({
+          postId: localPostId,
+          cacheObj: {
+            commentingUserList,
+            likingUsersList,
+            alreadyLikedPostAndReactionId,
+          },
+        })
+      );
+    }
+  }, [
+    commentingUserList,
+    likingUsersList,
+    areReactionsReadyForRendering,
+    alreadyLikedPostAndReactionId,
+  ]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
