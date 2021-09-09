@@ -270,8 +270,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       postReactionConfirm &&
       postReactionConfirm.message === 'Post liked successfully!' &&
-      postReactionConfirm.postId === postId &&
-      postModalProps.id
+      postId &&
+      postReactionConfirm.postId === postId
     ) {
       clearPostReactions();
 
@@ -292,8 +292,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       deleteReactionConfirm &&
       deleteReactionConfirm.message === 'Like removed successfully!' &&
-      deleteReactionConfirm.postId === postId &&
-      postModalProps.id
+      postId &&
+      deleteReactionConfirm.postId === postId
     ) {
       clearPostReactions();
 
@@ -314,7 +314,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       postReactionConfirm &&
       postReactionConfirm.message === 'Post comment created successfully!' &&
-      postId
+      postId &&
+      postReactionConfirm.postId === postId
     ) {
       clearPostReactions();
 
@@ -330,7 +331,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       deleteReactionConfirm &&
       deleteReactionConfirm.message === 'Comment removed successfully!' &&
-      postId
+      postId &&
+      deleteReactionConfirm.postId === postId
     ) {
       clearPostReactions();
 
