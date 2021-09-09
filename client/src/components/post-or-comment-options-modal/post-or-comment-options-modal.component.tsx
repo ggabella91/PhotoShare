@@ -7,7 +7,7 @@ interface Props {
   show: boolean;
   onHide: () => void;
   archive: () => void;
-  isCurrentUserPostOrComment: boolean | null;
+  isCurrentUserPostOrComment: boolean;
 }
 
 const PostOrCommentOptionsModal: React.FC<Props> = ({

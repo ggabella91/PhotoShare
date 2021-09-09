@@ -250,7 +250,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
 
-  const [currentUserPost, setCurrentUserPost] = useState<boolean | null>(null);
+  const [currentUserPost, setCurrentUserPost] = useState<boolean>(false);
 
   const [currentUserPostOrComment, setCurrentUserPostOrComment] =
     useState<boolean>(false);

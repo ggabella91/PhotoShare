@@ -167,7 +167,9 @@ export const PostPage: React.FC<PostPageProps> = ({
 
   return (
     <div className='homepage'>
-      <div>{name ? <h2>Welcome, {name.split(' ')[0]}</h2> : null}</div>
+      <div>
+        <h2>Create New Post</h2>
+      </div>
       <div className='upload'>
         <div className='img-preview-container'>
           {imgPreview || showAlert ? null : (
