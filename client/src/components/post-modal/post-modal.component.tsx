@@ -366,7 +366,8 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       postReactionConfirm &&
       postReactionConfirm.message === 'Post liked successfully!' &&
-      localPostId
+      localPostId &&
+      postReactionConfirm.postId === localPostId
     ) {
       clearPostReactions();
 
@@ -389,7 +390,8 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       deleteReactionConfirm &&
       deleteReactionConfirm.message === 'Like removed successfully!' &&
-      localPostId
+      localPostId &&
+      deleteReactionConfirm.postId === localPostId
     ) {
       clearPostReactions();
 
@@ -412,7 +414,8 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       postReactionConfirm &&
       postReactionConfirm.message === 'Post comment created successfully!' &&
-      localPostId
+      localPostId &&
+      postReactionConfirm.postId === localPostId
     ) {
       clearPostReactions();
 
@@ -429,7 +432,8 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       deleteReactionConfirm &&
       deleteReactionConfirm.message === 'Comment removed successfully!' &&
-      localPostId
+      localPostId &&
+      deleteReactionConfirm.postId === localPostId
     ) {
       clearPostReactions();
 
