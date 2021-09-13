@@ -277,17 +277,11 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [user]);
 
   useEffect(() => {
-    if (followers && followers.length) {
-      setFollowersList(List(followers));
-    } else {
-      setFollowersList(List());
-    }
+    followers ? setFollowersList(List(followers)) : setFollowersList(List());
 
-    if (otherUserUsersFollowing && otherUserUsersFollowing.length) {
-      setUsersFollowingList(List(otherUserUsersFollowing));
-    } else {
-      setUsersFollowingList(List());
-    }
+    otherUserUsersFollowing
+      ? setUsersFollowingList(List(otherUserUsersFollowing))
+      : setUsersFollowingList(List());
   }, [followers, otherUserUsersFollowing]);
 
   useEffect(() => {

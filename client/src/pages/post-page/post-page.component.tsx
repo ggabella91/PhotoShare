@@ -168,7 +168,7 @@ export const PostPage: React.FC<PostPageProps> = ({
   return (
     <div className='homepage'>
       <div>
-        <h2>Create New Post</h2>
+        <h2>Create a New Post</h2>
       </div>
       <div className='upload'>
         <div className='img-preview-container'>
