@@ -162,8 +162,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     List()
   );
 
-  const [isFollowing, setIsFollowing] = useState(false);
-
   const [postDataList, setPostDataList] = useState<List<Post>>(List());
   const [postFileList, setPostFileList] = useState<List<PostFile>>(List());
 
@@ -233,17 +231,11 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }, [currentUser]);
 
   useEffect(() => {
-    if (followers) {
-      setFollowersList(List(followers));
-    } else {
-      setFollowersList(List());
-    }
+    followers ? setFollowersList(List(followers)) : setFollowersList(List());
 
-    if (currentUserUsersFollowing) {
-      setUsersFollowingList(List(currentUserUsersFollowing));
-    } else {
-      setUsersFollowingList(List());
-    }
+    currentUserUsersFollowing
+      ? setUsersFollowingList(List(currentUserUsersFollowing))
+      : setUsersFollowingList(List());
   }, [followers, currentUserUsersFollowing]);
 
   useEffect(() => {
@@ -376,16 +368,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     setClearPostModalLocalState(true);
     setShowPostEditForm(false);
   };
-
-  useEffect(() => {
-    if (currentUserUsersFollowing?.length) {
-      currentUserUsersFollowing.forEach((userFollowing) => {
-        if (userFollowing.userId === user.id) {
-          setIsFollowing(true);
-        }
-      });
-    }
-  }, [getUsersFollowingConfirm]);
 
   const handleRenderFollowersModal = () => {
     if (followersList.size) {
