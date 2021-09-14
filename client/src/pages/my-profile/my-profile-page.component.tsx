@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
@@ -78,6 +78,17 @@ import FollowersOrFollowingOrLikesModal from '../../components/followers-or-foll
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 import './profile-page.styles.scss';
+
+export interface ImmutableMap<T> extends Map<string, any> {
+  get<K extends keyof T>(name: K): T[K];
+}
+
+export type UserLite = ImmutableMap<{
+  id: string;
+  name: string;
+  username: string;
+  bio: string;
+}>;
 
 interface MyProfilePageProps {
   currentUser: User | null;
@@ -154,7 +165,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   getSinglePostDataConfirm,
   setShowPostEditForm,
 }) => {
-  const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
+  const [user, setUser] = useState<UserLite>(
+    Map({
+      id: '',
+      name: '',
+      username: '',
+      bio: '',
+    })
+  );
+
   const [profilePhotoString, setProfilePhotoString] = useState<string>('');
 
   const [followersList, setFollowersList] = useState<List<Follower>>(List());
@@ -206,18 +225,28 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }
 
   useEffect(() => {
-    if (currentUser && !user.name) {
+    let currentUserMap;
+    if (currentUser) {
+      currentUserMap = Map(currentUser);
+    } else {
+      return;
+    }
+
+    if (!user.equals(currentUserMap)) {
       clearPostState();
       clearFollowState();
       clearFollowersAndFollowing();
       setIsCurrentUserProfilePage(true);
 
-      setUser({
-        id: currentUser.id,
-        name: currentUser.name,
-        username: currentUser.username,
-        bio: currentUser.bio || '',
-      });
+      setUser(
+        Map({
+          id: currentUserMap.get('id'),
+          name: currentUserMap.get('name'),
+          username: currentUserMap.get('username'),
+          bio: currentUserMap.get('bio') || '',
+        })
+      );
+
       getPostDataStart({
         userId: currentUser.id,
         dataReqType: DataRequestType.single,
@@ -437,7 +466,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           </div>
           <div className='user-details'>
             <div className='username-and-edit'>
-              <span className='user-username'>{user.username}</span>
+              <span className='user-username'>{user.get('username')}</span>
               <NavLink className='edit-profile' to='/settings'>
                 <span className='edit-text'>Edit profile</span>
               </NavLink>
@@ -462,14 +491,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               </span>
             </div>
             <div className='name-and-bio'>
-              <span className='user-name'>{user.name}</span>
-              <span className='user-bio'>{user.bio}</span>
+              <span className='user-name'>{user.get('name')}</span>
+              <span className='user-bio'>{user.get('bio')}</span>
             </div>
           </div>
         </div>
         <div className='name-and-bio-narrow-screen'>
-          <span className='user-name-narrow'>{user.name}</span>
-          <span className='user-bio-narrow'>{user.bio}</span>
+          <span className='user-name-narrow'>{user.get('name')}</span>
+          <span className='user-bio-narrow'>{user.get('bio')}</span>
         </div>
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
@@ -511,8 +540,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         onOptionsClick={() => setPostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
         userProfilePhotoFile={profilePhotoString}
-        userName={user.username}
-        userId={user.id}
+        userName={user.get('username')}
+        userId={user.get('id')}
         clearLocalState={clearPostModalLocalState}
         isCurrentUserPost
       />
