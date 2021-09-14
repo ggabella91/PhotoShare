@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
 import {
@@ -92,6 +92,17 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 
 import '../my-profile/profile-page.styles.scss';
 
+export interface ImmutableMap<T> extends Map<string, any> {
+  get<K extends keyof T>(name: K): T[K];
+}
+
+export type UserLite = ImmutableMap<{
+  id: string;
+  name: string;
+  username: string;
+  bio: string;
+}>;
+
 interface UserProfilePageProps {
   username: string;
   otherUser: User | null;
@@ -178,7 +189,15 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   deleteReactionStart,
   postLikingUsersArray,
 }) => {
-  const [user, setUser] = useState({ id: '', name: '', username: '', bio: '' });
+  const [user, setUser] = useState<UserLite>(
+    Map({
+      id: '',
+      name: '',
+      username: '',
+      bio: '',
+    })
+  );
+
   const [profilePhotoString, setProfilePhoto] = useState<string>('');
 
   const [followersList, setFollowersList] = useState<List<Follower>>(List());
@@ -257,20 +276,24 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (otherUser) {
-      setUser({
-        id: otherUser.id,
-        name: otherUser.name,
-        username: otherUser.username,
-        bio: otherUser.bio || '',
-      });
+      const otherUserMap = Map(otherUser);
+
+      setUser(
+        Map({
+          id: otherUserMap.get('id'),
+          name: otherUserMap.get('name'),
+          username: otherUserMap.get('username'),
+          bio: otherUserMap.get('bio') || '',
+        })
+      );
     }
   }, [otherUser]);
 
   useEffect(() => {
     if (user) {
-      getFollowersStart(user.id);
+      getFollowersStart(user.get('id'));
       getUsersFollowingStart({
-        userId: user.id,
+        userId: user.get('id'),
         whoseUsersFollowing: WhoseUsersFollowing.OTHER_USER,
       });
     }
@@ -285,9 +308,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [followers, otherUserUsersFollowing]);
 
   useEffect(() => {
-    if (user.username === username && user.id) {
+    if (user.get('username') === username && user.get('id')) {
       getPostDataStart({
-        userId: user.id,
+        userId: user.get('id'),
         dataReqType: DataRequestType.single,
       });
     }
@@ -393,7 +416,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const handleDetermineIfFollowing = () => {
     if (currentUserUsersFollowing && currentUserUsersFollowing.length) {
       for (let userFollowing of currentUserUsersFollowing) {
-        if (userFollowing.userId === user.id) {
+        if (userFollowing.userId === user.get('id')) {
           setIsFollowing(true);
           return;
         }
@@ -422,7 +445,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           onClick={
             isFollowing!
               ? () => setUnfollowModalShow(true)
-              : () => followNewUserStart(user.id)
+              : () => followNewUserStart(user.get('id'))
           }
         >
           {isFollowing! ? 'Following' : 'Follow'}
@@ -503,7 +526,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           </div>
           <div className='user-details'>
             <div className='username-and-follow'>
-              <span className='user-username'>{user.username}</span>
+              <span className='user-username'>{user.get('username')}</span>
               {handleRenderFollowOrFollowingButton(false)}
             </div>
             {handleRenderFollowOrFollowingButton(true)}
@@ -524,14 +547,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
               </span>
             </div>
             <div className='name-and-bio'>
-              <span className='user-name'>{user.name}</span>
-              <span className='user-bio'>{user.bio}</span>
+              <span className='user-name'>{user.get('name')}</span>
+              <span className='user-bio'>{user.get('bio')}</span>
             </div>
           </div>
         </div>
         <div className='name-and-bio-narrow-screen'>
-          <span className='user-name-narrow'>{user.name}</span>
-          <span className='user-bio-narrow'>{user.bio}</span>
+          <span className='user-name-narrow'>{user.get('name')}</span>
+          <span className='user-bio-narrow'>{user.get('bio')}</span>
         </div>
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
@@ -573,8 +596,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         onOptionsClick={() => setPostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
         userProfilePhotoFile={profilePhotoString}
-        userName={user.username}
-        userId={user.id}
+        userName={user.get('username')}
+        userId={user.get('id')}
         clearLocalState={clearPostModalLocalState}
       />
       <PostOrCommentOptionsModal

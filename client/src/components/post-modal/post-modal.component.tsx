@@ -500,9 +500,9 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       reactionsList.size &&
       reactingUserInfoList.size &&
-      (userProfilePhotoList.size ||
+      userProfilePhotoList.size /*||
         (!userProfilePhotoList.size &&
-          usersProfilePhotoConfirm === 'User photo added to reactor array!')) &&
+          usersProfilePhotoConfirm === 'User photo added to reactor array!')*/ &&
       !areReactionsReadyForRendering &&
       !postModalDataCache.get(localPostId)
     ) {
@@ -576,16 +576,6 @@ export const PostModal: React.FC<PostModalProps> = ({
       setAreReactionsReadyForRendering(true);
     }
   }, [reactionsList, reactingUserInfoList, userProfilePhotoList]);
-
-  // useEffect(() => {
-  //   if (
-  //     reactionsList.size &&
-  //     commentingUserList.size + likingUsersList.size === reactionsList.size &&
-  //     !postModalDataCache.get(localPostId)
-  //   ) {
-  //     setAreReactionsReadyForRendering(true);
-  //   }
-  // }, [commentingUserList, likingUsersList]);
 
   useEffect(() => {
     if (
