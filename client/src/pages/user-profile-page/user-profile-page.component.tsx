@@ -145,14 +145,14 @@ interface UserProfilePageProps {
   deleteReactionStart: typeof deleteReactionStart;
 }
 
-interface PostModalProps {
+type PostModalMapProps = ImmutableMap<{
   id: string;
   s3Key: string;
   caption: string;
   location: string;
   createdAt: Date | null;
   fileString: string;
-}
+}>;
 
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
@@ -211,14 +211,16 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [postFileList, setPostFileList] = useState<List<PostFile>>(List());
 
   const [postModalShow, setPostModalShow] = useState(false);
-  const [postModalProps, setPostModalProps] = useState<PostModalProps>({
-    id: '',
-    s3Key: '',
-    caption: '',
-    location: '',
-    createdAt: null,
-    fileString: '',
-  });
+  const [postModalProps, setPostModalProps] = useState<PostModalMapProps>(
+    Map({
+      id: '',
+      s3Key: '',
+      caption: '',
+      location: '',
+      createdAt: null,
+      fileString: '',
+    })
+  );
 
   const [clearPostModalLocalState, setClearPostModalLocalState] =
     useState(false);
@@ -383,28 +385,32 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       const location = postData.postLocation || '';
       const { createdAt } = postData;
 
-      setPostModalProps({
-        id: postData.id,
-        caption,
-        s3Key: postData.s3Key,
-        location,
-        createdAt,
-        fileString: file.fileString,
-      });
+      setPostModalProps(
+        Map({
+          id: postData.id,
+          caption,
+          s3Key: postData.s3Key,
+          location,
+          createdAt,
+          fileString: file.fileString,
+        })
+      );
       setClearPostModalLocalState(false);
       setPostModalShow(true);
     }
   };
 
   const handleHidePostModal = () => {
-    setPostModalProps({
-      id: '',
-      s3Key: '',
-      caption: '',
-      location: '',
-      createdAt: null,
-      fileString: '',
-    });
+    setPostModalProps(
+      Map({
+        id: '',
+        s3Key: '',
+        caption: '',
+        location: '',
+        createdAt: null,
+        fileString: '',
+      })
+    );
     setPostModalShow(false);
     setClearPostModalLocalState(true);
   };
@@ -586,12 +592,12 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           : null}
       </div>
       <PostModal
-        postId={postModalProps.id}
+        postId={postModalProps.get('id')}
         show={postModalShow}
-        fileString={postModalProps.fileString}
-        caption={postModalProps.caption}
-        location={postModalProps.location}
-        createdAt={postModalProps.createdAt || ''}
+        fileString={postModalProps.get('fileString')}
+        caption={postModalProps.get('caption')}
+        location={postModalProps.get('location')}
+        createdAt={postModalProps.get('createdAt') || ''}
         onHide={() => handleHidePostModal()}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
@@ -606,8 +612,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         isCurrentUserPostOrComment={false}
         archive={() =>
           archivePostStart({
-            postId: postModalProps.id,
-            s3Key: postModalProps.s3Key,
+            postId: postModalProps.get('id'),
+            s3Key: postModalProps.get('s3Key'),
           })
         }
       />

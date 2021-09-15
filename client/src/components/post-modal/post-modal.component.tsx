@@ -50,6 +50,7 @@ import {
   createPostReactionStart,
   getPostReactionsStart,
   getPostFileStart,
+  getUserPhotoForReactorArraySuccess,
   deleteReactionStart,
   clearPostReactions,
   setPostLikingUsersArray,
@@ -485,6 +486,10 @@ export const PostModal: React.FC<PostModalProps> = ({
             user: UserType.postReactorsArray,
             fileRequestType: FileRequestType.singlePost,
           });
+        } else {
+          dispatch(
+            getUserPhotoForReactorArraySuccess({ s3Key: '', fileString: '' })
+          );
         }
       });
     }
@@ -497,12 +502,15 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [reactorPhotoFileArray]);
 
   useEffect(() => {
+    console.log('userProfilePhotoList: ', userProfilePhotoList);
+  }, [userProfilePhotoList]);
+
+  useEffect(() => {
     if (
       reactionsList.size &&
       reactingUserInfoList.size &&
-      userProfilePhotoList.size /*||
-        (!userProfilePhotoList.size &&
-          usersProfilePhotoConfirm === 'User photo added to reactor array!')*/ &&
+      userProfilePhotoList.size &&
+      reactingUserInfoList.size === userProfilePhotoList.size &&
       !areReactionsReadyForRendering &&
       !postModalDataCache.get(localPostId)
     ) {

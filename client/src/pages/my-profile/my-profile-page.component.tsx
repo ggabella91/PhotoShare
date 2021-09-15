@@ -127,14 +127,14 @@ interface MyProfilePageProps {
   setShowPostEditForm: typeof setShowPostEditForm;
 }
 
-interface PostModalProps {
+type PostModalMapProps = ImmutableMap<{
   id: string;
   s3Key: string;
   caption: string;
   location: string;
   createdAt: Date | null;
   fileString: string;
-}
+}>;
 
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   currentUser,
@@ -185,14 +185,16 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [postFileList, setPostFileList] = useState<List<PostFile>>(List());
 
   const [postModalShow, setPostModalShow] = useState(false);
-  const [postModalProps, setPostModalProps] = useState<PostModalProps>({
-    id: '',
-    s3Key: '',
-    caption: '',
-    location: '',
-    createdAt: null,
-    fileString: '',
-  });
+  const [postModalProps, setPostModalProps] = useState<PostModalMapProps>(
+    Map({
+      id: '',
+      s3Key: '',
+      caption: '',
+      location: '',
+      createdAt: null,
+      fileString: '',
+    })
+  );
 
   const [clearPostModalLocalState, setClearPostModalLocalState] =
     useState(false);
@@ -352,12 +354,12 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       setClearPostModalLocalState(true);
 
       const newDataArray = postDataList.filter(
-        (el) => el.id !== postModalProps.id
+        (el) => el.id !== postModalProps.get('id')
       );
       setPostDataList(newDataArray);
 
       const newFileArray = postFileList.filter(
-        (el) => el.s3Key !== postModalProps.s3Key
+        (el) => el.s3Key !== postModalProps.get('s3Key')
       );
       setPostFileList(newFileArray);
     }
@@ -371,28 +373,32 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       const location = postData.postLocation || '';
       const { createdAt } = postData;
 
-      setPostModalProps({
-        id: postData.id,
-        caption,
-        s3Key: postData.s3Key,
-        location,
-        createdAt,
-        fileString: file.fileString,
-      });
+      setPostModalProps(
+        Map({
+          id: postData.id,
+          caption,
+          s3Key: postData.s3Key,
+          location,
+          createdAt,
+          fileString: file.fileString,
+        })
+      );
       setPostModalShow(true);
       setClearPostModalLocalState(false);
     }
   };
 
   const handleHidePostModal = () => {
-    setPostModalProps({
-      id: '',
-      s3Key: '',
-      caption: '',
-      location: '',
-      createdAt: null,
-      fileString: '',
-    });
+    setPostModalProps(
+      Map({
+        id: '',
+        s3Key: '',
+        caption: '',
+        location: '',
+        createdAt: null,
+        fileString: '',
+      })
+    );
     setPostModalShow(false);
     setClearPostModalLocalState(true);
     setShowPostEditForm(false);
@@ -530,12 +536,12 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           : null}
       </div>
       <PostModal
-        postId={postModalProps.id}
+        postId={postModalProps.get('id')}
         show={postModalShow}
-        fileString={postModalProps.fileString}
-        caption={postModalProps.caption}
-        location={postModalProps.location}
-        createdAt={postModalProps.createdAt || ''}
+        fileString={postModalProps.get('fileString')}
+        caption={postModalProps.get('caption')}
+        location={postModalProps.get('location')}
+        createdAt={postModalProps.get('createdAt') || ''}
         onHide={() => handleHidePostModal()}
         onOptionsClick={() => setPostOptionsModalShow(true)}
         onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
@@ -551,8 +557,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         isCurrentUserPostOrComment={true}
         archive={() =>
           archivePostStart({
-            postId: postModalProps.id,
-            s3Key: postModalProps.s3Key,
+            postId: postModalProps.get('id'),
+            s3Key: postModalProps.get('s3Key'),
           })
         }
       />

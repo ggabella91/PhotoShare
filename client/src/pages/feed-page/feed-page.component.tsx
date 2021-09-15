@@ -338,8 +338,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         return el;
       });
 
-      console.log('newDataFeedMapList: ', newDataFeedMapList);
-
       setDataFeedMapList(newDataFeedMapList);
     }
   }, [postMetaDataForUser]);
