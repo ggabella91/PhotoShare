@@ -65,6 +65,7 @@ import {
   setClearFeedPagePostModalState,
   setShowCommentOptionsModal,
   deleteReactionStart,
+  setPostMetaDataForUser,
 } from '../../redux/post/post.actions';
 
 import {
@@ -265,6 +266,15 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
+  useEffect(
+    // Clear post state when cleaning up before component
+    // leaves the screen
+    () => () => {
+      clearPostState();
+    },
+    []
+  );
+
   useEffect(() => {
     let currentUserMap;
     if (currentUser) {
@@ -387,6 +397,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       }
     }
   }, [postDataFeedArray]);
+
+  useEffect(() => {
+    console.log('dataFeedMapList: ', dataFeedMapList);
+  }, [dataFeedMapList]);
 
   useEffect(() => {
     let followingList;
