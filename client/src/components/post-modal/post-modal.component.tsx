@@ -302,6 +302,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (
+      localPostId &&
       !postModalDataCache.get(localPostId) &&
       !areReactionsReadyForRendering
     ) {
@@ -500,10 +501,6 @@ export const PostModal: React.FC<PostModalProps> = ({
       setUserProfilePhotoList(List(reactorPhotoFileArray));
     }
   }, [reactorPhotoFileArray]);
-
-  useEffect(() => {
-    console.log('userProfilePhotoList: ', userProfilePhotoList);
-  }, [userProfilePhotoList]);
 
   useEffect(() => {
     if (
