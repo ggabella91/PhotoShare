@@ -207,11 +207,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   let bucket: string;
 
-  if (process.env.NODE_ENV === 'production') {
-    bucket = 'photo-share-app-profile-photos';
-  } else {
-    bucket = 'photo-share-app-profile-photos-dev';
-  }
+  process.env.NODE_ENV === 'production'
+    ? (bucket = 'photo-share-app-profile-photos')
+    : (bucket = 'photo-share-app-profile-photos-dev');
 
   useEffect(() => {
     if (userInfo.postId !== postId) {

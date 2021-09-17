@@ -226,6 +226,16 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
+  useEffect(
+    // Clear post state and follow state when cleaning
+    // up before component leaves the screen
+    () => () => {
+      clearPostState();
+      clearFollowState();
+    },
+    []
+  );
+
   useEffect(() => {
     let currentUserMap;
     if (currentUser) {
@@ -301,13 +311,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (getSinglePostDataConfirm) {
-      const postDataArrayCopy = postDataList.map((el) => {
-        if (el.id === getSinglePostDataConfirm.id) {
-          return getSinglePostDataConfirm;
-        } else {
-          return el;
-        }
-      });
+      const postDataArrayCopy = postDataList.map((el) =>
+        el.id === getSinglePostDataConfirm.id ? getSinglePostDataConfirm : el
+      );
 
       setPostDataList(postDataArrayCopy);
     }
@@ -436,11 +442,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const handleSetIsCurrentUserComment = () => {
     if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
-      if (commentToDelete.reactingUserId === currentUser.id) {
-        setCurrentUserPostOrComment(true);
-      } else {
-        setCurrentUserPostOrComment(false);
-      }
+      commentToDelete.reactingUserId === currentUser.id
+        ? setCurrentUserPostOrComment(true)
+        : setCurrentUserPostOrComment(false);
     }
   };
 
