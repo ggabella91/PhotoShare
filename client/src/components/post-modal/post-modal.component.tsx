@@ -204,11 +204,9 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   let bucket: string;
 
-  if (process.env.NODE_ENV === 'production') {
-    bucket = 'photo-share-app-profile-photos';
-  } else {
-    bucket = 'photo-share-app-profile-photos-dev';
-  }
+  process.env.NODE_ENV === 'production'
+    ? (bucket = 'photo-share-app-profile-photos')
+    : (bucket = 'photo-share-app-profile-photos-dev');
 
   useEffect(() => {
     if (postId !== localPostId) {
@@ -229,22 +227,20 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [postId]);
 
   useEffect(() => {
-    if (caption) {
-      setCaptionInfoList(
-        List([
-          {
-            username: userName,
-            name: '',
-            profilePhotoFileString: userProfilePhotoFile,
-            comment: caption,
-            location: '',
-            commentDate: createdAt,
-          },
-        ])
-      );
-    } else {
-      setCaptionInfoList(List());
-    }
+    caption
+      ? setCaptionInfoList(
+          List([
+            {
+              username: userName,
+              name: '',
+              profilePhotoFileString: userProfilePhotoFile,
+              comment: caption,
+              location: '',
+              commentDate: createdAt,
+            },
+          ])
+        )
+      : setCaptionInfoList(List());
   }, [caption]);
 
   useEffect(() => {
@@ -331,8 +327,6 @@ export const PostModal: React.FC<PostModalProps> = ({
             !compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
           ) {
             setReactionsList(innerArrayAsList);
-          } else {
-            return;
           }
         }
       });

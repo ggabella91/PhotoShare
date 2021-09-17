@@ -56,6 +56,7 @@ import {
   clearPostFilesAndData,
   setShowCommentOptionsModal,
   deleteReactionStart,
+  clearPostState,
 } from '../../redux/post/post.actions';
 
 import {
@@ -143,6 +144,7 @@ interface UserProfilePageProps {
   setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
   deleteReactionStart: typeof deleteReactionStart;
+  clearPostState: typeof clearPostState;
 }
 
 type PostModalMapProps = ImmutableMap<{
@@ -188,6 +190,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   setShowCommentOptionsModal,
   deleteReactionStart,
   postLikingUsersArray,
+  clearPostState,
 }) => {
   const [user, setUser] = useState<UserLite>(
     Map({
@@ -252,6 +255,16 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     postsBucket = 'photo-share-app-dev';
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
+
+  useEffect(
+    // Clear post state and follow state when cleaning
+    // up before component leaves the screen
+    () => () => {
+      clearPostState();
+      clearFollowState();
+    },
+    []
+  );
 
   useEffect(() => {
     if (isCurrentUserProfilePage) {
@@ -492,11 +505,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const handleSetIsCurrentUserComment = () => {
     if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
-      if (commentToDelete.reactingUserId === currentUser.id) {
-        setCurrentUserPostOrComment(true);
-      } else {
-        setCurrentUserPostOrComment(false);
-      }
+      commentToDelete.reactingUserId === currentUser.id
+        ? setCurrentUserPostOrComment(true)
+        : setCurrentUserPostOrComment(false);
     }
   };
 
@@ -743,6 +754,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
     dispatch(deleteReactionStart(deleteReactionReq)),
+  clearPostState: () => dispatch(clearPostState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);

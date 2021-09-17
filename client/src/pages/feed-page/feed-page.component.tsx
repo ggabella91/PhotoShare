@@ -65,7 +65,6 @@ import {
   setClearFeedPagePostModalState,
   setShowCommentOptionsModal,
   deleteReactionStart,
-  setPostMetaDataForUser,
 } from '../../redux/post/post.actions';
 
 import {
@@ -397,10 +396,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       }
     }
   }, [postDataFeedArray]);
-
-  useEffect(() => {
-    console.log('dataFeedMapList: ', dataFeedMapList);
-  }, [dataFeedMapList]);
 
   useEffect(() => {
     let followingList;
