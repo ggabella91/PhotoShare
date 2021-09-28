@@ -409,9 +409,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (
       reactionsList.size &&
       reactingUserInfoList.size &&
-      (userProfilePhotoList.size ||
-        (!userProfilePhotoList.size &&
-          usersProfilePhotoConfirm === 'User photo added to reactor array!'))
+      userProfilePhotoList.size &&
+      reactingUserInfoList.size === userProfilePhotoList.size
     ) {
       let commentsList: List<UserInfoAndOtherData> = List();
       let likesList: List<UserInfoAndOtherData> = List();
