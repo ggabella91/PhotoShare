@@ -619,35 +619,37 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   return (
     <div className='feed-page'>
-      {userInfoAndPostFileList.size ? (
-        userInfoAndPostFileList.map((el, idx) => (
-          <FeedPostContainer
-            userInfo={{
-              profilePhotoFileString: el.profilePhotoFileString,
-              username: el.username,
-              userId: el.userId,
-              postId: el.postId,
-              location: el.location,
-              name: '',
-              comment: '',
-            }}
-            s3Key={el.postS3Key}
-            fileString={el.postFileString}
-            caption={el.caption}
-            date={el.dateString}
-            key={el.postId}
-            custRef={
-              idx === userInfoAndPostFileList.size - 1
-                ? lastPostContainerElementRef
-                : null
-            }
-          />
-        ))
-      ) : (
+      {isLoadingPostData ? <div className='no-franz'>Loading...</div> : null}
+      {userInfoAndPostFileList.size && !isLoadingPostData
+        ? userInfoAndPostFileList.map((el, idx) => (
+            <FeedPostContainer
+              userInfo={{
+                profilePhotoFileString: el.profilePhotoFileString,
+                username: el.username,
+                userId: el.userId,
+                postId: el.postId,
+                location: el.location,
+                name: '',
+                comment: '',
+              }}
+              s3Key={el.postS3Key}
+              fileString={el.postFileString}
+              caption={el.caption}
+              date={el.dateString}
+              key={el.postId}
+              custRef={
+                idx === userInfoAndPostFileList.size - 1
+                  ? lastPostContainerElementRef
+                  : null
+              }
+            />
+          ))
+        : null}
+      {currentUserUsersFollowing && !currentUserUsersFollowing.length ? (
         <div className='no-franz'>
           Follow users to see their recent posts here
         </div>
-      )}
+      ) : null}
       {postLikersList ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
