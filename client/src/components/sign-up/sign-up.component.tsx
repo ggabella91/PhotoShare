@@ -21,6 +21,7 @@ interface SignUpProps {
 
 export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
   const [userCredentials, setUserCredentials] = useState({
+    username: '',
     name: '',
     email: '',
     password: '',
@@ -29,12 +30,13 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
 
   const [show, setShow] = useState(true);
 
-  const { name, email, password, passwordConfirm } = userCredentials;
+  const { username, name, email, password, passwordConfirm } = userCredentials;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    signUpStart({ name, email, password, passwordConfirm });
+    // Need to handle including username in /signup route request body in auth service
+    signUpStart({ username, name, email, password, passwordConfirm });
   };
 
   const [error, setError] = useState(false);
@@ -68,6 +70,13 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
         <span>Sign up below!</span>
       </div>
       <form className='sign-up-form' onSubmit={handleSubmit}>
+        <FormInput
+          type='text'
+          name='username'
+          value={username}
+          onChange={handleChange}
+          label='username'
+        />
         <FormInput
           type='text'
           name='name'
@@ -120,8 +129,8 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  signUpStart: ({ name, email, password, passwordConfirm }: UserSignUp) =>
-    dispatch(signUpStart({ name, email, password, passwordConfirm })),
+  // Add username after updating /signup route in auth service
+  signUpStart: (userSignUp: UserSignUp) => dispatch(signUpStart(userSignUp)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

@@ -12,13 +12,14 @@ import {
 } from './user.types';
 
 export const signUpStart = ({
+  username,
   name,
   email,
   password,
   passwordConfirm,
 }: UserSignUp): UserActionTypes => ({
   type: UserActions.SIGN_UP_START,
-  payload: { name, email, password, passwordConfirm },
+  payload: { username, name, email, password, passwordConfirm },
 });
 
 export const signUpSuccess = (user: User): UserActionTypes => ({

@@ -48,12 +48,13 @@ import { clearPostState } from '../post/post.actions';
 import axios from 'axios';
 
 export function* signUp({
-  payload: { name, email, password, passwordConfirm },
+  payload: { username, name, email, password, passwordConfirm },
 }: {
   payload: UserSignUp;
 }): any {
   try {
     const { data } = yield axios.post('/api/users/signup', {
+      username,
       name,
       email,
       password,
