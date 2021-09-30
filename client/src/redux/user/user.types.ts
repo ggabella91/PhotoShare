@@ -43,6 +43,7 @@ export enum UserActions {
 }
 
 export interface UserSignUp {
+  username: string;
   name: string;
   email: string;
   password: string;

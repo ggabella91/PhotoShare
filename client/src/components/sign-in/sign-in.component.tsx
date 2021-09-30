@@ -109,8 +109,7 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  signInStart: ({ email, password }: UserSignIn) =>
-    dispatch(signInStart({ email, password })),
+  signInStart: (userSignIn: UserSignIn) => dispatch(signInStart(userSignIn)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
