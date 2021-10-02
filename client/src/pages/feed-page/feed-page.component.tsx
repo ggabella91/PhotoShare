@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List, Map } from 'immutable';
+import { CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -619,7 +621,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   return (
     <div className='feed-page'>
-      {isLoadingPostData ? <div className='no-franz'>Loading...</div> : null}
+      {isLoadingPostData ? (
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
+      ) : null}
       {userInfoAndPostFileList.size && !isLoadingPostData
         ? userInfoAndPostFileList.map((el, idx) => (
             <FeedPostContainer
