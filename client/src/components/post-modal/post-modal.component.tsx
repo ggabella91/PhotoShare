@@ -3,6 +3,8 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List } from 'immutable';
+import { CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -720,6 +722,11 @@ export const PostModal: React.FC<PostModalProps> = ({
             ) : (
               handleRenderEditPostDetails()
             )}
+            {!areReactionsReadyForRendering ? (
+              <Box sx={{ display: 'flex' }}>
+                <CircularProgress />
+              </Box>
+            ) : null}
             {commentingUserList.size ? (
               <UserInfo
                 styleType={StyleType.comment}
