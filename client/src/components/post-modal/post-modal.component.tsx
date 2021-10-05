@@ -5,6 +5,8 @@ import { createStructuredSelector } from 'reselect';
 import { List } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -632,9 +634,13 @@ export const PostModal: React.FC<PostModalProps> = ({
             : () => handleSubmitLike()
         }
       >
-        <span>
-          {alreadyLikedPostAndReactionId.alreadyLikedPost ? 'Liked' : 'Like'}
-        </span>
+        {/*<span>*/}
+        {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
+          <FavoriteIcon htmlColor='red' />
+        ) : (
+          <FavoriteBorderIcon />
+        )}
+        {/*</span>*/}
       </Button>
     );
   };
@@ -723,7 +729,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               handleRenderEditPostDetails()
             )}
             {!areReactionsReadyForRendering ? (
-              <Box sx={{ display: 'flex' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <CircularProgress />
               </Box>
             ) : null}
