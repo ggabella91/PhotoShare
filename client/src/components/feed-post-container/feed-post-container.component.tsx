@@ -3,6 +3,8 @@ import { connect, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List } from 'immutable';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -505,16 +507,18 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const handleRenderLikeOrLikedButton = () => {
     return (
       <Button
-        className='likes-text'
+        className='likes-icon'
         onClick={
           alreadyLikedPostAndReactionId.alreadyLikedPost
             ? () => handleSubmitRemoveLike()
             : () => handleSubmitLike()
         }
       >
-        <span>
-          {alreadyLikedPostAndReactionId.alreadyLikedPost ? 'Liked' : 'Like'}
-        </span>
+        {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
+          <FavoriteIcon htmlColor='red' />
+        ) : (
+          <FavoriteBorderIcon />
+        )}
       </Button>
     );
   };

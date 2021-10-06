@@ -627,20 +627,18 @@ export const PostModal: React.FC<PostModalProps> = ({
   const handleRenderLikeOrLikedButton = () => {
     return (
       <Button
-        className='likes-text'
+        className='likes-icon'
         onClick={
           alreadyLikedPostAndReactionId.alreadyLikedPost
             ? () => handleSubmitRemoveLike()
             : () => handleSubmitLike()
         }
       >
-        {/*<span>*/}
         {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
           <FavoriteIcon htmlColor='red' />
         ) : (
           <FavoriteBorderIcon />
         )}
-        {/*</span>*/}
       </Button>
     );
   };
