@@ -100,6 +100,10 @@ $image-height: 62.5vw;
     transform: translate(-50%, -50%);
   }
 
+  &.shift-right {
+    margin-left: 54vw !important;
+  }
+
   .large-image-adjustments {
     display: flex;
     flex-direction: row;
@@ -273,7 +277,7 @@ $image-height: 62.5vw;
         }
       }
 
-      .likes-icon {
+      .likes {
         width: fit-content;
         cursor: pointer;
         display: inline-flex;
