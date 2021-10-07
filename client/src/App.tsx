@@ -38,11 +38,6 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
       <Switch>
         <Route
           exact
-          path='/me'
-          render={() => (!currentUser ? <Redirect to='/' /> : <FeedPage />)}
-        />
-        <Route
-          exact
           path='/post'
           render={() => (!currentUser ? <Redirect to='/' /> : <PostPage />)}
         />
@@ -63,10 +58,9 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
         <Route
           exact
           path='/'
-          render={() =>
-            currentUser ? <Redirect to='/me' /> : <SignUpAndSignUpPage />
-          }
+          render={() => (currentUser ? <FeedPage /> : <SignUpAndSignUpPage />)}
         />
+        <Route path='/p/:postId' render={() => <FeedPage />} />
         <Route
           path='/:username'
           render={({ match }) => {

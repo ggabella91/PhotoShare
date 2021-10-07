@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -204,6 +205,8 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const dispatch = useDispatch();
 
+  const urlLocation = useLocation();
+
   const postDate = new Date(createdAt).toDateString();
 
   let bucket: string;
@@ -212,7 +215,18 @@ export const PostModal: React.FC<PostModalProps> = ({
     ? (bucket = 'photo-share-app-profile-photos')
     : (bucket = 'photo-share-app-profile-photos-dev');
 
+  let shiftLeft: boolean;
+  process.env.NODE_ENV === 'development'
+    ? (shiftLeft = true)
+    : (shiftLeft = false);
+
   useEffect(() => {
+    if (postId) {
+      window.history.pushState({}, '', `p/${postId}`);
+    } else {
+      window.history.pushState({}, '', `${urlLocation.pathname}`);
+    }
+
     if (postId !== localPostId) {
       setLocalPostId(postId);
       setAlreadyLikedPostAndReactionId({
@@ -627,7 +641,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const handleRenderLikeOrLikedButton = () => {
     return (
       <Button
-        className='likes-icon'
+        className='likes'
         onClick={
           alreadyLikedPostAndReactionId.alreadyLikedPost
             ? () => handleSubmitRemoveLike()
@@ -679,7 +693,12 @@ export const PostModal: React.FC<PostModalProps> = ({
   };
 
   return (
-    <Modal {...props} dialogClassName='post-modal' animation={false} centered>
+    <Modal
+      {...props}
+      dialogClassName={`${shiftLeft ? 'shift-right' : ''} : post-modal`}
+      animation={false}
+      centered
+    >
       <div className='large-image-adjustments'>
         <img
           className='post-modal-image-large'
@@ -726,8 +745,16 @@ export const PostModal: React.FC<PostModalProps> = ({
             ) : (
               handleRenderEditPostDetails()
             )}
-            {!areReactionsReadyForRendering ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            {!areReactionsReadyForRendering &&
+            postReactionsArray &&
+            postReactionsArray.length ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingTop: '10px',
+                }}
+              >
                 <CircularProgress />
               </Box>
             ) : null}
@@ -740,7 +767,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           </div>
           {handleRenderLikeOrLikedButton()}
           {likingUsersList.size ? (
-            <Button className='likes-text' onClick={onPostLikingUsersClick}>
+            <Button className='likes' onClick={onPostLikingUsersClick}>
               <span>{`${likingUsersList.size} likes`}</span>
             </Button>
           ) : null}
