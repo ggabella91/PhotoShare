@@ -225,6 +225,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       window.history.pushState({}, '', `p/${postId}`);
     } else {
       window.history.pushState({}, '', `${urlLocation.pathname}`);
+      setReactionsList(List());
     }
 
     if (postId !== localPostId) {
@@ -745,14 +746,13 @@ export const PostModal: React.FC<PostModalProps> = ({
             ) : (
               handleRenderEditPostDetails()
             )}
-            {!areReactionsReadyForRendering &&
-            postReactionsArray &&
-            postReactionsArray.length ? (
+            {!areReactionsReadyForRendering && reactionsList.size ? (
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
                   paddingTop: '10px',
+                  paddingBottom: '10px',
                 }}
               >
                 <CircularProgress />
