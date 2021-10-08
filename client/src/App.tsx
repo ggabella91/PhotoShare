@@ -60,7 +60,7 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           path='/'
           render={() => (currentUser ? <FeedPage /> : <SignUpAndSignUpPage />)}
         />
-        <Route path='/p/:postId' render={() => <FeedPage />} />
+        <Route path='/p/:postId' render={() => <Redirect to='/' />} />
         <Route
           path='/:username'
           render={({ match }) => {
