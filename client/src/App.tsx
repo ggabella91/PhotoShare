@@ -14,7 +14,7 @@ import Header from './components/header/header.component';
 import Footer from './components/footer/footer.component';
 import SignUpAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-sign-up.component';
 import FeedPage from './pages/feed-page/feed-page.component';
-import PostPage from './pages/post-page/post-page.component';
+import CreatePostPage from './pages/create-post-page/create-post-page.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SettingsPage from './pages/settings-page/settings-page.component';
 import MyProfilePage from './pages/my-profile/my-profile-page.component';
@@ -39,7 +39,9 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
         <Route
           exact
           path='/post'
-          render={() => (!currentUser ? <Redirect to='/' /> : <PostPage />)}
+          render={() =>
+            !currentUser ? <Redirect to='/' /> : <CreatePostPage />
+          }
         />
         <Route
           exact

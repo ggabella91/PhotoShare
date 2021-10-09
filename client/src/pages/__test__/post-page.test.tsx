@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import { PostPage } from '../post-page/post-page.component';
+import { PostPage } from '../create-post-page/create-post-page.component';
 
 import { getUsersFollowingStart } from '../../redux/follower/follower.actions';
 
