@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { List } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+
+import { AppState } from '../../redux/root-reducer';
 
 import {
   User,
@@ -17,16 +19,64 @@ import {
 } from '../../redux/user/user.selectors';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
+import {
+  Reaction,
+  ReactionReq,
+  ReactionConfirm,
+  DeleteReactionReq,
+  DeleteReactionConfirm,
+  Post,
+  PostError,
+  PostFileReq,
+  FileRequestType,
+  PostFile,
+  GetPostReactionsReq,
+  ReactionRequestType,
+  UserType,
+  SinglePostDataReq,
+} from '../../redux/post/post.types';
+import {
+  createPostReactionStart,
+  getPostReactionsStart,
+  getPostFileStart,
+  getUserPhotoForReactorArraySuccess,
+  deleteReactionStart,
+  clearPostReactions,
+  setPostLikingUsersArray,
+  setShowPostEditForm,
+  getSinglePostDataStart,
+  savePostModalDataToCache,
+  removePostModalDataFromCache,
+} from '../../redux/post/post.actions';
+
+import UserInfo, {
+  StyleType,
+  UserInfoAndOtherData,
+} from '../../components/user-info/user-info.component';
+
+import Modal from 'react-bootstrap/Modal';
+import Button from '../../components/button/button.component';
+import { ExpandableFormInput } from '../../components/form-input/form-input.component';
+import EditPostForm from '../../components/edit-post-form/edit-post-form.component';
+
+import {
+  compareUserOrPostOrReactionLists,
+  compareUserInfoAndDataObjLists,
+} from '../../pages/feed-page/feed-page.utils';
+
 interface PostPageProps {}
 
 const PostPage: React.FC<PostPageProps> = ({}) => {
+  const userState = useSelector((state: AppState) => state.user);
+  const postState = useSelector((state: AppState) => state.post);
+  const followerState = useSelector((state: AppState) => state.follower);
+
   return (
     <div className='post-page'>
       <div className='post-container'>
         <div className='post-image-container'>
           {/*
-
-         <img
+          <img
             className='post-image'
             src={`data:image/jpeg;base64,${fileString}`}
             alt='post-pic'
