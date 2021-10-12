@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { List } from 'immutable';
+import { useParams } from 'react-router-dom';
+import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -20,6 +21,7 @@ import {
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
+  SinglePostDataReq,
   Reaction,
   ReactionReq,
   ReactionConfirm,
@@ -33,9 +35,9 @@ import {
   GetPostReactionsReq,
   ReactionRequestType,
   UserType,
-  SinglePostDataReq,
 } from '../../redux/post/post.types';
 import {
+  getSinglePostDataStart,
   createPostReactionStart,
   getPostReactionsStart,
   getPostFileStart,
@@ -44,9 +46,9 @@ import {
   clearPostReactions,
   setPostLikingUsersArray,
   setShowPostEditForm,
-  getSinglePostDataStart,
   savePostModalDataToCache,
   removePostModalDataFromCache,
+  clearPostState,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -64,12 +66,108 @@ import {
   compareUserInfoAndDataObjLists,
 } from '../../pages/feed-page/feed-page.utils';
 
+interface Params {
+  postId: string;
+}
+
+export interface ImmutableMap<T> extends Map<string, any> {
+  get<K extends keyof T>(name: K): T[K];
+}
+
+export type UserLite = ImmutableMap<{
+  id: string;
+  name: string;
+  username: string;
+  bio: string;
+}>;
+
 interface PostPageProps {}
 
 const PostPage: React.FC<PostPageProps> = ({}) => {
   const userState = useSelector((state: AppState) => state.user);
   const postState = useSelector((state: AppState) => state.post);
   const followerState = useSelector((state: AppState) => state.follower);
+
+  const dispatch = useDispatch();
+
+  const { postId } = useParams<Params>();
+
+  console.log('postId: ', postId);
+
+  const { currentUser } = userState;
+
+  const { getSinglePostDataConfirm } = postState;
+
+  const [user, setUser] = useState<UserLite>(
+    Map({
+      id: '',
+      name: '',
+      username: '',
+      bio: '',
+    })
+  );
+
+  const [postData, setPostData] = useState<Post | null>(null);
+
+  const [currentUserPost, setCurrentUserPost] = useState<boolean>(false);
+
+  useEffect(
+    // Clear post state when cleaning up before component
+    // leaves the screen
+    () => () => {
+      clearPostState();
+    },
+    []
+  );
+
+  useEffect(() => {
+    let currentUserMap;
+
+    if (currentUser) {
+      currentUserMap = Map(currentUser);
+    } else {
+      return;
+    }
+
+    if (!user.equals(currentUserMap)) {
+      dispatch(clearPostState());
+
+      setUser(
+        Map({
+          id: currentUserMap.get('id'),
+          name: currentUserMap.get('name'),
+          username: currentUserMap.get('username'),
+          bio: currentUserMap.get('bio') || '',
+        })
+      );
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    dispatch(getSinglePostDataStart({ postId }));
+  }, [postId]);
+
+  useEffect(() => {
+    if (getSinglePostDataConfirm) {
+      setPostData(getSinglePostDataConfirm);
+    }
+  }, [getSinglePostDataConfirm]);
+
+  useEffect(() => {
+    if (postData) {
+      handleSetIsCurrentUserPost(postData);
+    }
+  }, [postData]);
+
+  const handleSetIsCurrentUserPost = (postData: Post) => {
+    if (currentUser) {
+      if (postData.userId === user.get('id')) {
+        setCurrentUserPost(true);
+      } else {
+        setCurrentUserPost(false);
+      }
+    }
+  };
 
   return (
     <div className='post-page'>
