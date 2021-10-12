@@ -278,6 +278,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     let currentUserMap;
+
     if (currentUser) {
       currentUserMap = Map(currentUser);
     } else {
