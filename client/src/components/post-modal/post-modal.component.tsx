@@ -63,6 +63,7 @@ import {
   getSinglePostDataStart,
   savePostModalDataToCache,
   removePostModalDataFromCache,
+  clearPostState,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -124,6 +125,7 @@ interface PostModalProps {
   clearPostReactions: typeof clearPostReactions;
   setShowPostEditForm: typeof setShowPostEditForm;
   getSinglePostDataStart: typeof getSinglePostDataStart;
+  clearPostState: typeof clearPostState;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -168,6 +170,10 @@ export const PostModal: React.FC<PostModalProps> = ({
   >(List());
 
   const [reactionsList, setReactionsList] = useState<List<Reaction>>(List());
+
+  const [uniqueReactingUsers, setUniqueReactingUsers] = useState<Set<string>>(
+    new Set()
+  );
 
   const [reactingUserInfoList, setReactingUsersInfoList] = useState<List<User>>(
     List()
@@ -226,6 +232,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     } else {
       window.history.pushState({}, '', `${urlLocation.pathname}`);
       setReactionsList(List());
+      clearPostState();
     }
 
     if (postId !== localPostId) {
@@ -472,6 +479,8 @@ export const PostModal: React.FC<PostModalProps> = ({
           type: OtherUserType.POST_REACTOR,
           usernameOrId: el.reactingUserId,
         });
+
+        setUniqueReactingUsers(uniqueReactingUsers.add(el.reactingUserId));
       });
     }
   }, [reactionsList]);
@@ -519,6 +528,8 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       reactionsList.size &&
       reactingUserInfoList.size &&
+      uniqueReactingUsers.size &&
+      reactingUserInfoList.size === uniqueReactingUsers.size &&
       userProfilePhotoList.size &&
       reactingUserInfoList.size === userProfilePhotoList.size &&
       !areReactionsReadyForRendering &&
@@ -544,7 +555,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         });
 
         userProfilePhotoList.forEach((photoEl) => {
-          if (photoEl.s3Key === photoKey!) {
+          if (photoEl.s3Key === photoKey) {
             fileString = photoEl.fileString;
           }
         });
@@ -593,7 +604,12 @@ export const PostModal: React.FC<PostModalProps> = ({
 
       setAreReactionsReadyForRendering(true);
     }
-  }, [reactionsList, reactingUserInfoList, userProfilePhotoList]);
+  }, [
+    reactionsList,
+    uniqueReactingUsers,
+    reactingUserInfoList,
+    userProfilePhotoList,
+  ]);
 
   useEffect(() => {
     if (
@@ -847,6 +863,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setShowPostEditForm(showPostEditForm)),
   getSinglePostDataStart: (singlePostDataReq: SinglePostDataReq) =>
     dispatch(getSinglePostDataStart(singlePostDataReq)),
+  clearPostState: () => dispatch(clearPostState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
