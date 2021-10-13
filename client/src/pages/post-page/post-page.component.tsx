@@ -74,12 +74,10 @@ export interface ImmutableMap<T> extends Map<string, any> {
   get<K extends keyof T>(name: K): T[K];
 }
 
-export type UserLite = ImmutableMap<{
-  id: string;
-  name: string;
-  username: string;
-  bio: string;
-}>;
+export interface AlreadyLikedAndReactionId {
+  alreadyLikedPost: boolean;
+  reactionId: string;
+}
 
 interface PostPageProps {}
 
@@ -94,22 +92,61 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
 
   console.log('postId: ', postId);
 
-  const { currentUser } = userState;
+  const { currentUser, otherUser } = userState;
 
   const { getSinglePostDataConfirm } = postState;
-
-  const [user, setUser] = useState<UserLite>(
-    Map({
-      id: '',
-      name: '',
-      username: '',
-      bio: '',
-    })
-  );
 
   const [postData, setPostData] = useState<Post | null>(null);
 
   const [currentUserPost, setCurrentUserPost] = useState<boolean>(false);
+
+  const [comment, setComment] = useState('');
+
+  const [captionInfoList, setCaptionInfoList] = useState<
+    List<UserInfoAndOtherData>
+  >(List());
+
+  const [reactionsList, setReactionsList] = useState<List<Reaction>>(List());
+
+  const [uniqueReactingUsers, setUniqueReactingUsers] = useState<Set<string>>(
+    new Set()
+  );
+
+  const [reactingUserInfoList, setReactingUsersInfoList] = useState<List<User>>(
+    List()
+  );
+
+  const [userProfilePhotoList, setUserProfilePhotoList] = useState<
+    List<PostFile>
+  >(List());
+
+  const [commentingUserList, setCommentingUserList] = useState<
+    List<UserInfoAndOtherData>
+  >(List());
+
+  const [likingUsersList, setLikingUsersList] = useState<
+    List<UserInfoAndOtherData>
+  >(List());
+
+  const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
+    useState<AlreadyLikedAndReactionId>({
+      alreadyLikedPost: false,
+      reactionId: '',
+    });
+
+  const [editPostDetails, setEditPostDetails] = useState({
+    editCaption: '',
+    editLocation: '',
+  });
+
+  const [areReactionsReadyForRendering, setAreReactionsReadyForRendering] =
+    useState(false);
+
+  let bucket: string;
+
+  process.env.NODE_ENV === 'production'
+    ? (bucket = 'photo-share-app-profile-photos')
+    : (bucket = 'photo-share-app-profile-photos-dev');
 
   useEffect(
     // Clear post state when cleaning up before component
@@ -128,19 +165,6 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     } else {
       return;
     }
-
-    if (!user.equals(currentUserMap)) {
-      dispatch(clearPostState());
-
-      setUser(
-        Map({
-          id: currentUserMap.get('id'),
-          name: currentUserMap.get('name'),
-          username: currentUserMap.get('username'),
-          bio: currentUserMap.get('bio') || '',
-        })
-      );
-    }
   }, [currentUser]);
 
   useEffect(() => {
@@ -150,8 +174,27 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
   useEffect(() => {
     if (getSinglePostDataConfirm) {
       setPostData(getSinglePostDataConfirm);
+
+      const { userId } = getSinglePostDataConfirm;
+
+      dispatch(
+        getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: userId })
+      );
     }
   }, [getSinglePostDataConfirm]);
+
+  useEffect(() => {
+    if (otherUser && otherUser.photo) {
+      dispatch(
+        getPostFileStart({
+          user: UserType.other,
+          fileRequestType: FileRequestType.singlePost,
+          s3Key: otherUser.photo,
+          bucket,
+        })
+      );
+    }
+  }, [otherUser]);
 
   useEffect(() => {
     if (postData) {
@@ -161,7 +204,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
 
   const handleSetIsCurrentUserPost = (postData: Post) => {
     if (currentUser) {
-      if (postData.userId === user.get('id')) {
+      if (postData.userId === currentUser.id) {
         setCurrentUserPost(true);
       } else {
         setCurrentUserPost(false);
