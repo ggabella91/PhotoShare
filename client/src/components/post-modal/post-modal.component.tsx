@@ -227,13 +227,20 @@ export const PostModal: React.FC<PostModalProps> = ({
     : (shiftLeft = false);
 
   useEffect(() => {
-    if (postId) {
+    if (props.show && postId) {
       window.history.pushState({}, '', `p/${postId}`);
-    } else {
-      window.history.pushState({}, '', `${urlLocation.pathname}`);
-      setReactionsList(List());
-      clearPostState();
+    } else if (!props.show) {
+      if (urlLocation.pathname === '/') {
+        window.history.pushState({}, '', '/');
+      } else {
+        window.history.pushState({}, '', `${urlLocation.pathname}`);
+      }
     }
+  }, [props.show, postId]);
+
+  useEffect(() => {
+    setReactionsList(List());
+    clearPostState();
 
     if (postId !== localPostId) {
       setLocalPostId(postId);
@@ -529,7 +536,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       reactionsList.size &&
       reactingUserInfoList.size &&
       uniqueReactingUsers.size &&
-      reactingUserInfoList.size === uniqueReactingUsers.size &&
+      reactingUserInfoList.size >= uniqueReactingUsers.size &&
       userProfilePhotoList.size &&
       reactingUserInfoList.size === userProfilePhotoList.size &&
       !areReactionsReadyForRendering &&

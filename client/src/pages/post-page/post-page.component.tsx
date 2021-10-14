@@ -94,7 +94,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
 
   const { currentUser, otherUser } = userState;
 
-  const { getSinglePostDataConfirm } = postState;
+  const { getSinglePostDataConfirm, otherUserProfilePhotoFile } = postState;
 
   const [postData, setPostData] = useState<Post | null>(null);
 
@@ -158,16 +158,6 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
   );
 
   useEffect(() => {
-    let currentUserMap;
-
-    if (currentUser) {
-      currentUserMap = Map(currentUser);
-    } else {
-      return;
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
     dispatch(getSinglePostDataStart({ postId }));
   }, [postId]);
 
@@ -201,6 +191,23 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
       handleSetIsCurrentUserPost(postData);
     }
   }, [postData]);
+
+  useEffect(() => {
+    if (postData && otherUser && otherUserProfilePhotoFile) {
+      setCaptionInfoList(
+        List([
+          {
+            username: otherUser.username,
+            name: '',
+            profilePhotoFileString: otherUserProfilePhotoFile.fileString,
+            comment: postData.caption || '',
+            location: '',
+            commentDate: postData.createdAt,
+          },
+        ])
+      );
+    }
+  }, [postData, otherUser, otherUserProfilePhotoFile]);
 
   const handleSetIsCurrentUserPost = (postData: Post) => {
     if (currentUser) {
