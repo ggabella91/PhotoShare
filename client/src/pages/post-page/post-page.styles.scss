@@ -7,4 +7,184 @@
   margin-left: 50%;
   margin-top: 40px;
   transform: translate(-50%);
+
+  .post-container {
+    font-family: 'Lato', sans-serif;
+    display: flex;
+    flex-direction: row;
+    width: 335px;
+    height: 600px;
+    position: relative;
+    margin-left: 54vw;
+
+    .post-image-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: black;
+      width: 480px;
+      height: 600px;
+      transform: translate(-480px);
+
+      .post-image {
+        height: auto;
+        width: 480px;
+        position: relative;
+      }
+    }
+
+    .post-details {
+      width: 335px;
+      height: 568px;
+      display: flex;
+      position: relative;
+      flex-direction: column;
+
+      .post-user-and-location {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 1vh;
+        padding-bottom: 1vh;
+        border-bottom: solid 1px;
+        border-color: rgba(0, 0, 0, 0.2);
+
+        .user-photo {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+        }
+
+        .text-and-options {
+          margin-left: 12px;
+          min-width: 250px;
+          display: flex;
+          flex-direction: row;
+          justify-content: stretch;
+
+          .user-and-location {
+            display: flex;
+            flex-direction: column;
+
+            .user-name {
+              margin: 0;
+              font-size: 14px;
+              font-weight: 540;
+            }
+
+            .post-location {
+              margin: 0;
+              font-size: 12px;
+              font-weight: 420;
+            }
+          }
+
+          .post-options {
+            font-size: 30px;
+            transform: translate(450%, -50%);
+            margin-left: 45px;
+
+            .ellipsis {
+              &:hover {
+                cursor: pointer;
+              }
+            }
+          }
+        }
+      }
+
+      .caption-and-comments-container {
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        overflow-x: hidden;
+
+        .edit-post {
+          font-size: 14px;
+          font-weight: 480;
+          cursor: pointer;
+          text-align: center;
+          padding: 2px;
+          border: 1px solid #808080a6;
+          border-radius: 4px;
+          color: #808080a6;
+        }
+      }
+
+      .likes {
+        width: fit-content;
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        background-color: white;
+        color: #074aaf;
+        border: none;
+        margin: 10px 0 5px 0;
+        padding-left: 0;
+        text-decoration: none;
+        border-radius: 15px;
+
+        span {
+          font-size: 14px;
+          font-weight: 520;
+          text-align: center;
+          display: table-cell;
+          vertical-align: middle;
+          margin: auto;
+          font-family: 'Lato', sans-serif;
+        }
+      }
+
+      .post-date {
+        margin: 0;
+        font-size: 12px;
+      }
+
+      .comment-form {
+        display: flex;
+        max-height: 65px;
+
+        .post-text-button {
+          margin-top: 35px;
+          margin-left: 15px;
+          font-size: 14px;
+          font-weight: 520;
+        }
+
+        .submit-comment-button {
+          width: auto;
+          cursor: pointer;
+          display: inline-flex;
+          justify-content: center;
+          background-color: white;
+          color: #074aaf;
+          border: none;
+          margin-top: 25px;
+          margin-left: 15px;
+          text-transform: capitalize;
+          text-decoration: none;
+          border-radius: 15px;
+
+          span {
+            font-size: 14px;
+            font-weight: 520;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+            margin: auto;
+            font-family: 'Lato', sans-serif;
+          }
+
+          &.greyed-out {
+            opacity: 0.6;
+            cursor: default;
+          }
+        }
+      }
+
+      span {
+        text-align: left;
+        overflow: hidden;
+      }
+    }
+  }
 }

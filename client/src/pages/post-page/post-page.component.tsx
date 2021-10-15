@@ -42,6 +42,7 @@ import {
   getPostReactionsStart,
   getPostFileStart,
   getUserPhotoForReactorArraySuccess,
+  archivePostStart,
   deleteReactionStart,
   clearPostReactions,
   setPostLikingUsersArray,
@@ -49,6 +50,7 @@ import {
   savePostModalDataToCache,
   removePostModalDataFromCache,
   clearPostState,
+  setShowPostLikingUsersModal,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -56,7 +58,8 @@ import UserInfo, {
   UserInfoAndOtherData,
 } from '../../components/user-info/user-info.component';
 
-import Modal from 'react-bootstrap/Modal';
+import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
+import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 import Button from '../../components/button/button.component';
 import { ExpandableFormInput } from '../../components/form-input/form-input.component';
 import EditPostForm from '../../components/edit-post-form/edit-post-form.component';
@@ -92,13 +95,27 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
 
   console.log('postId: ', postId);
 
-  const { currentUser, otherUser } = userState;
+  const { currentUser, otherUser, postReactingUsers } = userState;
 
-  const { getSinglePostDataConfirm, otherUserProfilePhotoFile } = postState;
+  const {
+    getSinglePostDataConfirm,
+    postFiles,
+    otherUserProfilePhotoFile,
+    postReactionsArray,
+    postReactionConfirm,
+    deleteReactionConfirm,
+    reactorPhotoFileArray,
+    showPostEditForm,
+    commentToDelete,
+    showCommentOptionsModal,
+  } = postState;
 
   const [postData, setPostData] = useState<Post | null>(null);
 
-  const [currentUserPost, setCurrentUserPost] = useState<boolean>(false);
+  const [isCurrentUserPost, setIsCurrentUserPost] = useState<boolean>(false);
+
+  const [isCurrentUserComment, setIsCurrentUserComment] =
+    useState<boolean>(false);
 
   const [comment, setComment] = useState('');
 
@@ -142,11 +159,22 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
   const [areReactionsReadyForRendering, setAreReactionsReadyForRendering] =
     useState(false);
 
-  let bucket: string;
+  const [showPostOptionsModal, setShowPostOptionsModal] = useState(false);
 
-  process.env.NODE_ENV === 'production'
-    ? (bucket = 'photo-share-app-profile-photos')
-    : (bucket = 'photo-share-app-profile-photos-dev');
+  const [showCommentOptions, setShowCommentOptions] = useState(false);
+
+  const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
+    useState(false);
+
+  let postsBucket: string, profileBucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    postsBucket = 'photo-share-app';
+    profileBucket = 'photo-share-app-profile-photos';
+  } else {
+    postsBucket = 'photo-share-app-dev';
+    profileBucket = 'photo-share-app-profile-photos-dev';
+  }
 
   useEffect(
     // Clear post state when cleaning up before component
@@ -180,7 +208,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
           user: UserType.other,
           fileRequestType: FileRequestType.singlePost,
           s3Key: otherUser.photo,
-          bucket,
+          bucket: profileBucket,
         })
       );
     }
@@ -189,6 +217,15 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
   useEffect(() => {
     if (postData) {
       handleSetIsCurrentUserPost(postData);
+
+      dispatch(
+        getPostFileStart({
+          s3Key: postData.s3Key,
+          bucket: postsBucket,
+          user: UserType.other,
+          fileRequestType: FileRequestType.singlePost,
+        })
+      );
     }
   }, [postData]);
 
@@ -209,43 +246,470 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     }
   }, [postData, otherUser, otherUserProfilePhotoFile]);
 
+  useEffect(() => {
+    if (!areReactionsReadyForRendering) {
+      dispatch(
+        getPostReactionsStart({
+          postId: postId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      postReactionsArray &&
+      postReactionsArray.length &&
+      !areReactionsReadyForRendering
+    ) {
+      postReactionsArray.forEach((innerArray) => {
+        let innerArrayAsList = List(innerArray);
+
+        if (
+          innerArrayAsList.size &&
+          innerArrayAsList.get(0)!.postId === postId
+        ) {
+          if (
+            !compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
+          ) {
+            setReactionsList(innerArrayAsList);
+          }
+        }
+      });
+    }
+  }, [postReactionsArray]);
+
+  useEffect(() => {
+    if (currentUser && reactionsList.size && !areReactionsReadyForRendering) {
+      const foundPost = reactionsList.find(
+        (el) => el.reactingUserId === currentUser.id && el.likedPost
+      );
+
+      if (foundPost) {
+        setAlreadyLikedPostAndReactionId({
+          alreadyLikedPost: true,
+          reactionId: foundPost.id,
+        });
+      } else {
+        setAlreadyLikedPostAndReactionId({
+          alreadyLikedPost: false,
+          reactionId: 'no-post-found',
+        });
+      }
+    }
+  }, [reactionsList]);
+
+  useEffect(() => {
+    if (
+      postReactionConfirm &&
+      postReactionConfirm.message === 'Post liked successfully!' &&
+      postId &&
+      postReactionConfirm.postId === postId
+    ) {
+      dispatch(clearPostReactions());
+
+      setAlreadyLikedPostAndReactionId({
+        alreadyLikedPost: true,
+        reactionId: postReactionConfirm.reactionId,
+      });
+
+      setLikingUsersList(List());
+      setAreReactionsReadyForRendering(false);
+      dispatch(
+        getPostReactionsStart({
+          postId: postId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
+    }
+  }, [postReactionConfirm]);
+
+  useEffect(() => {
+    if (
+      deleteReactionConfirm &&
+      deleteReactionConfirm.message === 'Like removed successfully!' &&
+      postId &&
+      deleteReactionConfirm.postId === postId
+    ) {
+      dispatch(clearPostReactions());
+
+      setAlreadyLikedPostAndReactionId({
+        alreadyLikedPost: false,
+        reactionId: '',
+      });
+
+      setLikingUsersList(List());
+      setAreReactionsReadyForRendering(false);
+      dispatch(
+        getPostReactionsStart({
+          postId: postId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
+    }
+  }, [deleteReactionConfirm]);
+
+  useEffect(() => {
+    if (
+      postReactionConfirm &&
+      postReactionConfirm.message === 'Post comment created successfully!' &&
+      postId &&
+      postReactionConfirm.postId === postId
+    ) {
+      dispatch(clearPostReactions());
+
+      setAreReactionsReadyForRendering(false);
+      dispatch(
+        getPostReactionsStart({
+          postId: postId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
+    }
+  }, [postReactionConfirm]);
+
+  useEffect(() => {
+    if (
+      deleteReactionConfirm &&
+      deleteReactionConfirm.message === 'Comment removed successfully!' &&
+      postId &&
+      deleteReactionConfirm.postId === postId
+    ) {
+      dispatch(clearPostReactions());
+
+      setAreReactionsReadyForRendering(false);
+      dispatch(
+        getPostReactionsStart({
+          postId: postId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
+    }
+  }, [deleteReactionConfirm]);
+
+  useEffect(() => {
+    if (reactionsList.size && !areReactionsReadyForRendering) {
+      reactionsList.forEach((el) => {
+        dispatch(
+          getOtherUserStart({
+            type: OtherUserType.POST_REACTOR,
+            usernameOrId: el.reactingUserId,
+          })
+        );
+
+        setUniqueReactingUsers(uniqueReactingUsers.add(el.reactingUserId));
+      });
+    }
+  }, [reactionsList]);
+
+  useEffect(() => {
+    if (postReactingUsers && postReactingUsers.length) {
+      setReactingUsersInfoList(List(postReactingUsers));
+    }
+  }, [postReactingUsers]);
+
+  useEffect(() => {
+    if (reactingUserInfoList.size && !areReactionsReadyForRendering) {
+      reactingUserInfoList.forEach((el) => {
+        if (el.photo) {
+          dispatch(
+            getPostFileStart({
+              s3Key: el.photo,
+              bucket: profileBucket,
+              user: UserType.postReactorsArray,
+              fileRequestType: FileRequestType.singlePost,
+            })
+          );
+        } else {
+          dispatch(
+            getUserPhotoForReactorArraySuccess({ s3Key: '', fileString: '' })
+          );
+        }
+      });
+    }
+  }, [reactingUserInfoList]);
+
+  useEffect(() => {
+    if (reactorPhotoFileArray) {
+      setUserProfilePhotoList(List(reactorPhotoFileArray));
+    }
+  }, [reactorPhotoFileArray]);
+
+  useEffect(() => {
+    if (
+      reactionsList.size &&
+      reactingUserInfoList.size &&
+      uniqueReactingUsers.size &&
+      reactingUserInfoList.size >= uniqueReactingUsers.size &&
+      userProfilePhotoList.size &&
+      reactingUserInfoList.size === userProfilePhotoList.size &&
+      !areReactionsReadyForRendering
+    ) {
+      let commentsList: List<UserInfoAndOtherData> = List();
+      let likesList: List<UserInfoAndOtherData> = List();
+
+      reactionsList.forEach((reactionEl) => {
+        const userId = reactionEl.reactingUserId;
+        let username: string;
+        let name: string;
+        let comment = reactionEl.comment;
+        let photoKey: string;
+        let fileString: string;
+
+        reactingUserInfoList.forEach((infoEl) => {
+          if (infoEl.id === userId) {
+            username = infoEl.username;
+            name = infoEl.name;
+            photoKey = infoEl.photo || '';
+          }
+        });
+
+        userProfilePhotoList.forEach((photoEl) => {
+          if (photoEl.s3Key === photoKey) {
+            fileString = photoEl.fileString;
+          }
+        });
+
+        if (!photoKey!) {
+          fileString = '';
+        }
+
+        if (!comment) {
+          comment = '';
+        }
+
+        if (reactionEl.likedPost) {
+          likesList = likesList.push({
+            username: username!,
+            name: name!,
+            profilePhotoFileString: fileString!,
+            comment: '',
+            location: '',
+            reactionId: reactionEl.id,
+            postId: postId,
+          });
+        } else {
+          commentsList = commentsList.push({
+            username: username!,
+            name: name!,
+            profilePhotoFileString: fileString!,
+            comment,
+            location: '',
+            commentDate: reactionEl.createdAt,
+            reactionId: reactionEl.id,
+            reactingUserId: reactionEl.reactingUserId,
+            postId: postId,
+          });
+        }
+      });
+
+      if (!compareUserInfoAndDataObjLists(commentingUserList, commentsList)) {
+        setCommentingUserList(commentsList);
+      }
+
+      if (!compareUserInfoAndDataObjLists(likingUsersList, likesList)) {
+        setLikingUsersList(likesList);
+        setPostLikingUsersArray(likesList.toArray());
+      }
+
+      setAreReactionsReadyForRendering(true);
+    }
+  }, [
+    reactionsList,
+    uniqueReactingUsers,
+    reactingUserInfoList,
+    userProfilePhotoList,
+  ]);
+
   const handleSetIsCurrentUserPost = (postData: Post) => {
     if (currentUser) {
       if (postData.userId === currentUser.id) {
-        setCurrentUserPost(true);
+        setIsCurrentUserPost(true);
       } else {
-        setCurrentUserPost(false);
+        setIsCurrentUserPost(false);
       }
     }
+  };
+
+  useEffect(() => {
+    handleSetIsCurrentUserComment();
+  }, [showCommentOptionsModal]);
+
+  useEffect(() => {
+    if (showCommentOptionsModal) {
+      setShowCommentOptions(true);
+    }
+  }, [isCurrentUserComment, showCommentOptionsModal]);
+
+  const handleSetIsCurrentUserComment = () => {
+    if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
+      if (commentToDelete.reactingUserId === currentUser.id) {
+        setIsCurrentUserComment(true);
+      } else {
+        setIsCurrentUserComment(false);
+      }
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setComment(value);
+  };
+
+  const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (currentUser && comment) {
+      createPostReactionStart({
+        reactingUserId: currentUser.id,
+        postId: postId,
+        likedPost: false,
+        comment,
+      });
+    }
+    setComment('');
+  };
+
+  const handleRenderLikeOrLikedButton = () => {
+    return (
+      <Button
+        className='likes'
+        onClick={
+          alreadyLikedPostAndReactionId.alreadyLikedPost
+            ? () => handleSubmitRemoveLike()
+            : () => handleSubmitLike()
+        }
+      >
+        {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
+          <FavoriteIcon htmlColor='red' />
+        ) : (
+          <FavoriteBorderIcon />
+        )}
+      </Button>
+    );
+  };
+
+  const handleSubmitLike = () => {
+    if (currentUser) {
+      createPostReactionStart({
+        reactingUserId: currentUser.id,
+        postId: postId,
+        likedPost: true,
+        comment: '',
+      });
+    }
+  };
+
+  const handleSubmitRemoveLike = () => {
+    deleteReactionStart({
+      reactionId: alreadyLikedPostAndReactionId.reactionId,
+      isLikeRemoval: true,
+      postId: postId,
+    });
+  };
+
+  const handleRenderEditPostDetails = () => {
+    if (isCurrentUserPost && !showPostEditForm) {
+      return (
+        <span className='edit-post' onClick={() => setShowPostEditForm(true)}>
+          Edit post details
+        </span>
+      );
+    } else if (isCurrentUserPost && showPostEditForm) {
+      return (
+        <EditPostForm
+          postId={postId}
+          editCaption={editPostDetails.editCaption}
+          editLocation={editPostDetails.editLocation}
+        />
+      );
+    } else return null;
+  };
+
+  const handleShowPostLikingUsersModal = () =>
+    setShowPostLikingUsersModal(true);
+
+  const handleSetShowPostOptionsModal = () => setShowPostOptionsModal(true);
+
+  const handleArchivePost = () => {
+    if (postId && postData) {
+      dispatch(
+        archivePostStart({
+          postId,
+          s3Key: postData.s3Key,
+        })
+      );
+    }
+  };
+
+  const handleArchiveComment = () => {
+    if (commentToDelete) {
+      dispatch(deleteReactionStart(commentToDelete));
+    }
+    setShowCommentOptions(false);
   };
 
   return (
     <div className='post-page'>
       <div className='post-container'>
         <div className='post-image-container'>
-          {/*
-          <img
-            className='post-image'
-            src={`data:image/jpeg;base64,${fileString}`}
-            alt='post-pic'
-          />
-        </div>
-        <div className='post-modal-details'>
-          <div className='post-user-and-location'>
+          {postFiles && postFiles.length ? (
             <img
-              className='user-photo'
-              src={`data:image/jpeg;base64,${userProfilePhotoFile}`}
-              alt='user'
+              className='post-image'
+              src={`data:image/jpeg;base64,${postFiles[0].fileString}`}
+              alt='post-pic'
             />
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                paddingTop: '10px',
+                paddingBottom: '10px',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
+        </div>
+        <div className='post-details'>
+          <div className='post-user-and-location'>
+            {otherUserProfilePhotoFile ? (
+              <img
+                className='user-photo'
+                src={`data:image/jpeg;base64,${otherUserProfilePhotoFile?.fileString}`}
+                alt='user'
+              />
+            ) : (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingTop: '10px',
+                  paddingBottom: '10px',
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            )}
             <div className='text-and-options'>
               <div className='user-and-location'>
-                <span className='user-name'>{userName}</span>
+                {otherUser ? (
+                  <span className='user-name'>{otherUser.username}</span>
+                ) : null}
                 <span className='post-location'>
-                  {editPostDetails.editLocation}
+                  {editPostDetails.editLocation
+                    ? editPostDetails.editLocation
+                    : null}
                 </span>
               </div>
               <div className='post-options'>
-                <span className='ellipsis' onClick={onOptionsClick}>
+                <span
+                  className='ellipsis'
+                  onClick={handleSetShowPostOptionsModal}
+                >
                   ...
                 </span>
               </div>
@@ -283,11 +747,15 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
           </div>
           {handleRenderLikeOrLikedButton()}
           {likingUsersList.size ? (
-            <Button className='likes' onClick={onPostLikingUsersClick}>
+            <Button className='likes' onClick={handleShowPostLikingUsersModal}>
               <span>{`${likingUsersList.size} likes`}</span>
             </Button>
           ) : null}
-          <span className='post-date'>{postDate}</span>
+          {postData ? (
+            <span className='post-date'>
+              {new Date(postData.createdAt).toDateString()}
+            </span>
+          ) : null}
           <form className='comment-form' onSubmit={handleSubmitComment}>
             <ExpandableFormInput
               tall={true}
@@ -307,9 +775,30 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
               <span>Post</span>
             </Button>
           </form>
-        */}
         </div>
       </div>
+      {likingUsersList.size ? (
+        <FollowersOrFollowingOrLikesModal
+          users={null}
+          show={showPostLikingUsersModal}
+          onHide={() => setShowPostLikingUsersModal(false)}
+          isFollowersModal={false}
+          isPostLikingUsersModal={true}
+          postLikingUsersList={likingUsersList}
+        />
+      ) : null}
+      <PostOrCommentOptionsModal
+        show={showPostOptionsModal}
+        onHide={() => setShowPostOptionsModal(false)}
+        isCurrentUserPostOrComment={isCurrentUserPost}
+        archive={handleArchivePost}
+      />
+      <PostOrCommentOptionsModal
+        show={showCommentOptions}
+        onHide={() => setShowCommentOptions(false)}
+        archive={handleArchiveComment}
+        isCurrentUserPostOrComment={isCurrentUserComment}
+      />
     </div>
   );
 };
