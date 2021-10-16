@@ -9,30 +9,15 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { AppState } from '../../redux/root-reducer';
 
-import {
-  User,
-  OtherUserType,
-  OtherUserRequest,
-} from '../../redux/user/user.types';
-import {
-  selectCurrentUser,
-  selectPostReactingUsers,
-} from '../../redux/user/user.selectors';
+import { User, OtherUserType } from '../../redux/user/user.types';
+
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
-  SinglePostDataReq,
   Reaction,
-  ReactionReq,
-  ReactionConfirm,
-  DeleteReactionReq,
-  DeleteReactionConfirm,
   Post,
-  PostError,
-  PostFileReq,
   FileRequestType,
   PostFile,
-  GetPostReactionsReq,
   ReactionRequestType,
   UserType,
 } from '../../redux/post/post.types';
@@ -47,10 +32,7 @@ import {
   clearPostReactions,
   setPostLikingUsersArray,
   setShowPostEditForm,
-  savePostModalDataToCache,
-  removePostModalDataFromCache,
   clearPostState,
-  setShowPostLikingUsersModal,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -68,6 +50,8 @@ import {
   compareUserOrPostOrReactionLists,
   compareUserInfoAndDataObjLists,
 } from '../../pages/feed-page/feed-page.utils';
+
+import './post-page.styles.scss';
 
 interface Params {
   postId: string;
@@ -112,10 +96,9 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
 
   const [postData, setPostData] = useState<Post | null>(null);
 
-  const [isCurrentUserPost, setIsCurrentUserPost] = useState<boolean>(false);
+  const [isCurrentUserPost, setIsCurrentUserPost] = useState(false);
 
-  const [isCurrentUserComment, setIsCurrentUserComment] =
-    useState<boolean>(false);
+  const [isCurrentUserComment, setIsCurrentUserComment] = useState(false);
 
   const [comment, setComment] = useState('');
 
@@ -192,11 +175,18 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
   useEffect(() => {
     if (getSinglePostDataConfirm) {
       setPostData(getSinglePostDataConfirm);
+      setEditPostDetails({
+        editCaption: getSinglePostDataConfirm.caption || '',
+        editLocation: getSinglePostDataConfirm.postLocation || '',
+      });
 
       const { userId } = getSinglePostDataConfirm;
 
       dispatch(
-        getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: userId })
+        getOtherUserStart({
+          type: OtherUserType.POST_PAGE_USER,
+          usernameOrId: userId,
+        })
       );
     }
   }, [getSinglePostDataConfirm]);

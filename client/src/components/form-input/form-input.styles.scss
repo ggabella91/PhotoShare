@@ -52,10 +52,16 @@ span {
 
     &.comment {
       font-size: 14px;
-      height: fit-content;
+      height: 60px;
       width: inherit;
+      margin: 5px 0 10px 0;
+      padding-top: 28px;
       min-width: 120px;
       overflow-y: scroll;
+      resize: none;
+      flex-grow: 1;
+      border: 1.2px solid $sub-color;
+      border-radius: 2px;
 
       @include respond-medium-wide() {
         min-width: 150px;
@@ -63,7 +69,7 @@ span {
       }
 
       @include respond-medium-narrow-wide() {
-        width: inherit;
+        width: 250px;
       }
     }
   }
@@ -94,7 +100,7 @@ span {
     position: absolute;
     pointer-events: none;
     left: 7px;
-    top: 22px;
+    top: 34px;
     transition: 300ms ease all;
 
     &.hide {

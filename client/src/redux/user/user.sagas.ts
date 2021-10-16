@@ -107,6 +107,12 @@ export function* getOtherUser({
       );
 
       yield put(getOtherUserSuccess(data));
+    } else if (type === OtherUserType.POST_PAGE_USER) {
+      const { data }: { data: User } = yield axios.get(
+        `/api/users/id/${usernameOrId}`
+      );
+
+      yield put(getOtherUserSuccess(data));
     } else if (type === OtherUserType.FOLLOWERS) {
       const { data }: { data: User } = yield axios.get(
         `/api/users/id/${usernameOrId}`

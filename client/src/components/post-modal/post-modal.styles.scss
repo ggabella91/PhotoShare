@@ -354,6 +354,7 @@ $image-height: 62.5vw;
 
           @include respond-medium-narrow-wide() {
             width: 75%;
+            margin-left: 15px;
             transform: translateX(80%);
           }
 
