@@ -1,21 +1,17 @@
 .post-page {
   min-height: 800px;
   display: flex;
-  width: 85vw;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 50%;
+  justify-content: center;
   margin-top: 40px;
-  transform: translate(-50%);
 
   .post-container {
     font-family: 'Lato', sans-serif;
     display: flex;
     flex-direction: row;
-    width: 335px;
     height: 600px;
     position: relative;
-    margin-left: 54vw;
+    border: solid 1px;
+    border-color: rgba(0, 0, 0, 0.2);
 
     .post-image-container {
       display: flex;
@@ -24,7 +20,6 @@
       background-color: black;
       width: 480px;
       height: 600px;
-      transform: translate(-480px);
 
       .post-image {
         height: auto;
@@ -35,7 +30,7 @@
 
     .post-details {
       width: 335px;
-      height: 568px;
+      height: 600px;
       display: flex;
       position: relative;
       flex-direction: column;
@@ -43,8 +38,7 @@
       .post-user-and-location {
         display: flex;
         flex-direction: row;
-        margin-bottom: 1vh;
-        padding-bottom: 1vh;
+        padding: 2vh 0 1vh 20px;
         border-bottom: solid 1px;
         border-color: rgba(0, 0, 0, 0.2);
 
@@ -97,6 +91,10 @@
         flex-direction: column;
         overflow-y: scroll;
         overflow-x: hidden;
+        min-height: 335px;
+        padding-left: 20px;
+        border-bottom: solid 1px;
+        border-color: rgba(0, 0, 0, 0.2);
 
         .edit-post {
           font-size: 14px;
@@ -119,7 +117,7 @@
         color: #074aaf;
         border: none;
         margin: 10px 0 5px 0;
-        padding-left: 0;
+        padding-left: 20px;
         text-decoration: none;
         border-radius: 15px;
 
@@ -137,11 +135,13 @@
       .post-date {
         margin: 0;
         font-size: 12px;
+        padding-left: 20px;
       }
 
       .comment-form {
         display: flex;
         max-height: 65px;
+        padding-left: 20px;
 
         .post-text-button {
           margin-top: 35px;
@@ -158,8 +158,7 @@
           background-color: white;
           color: #074aaf;
           border: none;
-          margin-top: 25px;
-          margin-left: 15px;
+          margin: 20px 15px 10px 10px;
           text-transform: capitalize;
           text-decoration: none;
           border-radius: 15px;

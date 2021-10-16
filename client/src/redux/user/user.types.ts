@@ -91,6 +91,7 @@ export interface Error {
 
 export enum OtherUserType {
   OTHER = 'OTHER',
+  POST_PAGE_USER = 'POST_PAGE_USER',
   FOLLOWERS = 'FOLLOWERS',
   FOLLOWING = 'FOLLOWING',
   POST_REACTOR = 'POST_REACTOR',
