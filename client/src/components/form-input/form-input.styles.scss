@@ -63,13 +63,15 @@ span {
       border: 1.2px solid $sub-color;
       border-radius: 2px;
 
-      @include respond-medium-wide() {
-        min-width: 150px;
-        width: 100%;
-      }
+      &.modal {
+        @include respond-medium-wide() {
+          min-width: 150px;
+          width: 100%;
+        }
 
-      @include respond-medium-narrow-wide() {
-        width: 250px;
+        @include respond-medium-narrow-wide() {
+          width: 250px;
+        }
       }
     }
   }

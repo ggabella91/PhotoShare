@@ -803,6 +803,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               type='textarea'
               value={comment}
               label='Add a comment...'
+              modal={true}
             />
             <Button
               className={`${
