@@ -102,6 +102,10 @@ $image-height: 62.5vw;
 
   &.shift-right {
     margin-left: 54vw !important;
+
+    @include respond-medium() {
+      transform: translate(-45vw, -10vh);
+    }
   }
 
   .large-image-adjustments {
@@ -234,7 +238,7 @@ $image-height: 62.5vw;
             margin-left: 45px;
 
             @include respond-medium-wide() {
-              transform: translate(-110%, -50%);
+              transform: translate(480%, -55%);
             }
 
             @include respond-medium() {
@@ -354,7 +358,7 @@ $image-height: 62.5vw;
 
           @include respond-medium-narrow-wide() {
             width: 75%;
-            margin-left: 15px;
+            margin-left: 60px;
             transform: translateX(80%);
           }
 

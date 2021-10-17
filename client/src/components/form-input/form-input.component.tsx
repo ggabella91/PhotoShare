@@ -9,6 +9,7 @@ export interface FormInputProps {
   value: string;
   label: string;
   tall?: boolean;
+  modal?: boolean;
 }
 
 export interface FormFileInputType {
@@ -42,9 +43,10 @@ export const ExpandableFormInput: React.FC<FormInputProps> = ({
   children,
   label,
   tall,
+  modal,
   ...otherProps
 }) => (
-  <div className='group comment'>
+  <div className={`${modal ? 'modal' : ''} group comment`}>
     {label ? (
       <label
         className={`${
