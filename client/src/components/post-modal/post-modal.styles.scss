@@ -271,13 +271,15 @@ $image-height: 62.5vw;
           color: #808080a6;
         }
 
-        @include respond-medium-wide() {
-          width: 100%;
-          height: 70%;
-        }
+        &.post-modal {
+          @include respond-medium-wide() {
+            width: 100%;
+            height: 70%;
+          }
 
-        @include respond-medium() {
-          height: 0;
+          @include respond-medium() {
+            height: 0;
+          }
         }
       }
 

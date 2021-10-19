@@ -1,3 +1,9 @@
+@mixin respond-medium-wide {
+  @media (max-width: 895px) {
+    @content;
+  }
+}
+
 @mixin respond-medium {
   @media (max-width: 736px) {
     @content;
@@ -16,6 +22,17 @@
   margin-left: 50%;
   transform: translate(-50%);
 
+  &.shift-right {
+    margin-left: 54vw !important;
+  }
+
+  &.modal-content {
+    @include respond-medium() {
+      transform: translate(10%, 50%);
+      min-height: 80px;
+    }
+  }
+
   .modal-content {
     width: 20vw;
     max-width: 200px;
@@ -24,8 +41,8 @@
     flex-direction: column;
     transform: translate(30%, 350%);
 
-    @include respond-medium() {
-      transform: translate(10%, 100%);
+    @include respond-medium-wide() {
+      max-height: 80px;
     }
   }
 

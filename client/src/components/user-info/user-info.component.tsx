@@ -44,6 +44,7 @@ interface UserInfoProps {
   setCommentToDelete: typeof setCommentToDelete;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
   setShowPostEditForm: typeof setShowPostEditForm;
+  modal?: boolean;
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({
@@ -51,6 +52,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   styleType,
   isCaption,
   isCaptionOwner,
+  modal,
   setCommentToDelete,
   setShowCommentOptionsModal,
   setShowPostEditForm,
@@ -161,7 +163,11 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     </div>
   ));
 
-  return <div className={`user-${styleType}-container`}>{userInfo}</div>;
+  return (
+    <div className={`${modal ? 'modal' : ''} user-${styleType}-container`}>
+      {userInfo}
+    </div>
+  );
 };
 
 interface LinkStateProps {}

@@ -15,25 +15,34 @@ const PostOrCommentOptionsModal: React.FC<Props> = ({
   onHide,
   isCurrentUserPostOrComment,
   ...props
-}) => (
-  <Modal
-    {...props}
-    dialogClassName='post-options-modal'
-    animation={false}
-    onHide={onHide}
-    centered
-  >
-    <Modal.Body className='post-options-modal-body'>
-      {isCurrentUserPostOrComment ? (
-        <div className='archive' onClick={archive}>
-          <span>Archive</span>
+}) => {
+  let shiftRight: boolean;
+  process.env.NODE_ENV === 'development'
+    ? (shiftRight = true)
+    : (shiftRight = false);
+
+  return (
+    <Modal
+      {...props}
+      dialogClassName={`${
+        shiftRight ? 'shift-right' : ''
+      } : post-options-modal`}
+      animation={false}
+      onHide={onHide}
+      centered
+    >
+      <Modal.Body className='post-options-modal-body'>
+        {isCurrentUserPostOrComment ? (
+          <div className='archive' onClick={archive}>
+            <span>Archive</span>
+          </div>
+        ) : null}
+        <div className='cancel' onClick={onHide}>
+          <span>Cancel</span>
         </div>
-      ) : null}
-      <div className='cancel' onClick={onHide}>
-        <span>Cancel</span>
-      </div>
-    </Modal.Body>
-  </Modal>
-);
+      </Modal.Body>
+    </Modal>
+  );
+};
 
 export default PostOrCommentOptionsModal;
