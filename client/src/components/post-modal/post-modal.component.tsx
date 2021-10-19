@@ -221,10 +221,10 @@ export const PostModal: React.FC<PostModalProps> = ({
     ? (bucket = 'photo-share-app-profile-photos')
     : (bucket = 'photo-share-app-profile-photos-dev');
 
-  let shiftLeft: boolean;
+  let shiftRight: boolean;
   process.env.NODE_ENV === 'development'
-    ? (shiftLeft = true)
-    : (shiftLeft = false);
+    ? (shiftRight = true)
+    : (shiftRight = false);
 
   useEffect(() => {
     if (props.show && postId) {
@@ -719,7 +719,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   return (
     <Modal
       {...props}
-      dialogClassName={`${shiftLeft ? 'shift-right' : ''} : post-modal`}
+      dialogClassName={`${shiftRight ? 'shift-right' : ''} : post-modal`}
       animation={false}
       centered
     >
@@ -758,13 +758,14 @@ export const PostModal: React.FC<PostModalProps> = ({
               </div>
             </div>
           </div>
-          <div className='caption-and-comments-container'>
+          <div className='caption-and-comments-container post-modal'>
             {captionInfoList.size && !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.comment}
                 userInfoList={captionInfoList}
                 isCaption
                 isCaptionOwner={isCurrentUserPost ? true : false}
+                modal={true}
               />
             ) : (
               handleRenderEditPostDetails()
