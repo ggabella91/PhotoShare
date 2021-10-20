@@ -330,14 +330,12 @@
   background-color: white;
   border-radius: 4px;
 
-  &.modal {
-    @include respond-medium-wide() {
-      width: 100%;
-    }
+  @include respond-medium-wide() {
+    width: 100%;
+  }
 
-    @include respond-medium() {
-      display: none;
-    }
+  @include respond-medium() {
+    display: none;
   }
 
   .user-comment-element {
@@ -443,6 +441,127 @@
       }
 
       .comment-ellipsis-button {
+        font-size: 20px;
+        transform: translate(50%, -25%);
+        background-color: rgba(255, 255, 255, 0.7);
+      }
+    }
+  }
+}
+
+.user-post-page-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: inherit;
+  max-width: 300px;
+  max-height: 338px;
+  background-color: white;
+  border-radius: 4px;
+
+  .user-post-page-element {
+    display: flex;
+    position: relative;
+    width: 90%;
+    background-color: white;
+    padding-top: 6px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .post-page-avatar {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+
+      .post-page-profile-photo {
+        position: relative;
+        margin-top: 30%;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+      }
+
+      .post-page-photo-placeholder {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: solid 1px;
+        border-color: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .post-page-photo-placeholder-text {
+          position: relative;
+          font-size: 10px;
+          color: black;
+        }
+      }
+    }
+
+    .user-data-and-date {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      margin-left: 12px;
+
+      .post-page-username-and-other-data {
+        display: inline-block;
+        position: relative;
+        padding-top: 10px;
+        width: 100%;
+        text-align: left;
+        word-wrap: break-word;
+        font-size: 14px;
+        font-weight: 420;
+
+        .post-page-username {
+          display: inline-flex;
+          position: relative;
+          font-size: 14px;
+          font-weight: 540;
+          color: black;
+          height: fit-content;
+          width: fit-content;
+          margin-right: 4px;
+        }
+
+        .post-page-name {
+          display: none;
+        }
+
+        .post-page-location {
+          display: none;
+        }
+      }
+
+      .post-page-date {
+        display: flex;
+        position: relative;
+        font-size: 12px;
+        font-weight: 380;
+        margin-top: 5px;
+      }
+    }
+
+    .post-page-options {
+      display: flex;
+      position: absolute;
+      right: 5px;
+      width: 10%;
+      transform: translateY(25%);
+      background-color: rgba(255, 255, 255, 0.7);
+
+      &.hide {
+        @include hideOptionsButton();
+      }
+
+      .post-page-ellipsis-button {
         font-size: 20px;
         transform: translate(50%, -25%);
         background-color: rgba(255, 255, 255, 0.7);

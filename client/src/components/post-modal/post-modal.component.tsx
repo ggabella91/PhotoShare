@@ -758,14 +758,13 @@ export const PostModal: React.FC<PostModalProps> = ({
               </div>
             </div>
           </div>
-          <div className='caption-and-comments-container post-modal'>
+          <div className='caption-and-comments-container'>
             {captionInfoList.size && !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.comment}
                 userInfoList={captionInfoList}
                 isCaption
                 isCaptionOwner={isCurrentUserPost ? true : false}
-                modal={true}
               />
             ) : (
               handleRenderEditPostDetails()

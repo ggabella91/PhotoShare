@@ -28,14 +28,14 @@
       }
     }
 
-    .post-details {
+    .post-page-details {
       width: 335px;
       height: 600px;
       display: flex;
       position: relative;
       flex-direction: column;
 
-      .post-user-and-location {
+      .post-page-user-and-location {
         display: flex;
         flex-direction: row;
         padding: 2vh 0 1vh 20px;
@@ -65,14 +65,14 @@
               font-weight: 540;
             }
 
-            .post-location {
+            .post-page-location {
               margin: 0;
               font-size: 12px;
               font-weight: 420;
             }
           }
 
-          .post-options {
+          .post-page-options {
             font-size: 30px;
             transform: translate(450%, -50%);
             margin-left: 45px;
@@ -86,7 +86,7 @@
         }
       }
 
-      .caption-and-comments-container {
+      .post-page-caption-and-comments-container {
         display: flex;
         flex-direction: column;
         overflow-y: scroll;
@@ -96,7 +96,7 @@
         border-bottom: solid 1px;
         border-color: rgba(0, 0, 0, 0.2);
 
-        .edit-post {
+        .post-page-edit-post {
           font-size: 14px;
           font-weight: 480;
           cursor: pointer;
@@ -132,25 +132,25 @@
         }
       }
 
-      .post-date {
+      .post-page-date {
         margin: 0;
         font-size: 12px;
         padding-left: 20px;
       }
 
-      .comment-form {
+      .post-page-comment-form {
         display: flex;
         max-height: 65px;
         padding-left: 20px;
 
-        .post-text-button {
-          margin-top: 35px;
-          margin-left: 15px;
-          font-size: 14px;
-          font-weight: 520;
-        }
+        // .post-text-button {
+        //   margin-top: 35px;
+        //   margin-left: 15px;
+        //   font-size: 14px;
+        //   font-weight: 520;
+        // }
 
-        .submit-comment-button {
+        .post-page-submit-comment-button {
           width: auto;
           cursor: pointer;
           display: inline-flex;
