@@ -272,6 +272,8 @@ $image-height: 62.5vw;
         }
 
         &.post-modal {
+          height: 75%;
+
           @include respond-medium-wide() {
             width: 100%;
             height: 70%;
