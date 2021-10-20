@@ -603,7 +603,10 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
   const handleRenderEditPostDetails = () => {
     if (isCurrentUserPost && !showPostEditForm) {
       return (
-        <span className='edit-post' onClick={() => setShowPostEditForm(true)}>
+        <span
+          className='post-page-edit-post'
+          onClick={() => setShowPostEditForm(true)}
+        >
           Edit post details
         </span>
       );
@@ -664,8 +667,8 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
             </Box>
           )}
         </div>
-        <div className='post-details'>
-          <div className='post-user-and-location'>
+        <div className='post-page-details'>
+          <div className='post-page-user-and-location'>
             {otherUserProfilePhotoFile ? (
               <img
                 className='user-photo'
@@ -689,13 +692,13 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
                 {otherUser ? (
                   <span className='user-name'>{otherUser.username}</span>
                 ) : null}
-                <span className='post-location'>
+                <span className='post-page-location'>
                   {editPostDetails.editLocation
                     ? editPostDetails.editLocation
                     : null}
                 </span>
               </div>
-              <div className='post-options'>
+              <div className='post-page-options'>
                 <span
                   className='ellipsis'
                   onClick={handleSetShowPostOptionsModal}
@@ -705,7 +708,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
               </div>
             </div>
           </div>
-          <div className='caption-and-comments-container'>
+          <div className='post-page-caption-and-comments-container'>
             {captionInfoList.size && !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.comment}
@@ -730,7 +733,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
             ) : null}
             {commentingUserList.size ? (
               <UserInfo
-                styleType={StyleType.comment}
+                styleType={StyleType.postPage}
                 userInfoList={commentingUserList}
               />
             ) : null}
@@ -742,11 +745,14 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
             </Button>
           ) : null}
           {postData ? (
-            <span className='post-date'>
+            <span className='post-page-date'>
               {new Date(postData.createdAt).toDateString()}
             </span>
           ) : null}
-          <form className='comment-form' onSubmit={handleSubmitComment}>
+          <form
+            className='post-page-comment-form'
+            onSubmit={handleSubmitComment}
+          >
             <ExpandableFormInput
               tall={true}
               onChange={handleChange}
@@ -758,7 +764,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
             <Button
               className={`${
                 !comment ? 'greyed-out' : ''
-              } submit-comment-button`}
+              } post-page-submit-comment-button`}
               disabled={comment ? false : true}
               onClick={handleSubmitComment}
             >
