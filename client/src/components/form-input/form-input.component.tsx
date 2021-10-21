@@ -57,7 +57,7 @@ export const ExpandableFormInput: React.FC<FormInputProps> = ({
       </label>
     ) : null}
     <textarea
-      className={`${modal ? 'modal' : ''} form-input comment`}
+      className={`${modal ? 'modal ' : ''}form-input comment`}
       {...otherProps}
     />
   </div>
