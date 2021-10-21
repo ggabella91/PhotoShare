@@ -4,6 +4,12 @@
   }
 }
 
+@mixin respond-narrow {
+  @media (max-width: 576px) {
+    @content;
+  }
+}
+
 .followers-following-modal {
   display: flex;
   flex-direction: column;
@@ -15,8 +21,15 @@
   min-height: 400px;
   max-height: 400px;
   margin-top: 25vh;
-  margin-left: 50%;
-  transform: translate(-50%);
+
+  @include respond-medium() {
+    margin-left: 50%;
+    transform: translate(-50%);
+  }
+
+  @include respond-narrow() {
+    margin: 100vh 0vw 0vh 10vw !important;
+  }
 
   .modal-content {
     width: 50vw;
