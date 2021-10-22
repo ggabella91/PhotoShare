@@ -10,6 +10,12 @@
   }
 }
 
+@mixin respond-narrow {
+  @media (max-width: 576px) {
+    @content;
+  }
+}
+
 .post-options-modal {
   display: flex;
   flex-direction: column;
@@ -20,16 +26,14 @@
   max-height: 120px;
   margin-top: 45vh;
   margin-left: 50%;
-  transform: translate(-50%);
 
   &.shift-right {
-    margin-left: 54vw !important;
+    margin-left: 50vw !important;
   }
 
   &.modal-content {
     @include respond-medium() {
       transform: translate(10%, 50%);
-      min-height: 80px;
     }
   }
 
@@ -37,12 +41,14 @@
     width: 20vw;
     max-width: 200px;
     min-width: 120px;
-    max-height: 120px;
     flex-direction: column;
-    transform: translate(30%, 350%);
+    height: fit-content !important;
+    margin-top: 35vh;
+    margin-left: -35vw;
+    min-height: 80px !important;
 
-    @include respond-medium-wide() {
-      max-height: 80px;
+    @include respond-narrow() {
+      transform: translate(15vw, 85vh);
     }
   }
 
