@@ -64,7 +64,7 @@ export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
         <span>Sign in</span>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form className='sign-in-form' onSubmit={handleSubmit}>
         <FormInput
           name='email'
           type='email'
