@@ -53,7 +53,6 @@ $image-height: 62.5vw;
   border-radius: 0;
   min-width: 335px;
   max-width: 335px;
-  // margin-left: 62.5%;
 
   @include respond-medium-wide() {
     height: $image-height;
@@ -68,7 +67,6 @@ $image-height: 62.5vw;
     flex-direction: column;
     margin-top: 50%;
     margin-left: 100%;
-    // transform: translateY(50%);
   }
 }
 
@@ -330,14 +328,7 @@ $image-height: 62.5vw;
           display: none;
         }
 
-        // .post-text-button {
-        //   margin-top: 35px;
-        //   margin-left: 15px;
-        //   font-size: 14px;
-        //   font-weight: 520;
-        // }
-
-        .submit-comment-button {
+        / .submit-comment-button {
           width: auto;
           cursor: pointer;
           display: inline-flex;
