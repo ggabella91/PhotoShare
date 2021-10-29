@@ -294,7 +294,7 @@ export function* getSinglePostData({
 }
 
 export function* onCreatePostStart(): SagaIterator {
-  yield takeLatest<ActionPattern, Saga>(
+  yield takeEvery<ActionPattern, Saga>(
     PostActions.CREATE_POST_START,
     createPost
   );
