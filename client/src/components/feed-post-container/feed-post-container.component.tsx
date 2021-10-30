@@ -515,9 +515,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       >
         {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
-          <FavoriteIcon htmlColor='red' />
+          <FavoriteIcon className='likes-icon' htmlColor='red' />
         ) : (
-          <FavoriteBorderIcon />
+          <FavoriteBorderIcon className='likes-icon' />
         )}
       </Button>
     );

@@ -673,9 +673,9 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       >
         {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
-          <FavoriteIcon htmlColor='red' />
+          <FavoriteIcon className='likes-icon' htmlColor='red' />
         ) : (
-          <FavoriteBorderIcon />
+          <FavoriteBorderIcon className='likes-icon' />
         )}
       </Button>
     );
