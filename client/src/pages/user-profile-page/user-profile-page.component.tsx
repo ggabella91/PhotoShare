@@ -456,7 +456,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const handleRenderFollowOrFollowingButton = (narrow: boolean) => {
     return (
-      <div
+      <button
         className={narrow ? 'follow-profile-narrow-screen' : 'follow-profile'}
       >
         <span
@@ -469,7 +469,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         >
           {isFollowing! ? 'Following' : 'Follow'}
         </span>
-      </div>
+      </button>
     );
   };
 
