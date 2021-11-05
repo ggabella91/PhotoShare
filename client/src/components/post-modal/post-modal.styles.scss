@@ -234,6 +234,8 @@ $image-height: 62.5vw;
             font-size: 30px;
             transform: translate(450%, -50%);
             margin-left: 45px;
+            background-color: transparent;
+            border: none;
 
             @include respond-medium-wide() {
               transform: translate(480%, -55%);
