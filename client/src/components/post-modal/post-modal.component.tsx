@@ -751,11 +751,11 @@ export const PostModal: React.FC<PostModalProps> = ({
                   {editPostDetails.editLocation}
                 </span>
               </div>
-              <div className='post-options'>
+              <button className='post-options'>
                 <span className='ellipsis' onClick={onOptionsClick}>
                   ...
                 </span>
-              </div>
+              </button>
             </div>
           </div>
           <div className='caption-and-comments-container'>
