@@ -223,97 +223,121 @@
   background-color: white;
   border-radius: 4px;
 
-  .user-feed-element {
+  .user-and-options {
     display: flex;
-    position: relative;
-    justify-content: start;
-    width: 100%;
-    height: 60px;
-    background-color: white;
+    flex-direction: row;
     border-bottom: solid 1px rgb(180, 180, 180);
-    padding-top: 5px;
-    padding-bottom: 5px;
 
-    &:hover {
-      cursor: pointer;
-    }
-
-    .feed-avatar {
+    .user-feed-element {
+      display: flex;
       position: relative;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-left: 15px;
-      margin-right: 15px;
+      justify-content: start;
+      width: 540px;
+      height: 60px;
+      background-color: white;
       padding-top: 5px;
+      padding-bottom: 5px;
 
-      .feed-profile-photo {
-        position: relative;
-        margin-left: 50%;
-        margin-top: 50%;
-        transform: translate(-50%, -50%);
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
+      &:hover {
+        cursor: pointer;
       }
 
-      .feed-photo-placeholder {
+      .feed-avatar {
         position: relative;
-        margin-left: 50%;
-        margin-top: 50%;
-        transform: translate(-50%, -50%);
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
-        border: solid 1px;
-        border-color: black;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        margin-left: 15px;
+        margin-right: 15px;
+        padding-top: 5px;
 
-        .feed-photo-placeholder-text {
+        .feed-profile-photo {
           position: relative;
-          font-size: 10px;
-          color: black;
-          margin-top: 50%;
           margin-left: 50%;
+          margin-top: 50%;
           transform: translate(-50%, -50%);
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+
+        .feed-photo-placeholder {
+          position: relative;
+          margin-left: 50%;
+          margin-top: 50%;
+          transform: translate(-50%, -50%);
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: solid 1px;
+          border-color: black;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          .feed-photo-placeholder-text {
+            position: relative;
+            font-size: 10px;
+            color: black;
+            margin-top: 50%;
+            margin-left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+      }
+
+      .user-data-and-date {
+        width: 200px;
+
+        .feed-username-and-other-data {
+          display: flex;
+          position: relative;
+          flex-direction: column;
+          padding-top: 6px;
+          width: 75%;
+          height: 60px;
+          justify-self: flex-end;
+          text-align: left;
+
+          .feed-username {
+            display: flex;
+            position: relative;
+            font-size: 14px;
+            font-weight: 540;
+            color: black;
+          }
+
+          .feed-name {
+            display: none;
+          }
+
+          .feed-location {
+            display: flex;
+            position: relative;
+            font-size: 12px;
+            font-weight: 380;
+            color: black;
+          }
         }
       }
     }
 
-    .user-data-and-date {
-      width: 200px;
+    .post-options {
+      font-size: 30px;
+      margin-right: 8px;
+      background-color: transparent;
+      border: none;
+      width: 60px;
+      height: 30px;
 
-      .feed-username-and-other-data {
-        display: flex;
-        position: relative;
-        flex-direction: column;
-        padding-top: 6px;
-        width: 75%;
-        height: 60px;
-        justify-self: flex-end;
-        text-align: left;
+      .ellipsis {
+        position: absolute;
+        height: inherit;
+        line-height: 0;
 
-        .feed-username {
-          display: flex;
-          position: relative;
-          font-size: 14px;
-          font-weight: 540;
-          color: black;
-        }
-
-        .feed-name {
-          display: none;
-        }
-
-        .feed-location {
-          display: flex;
-          position: relative;
-          font-size: 12px;
-          font-weight: 380;
-          color: black;
+        &:hover {
+          cursor: pointer;
         }
       }
     }
