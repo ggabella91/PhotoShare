@@ -13,6 +13,7 @@ import {
   setCommentToDelete,
   setShowCommentOptionsModal,
   setShowPostEditForm,
+  setFeedPagePostOptionsModalShow,
 } from '../../redux/post/post.actions';
 
 import './user-info.styles.scss';
@@ -45,6 +46,7 @@ interface UserInfoProps {
   setCommentToDelete: typeof setCommentToDelete;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
   setShowPostEditForm: typeof setShowPostEditForm;
+  setFeedPagePostOptionsModalShow: typeof setFeedPagePostOptionsModalShow;
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({
@@ -55,6 +57,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   setCommentToDelete,
   setShowCommentOptionsModal,
   setShowPostEditForm,
+  setFeedPagePostOptionsModalShow,
 }) => {
   const [showCommentOptionsButtonForIdx, setShowCommentOptionsButtonForIdx] =
     useState({ show: false, idx: -1 });
@@ -79,6 +82,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     if (isCaptionOwner) {
       setShowPostEditForm(true);
     }
+  };
+
+  const handleSetFeedPagePostOptionsModalShow = () => {
+    setFeedPagePostOptionsModalShow(true);
   };
 
   const userInfo = userInfoList.map((el: UserInfoAndOtherData, idx: number) => (
@@ -166,7 +173,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       </div>
       {styleType === StyleType.feed ? (
         <button className='post-options'>
-          <span className='ellipsis' onClick={() => {}}>
+          <span
+            className='ellipsis'
+            onClick={handleSetFeedPagePostOptionsModalShow}
+          >
             ...
           </span>
         </button>
@@ -188,6 +198,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
   setShowPostEditForm: (showPostEditForm: boolean) =>
     dispatch(setShowPostEditForm(showPostEditForm)),
+  setFeedPagePostOptionsModalShow: (feedPagePostOptionsModalShow: boolean) =>
+    dispatch(setFeedPagePostOptionsModalShow(feedPagePostOptionsModalShow)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
