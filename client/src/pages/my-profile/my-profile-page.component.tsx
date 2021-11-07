@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -215,6 +215,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [postLikersList, setPostLikersList] = useState<
     List<UserInfoAndOtherData>
   >(List());
+
+  let history = useHistory();
 
   let postsBucket: string, profileBucket: string;
 
@@ -454,6 +456,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   }, [postLikingUsersArray]);
 
+  const handleGoToPostClick = () => {
+    history.push(`/p/${postModalProps.get('id')}`);
+  };
+
   return (
     <div className='profile-page'>
       <div className='user-bio'>
@@ -559,6 +565,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         show={postOptionsModalShow}
         onHide={() => setPostOptionsModalShow(false)}
         isCurrentUserPostOrComment={true}
+        postOptionsModal={true}
+        onGoToPostClick={handleGoToPostClick}
         archive={() =>
           archivePostStart({
             postId: postModalProps.get('id'),
@@ -576,6 +584,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           setShowCommentOptionsModal(false);
         }}
         isCurrentUserPostOrComment={currentUserPostOrComment}
+        postOptionsModal={false}
       />
       <FollowersOrFollowingOrLikesModal
         users={

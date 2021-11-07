@@ -787,6 +787,8 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
         show={showPostOptionsModal}
         onHide={() => setShowPostOptionsModal(false)}
         isCurrentUserPostOrComment={isCurrentUserPost}
+        postOptionsModal={true}
+        isInPostPage={true}
         archive={handleArchivePost}
       />
       <PostOrCommentOptionsModal
@@ -794,6 +796,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
         onHide={() => setShowCommentOptions(false)}
         archive={handleArchiveComment}
         isCurrentUserPostOrComment={isCurrentUserComment}
+        postOptionsModal={false}
       />
     </div>
   );

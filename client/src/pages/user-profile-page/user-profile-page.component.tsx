@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -245,6 +246,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [postLikersList, setPostLikersList] = useState<
     List<UserInfoAndOtherData>
   >(List());
+
+  let history = useHistory();
 
   let postsBucket: string, profileBucket: string;
 
@@ -517,6 +520,10 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     }
   }, [postLikingUsersArray]);
 
+  const handleGoToPostClick = () => {
+    history.push(`/p/${postModalProps.get('id')}`);
+  };
+
   if (otherUserError) {
     return <NotFoundPage />;
   }
@@ -621,6 +628,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         show={postOptionsModalShow}
         onHide={() => setPostOptionsModalShow(false)}
         isCurrentUserPostOrComment={false}
+        postOptionsModal={true}
+        onGoToPostClick={handleGoToPostClick}
         archive={() =>
           archivePostStart({
             postId: postModalProps.get('id'),
@@ -638,6 +647,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           }
         }}
         isCurrentUserPostOrComment={currentUserPostOrComment}
+        postOptionsModal={false}
       />
       <UnfollowModal
         show={unfollowModalShow}
