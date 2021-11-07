@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -256,6 +257,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [currentUserPostOrComment, setCurrentUserPostOrComment] =
     useState<boolean>(false);
+
+  let history = useHistory();
 
   let postsBucket: string, profileBucket: string;
 
@@ -620,6 +623,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     setShowCommentOptionsModal(false);
   };
 
+  const handleGoToPostClick = () => {
+    history.push(`/p/${postModalProps.id}`);
+  };
+
   return (
     <div className='feed-page'>
       {isLoadingPostData ? (
@@ -686,6 +693,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         show={postOptionsModalShow}
         onHide={() => setFeedPagePostOptionsModalShow(false)}
         isCurrentUserPostOrComment={currentUserPost}
+        postOptionsModal={true}
+        onGoToPostClick={handleGoToPostClick}
         archive={() =>
           archivePostStart({
             postId: postModalProps.id,
@@ -698,6 +707,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         onHide={() => setShowCommentOptionsModal(false)}
         archive={handleArchiveComment}
         isCurrentUserPostOrComment={currentUserPostOrComment}
+        postOptionsModal={false}
       />
     </div>
   );
