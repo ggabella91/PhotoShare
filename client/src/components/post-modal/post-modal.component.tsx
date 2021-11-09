@@ -8,6 +8,7 @@ import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -751,10 +752,8 @@ export const PostModal: React.FC<PostModalProps> = ({
                   {editPostDetails.editLocation}
                 </span>
               </div>
-              <button className='post-options'>
-                <span className='ellipsis' onClick={onOptionsClick}>
-                  ...
-                </span>
+              <button className='post-options' onClick={onOptionsClick}>
+                <MoreHorizIcon className='ellipsis' />
               </button>
             </div>
           </div>
