@@ -208,10 +208,14 @@ $image-height: 62.5vw;
 
         .text-and-options {
           margin-left: 12px;
-          min-width: 250px;
+          width: 250px;
           display: flex;
           flex-direction: row;
-          justify-content: stretch;
+          justify-content: space-between;
+
+          // @include respond-medium-wide() {
+          //   width: 100%;
+          // }
 
           .user-and-location {
             display: flex;
@@ -231,19 +235,10 @@ $image-height: 62.5vw;
           }
 
           .post-options {
-            font-size: 30px;
-            transform: translate(450%, -50%);
-            margin-left: 45px;
+            height: 25px;
             background-color: transparent;
             border: none;
-
-            @include respond-medium-wide() {
-              transform: translate(480%, -55%);
-            }
-
-            @include respond-medium() {
-              transform: translate(220%, -50%);
-            }
+            transform: translateY(-2px);
 
             .ellipsis {
               &:hover {
