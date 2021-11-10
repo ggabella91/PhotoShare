@@ -225,6 +225,7 @@
 
   .user-and-options {
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
     border-bottom: solid 1px rgb(180, 180, 180);
 
@@ -324,18 +325,12 @@
     }
 
     .post-options {
-      font-size: 30px;
-      margin-right: 8px;
+      height: 40px;
+      margin-right: 10px;
       background-color: transparent;
       border: none;
-      width: 60px;
-      height: 30px;
 
       .ellipsis {
-        position: absolute;
-        height: inherit;
-        line-height: 0;
-
         &:hover {
           cursor: pointer;
         }

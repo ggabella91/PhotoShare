@@ -53,11 +53,12 @@
           min-width: 250px;
           display: flex;
           flex-direction: row;
-          justify-content: stretch;
+          justify-content: space-between;
 
           .user-and-location {
             display: flex;
             flex-direction: column;
+            margin-right: 55px;
 
             .user-name {
               margin: 0;
@@ -73,9 +74,10 @@
           }
 
           .post-page-options {
-            font-size: 30px;
-            transform: translate(450%, -50%);
-            margin-left: 45px;
+            height: 25px;
+            background-color: transparent;
+            border: none;
+            transform: translateY(-4px);
 
             .ellipsis {
               &:hover {
@@ -132,8 +134,8 @@
         }
       }
 
-      .post-page-date {
-        margin: 0;
+      .post-page-post-date {
+        margin-left: 20px;
         font-size: 12px;
       }
 
