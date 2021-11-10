@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List } from 'immutable';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -151,19 +152,23 @@ export const UserInfo: React.FC<UserInfoProps> = ({
             showCommentOptionsButtonForIdx.idx === idx
               ? ''
               : 'hide'
-          } comment-options`}
+          } ${styleType}-options`}
         >
-          {styleType === StyleType.comment && !isCaption ? (
+          {(styleType === StyleType.comment ||
+            styleType === StyleType.postPage) &&
+          !isCaption ? (
             <span
-              className='comment-ellipsis-button'
+              className={`${styleType}-ellipsis-button`}
               onClick={() => handleSetCommentToDelete(idx)}
             >
               ...
             </span>
           ) : null}
-          {styleType === StyleType.comment && isCaption ? (
+          {(styleType === StyleType.comment ||
+            styleType === StyleType.postPage) &&
+          isCaption ? (
             <span
-              className='comment-ellipsis-button'
+              className={`${styleType}-ellipsis-button`}
               onClick={handleClickCaptionOptions}
             >
               ...
@@ -172,13 +177,11 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         </div>
       </div>
       {styleType === StyleType.feed ? (
-        <button className='post-options'>
-          <span
-            className='ellipsis'
-            onClick={handleSetFeedPagePostOptionsModalShow}
-          >
-            ...
-          </span>
+        <button
+          className='post-options'
+          onClick={handleSetFeedPagePostOptionsModalShow}
+        >
+          <MoreHorizIcon className='ellipsis' />
         </button>
       ) : null}
     </div>

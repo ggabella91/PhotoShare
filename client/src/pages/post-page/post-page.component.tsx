@@ -6,6 +6,7 @@ import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -33,6 +34,7 @@ import {
   setPostLikingUsersArray,
   setShowPostEditForm,
   clearPostState,
+  setShowCommentOptionsModal,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -71,13 +73,10 @@ interface PostPageProps {}
 const PostPage: React.FC<PostPageProps> = ({}) => {
   const userState = useSelector((state: AppState) => state.user);
   const postState = useSelector((state: AppState) => state.post);
-  const followerState = useSelector((state: AppState) => state.follower);
 
   const dispatch = useDispatch();
 
   const { postId } = useParams<Params>();
-
-  console.log('postId: ', postId);
 
   const { currentUser, otherUser, postReactingUsers } = userState;
 
@@ -143,8 +142,6 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     useState(false);
 
   const [showPostOptionsModal, setShowPostOptionsModal] = useState(false);
-
-  const [showCommentOptions, setShowCommentOptions] = useState(false);
 
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
@@ -267,6 +264,13 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
           }
         }
       });
+    } else if (postReactionsArray && !postReactionsArray.length) {
+      setReactionsList(List());
+      setUniqueReactingUsers(new Set());
+      setReactingUsersInfoList(List());
+      setUserProfilePhotoList(List());
+      setLikingUsersList(List());
+      setCommentingUserList(List());
     }
   }, [postReactionsArray]);
 
@@ -526,12 +530,6 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     handleSetIsCurrentUserComment();
   }, [showCommentOptionsModal]);
 
-  useEffect(() => {
-    if (showCommentOptionsModal) {
-      setShowCommentOptions(true);
-    }
-  }, [isCurrentUserComment, showCommentOptionsModal]);
-
   const handleSetIsCurrentUserComment = () => {
     if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
       if (commentToDelete.reactingUserId === currentUser.id) {
@@ -552,12 +550,14 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     event.preventDefault();
 
     if (currentUser && comment) {
-      createPostReactionStart({
-        reactingUserId: currentUser.id,
-        postId: postId,
-        likedPost: false,
-        comment,
-      });
+      dispatch(
+        createPostReactionStart({
+          reactingUserId: currentUser.id,
+          postId: postId,
+          likedPost: false,
+          comment,
+        })
+      );
     }
     setComment('');
   };
@@ -641,8 +641,13 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     if (commentToDelete) {
       dispatch(deleteReactionStart(commentToDelete));
     }
-    setShowCommentOptions(false);
+    dispatch(setShowCommentOptionsModal(false));
   };
+
+  const handleHidePostOptionsModal = () => setShowPostOptionsModal(false);
+
+  const handleHideCommentOptionsModal = () =>
+    dispatch(setShowCommentOptionsModal(false));
 
   return (
     <div className='post-page'>
@@ -698,20 +703,18 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
                     : null}
                 </span>
               </div>
-              <div className='post-page-options'>
-                <span
-                  className='ellipsis'
-                  onClick={handleSetShowPostOptionsModal}
-                >
-                  ...
-                </span>
-              </div>
+              <button
+                className='post-page-options'
+                onClick={handleSetShowPostOptionsModal}
+              >
+                <MoreHorizIcon className='ellipsis' />
+              </button>
             </div>
           </div>
           <div className='post-page-caption-and-comments-container'>
             {captionInfoList.size && !showPostEditForm ? (
               <UserInfo
-                styleType={StyleType.comment}
+                styleType={StyleType.postPage}
                 userInfoList={captionInfoList}
                 isCaption
                 isCaptionOwner={isCurrentUserPost ? true : false}
@@ -745,7 +748,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
             </Button>
           ) : null}
           {postData ? (
-            <span className='post-page-date'>
+            <span className='post-page-post-date'>
               {new Date(postData.createdAt).toDateString()}
             </span>
           ) : null}
@@ -785,15 +788,15 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
       ) : null}
       <PostOrCommentOptionsModal
         show={showPostOptionsModal}
-        onHide={() => setShowPostOptionsModal(false)}
+        onHide={handleHidePostOptionsModal}
         isCurrentUserPostOrComment={isCurrentUserPost}
         postOptionsModal={true}
         isInPostPage={true}
         archive={handleArchivePost}
       />
       <PostOrCommentOptionsModal
-        show={showCommentOptions}
-        onHide={() => setShowCommentOptions(false)}
+        show={showCommentOptionsModal}
+        onHide={handleHideCommentOptionsModal}
         archive={handleArchiveComment}
         isCurrentUserPostOrComment={isCurrentUserComment}
         postOptionsModal={false}
