@@ -564,14 +564,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
 
   const handleRenderLikeOrLikedButton = () => {
     return (
-      <Button
-        className='like-button'
-        onClick={
-          alreadyLikedPostAndReactionId.alreadyLikedPost
-            ? () => handleSubmitRemoveLike()
-            : () => handleSubmitLike()
-        }
-      >
+      <Button className='like-button' onClick={handleClickLikeButton}>
         {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
           <FavoriteIcon htmlColor='red' />
         ) : (
@@ -581,32 +574,38 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     );
   };
 
+  const handleClickLikeButton = () =>
+    alreadyLikedPostAndReactionId.alreadyLikedPost
+      ? handleSubmitRemoveLike()
+      : handleSubmitLike();
+
   const handleSubmitLike = () => {
     if (currentUser) {
-      createPostReactionStart({
-        reactingUserId: currentUser.id,
-        postId: postId,
-        likedPost: true,
-        comment: '',
-      });
+      dispatch(
+        createPostReactionStart({
+          reactingUserId: currentUser.id,
+          postId: postId,
+          likedPost: true,
+          comment: '',
+        })
+      );
     }
   };
 
   const handleSubmitRemoveLike = () => {
-    deleteReactionStart({
-      reactionId: alreadyLikedPostAndReactionId.reactionId,
-      isLikeRemoval: true,
-      postId: postId,
-    });
+    dispatch(
+      deleteReactionStart({
+        reactionId: alreadyLikedPostAndReactionId.reactionId,
+        isLikeRemoval: true,
+        postId: postId,
+      })
+    );
   };
 
   const handleRenderEditPostDetails = () => {
     if (isCurrentUserPost && !showPostEditForm) {
       return (
-        <span
-          className='post-page-edit-post'
-          onClick={() => setShowPostEditForm(true)}
-        >
+        <span className='post-page-edit-post' onClick={handleShowPostEditForm}>
           Edit post details
         </span>
       );
@@ -620,6 +619,8 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
       );
     } else return null;
   };
+
+  const handleShowPostEditForm = () => setShowPostEditForm(true);
 
   const handleShowPostLikingUsersModal = () =>
     setShowPostLikingUsersModal(true);
@@ -643,6 +644,9 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     }
     dispatch(setShowCommentOptionsModal(false));
   };
+
+  const handleHidePostLikingUsersModal = () =>
+    setShowPostLikingUsersModal(false);
 
   const handleHidePostOptionsModal = () => setShowPostOptionsModal(false);
 
@@ -677,7 +681,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
             {otherUserProfilePhotoFile ? (
               <img
                 className='user-photo'
-                src={`data:image/jpeg;base64,${otherUserProfilePhotoFile?.fileString}`}
+                src={`data:image/jpeg;base64,${otherUserProfilePhotoFile.fileString}`}
                 alt='user'
               />
             ) : (
@@ -780,7 +784,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showPostLikingUsersModal}
-          onHide={() => setShowPostLikingUsersModal(false)}
+          onHide={handleHidePostLikingUsersModal}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersList={likingUsersList}

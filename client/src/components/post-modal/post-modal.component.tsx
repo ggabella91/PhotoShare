@@ -665,14 +665,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const handleRenderLikeOrLikedButton = () => {
     return (
-      <Button
-        className='like-button'
-        onClick={
-          alreadyLikedPostAndReactionId.alreadyLikedPost
-            ? () => handleSubmitRemoveLike()
-            : () => handleSubmitLike()
-        }
-      >
+      <Button className='like-button' onClick={handleClickLikeButton}>
         {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
           <FavoriteIcon className='likes-icon' htmlColor='red' />
         ) : (
@@ -681,6 +674,11 @@ export const PostModal: React.FC<PostModalProps> = ({
       </Button>
     );
   };
+
+  const handleClickLikeButton = () =>
+    alreadyLikedPostAndReactionId.alreadyLikedPost
+      ? handleSubmitRemoveLike()
+      : handleSubmitLike();
 
   const handleSubmitLike = () => {
     createPostReactionStart({
@@ -702,7 +700,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const handleRenderEditPostDetails = () => {
     if (isCurrentUserPost && !showPostEditForm) {
       return (
-        <span className='edit-post' onClick={() => setShowPostEditForm(true)}>
+        <span className='edit-post' onClick={handleShowPostEditForm}>
           Edit post details
         </span>
       );
@@ -717,10 +715,12 @@ export const PostModal: React.FC<PostModalProps> = ({
     } else return null;
   };
 
+  const handleShowPostEditForm = () => setShowPostEditForm(true);
+
   return (
     <Modal
       {...props}
-      dialogClassName={`${shiftRight ? 'shift-right' : ''} : post-modal`}
+      dialogClassName={`${shiftRight ? 'shift-right ' : ''}post-modal`}
       animation={false}
       centered
     >
