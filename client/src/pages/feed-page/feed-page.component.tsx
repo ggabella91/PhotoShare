@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List, Map } from 'immutable';
@@ -259,6 +259,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     useState<boolean>(false);
 
   let history = useHistory();
+
+  const postState = useSelector((state: AppState) => state.post);
+
+  const { feedPagePostIdForNavigation } = postState;
 
   let postsBucket: string, profileBucket: string;
 
@@ -624,7 +628,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   };
 
   const handleGoToPostClick = () => {
-    history.push(`/p/${postModalProps.id}`);
+    history.push(`/p/${feedPagePostIdForNavigation}`);
   };
 
   return (

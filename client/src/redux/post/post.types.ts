@@ -63,6 +63,7 @@ export enum PostActions {
   GET_FEED_POST_FILE_SUCCESS = 'GET_FEED_POST_FILE_SUCCESS',
   GET_FEED_POST_REACTIONS_SUCCESS = 'GET_FEED_POST_REACTIONS_SUCCESS',
   GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS = 'GET_USER_PHOTO_FOR_FEED_REACTOR_ARRAY_SUCCESS',
+  SET_FEED_PAGE_POST_ID_FOR_NAVIGATION = 'SET_FEED_PAGE_POST_ID_FOR_NAVIGATION',
 
   // Actions specific to caching post modal reaction data
   SAVE_POST_MODAL_DATA_TO_CACHE = 'SAVE_POST_MODAL_DATA_TO_CACHE',
@@ -245,12 +246,13 @@ export interface PostState {
   getSinglePostDataError: PostError | null;
 
   // New props to be used for feed-post-container
-  // compononents in the feed-page component
+  // components in the feed-page component
   getFeedPostDataConfirm: string | null;
   feedPostFiles: PostFile[];
   feedPostReactionsArray: Reaction[][];
   feedReactorPhotoFileArray: PostFile[] | null;
   feedUsersProfilePhotoConfirm: string | null;
+  feedPagePostIdForNavigation: string | null;
 
   // Post modal data cache
   postModalDataCache: Map<string, any>;
@@ -543,6 +545,11 @@ export interface GetUserPhotoForFeedReactorArraySuccess {
   payload: PostFile;
 }
 
+export interface SetFeedPagePostIdForNavigation {
+  type: typeof PostActions.SET_FEED_PAGE_POST_ID_FOR_NAVIGATION;
+  payload: string;
+}
+
 // Interfaces related to caching /uncaching post modal data
 
 export interface SavePostModalDataToCache {
@@ -613,5 +620,6 @@ export type PostActionTypes =
   | GetFeedPostFileSuccess
   | GetFeedPostReactionsSuccess
   | GetUserPhotoForFeedReactorArraySuccess
+  | SetFeedPagePostIdForNavigation
   | SavePostModalDataToCache
   | RemovePostModalDataFromCache;
