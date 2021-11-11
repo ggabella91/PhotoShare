@@ -565,7 +565,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
   const handleRenderLikeOrLikedButton = () => {
     return (
       <Button
-        className='likes'
+        className='like-button'
         onClick={
           alreadyLikedPostAndReactionId.alreadyLikedPost
             ? () => handleSubmitRemoveLike()
@@ -766,8 +766,8 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
             />
             <Button
               className={`${
-                !comment ? 'greyed-out' : ''
-              } post-page-submit-comment-button`}
+                !comment ? 'greyed-out ' : ''
+              }post-page-submit-comment-button`}
               disabled={comment ? false : true}
               onClick={handleSubmitComment}
             >

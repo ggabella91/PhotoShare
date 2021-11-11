@@ -507,7 +507,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const handleRenderLikeOrLikedButton = () => {
     return (
       <Button
-        className='likes'
+        className='like-button'
         onClick={
           alreadyLikedPostAndReactionId.alreadyLikedPost
             ? () => handleSubmitRemoveLike()
@@ -611,7 +611,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           label='Add a comment...'
         />
         <Button
-          className={`${!comment ? 'greyed-out' : ''} submit-comment-button`}
+          className={`${!comment ? 'greyed-out ' : ''}submit-comment-button`}
           disabled={comment ? false : true}
           onClick={handleSubmitComment}
         >
