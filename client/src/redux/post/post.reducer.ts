@@ -66,6 +66,7 @@ const INITIAL_STATE: PostState = {
   feedPostReactionsArray: [],
   feedReactorPhotoFileArray: null,
   feedUsersProfilePhotoConfirm: null,
+  feedPagePostIdForNavigation: null,
 
   // Post modal data cache
   postModalDataCache: Map<string, PostModalCacheObj>(),
@@ -388,6 +389,11 @@ const postReducer = (
       return {
         ...state,
         feedPagePostModalData: { ...action.payload },
+      };
+    case PostActions.SET_FEED_PAGE_POST_ID_FOR_NAVIGATION:
+      return {
+        ...state,
+        feedPagePostIdForNavigation: action.payload,
       };
     case PostActions.SET_FEED_PAGE_POST_MODAL_SHOW:
       return {

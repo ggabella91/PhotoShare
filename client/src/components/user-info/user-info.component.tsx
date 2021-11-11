@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List } from 'immutable';
@@ -15,6 +15,7 @@ import {
   setShowCommentOptionsModal,
   setShowPostEditForm,
   setFeedPagePostOptionsModalShow,
+  setFeedPagePostIdForNavigation,
 } from '../../redux/post/post.actions';
 
 import './user-info.styles.scss';
@@ -65,6 +66,8 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
   let history = useHistory();
 
+  const dispatch = useDispatch();
+
   const handleSetCommentToDelete = (idx: number) => {
     const commentToDelete = userInfoList.get(idx)!;
     if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
@@ -87,6 +90,9 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
   const handleSetFeedPagePostOptionsModalShow = () => {
     setFeedPagePostOptionsModalShow(true);
+    if (userInfoList.get(0) && userInfoList.get(0)!.postId) {
+      dispatch(setFeedPagePostIdForNavigation(userInfoList.get(0)!.postId!));
+    }
   };
 
   const userInfo = userInfoList.map((el: UserInfoAndOtherData, idx: number) => (

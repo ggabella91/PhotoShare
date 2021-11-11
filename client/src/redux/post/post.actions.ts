@@ -373,6 +373,13 @@ export const getUserPhotoForFeedReactorArraySuccess = (
   payload: postFile,
 });
 
+export const setFeedPagePostIdForNavigation = (
+  postId: string
+): PostActionTypes => ({
+  type: PostActions.SET_FEED_PAGE_POST_ID_FOR_NAVIGATION,
+  payload: postId,
+});
+
 export const savePostModalDataToCache = (
   postModalDataToCache: PostModalDataToCache
 ): PostActionTypes => ({
