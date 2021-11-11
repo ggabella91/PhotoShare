@@ -506,14 +506,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const handleRenderLikeOrLikedButton = () => {
     return (
-      <Button
-        className='like-button'
-        onClick={
-          alreadyLikedPostAndReactionId.alreadyLikedPost
-            ? () => handleSubmitRemoveLike()
-            : () => handleSubmitLike()
-        }
-      >
+      <Button className='like-button' onClick={handleClickLikeButton}>
         {alreadyLikedPostAndReactionId.alreadyLikedPost ? (
           <FavoriteIcon className='likes-icon' htmlColor='red' />
         ) : (
@@ -522,6 +515,11 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       </Button>
     );
   };
+
+  const handleClickLikeButton = () =>
+    alreadyLikedPostAndReactionId.alreadyLikedPost
+      ? handleSubmitRemoveLike()
+      : handleSubmitLike();
 
   const handleSubmitLike = () => {
     createPostReactionStart({
@@ -571,10 +569,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       <div className='caption-and-reactions'>
         {handleRenderLikeOrLikedButton()}
         {likingUsersList && likingUsersList.size ? (
-          <Button
-            className='likes'
-            onClick={() => handlePostLikingUsersClick()}
-          >
+          <Button className='likes' onClick={handlePostLikingUsersClick}>
             <span>{`${likingUsersList.size} likes`}</span>
           </Button>
         ) : null}
@@ -587,7 +582,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         {commentingUserList.size > 2 ? (
           <span
             className='view-all-comments'
-            onClick={() => handleClickViewAllComments()}
+            onClick={handleClickViewAllComments}
           >{`View all ${commentingUserList.size} comments`}</span>
         ) : null}
         {commentingUserList.size
