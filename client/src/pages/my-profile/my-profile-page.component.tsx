@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List, Map } from 'immutable';
@@ -215,6 +215,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const [postLikersList, setPostLikersList] = useState<
     List<UserInfoAndOtherData>
   >(List());
+
+  const postState = useSelector((state: AppState) => state.post);
+
+  const { postMetaDataForUser, isLoadingPostData } = postState;
 
   let history = useHistory();
 
@@ -541,6 +545,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
                 fileString={file.fileString}
                 key={idx}
                 onClick={() => handleRenderPostModal(file)}
+                custRef={null}
               />
             ))
           : null}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -8,6 +8,8 @@ import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
 import { AppState } from '../../redux/root-reducer';
+
+import { useLazyLoading } from '../hooks';
 
 import {
   User,
@@ -236,7 +238,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     List<UserInfoAndPostFile>
   >(List());
 
-  const [pageToFetch, setPageToFetch] = useState(1);
+  const { pageToFetch, lastElementRef } = useLazyLoading(isLoadingPostData);
 
   const [postLikersList, setPostLikersList] =
     useState<List<UserInfoAndOtherData> | null>(null);
@@ -521,29 +523,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     getFeedPostDataConfirm,
   ]);
 
-  const observer = useRef<IntersectionObserver>();
-
-  const lastPostContainerElementRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (isLoadingPostData) return;
-
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          setPageToFetch(pageToFetch + 1);
-        }
-      });
-
-      if (node) {
-        observer.current.observe(node);
-      }
-    },
-    [isLoadingPostData]
-  );
-
   useEffect(() => {
     let postLikingUsersList;
 
@@ -656,9 +635,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
               date={el.dateString}
               key={el.postId}
               custRef={
-                idx === userInfoAndPostFileList.size - 1
-                  ? lastPostContainerElementRef
-                  : null
+                idx === userInfoAndPostFileList.size - 1 ? lastElementRef : null
               }
             />
           ))
