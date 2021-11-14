@@ -605,6 +605,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
                 fileString={file.fileString}
                 key={idx}
                 onClick={() => handleRenderPostModal(file)}
+                custRef={null}
               />
             ))
           : null}
