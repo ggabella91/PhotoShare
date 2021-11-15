@@ -7,6 +7,7 @@ import {
   PostModalCacheObj,
 } from './post.types';
 import {
+  addToPostDataArray,
   addPostFileToArray,
   addPostDataToFeedArray,
   addUserPhotoFileToArray,
@@ -113,7 +114,7 @@ const postReducer = (
     case PostActions.GET_POST_DATA_SUCCESS:
       return {
         ...state,
-        postData: action.payload,
+        postData: addToPostDataArray(state.postData, action.payload),
         getPostDataError: null,
         getPostDataConfirm: 'Post data fetched!',
         isLoadingPostData: false,
