@@ -6,6 +6,9 @@ import { createStructuredSelector } from 'reselect';
 import { List, Map } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
+
+import { useLazyLoading } from '../hooks';
+
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import {
@@ -220,6 +223,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const { postMetaDataForUser, isLoadingPostData } = postState;
 
+  const { pageToFetch, lastElementRef } = useLazyLoading(isLoadingPostData);
+
   let history = useHistory();
 
   let postsBucket: string, profileBucket: string;
@@ -268,6 +273,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       getPostDataStart({
         userId: currentUser.id,
         dataReqType: DataRequestType.single,
+        pageToShow: pageToFetch,
+        limit: 9,
       });
       getFollowersStart(currentUser.id);
       getUsersFollowingStart({
@@ -324,6 +331,25 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       setPostDataList(postDataArrayCopy);
     }
   }, [getSinglePostDataConfirm]);
+
+  useEffect(() => {
+    if (pageToFetch > 1) {
+      postDataList.forEach((el) => {
+        if (
+          postMetaDataForUser &&
+          currentUser &&
+          pageToFetch <= postMetaDataForUser.queryLength / 9
+        ) {
+          getPostDataStart({
+            userId: el.userId,
+            dataReqType: DataRequestType.single,
+            pageToShow: pageToFetch,
+            limit: 9,
+          });
+        }
+      });
+    }
+  }, [pageToFetch, postDataList]);
 
   useEffect(() => {
     if (
@@ -545,7 +571,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
                 fileString={file.fileString}
                 key={idx}
                 onClick={() => handleRenderPostModal(file)}
-                custRef={null}
+                custRef={lastElementRef}
               />
             ))
           : null}

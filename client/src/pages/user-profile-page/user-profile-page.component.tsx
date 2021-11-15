@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List, Map } from 'immutable';
 
 import { AppState } from '../../redux/root-reducer';
+
+import { useLazyLoading } from '../hooks';
+
 import {
   User,
   Error,
@@ -247,6 +250,12 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     List<UserInfoAndOtherData>
   >(List());
 
+  const postState = useSelector((state: AppState) => state.post);
+
+  const { postMetaDataForUser, isLoadingPostData } = postState;
+
+  const { pageToFetch, lastElementRef } = useLazyLoading(isLoadingPostData);
+
   let history = useHistory();
 
   let postsBucket: string, profileBucket: string;
@@ -330,6 +339,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       getPostDataStart({
         userId: user.get('id'),
         dataReqType: DataRequestType.single,
+        pageToShow: pageToFetch,
+        limit: 9,
       });
     }
   }, [user]);
@@ -363,6 +374,25 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       setPostDataList(List(postData));
     }
   }, [postData]);
+
+  useEffect(() => {
+    if (pageToFetch > 1) {
+      postDataList.forEach((el) => {
+        if (
+          postMetaDataForUser &&
+          currentUser &&
+          pageToFetch <= postMetaDataForUser.queryLength / 9
+        ) {
+          getPostDataStart({
+            userId: el.userId,
+            dataReqType: DataRequestType.single,
+            pageToShow: pageToFetch,
+            limit: 9,
+          });
+        }
+      });
+    }
+  }, [pageToFetch, postDataList]);
 
   useEffect(() => {
     if (user && postData && postDataList.size === postData.length) {
@@ -605,7 +635,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
                 fileString={file.fileString}
                 key={idx}
                 onClick={() => handleRenderPostModal(file)}
-                custRef={null}
+                custRef={lastElementRef}
               />
             ))
           : null}
