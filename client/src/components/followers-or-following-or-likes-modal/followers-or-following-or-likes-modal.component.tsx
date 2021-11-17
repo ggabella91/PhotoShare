@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -86,6 +86,8 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
       List<UserInfoData>
     >(List());
 
+    let usersLoaded = useRef(false);
+
     let bucket: string;
 
     if (process.env.NODE_ENV === 'production') {
@@ -95,7 +97,8 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
     }
 
     useEffect(() => {
-      if (users && users.length) {
+      if (users && users.length && !usersLoaded.current) {
+        usersLoaded.current = true;
         clearFollowPhotoFileArray();
 
         if (isFollowersModal) {

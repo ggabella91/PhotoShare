@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 export const useLazyLoading = (isLoadingPostData: boolean) => {
   const [pageToFetch, setPageToFetch] = useState(1);
@@ -25,11 +25,6 @@ export const useLazyLoading = (isLoadingPostData: boolean) => {
     },
     [isLoadingPostData]
   );
-
-  useEffect(() => {
-    console.log('pageToFetch: ', pageToFetch);
-    debugger;
-  }, [pageToFetch]);
 
   return { pageToFetch, lastElementRef };
 };
