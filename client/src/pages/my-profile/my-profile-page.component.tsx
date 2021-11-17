@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, EffectCallback, useMemo } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List, Map } from 'immutable';
+import { CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -255,7 +257,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       return;
     }
 
-    if (!user.equals(currentUserMap)) {
+    console.log('currentUser: ', currentUser);
+    debugger;
+
+    if (user.get('id') !== currentUserMap.get('id')) {
       clearPostState();
       clearFollowState();
       clearFollowersAndFollowing();
@@ -333,23 +338,32 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }, [getSinglePostDataConfirm]);
 
   useEffect(() => {
-    if (pageToFetch > 1) {
-      postDataList.forEach((el) => {
-        if (
-          postMetaDataForUser &&
-          currentUser &&
-          pageToFetch <= postMetaDataForUser.queryLength / 9
-        ) {
-          getPostDataStart({
-            userId: el.userId,
-            dataReqType: DataRequestType.single,
-            pageToShow: pageToFetch,
-            limit: 9,
-          });
-        }
+    if (
+      postMetaDataForUser &&
+      pageToFetch > 1 &&
+      pageToFetch <= Math.ceil(postMetaDataForUser.queryLength / 9) &&
+      postMetaDataForUser &&
+      currentUser
+    ) {
+      console.log('pageToFetch, postDataList');
+      console.log(pageToFetch, postDataList);
+      debugger;
+
+      getPostDataStart({
+        userId: currentUser.id,
+        dataReqType: DataRequestType.single,
+        pageToShow: pageToFetch,
+        limit: 9,
       });
     }
-  }, [pageToFetch, postDataList]);
+  }, [pageToFetch]);
+
+  useEffect(() => {
+    if (pageToFetch > 2) {
+      console.log('pageToFetch: ', pageToFetch);
+      debugger;
+    }
+  }, [pageToFetch, postMetaDataForUser]);
 
   useEffect(() => {
     if (
@@ -486,6 +500,31 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   }, [postLikingUsersArray]);
 
+  const handleHidePostOptionsModal = () => setPostOptionsModalShow(false);
+
+  const handleArchivePost = () =>
+    archivePostStart({
+      postId: postModalProps.get('id'),
+      s3Key: postModalProps.get('s3Key'),
+    });
+
+  const handleHideFollowersOrFollowingModal = () => {
+    setFollowersOrFollowingModalShow(false);
+    clearFollowersAndFollowing();
+    clearFollowPhotoFileArray();
+  };
+
+  const handleHideLikesModal = () => setShowPostLikingUsersModal(false);
+
+  const handleHideCommentOptionsModal = () => setShowCommentOptionsModal(false);
+
+  const handleArchiveCommentOptionsModal = () => {
+    if (commentToDelete) {
+      deleteReactionStart(commentToDelete);
+      setShowCommentOptionsModal(false);
+    }
+  };
+
   const handleGoToPostClick = () => {
     history.push(`/p/${postModalProps.get('id')}`);
   };
@@ -521,7 +560,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               <span className='edit-narrow-text'>Edit profile</span>
             </NavLink>
             <div className='posts-followers-following-stats'>
-              <span className='user-stat'>{postDataList.size} Posts</span>
+              {postMetaDataForUser ? (
+                <span className='user-stat'>
+                  {postMetaDataForUser.queryLength} Posts
+                </span>
+              ) : (
+                <Box sx={{ display: 'flex' }}>
+                  <CircularProgress />
+                </Box>
+              )}
               <span
                 className={handleMakeStatClickable('followers', 'user-stat')}
                 onClick={handleRenderFollowersModal}
@@ -548,7 +595,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         </div>
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
-            <li className='stats-item'>{postDataList.size} Posts</li>
+            {postMetaDataForUser ? (
+              <li className='stats-item'>
+                {postMetaDataForUser.queryLength} Posts
+              </li>
+            ) : (
+              <Box sx={{ display: 'flex' }}>
+                <CircularProgress />
+              </Box>
+            )}
             <li
               className={handleMakeStatClickable('followers', 'stats-item')}
               onClick={handleRenderFollowersModal}
@@ -565,13 +620,18 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         </div>
       </div>
       <div className='posts-grid'>
-        {postFileList.size
+        {isLoadingPostData ? (
+          <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+        ) : null}
+        {postFileList.size && !isLoadingPostData
           ? postFileList.map((file, idx) => (
               <PostTile
                 fileString={file.fileString}
                 key={idx}
                 onClick={() => handleRenderPostModal(file)}
-                custRef={lastElementRef}
+                custRef={idx === postFileList.size - 1 ? lastElementRef : null}
               />
             ))
           : null}
@@ -594,26 +654,16 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       />
       <PostOrCommentOptionsModal
         show={postOptionsModalShow}
-        onHide={() => setPostOptionsModalShow(false)}
+        onHide={handleHidePostOptionsModal}
         isCurrentUserPostOrComment={true}
         postOptionsModal={true}
         onGoToPostClick={handleGoToPostClick}
-        archive={() =>
-          archivePostStart({
-            postId: postModalProps.get('id'),
-            s3Key: postModalProps.get('s3Key'),
-          })
-        }
+        archive={handleArchivePost}
       />
       <PostOrCommentOptionsModal
         show={showCommentOptionsModal}
-        onHide={() => setShowCommentOptionsModal(false)}
-        archive={() => {
-          if (commentToDelete) {
-            deleteReactionStart(commentToDelete);
-          }
-          setShowCommentOptionsModal(false);
-        }}
+        onHide={handleHideCommentOptionsModal}
+        archive={handleArchiveCommentOptionsModal}
         isCurrentUserPostOrComment={currentUserPostOrComment}
         postOptionsModal={false}
       />
@@ -624,18 +674,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
             : usersFollowingList.toArray()
         }
         show={followersOrFollowingModalShow}
-        onHide={() => {
-          setFollowersOrFollowingModalShow(false);
-          clearFollowersAndFollowing();
-          clearFollowPhotoFileArray();
-        }}
+        onHide={handleHideFollowersOrFollowingModal}
         isFollowersModal={isFollowersModal}
       />
       {postLikersList.size ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showPostLikingUsersModal}
-          onHide={() => setShowPostLikingUsersModal(false)}
+          onHide={handleHideLikesModal}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersList={postLikersList}

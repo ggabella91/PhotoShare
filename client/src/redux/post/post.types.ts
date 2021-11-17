@@ -19,7 +19,7 @@ export enum PostActions {
   CLEAR_POST_STATUSES = 'CLEAR_POST_STATUSES',
   CLEAR_PROFILE_PHOTO_STATUSES = 'CLEAR_PHOTO_STATUSES',
   GET_POST_DATA_START = 'GET_POST_DATA_START',
-  GET_POST_DATA_SUCCESS = 'GET_POST_DATA_SUCCESS',
+  ADD_TO_POST_DATA_ARRAY = 'ADD_TO_POST_DATA_ARRAY',
   ADD_POST_DATA_TO_FEED_ARRAY = 'ADD_POST_DATA_TO_FEED_ARRAY',
   GET_POST_DATA_FAILURE = 'GET_POST_DATA_FAILURE',
   GET_POST_FILE_START = 'GET_POST_FILE_START',
@@ -333,8 +333,8 @@ export interface GetPostDataStart {
   payload: PostDataReq;
 }
 
-export interface GetPostDataSuccess {
-  type: typeof PostActions.GET_POST_DATA_SUCCESS;
+export interface AddToPostDataArray {
+  type: typeof PostActions.ADD_TO_POST_DATA_ARRAY;
   payload: Post[];
 }
 
@@ -578,7 +578,7 @@ export type PostActionTypes =
   | UpdateProfilePhotoFailure
   | ClearProfilePhotoStatuses
   | GetPostDataStart
-  | GetPostDataSuccess
+  | AddToPostDataArray
   | AddPostDataToFeedArray
   | GetPostDataFailure
   | GetPostFileStart

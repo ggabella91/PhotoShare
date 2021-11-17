@@ -111,8 +111,8 @@ export const getPostDataStart = (
   payload: postDataReq,
 });
 
-export const getPostDataSuccess = (postDataArray: Post[]): PostActionTypes => ({
-  type: PostActions.GET_POST_DATA_SUCCESS,
+export const addToPostDataArray = (postDataArray: Post[]): PostActionTypes => ({
+  type: PostActions.ADD_TO_POST_DATA_ARRAY,
   payload: postDataArray,
 });
 
