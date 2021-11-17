@@ -4,7 +4,7 @@ import { UserProfilePage } from '../user-profile-page/user-profile-page.componen
 
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
-import { PostFileReq } from '../../redux/post/post.types';
+import { PostDataReq, PostFileReq } from '../../redux/post/post.types';
 import {
   getPostDataStart,
   getPostFileStart,
@@ -22,7 +22,9 @@ it('renders a my-profile-page component', () => {
       postFiles={[]}
       postConfirm={null}
       postError={null}
-      getPostDataStart={(userId: string) => getPostDataStart(userId)}
+      getPostDataStart={(postDataReq: PostDataReq) =>
+        getPostDataStart(postDataReq)
+      }
       getPostDataConfirm={null}
       getPostDataError={null}
       getPostFileStart={(fileReq: PostFileReq) => getPostFileStart(fileReq)}

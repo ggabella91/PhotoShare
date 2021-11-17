@@ -111,7 +111,7 @@ const postReducer = (
         getFeedPostDataConfirm: null,
         getPostDataError: null,
       };
-    case PostActions.GET_POST_DATA_SUCCESS:
+    case PostActions.ADD_TO_POST_DATA_ARRAY:
       return {
         ...state,
         postData: addToPostDataArray(state.postData, action.payload),

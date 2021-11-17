@@ -28,7 +28,7 @@ import {
   createPostReactionFailure,
   updateProfilePhotoSuccess,
   updateProfilePhotoFailure,
-  getPostDataSuccess,
+  addToPostDataArray,
   addPostDataToFeedArray,
   getPostDataFailure,
   getPostReactionsSuccess,
@@ -116,7 +116,19 @@ export function* getPostData({
       );
 
     if (dataReqType === DataRequestType.single) {
-      yield put(getPostDataSuccess(data.posts));
+      if (data.queryLength) {
+        yield all([
+          put(addToPostDataArray(data.posts)),
+          put(
+            setPostMetaDataForUser({
+              queryLength: data.queryLength,
+              userId: data.posts[0].userId,
+            })
+          ),
+        ]);
+      } else {
+        yield put(addToPostDataArray(data.posts));
+      }
     } else if (dataReqType === DataRequestType.feed) {
       if (data.queryLength) {
         yield all([
