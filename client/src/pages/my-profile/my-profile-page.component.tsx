@@ -257,9 +257,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       return;
     }
 
-    console.log('currentUser: ', currentUser);
-    debugger;
-
     if (user.get('id') !== currentUserMap.get('id')) {
       clearPostState();
       clearFollowState();
@@ -345,10 +342,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       postMetaDataForUser &&
       currentUser
     ) {
-      console.log('pageToFetch, postDataList');
-      console.log(pageToFetch, postDataList);
-      debugger;
-
       getPostDataStart({
         userId: currentUser.id,
         dataReqType: DataRequestType.single,
@@ -357,13 +350,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       });
     }
   }, [pageToFetch]);
-
-  useEffect(() => {
-    if (pageToFetch > 2) {
-      console.log('pageToFetch: ', pageToFetch);
-      debugger;
-    }
-  }, [pageToFetch, postMetaDataForUser]);
 
   useEffect(() => {
     if (
