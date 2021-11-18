@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -217,7 +217,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [isFollowing, setIsFollowing] = useState(false);
 
   const [postDataList, setPostDataList] = useState<List<Post>>(List());
-  const [postFileList, setPostFileList] = useState<List<PostFile>>(List());
 
   const [postModalShow, setPostModalShow] = useState(false);
   const [postModalProps, setPostModalProps] = useState<PostModalMapProps>(
@@ -251,6 +250,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [postLikersList, setPostLikersList] = useState<
     List<UserInfoAndOtherData>
   >(List());
+
+  let isInitialPostDataFetched = useRef(false);
 
   const postState = useSelector((state: AppState) => state.post);
 
@@ -337,7 +338,12 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }, [followers, otherUserUsersFollowing]);
 
   useEffect(() => {
-    if (user.get('username') === username && user.get('id')) {
+    if (
+      user.get('username') === username &&
+      user.get('id') &&
+      !isInitialPostDataFetched.current
+    ) {
+      isInitialPostDataFetched.current = true;
       getPostDataStart({
         userId: user.get('id'),
         dataReqType: DataRequestType.single,
@@ -383,7 +389,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       pageToFetch > 1 &&
       pageToFetch <= Math.ceil(postMetaDataForUser.queryLength / 9) &&
       postMetaDataForUser &&
-      otherUser
+      otherUser &&
+      postData &&
+      postData.length === postFiles.length
     ) {
       getPostDataStart({
         userId: otherUser.id,
@@ -407,7 +415,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     }
   }, [postDataList]);
 
-  useEffect(() => {
+  const postFileList = useMemo(() => {
     if (postData && postFiles.length === postData.length) {
       let orderedFiles: List<PostFile> = List();
 
@@ -419,7 +427,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         }
       });
 
-      setPostFileList(orderedFiles);
+      return orderedFiles;
     }
   }, [postFiles]);
 
@@ -677,21 +685,21 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         </div>
       </div>
       <div className='posts-grid'>
-        {isLoadingPostData ? (
-          <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-          </Box>
-        ) : null}
-        {postFileList.size && !isLoadingPostData
+        {postFileList && postFileList.size
           ? postFileList.map((file, idx) => (
               <PostTile
                 fileString={file.fileString}
                 key={idx}
                 onClick={() => handleRenderPostModal(file)}
-                custRef={idx === postFileList.size - 1 ? lastElementRef : null}
+                custRef={idx === postFileList!.size - 1 ? lastElementRef : null}
               />
             ))
           : null}
+        {isLoadingPostData ? (
+          <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+        ) : null}
       </div>
       <PostModal
         postId={postModalProps.get('id')}

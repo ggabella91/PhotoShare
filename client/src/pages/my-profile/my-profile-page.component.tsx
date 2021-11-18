@@ -1,4 +1,4 @@
-import React, { useState, useEffect, EffectCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -187,7 +187,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   );
 
   const [postDataList, setPostDataList] = useState<List<Post>>(List());
-  const [postFileList, setPostFileList] = useState<List<PostFile>>(List());
 
   const [postModalShow, setPostModalShow] = useState(false);
   const [postModalProps, setPostModalProps] = useState<PostModalMapProps>(
@@ -340,7 +339,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       pageToFetch > 1 &&
       pageToFetch <= Math.ceil(postMetaDataForUser.queryLength / 9) &&
       postMetaDataForUser &&
-      currentUser
+      currentUser &&
+      postData &&
+      postData.length === postFiles.length
     ) {
       getPostDataStart({
         userId: currentUser.id,
@@ -368,7 +369,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   }, [postDataList]);
 
-  useEffect(() => {
+  let postFileList = useMemo(() => {
     if (postData && postFiles.length === postData.length) {
       let orderedFiles: List<PostFile> = List();
 
@@ -380,7 +381,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         }
       });
 
-      setPostFileList(orderedFiles);
+      return orderedFiles;
     }
   }, [postFiles]);
 
@@ -396,10 +397,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       );
       setPostDataList(newDataArray);
 
-      const newFileArray = postFileList.filter(
-        (el) => el.s3Key !== postModalProps.get('s3Key')
-      );
-      setPostFileList(newFileArray);
+      const newFileArray =
+        postFileList &&
+        postFileList.filter((el) => el.s3Key !== postModalProps.get('s3Key'));
+      postFileList = newFileArray;
     }
   }, [archivePostConfirm]);
 
@@ -606,21 +607,21 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         </div>
       </div>
       <div className='posts-grid'>
-        {isLoadingPostData ? (
-          <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-          </Box>
-        ) : null}
-        {postFileList.size && !isLoadingPostData
+        {postFileList && postFileList.size
           ? postFileList.map((file, idx) => (
               <PostTile
                 fileString={file.fileString}
                 key={idx}
                 onClick={() => handleRenderPostModal(file)}
-                custRef={idx === postFileList.size - 1 ? lastElementRef : null}
+                custRef={idx === postFileList!.size - 1 ? lastElementRef : null}
               />
             ))
           : null}
+        {isLoadingPostData ? (
+          <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+        ) : null}
       </div>
       <PostModal
         postId={postModalProps.get('id')}
