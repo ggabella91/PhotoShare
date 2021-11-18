@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -100,7 +100,6 @@ import {
   prepareUserInfoAndFileList,
   compareUserOrPostOrReactionLists,
   comparePostFileLists,
-  compareUserInfoAndDataObjLists,
 } from './feed-page.utils';
 import './feed-page.styles.scss';
 
@@ -233,10 +232,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const [postFileFeedArray, setPostFileFeedArray] = useState<List<PostFile>>(
     List()
   );
-
-  const [userInfoAndPostFileList, setUserInfoAndPostFileArray] = useState<
-    List<UserInfoAndPostFile>
-  >(List());
 
   const { pageToFetch, lastElementRef } = useLazyLoading(isLoadingPostData);
 
@@ -481,7 +476,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   }, [postFiles]);
 
-  useEffect(() => {
+  const userInfoAndPostFileList = useMemo(() => {
     if (
       dataFeedMapList.size &&
       followingProfilePhotoList.size &&
@@ -504,16 +499,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         (a, b) => b.dateInt - a.dateInt
       );
 
-      if (
-        compareUserInfoAndDataObjLists(
-          userInfoAndPostFileList,
-          sortedUserInfoAndPostList
-        )
-      ) {
-        return;
-      }
-
-      setUserInfoAndPostFileArray(sortedUserInfoAndPostList);
+      return sortedUserInfoAndPostList;
     }
   }, [
     followingInfoList,
@@ -612,12 +598,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   return (
     <div className='feed-page'>
-      {isLoadingPostData ? (
-        <Box sx={{ display: 'flex' }}>
-          <CircularProgress />
-        </Box>
-      ) : null}
-      {userInfoAndPostFileList.size && !isLoadingPostData
+      {userInfoAndPostFileList && userInfoAndPostFileList.size
         ? userInfoAndPostFileList.map((el, idx) => (
             <FeedPostContainer
               userInfo={{
@@ -640,6 +621,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             />
           ))
         : null}
+      {isLoadingPostData ? (
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
+      ) : null}
       {currentUserUsersFollowing && !currentUserUsersFollowing.length ? (
         <div className='no-franz'>
           Follow users to see their recent posts here
