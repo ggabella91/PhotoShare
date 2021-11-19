@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 
 export const useLazyLoading = (isLoadingPostData: boolean) => {
-  const [pageToFetch, setPageToFetch] = useState(1);
+  const [intersectionCounter, setIntersectionCounter] = useState(1);
 
   const observer = useRef<IntersectionObserver>();
 
@@ -15,7 +15,9 @@ export const useLazyLoading = (isLoadingPostData: boolean) => {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          setPageToFetch((pageToFetch) => pageToFetch + 1);
+          setIntersectionCounter(
+            (intersectionCounter) => intersectionCounter + 1
+          );
         }
       });
 
@@ -26,5 +28,5 @@ export const useLazyLoading = (isLoadingPostData: boolean) => {
     [isLoadingPostData]
   );
 
-  return { pageToFetch, lastElementRef };
+  return { intersectionCounter, lastElementRef };
 };

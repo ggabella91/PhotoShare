@@ -251,13 +251,16 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     List<UserInfoAndOtherData>
   >(List());
 
+  const [pageToFetch, setPageToFetch] = useState(1);
+
   let isInitialPostDataFetched = useRef(false);
 
   const postState = useSelector((state: AppState) => state.post);
 
   const { postMetaDataForUser, isLoadingPostData } = postState;
 
-  const { pageToFetch, lastElementRef } = useLazyLoading(isLoadingPostData);
+  const { intersectionCounter, lastElementRef } =
+    useLazyLoading(isLoadingPostData);
 
   let history = useHistory();
 
@@ -386,9 +389,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     if (
       postMetaDataForUser &&
-      pageToFetch > 1 &&
-      pageToFetch <= Math.ceil(postMetaDataForUser.queryLength / 9) &&
-      postMetaDataForUser &&
+      intersectionCounter > 1 &&
+      pageToFetch + 1 <= Math.ceil(postMetaDataForUser.queryLength / 9) &&
       otherUser &&
       postData &&
       postData.length === postFiles.length
@@ -396,11 +398,13 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       getPostDataStart({
         userId: otherUser.id,
         dataReqType: DataRequestType.single,
-        pageToShow: pageToFetch,
+        pageToShow: pageToFetch + 1,
         limit: 9,
       });
+
+      setPageToFetch(pageToFetch + 1);
     }
-  }, [pageToFetch]);
+  }, [intersectionCounter]);
 
   useEffect(() => {
     if (user && postData && postDataList.size === postData.length) {

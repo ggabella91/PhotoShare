@@ -233,7 +233,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     List()
   );
 
-  const { pageToFetch, lastElementRef } = useLazyLoading(isLoadingPostData);
+  const [pageToFetch, setPageToFetch] = useState(1);
+
+  const { intersectionCounter, lastElementRef } =
+    useLazyLoading(isLoadingPostData);
 
   const [postLikersList, setPostLikersList] =
     useState<List<UserInfoAndOtherData> | null>(null);
@@ -359,23 +362,25 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   }, [postMetaDataForUser]);
 
   useEffect(() => {
-    if (pageToFetch > 1) {
+    if (intersectionCounter > 1) {
       dataFeedMapList.forEach((el) => {
         if (
           el.queryLength &&
           currentUser &&
-          pageToFetch <= el.queryLength / 2
+          pageToFetch + 1 <= Math.ceil(el.queryLength / 2)
         ) {
           getPostDataStart({
             userId: el.userId,
             dataReqType: DataRequestType.feed,
-            pageToShow: pageToFetch,
+            pageToShow: pageToFetch + 1,
             limit: 2,
           });
+
+          setPageToFetch(pageToFetch + 1);
         }
       });
     }
-  }, [pageToFetch, dataFeedMapList]);
+  }, [intersectionCounter]);
 
   useEffect(() => {
     if (postDataFeedArray.length) {
