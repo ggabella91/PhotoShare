@@ -158,12 +158,14 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
         setShowAlert(false);
       }, 3000);
       return (
-        <Alert variant={type} onClose={() => setShowAlert(false)} dismissible>
+        <Alert variant={type} onClose={handleCloseAlert} dismissible>
           {message}
         </Alert>
       );
     }
   };
+
+  const handleCloseAlert = () => setShowAlert(false);
 
   return (
     <div className='create-post-page'>

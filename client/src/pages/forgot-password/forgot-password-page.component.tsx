@@ -62,12 +62,14 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
         setStatus({ success: false, error: false });
       }, 5000);
       return (
-        <Alert variant={type} onClose={() => setShowAlert(false)} dismissible>
+        <Alert variant={type} onClose={handleCloseAlert} dismissible>
           {message}
         </Alert>
       );
     }
   };
+
+  const handleCloseAlert = () => setShowAlert(false);
 
   return (
     <div>
