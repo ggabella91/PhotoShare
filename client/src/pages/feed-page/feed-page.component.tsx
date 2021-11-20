@@ -555,16 +555,25 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     setPostOptionsModalShow(feedPagePostOptionsModalShow);
   }, [feedPagePostOptionsModalShow]);
 
-  const handleHidePostModal = () => {
-    setPostModalShow(false);
-    setClearFeedPagePostModalState(true);
-  };
-
   useEffect(() => {
     if (postModalProps.postUserId) {
       handleSetIsCurrentUserPost();
     }
   }, [postModalProps]);
+
+  const handleHideLikesModal = () => setShowPostLikingUsersModal(false);
+
+  const handleHidePostModal = () => {
+    setPostModalShow(false);
+    setClearFeedPagePostModalState(true);
+  };
+
+  const handlePostOptionsClick = () => setFeedPagePostOptionsModalShow(true);
+
+  const handlePostLikingUsersClick = () => setShowPostLikingUsersModal(true);
+
+  const handleHidePostOptionsModal = () =>
+    setFeedPagePostOptionsModalShow(false);
 
   const handleSetIsCurrentUserPost = () => {
     if (currentUser && postModalProps.postUserId) {
@@ -590,15 +599,23 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
   };
 
+  const handleGoToPostClick = () => {
+    history.push(`/p/${feedPagePostIdForNavigation}`);
+  };
+
+  const handleArchivePost = () =>
+    archivePostStart({
+      postId: postModalProps.id,
+      s3Key: postModalProps.postS3Key,
+    });
+
+  const handleHideCommentOptionsModal = () => setShowCommentOptionsModal(false);
+
   const handleArchiveComment = () => {
     if (commentToDelete) {
       deleteReactionStart(commentToDelete);
     }
     setShowCommentOptionsModal(false);
-  };
-
-  const handleGoToPostClick = () => {
-    history.push(`/p/${feedPagePostIdForNavigation}`);
   };
 
   return (
@@ -640,7 +657,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showLikingUsersModal}
-          onHide={() => setShowPostLikingUsersModal(false)}
+          onHide={handleHideLikesModal}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersList={postLikersList}
@@ -653,9 +670,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         caption={postModalProps.caption}
         location={postModalProps.location}
         createdAt={postModalProps.date || ''}
-        onHide={() => handleHidePostModal()}
-        onOptionsClick={() => setFeedPagePostOptionsModalShow(true)}
-        onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
+        onHide={handleHidePostModal}
+        onOptionsClick={handlePostOptionsClick}
+        onPostLikingUsersClick={handlePostLikingUsersClick}
         userProfilePhotoFile={postModalProps.profilePhotoFileString || ''}
         userName={postModalProps.postUserName}
         userId={postModalProps.postUserId}
@@ -663,20 +680,15 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       />
       <PostOrCommentOptionsModal
         show={postOptionsModalShow}
-        onHide={() => setFeedPagePostOptionsModalShow(false)}
+        onHide={handleHidePostOptionsModal}
         isCurrentUserPostOrComment={currentUserPost}
         postOptionsModal={true}
         onGoToPostClick={handleGoToPostClick}
-        archive={() =>
-          archivePostStart({
-            postId: postModalProps.id,
-            s3Key: postModalProps.postS3Key,
-          })
-        }
+        archive={handleArchivePost}
       />
       <PostOrCommentOptionsModal
         show={showCommentOptionsModal}
-        onHide={() => setShowCommentOptionsModal(false)}
+        onHide={handleHideCommentOptionsModal}
         archive={handleArchiveComment}
         isCurrentUserPostOrComment={currentUserPostOrComment}
         postOptionsModal={false}

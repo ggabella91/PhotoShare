@@ -408,8 +408,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   }, [archivePostConfirm]);
 
-  const handleRenderPostModal = (file: PostFile) => {
-    const postData = postDataList.find((el) => el.s3Key === file.s3Key);
+  const handleRenderPostModal = (event: React.MouseEvent<HTMLImageElement>) => {
+    const imageElement = event.target as HTMLElement;
+    const postS3Key = imageElement.dataset.s3key;
+
+    const postData = postDataList.find((el) => el.s3Key === postS3Key);
+    const postFileString =
+      postFileList &&
+      postFileList.find((el) => el.s3Key === postS3Key) &&
+      postFileList.find((el) => el.s3Key === postS3Key)!.fileString;
 
     if (postData) {
       const caption = postData.caption || '';
@@ -420,10 +427,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         Map({
           id: postData.id,
           caption,
-          s3Key: postData.s3Key,
+          s3Key: postS3Key,
           location,
           createdAt,
-          fileString: file.fileString,
+          fileString: postFileString,
         })
       );
       setPostModalShow(true);
@@ -446,6 +453,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     setClearPostModalLocalState(true);
     setShowPostEditForm(false);
   };
+
+  const handlePostOptionsClick = () => setPostOptionsModalShow(true);
+
+  const handlePostLikingUsersClick = () => setShowPostLikingUsersModal(true);
 
   const handleRenderFollowersModal = () => {
     if (followersList.size) {
@@ -616,7 +627,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               <PostTile
                 fileString={file.fileString}
                 key={idx}
-                onClick={() => handleRenderPostModal(file)}
+                dataS3Key={file.s3Key}
+                onClick={handleRenderPostModal}
                 custRef={idx === postFileList!.size - 1 ? lastElementRef : null}
               />
             ))
@@ -634,9 +646,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         caption={postModalProps.get('caption')}
         location={postModalProps.get('location')}
         createdAt={postModalProps.get('createdAt') || ''}
-        onHide={() => handleHidePostModal()}
-        onOptionsClick={() => setPostOptionsModalShow(true)}
-        onPostLikingUsersClick={() => setShowPostLikingUsersModal(true)}
+        onHide={handleHidePostModal}
+        onOptionsClick={handlePostOptionsClick}
+        onPostLikingUsersClick={handlePostLikingUsersClick}
         userProfilePhotoFile={profilePhotoString}
         userName={user.get('username')}
         userId={user.get('id')}
