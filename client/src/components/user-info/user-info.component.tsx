@@ -99,7 +99,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     const spanElement = event.currentTarget as HTMLElement;
     let idx = parseInt(spanElement.dataset.idx || '0');
 
-    if (!(idx instanceof Number)) {
+    if (typeof idx !== 'number') {
       idx = -1;
     }
 
