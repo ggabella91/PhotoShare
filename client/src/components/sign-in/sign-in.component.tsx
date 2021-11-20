@@ -44,7 +44,7 @@ export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
   const handleRenderAlert = (type: string, message: string) => {
     if (show) {
       return (
-        <Alert variant={type} onClose={() => setShow(false)} dismissible>
+        <Alert variant={type} onClose={handleHideAlert} dismissible>
           {message}
         </Alert>
       );
@@ -56,6 +56,8 @@ export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
 
     setCredentials({ ...userCredentials, [name]: value });
   };
+
+  const handleHideAlert = () => setShow(false);
 
   return (
     <div className='sign-in'>

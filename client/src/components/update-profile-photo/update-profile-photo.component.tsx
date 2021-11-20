@@ -129,7 +129,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
         <Alert
           variant={type}
           className='photo-alert'
-          onClose={() => setShowProfilePhotoAlert(false)}
+          onClose={handleHideProfilePhotoAlert}
           dismissible
         >
           {message}
@@ -137,6 +137,8 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
       );
     }
   };
+
+  const handleHideProfilePhotoAlert = () => setShowProfilePhotoAlert(false);
 
   return (
     <div className='settings'>

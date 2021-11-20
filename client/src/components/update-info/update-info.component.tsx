@@ -107,16 +107,20 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
         setStatusInfo({ success: false, error: false });
       }, 3000);
       return (
-        <Alert
-          variant={type}
-          onClose={() => setShowInfoAlert(false)}
-          dismissible
-        >
+        <Alert variant={type} onClose={handleHideAlert} dismissible>
           {message}
         </Alert>
       );
     }
   };
+
+  const handleHideAlert = () => setShowInfoAlert(false);
+
+  const handleShowAccountDeletionModal = () => setModalShow(true);
+
+  const handleHideAccountDeletionModal = () => setModalShow(false);
+
+  const handleDeleteAccount = () => deleteAccountStart();
 
   return (
     <div className='settings'>
@@ -170,21 +174,19 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
       <div>
         <Button
           className='submit-button settings-button delete'
-          onClick={() => setModalShow(true)}
+          onClick={handleShowAccountDeletionModal}
         >
           <span>Delete Account</span>
         </Button>
       </div>
       <CustomModal
         show={modalShow}
-        onHide={() => setModalShow(false)}
+        onHide={handleHideAccountDeletionModal}
         header='Confirm Account Deletion'
         subheader='Are you sure you want to delete your account?'
         bodytext='This action cannot be undone.'
         actionlabel='Delete Account'
-        handleconfirm={() => {
-          deleteAccountStart();
-        }}
+        handleconfirm={handleDeleteAccount}
       />
     </div>
   );

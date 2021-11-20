@@ -51,9 +51,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
     setEditPostDetails({ ...editPostDetails, [name]: value });
   };
 
-  const handleEditPostFormSubmit = (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleEditPostFormSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
 
     editPostDetailsStart({
@@ -63,6 +61,8 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
     });
     setShowPostEditForm(false);
   };
+
+  const handleCancelEdit = () => setShowPostEditForm(false);
 
   return (
     <form className='edit-post-form' onSubmit={handleEditPostFormSubmit}>
@@ -86,14 +86,14 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
         <button
           type='submit'
           className='edit-post-button'
-          onClick={() => handleEditPostFormSubmit}
+          onClick={handleEditPostFormSubmit}
         >
           Done Editing
         </button>
         <button
           type='button'
           className='cancel-edit-button'
-          onClick={() => setShowPostEditForm(false)}
+          onClick={handleCancelEdit}
         >
           Cancel
         </button>

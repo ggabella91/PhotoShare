@@ -80,11 +80,13 @@ export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
       clearPasswordStatuses();
     }, 5000);
     return (
-      <Alert variant={type} onClose={() => setShowPassAlert(false)} dismissible>
+      <Alert variant={type} onClose={handleHidePassAlert} dismissible>
         {message}
       </Alert>
     );
   };
+
+  const handleHidePassAlert = () => setShowPassAlert(false);
 
   return (
     <div className='settings'>
