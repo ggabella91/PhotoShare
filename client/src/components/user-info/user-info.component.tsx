@@ -68,8 +68,43 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
   const dispatch = useDispatch();
 
-  const handleSetCommentToDelete = (idx: number) => {
-    const commentToDelete = userInfoList.get(idx)!;
+  const handleClickComponent = (event: React.MouseEvent<HTMLElement>) => {
+    const divElement = event.currentTarget as HTMLElement;
+    const username = divElement.dataset.username;
+
+    if (styleType === StyleType.suggestion) {
+      history.push(`/${username}`);
+    }
+  };
+
+  const handleOnMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+    const divElement = event.currentTarget as HTMLElement;
+    const idx = parseInt(divElement.dataset.idx || '0');
+
+    if (idx) {
+      setShowCommentOptionsButtonForIdx({ show: true, idx });
+    }
+  };
+
+  const handleOnMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
+    const divElement = event.currentTarget as HTMLElement;
+    const idx = parseInt(divElement.dataset.idx || '0');
+
+    if (idx) {
+      setShowCommentOptionsButtonForIdx({ show: false, idx });
+    }
+  };
+
+  const handleSetCommentToDelete = (event: React.MouseEvent<HTMLElement>) => {
+    const spanElement = event.currentTarget as HTMLElement;
+    let idx = parseInt(spanElement.dataset.idx || '0');
+
+    if (!(idx instanceof Number)) {
+      idx = -1;
+    }
+
+    const commentToDelete: UserInfoAndOtherData = userInfoList.get(idx)!;
+
     if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
       setCommentToDelete({
         reactionId: commentToDelete.reactionId,
@@ -96,24 +131,16 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   };
 
   const userInfo = userInfoList.map((el: UserInfoAndOtherData, idx: number) => (
-    <div className='user-and-options'>
-      <div
-        className={`user-${styleType}-element`}
-        key={idx}
-        onClick={
-          styleType === StyleType.suggestion
-            ? () => {
-                history.push(`/${el.username}`);
-              }
-            : () => {}
-        }
-        onMouseEnter={() =>
-          setShowCommentOptionsButtonForIdx({ show: true, idx })
-        }
-        onMouseLeave={() =>
-          setShowCommentOptionsButtonForIdx({ show: false, idx })
-        }
-      >
+    <div
+      className='user-and-options'
+      key={idx}
+      data-idx={idx}
+      data-username={el.username}
+      onClick={handleClickComponent}
+      onMouseEnter={handleOnMouseEnter}
+      onMouseLeave={handleOnMouseLeave}
+    >
+      <div className={`user-${styleType}-element`}>
         <div className={`${styleType}-avatar`}>
           {el.profilePhotoFileString ? (
             <img
@@ -165,7 +192,8 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           !isCaption ? (
             <span
               className={`${styleType}-ellipsis-button`}
-              onClick={() => handleSetCommentToDelete(idx)}
+              data-idx={idx}
+              onClick={handleSetCommentToDelete}
             >
               ...
             </span>

@@ -106,7 +106,6 @@ export const replaceSinglePostInDataArray = (
       }
     });
 
-    console.log('newDataArray: ', newDataArray);
     return newDataArray;
   }
 
