@@ -52,7 +52,6 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log(token);
 
     resetPasswordStart({ password, passwordConfirm, token });
   };
