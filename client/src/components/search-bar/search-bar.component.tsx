@@ -87,15 +87,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     bucket = 'photo-share-app-profile-photos-dev';
   }
 
-  const handleSearchStringChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = event.target;
-
-    setUserSuggestionsList(List());
-    setSearchString(value);
-  };
-
   useEffect(() => {
     clearUserSuggestions();
     setUserSuggestionsList(List());
@@ -189,6 +180,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
   }, [searchString.length]);
 
+  const handleSearchStringChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+
+    setUserSuggestionsList(List());
+    setSearchString(value);
+  };
+
+  const handleFocus = () => setHideSuggestionsOnBlur(false);
+
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
       setTimeout(() => {
@@ -211,8 +213,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           name='search'
           type='text'
           value={searchString}
-          onFocus={(e) => setHideSuggestionsOnBlur(false)}
-          onBlur={(e) => handleBlur(e)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
           <UserInfo
