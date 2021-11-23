@@ -81,18 +81,14 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     const divElement = event.currentTarget as HTMLElement;
     const idx = parseInt(divElement.dataset.idx || '0');
 
-    if (idx) {
-      setShowCommentOptionsButtonForIdx({ show: true, idx });
-    }
+    setShowCommentOptionsButtonForIdx({ show: true, idx });
   };
 
   const handleOnMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
     const divElement = event.currentTarget as HTMLElement;
     const idx = parseInt(divElement.dataset.idx || '0');
 
-    if (idx) {
-      setShowCommentOptionsButtonForIdx({ show: false, idx });
-    }
+    setShowCommentOptionsButtonForIdx({ show: false, idx });
   };
 
   const handleSetCommentToDelete = (event: React.MouseEvent<HTMLElement>) => {
@@ -190,23 +186,23 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           {(styleType === StyleType.comment ||
             styleType === StyleType.postPage) &&
           !isCaption ? (
-            <span
+            <button
               className={`${styleType}-ellipsis-button`}
               data-idx={idx}
               onClick={handleSetCommentToDelete}
             >
-              ...
-            </span>
+              <MoreHorizIcon />
+            </button>
           ) : null}
           {(styleType === StyleType.comment ||
             styleType === StyleType.postPage) &&
           isCaption ? (
-            <span
+            <button
               className={`${styleType}-ellipsis-button`}
               onClick={handleClickCaptionOptions}
             >
-              ...
-            </span>
+              <MoreHorizIcon />
+            </button>
           ) : null}
         </div>
       </div>
