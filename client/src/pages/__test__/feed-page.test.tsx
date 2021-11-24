@@ -28,37 +28,8 @@ import {
   clearFollowState,
 } from '../../redux/follower/follower.actions';
 
-// it('renders a feed page component', () => {
-//   const feedPageWrapper = shallow(
-//     <FeedPage
-//       currentUser={null}
-//       currentUserUsersFollowing={[]}
-//       followingInfo={[]}
-//       clearFollowState={() => clearFollowState()}
-//       getUsersFollowingConfirm=''
-//       clearFollowersAndFollowing={() => clearFollowersAndFollowing()}
-//       clearPostState={() => clearPostState()}
-//       postDataFeedArray={[]}
-//       postConfirm=''
-//       postError={null}
-//       postFiles={[]}
-//       getPostDataError={null}
-//       getPostDataStart={(dataReq) => getPostDataStart(dataReq)}
-//       getPostFileStart={(fileReq) => getPostFileStart(fileReq)}
-//       getPostFileConfirm=''
-//       getPostFileError={null}
-//       getOtherUserStart={(otherUserReq) => getOtherUserStart(otherUserReq)}
-//       getUsersFollowingStart={(usersFollowingRequest) =>
-//         getUsersFollowingStart(usersFollowingRequest)
-//       }
-//     />
-//   );
-
-//   expect(feedPageWrapper).toMatchSnapshot();
-// });
-
-it('renders a feed page component (RTL test)', () => {
-  const feedPage = render(
+it('renders a feed page component', () => {
+  const { container: feedPage } = render(
     <FeedPage
       currentUser={null}
       currentUserUsersFollowing={[]}
@@ -121,8 +92,6 @@ it('renders a feed page component (RTL test)', () => {
       deleteReactionStart={(delReq) => deleteReactionStart(delReq)}
     />
   );
-
-  console.log(feedPage);
 
   expect(feedPage).toBeInTheDocument();
 });
