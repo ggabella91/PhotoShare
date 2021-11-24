@@ -82,7 +82,6 @@ interface FeedPostContainerProps {
   caption?: string;
   date: string;
   custRef: CustomRef | null;
-  key: string;
   currentUser: User | null;
   feedPostReactionsArray: Reaction[][];
   feedPostReactingUsers: User[] | null;
