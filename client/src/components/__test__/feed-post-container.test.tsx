@@ -1,5 +1,4 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import {
   FeedPostContainer,
   PostModalDataToFeed,
@@ -23,7 +22,7 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 import { UserInfoAndOtherData } from '../user-info/user-info.component';
 
 it('expect to render a feed post container component', () => {
-  const feedPostContainerWrapper = shallow(
+  const { container: feedPostContainer } = render(
     <FeedPostContainer
       s3Key=''
       custRef={null}
@@ -87,5 +86,5 @@ it('expect to render a feed post container component', () => {
     />
   );
 
-  expect(feedPostContainerWrapper).toMatchSnapshot();
+  expect(feedPostContainer).toBeInTheDocument();
 });

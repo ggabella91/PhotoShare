@@ -1,11 +1,10 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import Button from '../button/button.component';
 
 it('renders a button component', () => {
-  const buttonWrapper = shallow(
+  const { container: button } = render(
     <Button className='button-class' onClick={() => {}} />
   );
 
-  expect(buttonWrapper).toMatchSnapshot();
+  expect(button).toBeInTheDocument();
 });

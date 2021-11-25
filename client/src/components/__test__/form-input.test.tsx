@@ -1,9 +1,8 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import { FormInput, FormFileInput } from '../form-input/form-input.component';
 
 it('renders a form input component', () => {
-  const formInputWrapper = shallow(
+  const { container: formInput } = render(
     <FormInput
       onChange={() => {}}
       name='regular form'
@@ -13,11 +12,11 @@ it('renders a form input component', () => {
     />
   );
 
-  expect(formInputWrapper).toMatchSnapshot();
+  expect(formInput).toBeInTheDocument();
 });
 
 it('renders a form file input component', () => {
-  const formFileInputWrapper = shallow(
+  const { container: formFileInput } = render(
     <FormFileInput
       onChange={() => {}}
       name='file form'
@@ -28,5 +27,5 @@ it('renders a form file input component', () => {
     />
   );
 
-  expect(formFileInputWrapper).toMatchSnapshot();
+  expect(formFileInput).toBeInTheDocument();
 });

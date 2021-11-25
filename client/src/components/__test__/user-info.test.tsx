@@ -1,5 +1,5 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
+
 import { List } from 'immutable';
 
 import { DeleteReactionReq } from '../../redux/post/post.types';
@@ -7,12 +7,13 @@ import {
   deleteReactionStart,
   setShowCommentOptionsModal,
   setShowPostEditForm,
+  setFeedPagePostOptionsModalShow,
 } from '../../redux/post/post.actions';
 
 import { UserInfo, StyleType } from '../user-info/user-info.component';
 
 it('renders a user-suggestions component', () => {
-  const userInfoWrapper = shallow(
+  const { container: userInfo } = render(
     <UserInfo
       userInfoList={List()}
       styleType={StyleType.suggestion}
@@ -25,8 +26,11 @@ it('renders a user-suggestions component', () => {
       setShowPostEditForm={(showPostEditForm: boolean) =>
         setShowPostEditForm(showPostEditForm)
       }
+      setFeedPagePostOptionsModalShow={(show) =>
+        setFeedPagePostOptionsModalShow(show)
+      }
     />
   );
 
-  expect(userInfoWrapper).toMatchSnapshot();
+  expect(userInfo).toBeInTheDocument();
 });

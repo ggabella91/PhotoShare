@@ -1,13 +1,12 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../test-utils/test-utils';
 import { App } from '../App';
 
 import { checkUserSession } from '../redux/user/user.actions';
 
 it('renders app component', () => {
-  const appWrapper = shallow(
+  const { container: app } = render(
     <App checkUserSession={() => checkUserSession()} currentUser={null} />
   );
 
-  expect(appWrapper).toMatchSnapshot();
+  expect(app).toBeInTheDocument();
 });

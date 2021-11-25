@@ -1,5 +1,4 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 
 import { SearchBar } from '../search-bar/search-bar.component';
 
@@ -10,12 +9,14 @@ import {
 import '../../redux/post/post.actions';
 import {
   getPostFileStart,
-  clearUsersPhotoFileArray,
+  clearSuggestionPhotoFileArray,
 } from '../../redux/post/post.actions';
 
 it('renders a search-bar component', () => {
-  const searchBarWrapper = shallow(
+  const { container: searchBar } = render(
     <SearchBar
+      key={0}
+      currentUser={null}
       getUserSuggestionsStart={() => getUserSuggestionsStart('test-user')}
       userSuggestions={null}
       userSuggestionsError={null}
@@ -24,9 +25,9 @@ it('renders a search-bar component', () => {
       userSuggestionsConfirm=''
       userSuggestionProfilePhotoConfirm=''
       clearUserSuggestions={() => clearUserSuggestions()}
-      clearUserSuggestionPhotoFiles={() => clearUsersPhotoFileArray()}
+      clearSuggestionPhotoFileArray={() => clearSuggestionPhotoFileArray()}
     />
   );
 
-  expect(searchBarWrapper).toMatchSnapshot();
+  expect(searchBar).toBeInTheDocument();
 });

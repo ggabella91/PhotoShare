@@ -1,5 +1,5 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
+
 import { UpdatePassword } from '../update-password/update-password.component';
 
 import {
@@ -8,7 +8,7 @@ import {
 } from '../../redux/user/user.actions';
 
 it('renders an update-password component', () => {
-  const updatePasswordWrapper = shallow(
+  const { container: updatePassword } = render(
     <UpdatePassword
       changePasswordStart={(passwordPayload) =>
         changePasswordStart(passwordPayload)
@@ -19,5 +19,5 @@ it('renders an update-password component', () => {
     />
   );
 
-  expect(updatePasswordWrapper).toMatchSnapshot();
+  expect(updatePassword).toBeInTheDocument();
 });
