@@ -1,6 +1,5 @@
-import { shallow } from 'enzyme';
-import React from 'react';
-import { PostPage } from '../create-post-page/create-post-page.component';
+import { render } from '../../test-utils/test-utils';
+import { CreatePostPage } from '../create-post-page/create-post-page.component';
 
 import { getUsersFollowingStart } from '../../redux/follower/follower.actions';
 
@@ -10,8 +9,8 @@ import {
 } from '../../redux/post/post.actions';
 
 it('renders a homepage component', () => {
-  const postPageWrapper = shallow(
-    <PostPage
+  const { container: postPageWrapper } = render(
+    <CreatePostPage
       currentUser={null}
       createPostStart={(postRequest) => createPostStart(postRequest)}
       postConfirm={null}
@@ -23,5 +22,5 @@ it('renders a homepage component', () => {
     />
   );
 
-  expect(postPageWrapper).toMatchSnapshot();
+  expect(postPageWrapper).toBeInTheDocument();
 });

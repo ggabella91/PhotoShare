@@ -1,11 +1,10 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import { ForgotPasswordPage } from '../forgot-password/forgot-password-page.component';
 
 import { forgotPasswordStart } from '../../redux/user/user.actions';
 
 it('renders a forgot password page component', () => {
-  const forgotPasswordPageWrapper = shallow(
+  const { container: forgotPasswordPageWrapper } = render(
     <ForgotPasswordPage
       forgotPasswordStart={(email) => forgotPasswordStart(email)}
       forgotConfirm={null}
@@ -13,5 +12,5 @@ it('renders a forgot password page component', () => {
     />
   );
 
-  expect(forgotPasswordPageWrapper).toMatchSnapshot();
+  expect(forgotPasswordPageWrapper).toBeInTheDocument();
 });

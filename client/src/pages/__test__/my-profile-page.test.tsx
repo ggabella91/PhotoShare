@@ -1,15 +1,31 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import { MyProfilePage } from '../my-profile/my-profile-page.component';
 
 import {
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
+  clearArchivePostStatuses,
+  clearPostState,
+  clearFollowPhotoFileArray,
+  setShowCommentOptionsModal,
+  deleteReactionStart,
+  setShowPostEditForm,
 } from '../../redux/post/post.actions';
 
+import {
+  clearFollowersAndFollowing,
+  setIsCurrentUserProfilePage,
+} from '../../redux/user/user.actions';
+
+import {
+  getFollowersStart,
+  getUsersFollowingStart,
+  clearFollowState,
+} from '../../redux/follower/follower.actions';
+
 it('renders a my-profile-page component', () => {
-  const myProfilePageWrapper = shallow(
+  const { container: myProfilePageWrapper } = render(
     <MyProfilePage
       currentUser={null}
       profilePhotoKey={null}
@@ -27,8 +43,35 @@ it('renders a my-profile-page component', () => {
       archivePostStart={(archivePostReq) => archivePostStart(archivePostReq)}
       archivePostConfirm={null}
       archivePostError={null}
+      followers={[]}
+      currentUserUsersFollowing={[]}
+      getUsersFollowingConfirm={null}
+      commentToDelete={{
+        postId: '',
+        reactingUserId: '',
+        reactionId: '',
+        isLikeRemoval: false,
+      }}
+      showCommentOptionsModal={false}
+      postLikingUsersArray={[]}
+      getSinglePostDataConfirm={null}
+      clearArchivePostStatuses={() => clearArchivePostStatuses()}
+      clearPostState={() => clearPostState()}
+      clearFollowPhotoFileArray={() => clearFollowPhotoFileArray()}
+      getFollowersStart={(userId) => getFollowersStart(userId)}
+      getUsersFollowingStart={(userId) => getUsersFollowingStart(userId)}
+      clearFollowersAndFollowing={() => clearFollowersAndFollowing()}
+      clearFollowState={() => clearFollowState()}
+      setIsCurrentUserProfilePage={(isCurrentUserProfilePage) =>
+        setIsCurrentUserProfilePage(isCurrentUserProfilePage)
+      }
+      setShowCommentOptionsModal={(show) => setShowCommentOptionsModal(show)}
+      deleteReactionStart={(deleteReactionReq) =>
+        deleteReactionStart(deleteReactionReq)
+      }
+      setShowPostEditForm={(show) => setShowPostEditForm(show)}
     />
   );
 
-  expect(myProfilePageWrapper).toMatchSnapshot();
+  expect(myProfilePageWrapper).toBeInTheDocument();
 });

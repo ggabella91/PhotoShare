@@ -1,9 +1,5 @@
-import { shallow } from 'enzyme';
-import React from 'react';
 import { FeedPage } from '../feed-page/feed-page.component';
-import { render, screen } from '../../test-utils/test-utils';
-
-import { Post } from '../../redux/post/post.types';
+import { render } from '../../test-utils/test-utils';
 
 import {
   getOtherUserStart,
