@@ -1,19 +1,18 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import CustomModal from '../modal/modal.component';
 
 it('renders a confirmation modal component', () => {
-  const customModalWrapper = shallow(
+  const { container: customModal } = render(
     <CustomModal
       header='header-text'
       subheader='subheader-text'
       bodytext='body-text'
       show={true}
       onHide={() => {}}
-      handleconfirm={() => {}}
+      handleConfirm={() => {}}
       actionlabel='action-label'
     />
   );
 
-  expect(customModalWrapper).toMatchSnapshot();
+  expect(customModal).toBeInTheDocument();
 });

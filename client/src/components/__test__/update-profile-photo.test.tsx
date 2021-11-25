@@ -1,19 +1,19 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
+
 import { UpdateProfilePhoto } from '../update-profile-photo/update-profile-photo.component';
 
-import { setCurrentUser } from '../../redux/user/user.actions';
+import { changeInfoStart } from '../../redux/user/user.actions';
 import {
   updateProfilePhotoStart,
   clearProfilePhotoStatuses,
 } from '../../redux/post/post.actions';
 
 it('renders an update-password component', () => {
-  const updateProfilePhotoWrapper = shallow(
+  const { container: updateProfilePhoto } = render(
     <UpdateProfilePhoto
       updateProfilePhotoStart={(formData) => updateProfilePhotoStart(formData)}
       currentUser={null}
-      setCurrentUser={(user) => setCurrentUser(user)}
+      changeInfoStart={(fieldsToUpdate) => changeInfoStart(fieldsToUpdate)}
       updateProfilePhotoConfirm={null}
       updateProfilePhotoError={null}
       profilePhotoKey={null}
@@ -21,5 +21,5 @@ it('renders an update-password component', () => {
     />
   );
 
-  expect(updateProfilePhotoWrapper).toMatchSnapshot();
+  expect(updateProfilePhoto).toBeInTheDocument();
 });

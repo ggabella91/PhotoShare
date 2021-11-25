@@ -1,11 +1,16 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import PostOptionsModal from '../post-or-comment-options-modal/post-or-comment-options-modal.component';
 
 it('renders a post options modal', () => {
-  const postOptionsModalWrapper = shallow(
-    <PostOptionsModal show={true} onHide={() => {}} archive={() => {}} />
+  const { container: postOptionsModal } = render(
+    <PostOptionsModal
+      show={true}
+      onHide={() => {}}
+      archive={() => {}}
+      isCurrentUserPostOrComment={false}
+      postOptionsModal={true}
+    />
   );
 
-  expect(postOptionsModalWrapper).toMatchSnapshot();
+  expect(postOptionsModal).toBeInTheDocument();
 });

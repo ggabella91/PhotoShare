@@ -1,15 +1,15 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
+
 import { SignIn } from '../sign-in/sign-in.component';
 import { signInStart } from '../../redux/user/user.actions';
 
 it('renders a sign-in component', () => {
-  const signInWrapper = shallow(
+  const { container: signIn } = render(
     <SignIn
       signInStart={(signInPayload) => signInStart(signInPayload)}
       signInError={null}
     />
   );
 
-  expect(signInWrapper).toMatchSnapshot();
+  expect(signIn).toBeInTheDocument();
 });

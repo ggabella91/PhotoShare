@@ -1,9 +1,8 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import Footer from '../footer/footer.component';
 
 it('renders a footer component', () => {
-  const footerWrapper = shallow(<Footer />);
+  const { container: footer } = render(<Footer />);
 
-  expect(footerWrapper).toMatchSnapshot();
+  expect(footer).toBeInTheDocument();
 });

@@ -1,14 +1,15 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
 import PostTile from '../post-tile/post-tile.component';
 
 it('expect to render a PostTile component', () => {
-  const postTileWrapper = shallow(
+  const { container: postTile } = render(
     <PostTile
       fileString='hello'
+      custRef={null}
+      dataS3Key=''
       onClick={() => console.log('I was clicked!')}
     />
   );
 
-  expect(postTileWrapper).toMatchSnapshot();
+  expect(postTile).toBeInTheDocument();
 });

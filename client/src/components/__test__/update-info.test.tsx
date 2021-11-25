@@ -1,5 +1,5 @@
-import { shallow } from 'enzyme';
-import React from 'react';
+import { render } from '../../test-utils/test-utils';
+
 import { UpdateInfo } from '../update-info/update-info.component';
 import {
   changeInfoStart,
@@ -8,7 +8,7 @@ import {
 } from '../../redux/user/user.actions';
 
 it('renders an update-info component', () => {
-  const updateInfoWrapper = shallow(
+  const { container: updateInfo } = render(
     <UpdateInfo
       changeInfoStart={(infoPayload) => changeInfoStart(infoPayload)}
       changeInfoError={null}
@@ -19,5 +19,5 @@ it('renders an update-info component', () => {
     />
   );
 
-  expect(updateInfoWrapper).toMatchSnapshot();
+  expect(updateInfo).toBeInTheDocument();
 });
