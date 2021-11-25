@@ -9,7 +9,7 @@ it('renders a confirmation modal component', () => {
       bodytext='body-text'
       show={true}
       onHide={() => {}}
-      handleconfirm={() => {}}
+      handleConfirm={() => {}}
       actionlabel='action-label'
     />
   );
