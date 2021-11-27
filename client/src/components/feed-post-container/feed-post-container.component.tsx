@@ -608,6 +608,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           className={`${!comment ? 'greyed-out ' : ''}submit-comment-button`}
           disabled={comment ? false : true}
           onClick={handleSubmitComment}
+          data-testid='submit-post-button'
         >
           <span>Post</span>
         </Button>

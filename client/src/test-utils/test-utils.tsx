@@ -18,8 +18,14 @@ const renderWithReduxAndRouter = (
   options?: Omit<RenderOptions, 'wrapper'>
 ) => {
   window.history.pushState({}, 'Test page', route);
+  const customContainer = document.createElement('div');
+  customContainer.id = 'root';
 
-  return render(ui, { wrapper: WithReduxProvider, ...options });
+  return render(ui, {
+    wrapper: WithReduxProvider,
+    container: document.body.appendChild(customContainer),
+    ...options,
+  });
 };
 
 export * from '@testing-library/react';
