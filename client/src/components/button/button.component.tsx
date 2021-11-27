@@ -7,14 +7,16 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   onClick: React.FormEventHandler | ((() => void) | undefined);
   disabled?: boolean;
   children?: any;
+  dataTestId?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
   children,
   disabled,
+  dataTestId,
   ...otherProps
 }) => (
-  <button disabled={disabled} {...otherProps}>
+  <button disabled={disabled} data-testid={dataTestId} {...otherProps}>
     {children}
   </button>
 );
