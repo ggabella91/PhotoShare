@@ -16,7 +16,11 @@ const Button: React.FC<ButtonProps> = ({
   dataTestId,
   ...otherProps
 }) => (
-  <button disabled={disabled} data-testid={dataTestId} {...otherProps}>
+  <button
+    disabled={disabled}
+    data-testid={dataTestId || 'button'}
+    {...otherProps}
+  >
     {children}
   </button>
 );
