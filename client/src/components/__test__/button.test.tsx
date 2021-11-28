@@ -13,9 +13,9 @@ describe('button component tests', () => {
   };
 
   it('renders a button component', () => {
-    const {
-      buttonRenderResult: { container: button },
-    } = setup();
+    setup();
+
+    const button = screen.getByTestId('button');
 
     expect(button).toBeInTheDocument();
   });
