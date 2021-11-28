@@ -93,14 +93,17 @@ describe('feed post container component tests', () => {
     );
 
   it('expect to render a feed post container component', () => {
-    const { container: feedPostContainer } = setup();
+    setup();
+
+    const feedPostContainer = screen.getByTestId('feed-post-container');
+
     expect(feedPostContainer).toBeInTheDocument();
   });
 
-  it('expect post button to be disabled when no comment has been entered', () => {
+  it('expect submit-comment button to be disabled when no comment has been entered', () => {
     setup();
 
-    const submitButton = screen.getByTestId('submit-post-button');
+    const submitButton = screen.getByTestId('submit-comment-button');
 
     expect(submitButton).toBeDisabled();
   });

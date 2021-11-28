@@ -220,6 +220,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLi
         animation={false}
         onHide={onHide}
         centered
+        data-testid='followers-following-or-likes-modal'
       >
         <Modal.Header className='followers-following-modal-header' closeButton>
           <span className='header-text'>

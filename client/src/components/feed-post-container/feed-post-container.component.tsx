@@ -554,7 +554,11 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   };
 
   return (
-    <div className='feed-post-container' ref={custRef}>
+    <div
+      className='feed-post-container'
+      ref={custRef}
+      data-testid='feed-post-container'
+    >
       <div className='profile-and-options'>
         <UserInfo styleType={StyleType.feed} userInfoList={List([userInfo])} />
       </div>
@@ -608,7 +612,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           className={`${!comment ? 'greyed-out ' : ''}submit-comment-button`}
           disabled={comment ? false : true}
           onClick={handleSubmitComment}
-          data-testid='submit-post-button'
+          data-testid='submit-comment-button'
         >
           <span>Post</span>
         </Button>

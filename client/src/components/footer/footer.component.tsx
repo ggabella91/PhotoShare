@@ -4,7 +4,7 @@ import './footer.styles.scss';
 
 const Footer: React.FC = () => (
   <div>
-    <div className='footer'>
+    <div className='footer' data-testid='footer'>
       <span>Created by Giuliano Gabella</span>
       <a
         className='favicon-link'
