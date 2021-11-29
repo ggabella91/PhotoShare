@@ -80,14 +80,18 @@ export const Header: React.FC<HeaderProps> = ({
   }, [profilePhotoFile]);
 
   return (
-    <div className='header'>
-      <NavLink className='app-name' to='/'>
+    <div className='header' data-testid='header'>
+      <NavLink className='app-name' to='/' data-testid='app-logo-link'>
         <h1 className='title'>PhotoShare</h1>
       </NavLink>
       {currentUser ? (
         <div>
           <SearchBar key={searchBarKey} />
-          <NavLink to={`/${currentUser.username}`} className='avatar'>
+          <NavLink
+            to={`/${currentUser.username}`}
+            className='avatar'
+            data-testid='profile-page-link'
+          >
             {photoFileString.length ? (
               <img
                 className='profile-photo'
@@ -102,13 +106,22 @@ export const Header: React.FC<HeaderProps> = ({
             ) : null}
           </NavLink>
           <nav className='header-menu'>
-            <NavLink className='link' to='/post'>
+            <NavLink className='link' to='/post' data-testid='create-post-link'>
               New Post
             </NavLink>
-            <NavLink className='link' to='/settings'>
+            <NavLink
+              className='link'
+              to='/settings'
+              data-testid='settings-link'
+            >
               Settings
             </NavLink>
-            <NavLink className='link' to='/' onClick={signOutStart}>
+            <NavLink
+              className='link'
+              to='/'
+              onClick={signOutStart}
+              data-testid='sign-out-link'
+            >
               Sign Out
             </NavLink>
           </nav>

@@ -5,11 +5,9 @@ describe('button component tests', () => {
   const setup = () => {
     const clickHandler = jest.fn();
 
-    const buttonRenderResult = render(
-      <Button className='button-class' onClick={clickHandler} />
-    );
+    render(<Button className='button-class' onClick={clickHandler} />);
 
-    return { buttonRenderResult, clickHandler };
+    return clickHandler;
   };
 
   it('renders a button component', () => {
@@ -21,7 +19,7 @@ describe('button component tests', () => {
   });
 
   it('clicking button calls click handler', () => {
-    const { clickHandler } = setup();
+    const clickHandler = setup();
 
     const button = screen.getByTestId('button');
 

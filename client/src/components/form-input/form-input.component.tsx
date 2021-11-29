@@ -31,11 +31,12 @@ export const FormInput: React.FC<FormInputProps> = ({
     {label ? (
       <label
         className={`${otherProps.value.length ? 'hide' : ''} form-input-label`}
+        htmlFor='form-input'
       >
         {label}
       </label>
     ) : null}
-    <input className='form-input' {...otherProps} />
+    <input id='form-input' className='form-input' {...otherProps} />
   </div>
 );
 
@@ -52,11 +53,13 @@ export const ExpandableFormInput: React.FC<FormInputProps> = ({
         className={`${
           otherProps.value.length ? 'hide' : ''
         } comment-form-input-label`}
+        htmlFor='expandable-form-input'
       >
         {label}
       </label>
     ) : null}
     <textarea
+      id='expandable-form-input'
       className={`${modal ? 'modal ' : ''}form-input comment`}
       {...otherProps}
     />
@@ -69,7 +72,9 @@ export const FormFileInput: React.FC<FormFileInputType> = ({
   ...otherProps
 }) => (
   <div className='group'>
-    <label className='form-file-input-label'>{label}</label>
-    <input className='form-file-input' {...otherProps} />
+    <label className='form-file-input-label' htmlFor='file-input'>
+      {label}
+    </label>
+    <input id='file-input' className='form-file-input' {...otherProps} />
   </div>
 );
