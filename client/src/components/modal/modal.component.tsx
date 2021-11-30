@@ -9,11 +9,11 @@ interface Props {
   bodytext: string;
   show: boolean;
   onHide: () => void;
-  handleConfirm: () => void;
+  onSubmit: () => void;
   actionlabel: string;
 }
 
-const CustomModal: React.FC<Props> = (props) => (
+const CustomModal: React.FC<Props> = ({ onHide, onSubmit, ...props }) => (
   <Modal {...props} dialogClassName='custom-modal' centered>
     <Modal.Header closeButton>
       <Modal.Title id='contained-modal-title-vcenter'>
@@ -25,12 +25,17 @@ const CustomModal: React.FC<Props> = (props) => (
       <p>{props.bodytext}</p>
     </Modal.Body>
     <Modal.Footer>
-      <Button className='button modal-button' onClick={props.onHide}>
+      <Button
+        className='button modal-button'
+        onClick={onHide}
+        dataTestId='cancel-button'
+      >
         Cancel
       </Button>
       <Button
         className='button modal-button delete-button'
-        onClick={props.handleConfirm}
+        onClick={onSubmit}
+        dataTestId='submit-button'
       >
         {props.actionlabel}
       </Button>

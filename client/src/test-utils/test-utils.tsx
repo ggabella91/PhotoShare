@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { render, RenderOptions } from '@testing-library/react';
@@ -29,5 +29,5 @@ const renderWithReduxAndRouter = (
 };
 
 export * from '@testing-library/react';
-export * from '@testing-library/user-event';
+export { default as userEvent } from '@testing-library/user-event';
 export { renderWithReduxAndRouter as render };
