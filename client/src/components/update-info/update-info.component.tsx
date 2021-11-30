@@ -186,7 +186,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
         subheader='Are you sure you want to delete your account?'
         bodytext='This action cannot be undone.'
         actionlabel='Delete Account'
-        handleConfirm={handleDeleteAccount}
+        onSubmit={handleDeleteAccount}
       />
     </div>
   );

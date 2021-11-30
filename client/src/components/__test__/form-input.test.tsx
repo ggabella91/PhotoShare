@@ -1,4 +1,9 @@
-import { render, screen, fireEvent } from '../../test-utils/test-utils';
+import {
+  render,
+  screen,
+  fireEvent,
+  userEvent,
+} from '../../test-utils/test-utils';
 import {
   FormInput,
   FormFileInput,
@@ -32,7 +37,7 @@ describe('form input component tests', () => {
 
     const formInput = screen.getByLabelText('test-form-input');
 
-    fireEvent.change(formInput, { target: { value: 'new input value' } });
+    userEvent.type(formInput, 'new input value');
 
     expect(changeHandler).toBeCalled();
   });
@@ -95,9 +100,7 @@ describe('expandable form input component tests', () => {
 
     const expandableFormInput = screen.getByLabelText('expandable-form-input');
 
-    fireEvent.change(expandableFormInput, {
-      target: { value: 'new comment value' },
-    });
+    userEvent.type(expandableFormInput, 'new comment value');
 
     expect(changeHandler).toBeCalled();
   });

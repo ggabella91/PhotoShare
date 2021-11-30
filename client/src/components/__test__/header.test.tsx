@@ -23,8 +23,6 @@ describe('header component tests', () => {
   it('renders a header component', () => {
     setup();
 
-    screen.debug();
-
     const header = screen.getByTestId('header');
 
     expect(header).toBeInTheDocument();
@@ -33,9 +31,9 @@ describe('header component tests', () => {
   it("clicking profile avatar causes navigation to current user's profile page", () => {
     setup();
 
-    const profileAvatar = screen.getByTestId('profile-page-link');
+    const profilePageAvatarLink = screen.getByTestId('profile-page-link');
 
-    fireEvent.click(profileAvatar);
+    fireEvent.click(profilePageAvatarLink);
 
     expect(window.location.pathname).toEqual('/test-dude');
   });
@@ -43,7 +41,7 @@ describe('header component tests', () => {
   it('clicking new post link causes navigation to create-post page', () => {
     setup();
 
-    const createPostLink = screen.getByTestId('create-post-link');
+    const createPostLink = screen.getByRole('link', { name: 'New Post' });
 
     fireEvent.click(createPostLink);
 
@@ -53,7 +51,7 @@ describe('header component tests', () => {
   it('clicking settings link causes navigation to settings page', () => {
     setup();
 
-    const settingsLink = screen.getByTestId('settings-link');
+    const settingsLink = screen.getByRole('link', { name: 'Settings' });
 
     fireEvent.click(settingsLink);
 
