@@ -1,4 +1,4 @@
-import { render, screen } from '../../test-utils/test-utils';
+import { render, screen, userEvent } from '../../test-utils/test-utils';
 import { PostModal } from '../post-modal/post-modal.component';
 
 describe('post modal component tests', () => {
@@ -75,8 +75,44 @@ describe('post modal component tests', () => {
   it('expect to render a post modal component', () => {
     setup();
 
-    screen.debug();
+    const postModal = screen.getByRole('document');
 
-    // expect(postModal).toBeInTheDocument();
+    expect(postModal).toBeInTheDocument();
+  });
+
+  it('Clicking close button calls hide handler function', () => {
+    const { handleHide } = setup();
+
+    const hideButton = screen.getByText(/Close/i).parentElement;
+
+    userEvent.click(hideButton!);
+
+    expect(handleHide).toBeCalled();
+  });
+
+  it('Clicking options button calls options handler', () => {
+    const { handleOptionsClick } = setup();
+
+    const optionsButton = screen.getByTestId('options-button');
+
+    userEvent.click(optionsButton);
+
+    expect(handleOptionsClick).toBeCalled();
+  });
+
+  it('Clicking post-comment button calls redux action creator for creating a post reaction', () => {
+    const { createPostReactionStart } = setup();
+
+    const textAreaInput = screen.getByRole('textbox');
+
+    userEvent.type(textAreaInput, 'Test comment');
+
+    const createReactionButton = screen.getByTestId(
+      'create-post-reaction-button'
+    );
+
+    userEvent.click(createReactionButton);
+
+    expect(createPostReactionStart).toBeCalled();
   });
 });

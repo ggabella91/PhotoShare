@@ -752,7 +752,11 @@ export const PostModal: React.FC<PostModalProps> = ({
                   {editPostDetails.editLocation}
                 </span>
               </div>
-              <button className='post-options' onClick={onOptionsClick}>
+              <button
+                className='post-options'
+                onClick={onOptionsClick}
+                data-testid='options-button'
+              >
                 <MoreHorizIcon className='ellipsis' />
               </button>
             </div>
@@ -810,6 +814,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               }submit-comment-button`}
               disabled={comment ? false : true}
               onClick={handleSubmitComment}
+              dataTestId='create-post-reaction-button'
             >
               <span>Post</span>
             </Button>
