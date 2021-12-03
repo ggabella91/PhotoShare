@@ -39,16 +39,24 @@ const PostOrCommentOptionsModal: React.FC<OptionsProps> = ({
     >
       <Modal.Body className='post-options-modal-body'>
         {postOptionsModal && !isInPostPage ? (
-          <div className='go-to-post' onClick={onGoToPostClick}>
+          <div
+            className='go-to-post'
+            onClick={onGoToPostClick}
+            data-testid='go-to-post-button'
+          >
             <span>Go to post</span>
           </div>
         ) : null}
         {isCurrentUserPostOrComment ? (
-          <div className='archive' onClick={archive}>
+          <div
+            className='archive'
+            onClick={archive}
+            data-test-id='archive-button'
+          >
             <span>Archive</span>
           </div>
         ) : null}
-        <div className='cancel' onClick={onHide}>
+        <div className='cancel' onClick={onHide} data-testid='cancel-button'>
           <span>Cancel</span>
         </div>
       </Modal.Body>
