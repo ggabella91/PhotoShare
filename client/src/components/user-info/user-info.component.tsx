@@ -69,7 +69,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   const dispatch = useDispatch();
 
   const handleClickComponent = (event: React.MouseEvent<HTMLElement>) => {
-    const divElement = event.currentTarget as HTMLElement;
+    const divElement = event.currentTarget;
     const username = divElement.dataset.username;
 
     if (styleType === StyleType.suggestion) {
@@ -78,21 +78,21 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   };
 
   const handleOnMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
-    const divElement = event.currentTarget as HTMLElement;
+    const divElement = event.currentTarget;
     const idx = parseInt(divElement.dataset.idx || '0');
 
     setShowCommentOptionsButtonForIdx({ show: true, idx });
   };
 
   const handleOnMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
-    const divElement = event.currentTarget as HTMLElement;
+    const divElement = event.currentTarget;
     const idx = parseInt(divElement.dataset.idx || '0');
 
     setShowCommentOptionsButtonForIdx({ show: false, idx });
   };
 
   const handleSetCommentToDelete = (event: React.MouseEvent<HTMLElement>) => {
-    const spanElement = event.currentTarget as HTMLElement;
+    const spanElement = event.currentTarget;
     let idx = parseInt(spanElement.dataset.idx || '0');
 
     if (typeof idx !== 'number') {

@@ -192,7 +192,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleFocus = () => setHideSuggestionsOnBlur(false);
 
   const handleBlur = (event: React.FocusEvent) => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
       setTimeout(() => {
         setHideSuggestionsOnBlur(true);
       }, 150);
@@ -200,7 +200,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <form>
+    <form data-testid='search-bar'>
       <div className='search-group'>
         <label
           className={`${searchString.length ? 'hide' : ''} search-bar-label`}
