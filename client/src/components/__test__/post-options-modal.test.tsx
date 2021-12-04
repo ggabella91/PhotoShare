@@ -5,6 +5,7 @@ describe('post options modal component tests', () => {
   const setup = () => {
     const handleHide = jest.fn();
     const handleArchive = jest.fn();
+    const handleGoToPost = jest.fn();
 
     // Should implement test for functionality of 'Go to post' button
 
@@ -13,12 +14,13 @@ describe('post options modal component tests', () => {
         show={true}
         onHide={handleHide}
         archive={handleArchive}
-        isCurrentUserPostOrComment={false}
+        isCurrentUserPostOrComment={true}
         postOptionsModal={true}
+        onGoToPostClick={handleGoToPost}
       />
     );
 
-    return { handleHide, handleArchive };
+    return { handleHide, handleArchive, handleGoToPost };
   };
 
   it('renders a post options modal', () => {
@@ -42,10 +44,20 @@ describe('post options modal component tests', () => {
   it('clicking archive button calls archive-post handler function', () => {
     const { handleArchive } = setup();
 
-    const archiveButton = screen.getByTestId('archive-post-button');
+    const archiveButton = screen.getByTestId('archive-button');
 
     userEvent.click(archiveButton);
 
     expect(handleArchive).toBeCalled();
+  });
+
+  it("clicking 'Go to post' button calls go-to-post handler function", () => {
+    const { handleGoToPost } = setup();
+
+    const goToPostButton = screen.getByTestId('go-to-post-button');
+
+    userEvent.click(goToPostButton);
+
+    expect(handleGoToPost).toBeCalled();
   });
 });

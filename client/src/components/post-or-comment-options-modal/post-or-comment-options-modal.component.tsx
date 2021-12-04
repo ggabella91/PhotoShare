@@ -51,7 +51,7 @@ const PostOrCommentOptionsModal: React.FC<OptionsProps> = ({
           <div
             className='archive'
             onClick={archive}
-            data-test-id='archive-button'
+            data-testid='archive-button'
           >
             <span>Archive</span>
           </div>
