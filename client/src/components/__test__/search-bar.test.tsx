@@ -48,4 +48,18 @@ describe('renders a search-bar component', () => {
 
     expect(searchBar).toBeInTheDocument();
   });
+
+  it('typing three or more characters in the search bar results in the user suggestion container component being rendered', () => {
+    setup();
+
+    const searchBarInput = screen.getByRole('textbox');
+
+    userEvent.type(searchBarInput, 'testing this out');
+
+    const userSuggestionsContainer = screen.getByTestId(
+      'user-suggestion-container'
+    );
+
+    expect(userSuggestionsContainer).toBeInTheDocument();
+  });
 });

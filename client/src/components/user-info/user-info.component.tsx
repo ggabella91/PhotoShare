@@ -217,7 +217,14 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     </div>
   ));
 
-  return <div className={`user-${styleType}-container`}>{userInfo}</div>;
+  return (
+    <div
+      className={`user-${styleType}-container`}
+      data-testid={`user-${styleType}-container`}
+    >
+      {userInfo}
+    </div>
+  );
 };
 
 interface LinkStateProps {}
