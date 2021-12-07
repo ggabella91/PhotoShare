@@ -19,7 +19,7 @@ import { User, FieldsToUpdate, Error } from '../../redux/user/user.types';
 
 import { FormInput } from '../form-input/form-input.component';
 import Button from '../button/button.component';
-import CustomModal from '../modal/modal.component';
+import DeleteAccountConfirmModal from '../delete-account-confirm-modal/delete-account-confirm-modal.component';
 
 import Alert from 'react-bootstrap/Alert';
 
@@ -158,6 +158,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
           <Button
             className='submit-button settings-button'
             onClick={handleSubmitInfo}
+            dataTestId='update-info-button'
           >
             <span className='update-info'>Update Info</span>
           </Button>
@@ -175,11 +176,12 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
         <Button
           className='submit-button settings-button delete'
           onClick={handleShowAccountDeletionModal}
+          dataTestId='delete-account-button'
         >
           <span>Delete Account</span>
         </Button>
       </div>
-      <CustomModal
+      <DeleteAccountConfirmModal
         show={modalShow}
         onHide={handleHideAccountDeletionModal}
         header='Confirm Account Deletion'

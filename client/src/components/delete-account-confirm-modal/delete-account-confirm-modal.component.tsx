@@ -13,7 +13,11 @@ interface Props {
   actionlabel: string;
 }
 
-const CustomModal: React.FC<Props> = ({ onHide, onSubmit, ...props }) => (
+const DeleteAccountConfirmModal: React.FC<Props> = ({
+  onHide,
+  onSubmit,
+  ...props
+}) => (
   <Modal {...props} dialogClassName='custom-modal' centered>
     <Modal.Header closeButton>
       <Modal.Title id='contained-modal-title-vcenter'>
@@ -35,7 +39,7 @@ const CustomModal: React.FC<Props> = ({ onHide, onSubmit, ...props }) => (
       <Button
         className='button modal-button delete-button'
         onClick={onSubmit}
-        dataTestId='submit-button'
+        dataTestId='delete-account-confirm-button'
       >
         {props.actionlabel}
       </Button>
@@ -43,4 +47,4 @@ const CustomModal: React.FC<Props> = ({ onHide, onSubmit, ...props }) => (
   </Modal>
 );
 
-export default CustomModal;
+export default DeleteAccountConfirmModal;

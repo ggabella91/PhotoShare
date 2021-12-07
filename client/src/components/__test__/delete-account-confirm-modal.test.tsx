@@ -1,5 +1,5 @@
 import { render, screen, userEvent } from '../../test-utils/test-utils';
-import CustomModal from '../modal/modal.component';
+import DeleteAccountConfirmModal from '../delete-account-confirm-modal/delete-account-confirm-modal.component';
 
 describe('custom modal component tests', () => {
   const setup = () => {
@@ -7,7 +7,7 @@ describe('custom modal component tests', () => {
     const handleSubmit = jest.fn();
 
     render(
-      <CustomModal
+      <DeleteAccountConfirmModal
         header='header-text'
         subheader='subheader-text'
         bodytext='body-text'
