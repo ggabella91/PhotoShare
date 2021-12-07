@@ -118,7 +118,6 @@ export interface UnfollowUserFailure {
 
 export interface ClearFollowState {
   type: typeof FollowerActions.CLEAR_FOLLOW_STATE;
-  payload: null;
 }
 
 export type FollowerActionTypes =

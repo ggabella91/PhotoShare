@@ -1,15 +1,31 @@
-import { render } from '../../test-utils/test-utils';
+import { render, screen, userEvent } from '../../test-utils/test-utils';
 
 import { SignUp } from '../sign-up/sign-up.component';
-import { signUpStart } from '../../redux/user/user.actions';
 
-it('renders a sign-up component', () => {
-  const { container: signUp } = render(
-    <SignUp
-      signUpStart={(signUpPayload) => signUpStart(signUpPayload)}
-      signUpError={null}
-    />
-  );
+describe('sign-up component tests', () => {
+  const setup = () => {
+    const signUpStart = jest.fn();
 
-  expect(signUp).toBeInTheDocument();
+    render(<SignUp signUpStart={signUpStart} signUpError={null} />);
+
+    return { signUpStart };
+  };
+
+  it('renders sign-up component', () => {
+    setup();
+
+    const signUp = screen.getByText(/Don't have an account yet?/i);
+
+    expect(signUp).toBeInTheDocument();
+  });
+
+  it('clicking sign up button calls sign-up handler', () => {
+    const { signUpStart } = setup();
+
+    const signUpButton = screen.getByTestId('button');
+
+    userEvent.click(signUpButton);
+
+    expect(signUpStart).toBeCalled();
+  });
 });
