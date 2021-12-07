@@ -42,7 +42,7 @@ describe('custom modal component tests', () => {
   it('clicking submit button calls submit handler function', () => {
     const { handleSubmit } = setup();
 
-    const submitButton = screen.getByTestId('submit-button');
+    const submitButton = screen.getByTestId('delete-account-confirm-button');
 
     userEvent.click(submitButton);
 

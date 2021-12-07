@@ -33,8 +33,6 @@ describe('update-info component tests', () => {
   it('renders update-info component', () => {
     setup();
 
-    screen.debug();
-
     const updateInfo = screen.getByText(/Update your info/i);
 
     expect(updateInfo).toBeInTheDocument();
