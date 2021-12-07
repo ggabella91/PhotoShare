@@ -9,8 +9,8 @@ import { PostFile } from '../../redux/post/post.types';
 describe('renders a search-bar component', () => {
   const setup = () => {
     const testUser = {} as User;
-    const testUserArray = [{}, {}, {}] as User[];
-    const testPostFileArray = [{}, {}, {}] as PostFile[];
+    const testUserArray = [] as User[];
+    const testPostFileArray = [] as PostFile[];
 
     const getUserSuggestionsStart = jest.fn();
     const getPostFileStart = jest.fn();
@@ -26,8 +26,8 @@ describe('renders a search-bar component', () => {
         userSuggestionsError={null}
         getPostFileStart={getPostFileStart}
         userSuggestionProfilePhotoFiles={testPostFileArray}
-        userSuggestionsConfirm=''
-        userSuggestionProfilePhotoConfirm=''
+        userSuggestionsConfirm='confirm'
+        userSuggestionProfilePhotoConfirm='confirm'
         clearUserSuggestions={clearUserSuggestions}
         clearSuggestionPhotoFileArray={clearSuggestionPhotoFileArray}
       />
@@ -49,17 +49,15 @@ describe('renders a search-bar component', () => {
     expect(searchBar).toBeInTheDocument();
   });
 
-  it('typing three or more characters in the search bar results in the user suggestion container component being rendered', () => {
+  it('typing three or more characters in the search bar results in the user suggestion container component being rendered with no matches found', () => {
     setup();
 
     const searchBarInput = screen.getByRole('textbox');
 
-    userEvent.type(searchBarInput, 'testing this out');
+    userEvent.type(searchBarInput, 'test');
 
-    const userSuggestionsContainer = screen.getByTestId(
-      'user-suggestion-container'
-    );
+    const noMatchesSpan = screen.getByText(/No matches found/i);
 
-    expect(userSuggestionsContainer).toBeInTheDocument();
+    expect(noMatchesSpan).toBeInTheDocument();
   });
 });

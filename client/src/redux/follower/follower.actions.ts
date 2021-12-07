@@ -95,5 +95,4 @@ export const unfollowUserFailure = (
 
 export const clearFollowState = (): FollowerActionTypes => ({
   type: FollowerActions.CLEAR_FOLLOW_STATE,
-  payload: null,
 });
