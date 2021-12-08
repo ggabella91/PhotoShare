@@ -1,23 +1,40 @@
-import { render } from '../../test-utils/test-utils';
+import { render, screen, userEvent } from '../../test-utils/test-utils';
 
 import { UpdatePassword } from '../update-password/update-password.component';
 
-import {
-  changePasswordStart,
-  clearPasswordStatuses,
-} from '../../redux/user/user.actions';
+describe('update-password component tests', () => {
+  const setup = () => {
+    const changePasswordStart = jest.fn();
+    const clearPasswordStatuses = jest.fn();
 
-it('renders an update-password component', () => {
-  const { container: updatePassword } = render(
-    <UpdatePassword
-      changePasswordStart={(passwordPayload) =>
-        changePasswordStart(passwordPayload)
-      }
-      changePassError={null}
-      changePassConfirm={null}
-      clearPasswordStatuses={() => clearPasswordStatuses()}
-    />
-  );
+    render(
+      <UpdatePassword
+        changePasswordStart={changePasswordStart}
+        changePassError={null}
+        changePassConfirm={null}
+        clearPasswordStatuses={clearPasswordStatuses}
+      />
+    );
 
-  expect(updatePassword).toBeInTheDocument();
+    return { changePasswordStart, clearPasswordStatuses };
+  };
+
+  it('renders an update-password component', () => {
+    setup();
+
+    const updatePassword = screen.getByText(/Change your password/i);
+
+    expect(updatePassword).toBeInTheDocument();
+  });
+
+  it('clicking change password calls change password start action creator', () => {
+    const { changePasswordStart } = setup();
+
+    const changePasswordButton =
+      screen.getByText(/Change Password/i).parentElement;
+
+    if (changePasswordButton) userEvent.click(changePasswordButton);
+
+    expect(changePasswordStart).toBeCalled();
+  });
 });
