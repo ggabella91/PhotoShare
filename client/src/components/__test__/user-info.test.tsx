@@ -10,6 +10,18 @@ import {
 
 describe('user info component tests', () => {
   const setup = (type: StyleType) => {
+    const userInfoEl = {
+      name: 'bob',
+      username: 'testbob',
+      reactingUserId: '12345',
+      reactionId: 'jgt3u4t34ut',
+    } as UserInfoAndOtherData;
+    const userCommentList = List([
+      userInfoEl,
+      {},
+      {},
+    ]) as List<UserInfoAndOtherData>;
+
     const userInfoList = List([{}, {}, {}]) as List<UserInfoAndOtherData>;
     const setCommentToDelete = jest.fn();
     const setShowCommentOptionsModal = jest.fn();
@@ -18,7 +30,7 @@ describe('user info component tests', () => {
 
     render(
       <UserInfo
-        userInfoList={userInfoList}
+        userInfoList={type === 'comment' ? userCommentList : userInfoList}
         styleType={type}
         setCommentToDelete={setCommentToDelete}
         setShowCommentOptionsModal={setShowCommentOptionsModal}
@@ -77,5 +89,22 @@ describe('user info component tests', () => {
     );
 
     expect(userPostPageContainer).toBeInTheDocument();
+  });
+
+  it('hovering over a comment in a user comment container component renders the ellipsis button, and clicking it causes calls the redux actions to set the comment for deletion and to show the comment options modal', () => {
+    const { setCommentToDelete, setShowCommentOptionsModal } = setup(
+      StyleType.comment
+    );
+
+    const firstComment = screen.getByTestId('user-comment-element-0');
+
+    userEvent.hover(firstComment);
+
+    const ellipsisButton = screen.getAllByTestId('comment-ellipsis-button')[0];
+
+    userEvent.click(ellipsisButton);
+
+    expect(setCommentToDelete).toBeCalled();
+    expect(setShowCommentOptionsModal).toBeCalled();
   });
 });
