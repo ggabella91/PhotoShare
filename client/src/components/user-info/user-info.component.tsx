@@ -132,6 +132,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       key={idx}
       data-idx={idx}
       data-username={el.username}
+      data-testid={`user-${styleType}-element-${idx}`}
       onClick={handleClickComponent}
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseLeave}
@@ -190,6 +191,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               className={`${styleType}-ellipsis-button`}
               data-idx={idx}
               onClick={handleSetCommentToDelete}
+              data-testid='comment-ellipsis-button'
             >
               <MoreHorizIcon />
             </button>
@@ -200,6 +202,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
             <button
               className={`${styleType}-ellipsis-button`}
               onClick={handleClickCaptionOptions}
+              data-testid='caption-ellipsis-button'
             >
               <MoreHorizIcon />
             </button>
@@ -210,6 +213,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         <button
           className='post-options'
           onClick={handleSetFeedPagePostOptionsModalShow}
+          data-testid='post-ellipsis-button'
         >
           <MoreHorizIcon className='ellipsis' />
         </button>
