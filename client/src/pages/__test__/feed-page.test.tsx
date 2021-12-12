@@ -1,93 +1,77 @@
+import { render, screen, userEvent } from '../../test-utils/test-utils';
+
 import { FeedPage } from '../feed-page/feed-page.component';
-import { render } from '../../test-utils/test-utils';
+import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 
-import {
-  getOtherUserStart,
-  clearFollowersAndFollowing,
-} from '../../redux/user/user.actions';
+import { PostMetaData } from '../../redux/post/post.types';
 
-import {
-  getPostDataStart,
-  getPostFileStart,
-  clearPostState,
-  archivePostStart,
-  setShowPostLikingUsersModal,
-  setFeedPagePostModalShow,
-  setFeedPagePostOptionsModalShow,
-  setClearFeedPagePostModalState,
-  setShowCommentOptionsModal,
-  deleteReactionStart,
-} from '../../redux/post/post.actions';
+describe('feed page component tests', () => {
+  const setup = () => {
+    const clearFollowState = jest.fn();
+    const clearFollowersAndFollowing = jest.fn();
+    const clearPostState = jest.fn();
+    const getPostDataStart = jest.fn();
+    const getPostFileStart = jest.fn();
+    const getOtherUserStart = jest.fn();
+    const getUsersFollowingStart = jest.fn();
+    const postMetaData = {} as PostMetaData;
+    const feedPagePostModalData = {} as PostModalDataToFeed;
+    const archivePostStart = jest.fn();
+    const setShowPostLikingUsersModal = jest.fn();
+    const setFeedPagePostModalShow = jest.fn();
+    const setFeedPagePostOptionsModalShow = jest.fn();
+    const setClearFeedPagePostModalState = jest.fn();
+    const setShowCommentOptionsModal = jest.fn();
+    const deleteReactionStart = jest.fn();
 
-import {
-  getUsersFollowingStart,
-  clearFollowState,
-} from '../../redux/follower/follower.actions';
+    render(
+      <FeedPage
+        currentUser={null}
+        currentUserUsersFollowing={[]}
+        followingInfo={[]}
+        clearFollowState={clearFollowState}
+        getUsersFollowingConfirm=''
+        clearFollowersAndFollowing={clearFollowersAndFollowing}
+        clearPostState={clearPostState}
+        postDataFeedArray={[]}
+        postConfirm=''
+        postError={null}
+        postFiles={[]}
+        getPostDataError={null}
+        getPostDataStart={getPostDataStart}
+        getPostFileStart={getPostFileStart}
+        getPostFileConfirm=''
+        getPostFileError={null}
+        getOtherUserStart={getOtherUserStart}
+        getUsersFollowingStart={getUsersFollowingStart}
+        followPhotoFileArray={[]}
+        isLoadingPostData={false}
+        postMetaDataForUser={postMetaData}
+        getFeedPostDataConfirm={null}
+        postLikingUsersArray={[]}
+        showPostLikingUsersModal={false}
+        feedPagePostModalData={feedPagePostModalData}
+        feedPagePostModalShow={false}
+        feedPagePostOptionsModalShow={false}
+        clearFeedPagePostModalState={false}
+        showCommentOptionsModal={false}
+        commentToDelete={null}
+        archivePostStart={archivePostStart}
+        setShowPostLikingUsersModal={setShowPostLikingUsersModal}
+        setFeedPagePostModalShow={setFeedPagePostModalShow}
+        setFeedPagePostOptionsModalShow={setFeedPagePostOptionsModalShow}
+        setClearFeedPagePostModalState={setClearFeedPagePostModalState}
+        setShowCommentOptionsModal={setShowCommentOptionsModal}
+        deleteReactionStart={deleteReactionStart}
+      />
+    );
+  };
 
-it('renders a feed page component', () => {
-  const { container: feedPage } = render(
-    <FeedPage
-      currentUser={null}
-      currentUserUsersFollowing={[]}
-      followingInfo={[]}
-      clearFollowState={() => clearFollowState()}
-      getUsersFollowingConfirm=''
-      clearFollowersAndFollowing={() => clearFollowersAndFollowing()}
-      clearPostState={() => clearPostState()}
-      postDataFeedArray={[]}
-      postConfirm=''
-      postError={null}
-      postFiles={[]}
-      getPostDataError={null}
-      getPostDataStart={(dataReq) => getPostDataStart(dataReq)}
-      getPostFileStart={(fileReq) => getPostFileStart(fileReq)}
-      getPostFileConfirm=''
-      getPostFileError={null}
-      getOtherUserStart={(otherUserReq) => getOtherUserStart(otherUserReq)}
-      getUsersFollowingStart={(usersFollowingRequest) =>
-        getUsersFollowingStart(usersFollowingRequest)
-      }
-      followPhotoFileArray={[]}
-      isLoadingPostData={false}
-      postMetaDataForUser={{ queryLength: 0, userId: '' }}
-      getFeedPostDataConfirm={null}
-      postLikingUsersArray={[]}
-      showPostLikingUsersModal={false}
-      feedPagePostModalData={{
-        id: '',
-        postUserId: '',
-        postUserName: '',
-        postS3Key: '',
-        postPhotoFileString: '',
-        profilePhotoFileString: '',
-        caption: '',
-        location: '',
-        date: '',
-      }}
-      feedPagePostModalShow={false}
-      feedPagePostOptionsModalShow={false}
-      clearFeedPagePostModalState={false}
-      showCommentOptionsModal={false}
-      commentToDelete={null}
-      archivePostStart={(archiveReq) => archivePostStart(archiveReq)}
-      setShowPostLikingUsersModal={(setShowVal) =>
-        setShowPostLikingUsersModal(setShowVal)
-      }
-      setFeedPagePostModalShow={(setShowVal) =>
-        setFeedPagePostModalShow(setShowVal)
-      }
-      setFeedPagePostOptionsModalShow={(setShowVal) =>
-        setFeedPagePostOptionsModalShow(setShowVal)
-      }
-      setClearFeedPagePostModalState={(setShowVal) =>
-        setClearFeedPagePostModalState(setShowVal)
-      }
-      setShowCommentOptionsModal={(setShowVal) =>
-        setShowCommentOptionsModal(setShowVal)
-      }
-      deleteReactionStart={(delReq) => deleteReactionStart(delReq)}
-    />
-  );
+  it('render a feed page component', () => {
+    setup();
 
-  expect(feedPage).toBeInTheDocument();
+    const feedPage = screen.getByTestId('feed-page');
+
+    expect(feedPage).toBeInTheDocument();
+  });
 });

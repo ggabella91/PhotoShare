@@ -619,7 +619,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   };
 
   return (
-    <div className='feed-page'>
+    <div className='feed-page' data-testid='feed-page'>
       {userInfoAndPostFileList && userInfoAndPostFileList.size
         ? userInfoAndPostFileList.map((el, idx) => (
             <FeedPostContainer
