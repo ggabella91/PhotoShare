@@ -3,10 +3,21 @@ import { render, screen, userEvent } from '../../test-utils/test-utils';
 import { FeedPage } from '../feed-page/feed-page.component';
 import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 
-import { PostMetaData } from '../../redux/post/post.types';
+import { Post, PostFile, PostMetaData } from '../../redux/post/post.types';
+import { User } from '../../redux/user/user.types';
+import { Follower } from '../../redux/follower/follower.types';
 
 describe('feed page component tests', () => {
   const setup = () => {
+    const currentUser = {} as User;
+    const currentUserUsersFollowing = [{}, {}] as Follower[];
+    const followingInfo = [{}, {}] as User[];
+    const postDataFeedArray = [
+      [{}, {}],
+      [{}, {}],
+    ] as Post[][];
+    const postFile = [{}, {}, {}, {}] as PostFile[];
+    const followPhotoFileArray = [{}, {}] as PostFile[];
     const clearFollowState = jest.fn();
     const clearFollowersAndFollowing = jest.fn();
     const clearPostState = jest.fn();
@@ -23,28 +34,34 @@ describe('feed page component tests', () => {
     const setClearFeedPagePostModalState = jest.fn();
     const setShowCommentOptionsModal = jest.fn();
     const deleteReactionStart = jest.fn();
+    const mockIntersectionObserver = jest.fn();
+    mockIntersectionObserver.mockReturnValue({
+      observe: jest.fn(),
+      disconnect: jest.fn(),
+    });
+    window.IntersectionObserver = mockIntersectionObserver;
 
     render(
       <FeedPage
-        currentUser={null}
-        currentUserUsersFollowing={[]}
-        followingInfo={[]}
+        currentUser={currentUser}
+        currentUserUsersFollowing={currentUserUsersFollowing}
+        followingInfo={followingInfo}
         clearFollowState={clearFollowState}
-        getUsersFollowingConfirm=''
+        getUsersFollowingConfirm='confirm'
         clearFollowersAndFollowing={clearFollowersAndFollowing}
         clearPostState={clearPostState}
-        postDataFeedArray={[]}
+        postDataFeedArray={postDataFeedArray}
         postConfirm=''
         postError={null}
-        postFiles={[]}
+        postFiles={postFile}
         getPostDataError={null}
         getPostDataStart={getPostDataStart}
         getPostFileStart={getPostFileStart}
-        getPostFileConfirm=''
+        getPostFileConfirm='confirm'
         getPostFileError={null}
         getOtherUserStart={getOtherUserStart}
         getUsersFollowingStart={getUsersFollowingStart}
-        followPhotoFileArray={[]}
+        followPhotoFileArray={followPhotoFileArray}
         isLoadingPostData={false}
         postMetaDataForUser={postMetaData}
         getFeedPostDataConfirm={null}
@@ -65,13 +82,42 @@ describe('feed page component tests', () => {
         deleteReactionStart={deleteReactionStart}
       />
     );
+
+    return {
+      clearFollowState,
+      clearFollowersAndFollowing,
+      clearPostState,
+      getPostDataStart,
+      getPostFileStart,
+      getOtherUserStart,
+      getUsersFollowingStart,
+      archivePostStart,
+      setShowPostLikingUsersModal,
+      setFeedPagePostModalShow,
+      setFeedPagePostOptionsModalShow,
+      setClearFeedPagePostModalState,
+      setShowCommentOptionsModal,
+      deleteReactionStart,
+    };
   };
 
   it('render a feed page component', () => {
-    setup();
+    const {
+      getPostDataStart,
+      getPostFileStart,
+      getOtherUserStart,
+      getUsersFollowingStart,
+    } = setup();
 
     const feedPage = screen.getByTestId('feed-page');
 
+    const feedPostContainers = screen.getAllByTestId('feed-post-container');
+
     expect(feedPage).toBeInTheDocument();
+    expect(getPostDataStart).toBeCalled();
+    expect(getPostFileStart).toBeCalled();
+    expect(getOtherUserStart).toBeCalled();
+    expect(getUsersFollowingStart).toBeCalled();
+    expect(feedPostContainers.length).toEqual(4);
   });
 });
