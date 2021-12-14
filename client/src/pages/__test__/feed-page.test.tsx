@@ -1,9 +1,14 @@
-import { render, screen, userEvent } from '../../test-utils/test-utils';
+import { render, screen } from '../../test-utils/test-utils';
 
 import { FeedPage } from '../feed-page/feed-page.component';
 import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 
-import { Post, PostFile, PostMetaData } from '../../redux/post/post.types';
+import {
+  Post,
+  PostFile,
+  PostMetaData,
+  DeleteReactionReq,
+} from '../../redux/post/post.types';
 import { User } from '../../redux/user/user.types';
 import { Follower } from '../../redux/follower/follower.types';
 
@@ -16,7 +21,8 @@ describe('feed page component tests', () => {
       [{}, {}],
       [{}, {}],
     ] as Post[][];
-    const postFile = [{}, {}, {}, {}] as PostFile[];
+    const postFiles = [{}, {}, {}, {}] as PostFile[];
+    const commentToDelete = {} as DeleteReactionReq;
     const followPhotoFileArray = [{}, {}] as PostFile[];
     const clearFollowState = jest.fn();
     const clearFollowersAndFollowing = jest.fn();
@@ -53,7 +59,7 @@ describe('feed page component tests', () => {
         postDataFeedArray={postDataFeedArray}
         postConfirm=''
         postError={null}
-        postFiles={postFile}
+        postFiles={postFiles}
         getPostDataError={null}
         getPostDataStart={getPostDataStart}
         getPostFileStart={getPostFileStart}
@@ -72,7 +78,7 @@ describe('feed page component tests', () => {
         feedPagePostOptionsModalShow={false}
         clearFeedPagePostModalState={false}
         showCommentOptionsModal={false}
-        commentToDelete={null}
+        commentToDelete={commentToDelete}
         archivePostStart={archivePostStart}
         setShowPostLikingUsersModal={setShowPostLikingUsersModal}
         setFeedPagePostModalShow={setFeedPagePostModalShow}
