@@ -532,7 +532,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   };
 
   return (
-    <div className='profile-page'>
+    <div className='profile-page' data-testid='my-profile-page'>
       <div className='user-bio'>
         <div className='avatar-and-details'>
           <div className='avatar'>

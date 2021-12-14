@@ -1,77 +1,112 @@
-import { render } from '../../test-utils/test-utils';
+import { render, screen } from '../../test-utils/test-utils';
 import { MyProfilePage } from '../my-profile/my-profile-page.component';
 
-import {
-  getPostDataStart,
-  getPostFileStart,
-  archivePostStart,
-  clearArchivePostStatuses,
-  clearPostState,
-  clearFollowPhotoFileArray,
-  setShowCommentOptionsModal,
-  deleteReactionStart,
-  setShowPostEditForm,
-} from '../../redux/post/post.actions';
+import { Post, PostFile, DeleteReactionReq } from '../../redux/post/post.types';
 
-import {
-  clearFollowersAndFollowing,
-  setIsCurrentUserProfilePage,
-} from '../../redux/user/user.actions';
+import { User } from '../../redux/user/user.types';
 
-import {
-  getFollowersStart,
-  getUsersFollowingStart,
-  clearFollowState,
-} from '../../redux/follower/follower.actions';
+import { Follower } from '../../redux/follower/follower.types';
 
-it('renders a my-profile-page component', () => {
-  const { container: myProfilePageWrapper } = render(
-    <MyProfilePage
-      currentUser={null}
-      profilePhotoKey={null}
-      profilePhotoFile={null}
-      postData={null}
-      postFiles={[]}
-      postConfirm={null}
-      postError={null}
-      getPostDataStart={(userId) => getPostDataStart(userId)}
-      getPostDataConfirm={null}
-      getPostDataError={null}
-      getPostFileStart={(fileReq) => getPostFileStart(fileReq)}
-      getPostFileConfirm={null}
-      getPostFileError={null}
-      archivePostStart={(archivePostReq) => archivePostStart(archivePostReq)}
-      archivePostConfirm={null}
-      archivePostError={null}
-      followers={[]}
-      currentUserUsersFollowing={[]}
-      getUsersFollowingConfirm={null}
-      commentToDelete={{
-        postId: '',
-        reactingUserId: '',
-        reactionId: '',
-        isLikeRemoval: false,
-      }}
-      showCommentOptionsModal={false}
-      postLikingUsersArray={[]}
-      getSinglePostDataConfirm={null}
-      clearArchivePostStatuses={() => clearArchivePostStatuses()}
-      clearPostState={() => clearPostState()}
-      clearFollowPhotoFileArray={() => clearFollowPhotoFileArray()}
-      getFollowersStart={(userId) => getFollowersStart(userId)}
-      getUsersFollowingStart={(userId) => getUsersFollowingStart(userId)}
-      clearFollowersAndFollowing={() => clearFollowersAndFollowing()}
-      clearFollowState={() => clearFollowState()}
-      setIsCurrentUserProfilePage={(isCurrentUserProfilePage) =>
-        setIsCurrentUserProfilePage(isCurrentUserProfilePage)
-      }
-      setShowCommentOptionsModal={(show) => setShowCommentOptionsModal(show)}
-      deleteReactionStart={(deleteReactionReq) =>
-        deleteReactionStart(deleteReactionReq)
-      }
-      setShowPostEditForm={(show) => setShowPostEditForm(show)}
-    />
-  );
+import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
-  expect(myProfilePageWrapper).toBeInTheDocument();
+describe('my-profile-page component tests', () => {
+  const setup = () => {
+    const currentUser = {} as User;
+    const followers = [{}, {}] as Follower[];
+    const postData = [{}, {}, {}, {}] as Post[];
+    const postFiles = [{}, {}, {}, {}] as PostFile[];
+    const currentUserUsersFollowing = [{}, {}] as Follower[];
+    const commentToDelete = {} as DeleteReactionReq;
+    const postLikingUsersArray = [{}, {}] as UserInfoAndOtherData[];
+
+    const getPostDataStart = jest.fn();
+    const getPostFileStart = jest.fn();
+    const archivePostStart = jest.fn();
+    const clearArchivePostStatuses = jest.fn();
+    const clearPostState = jest.fn();
+    const getFollowersStart = jest.fn();
+    const clearFollowersAndFollowing = jest.fn();
+    const clearFollowPhotoFileArray = jest.fn();
+    const getUsersFollowingStart = jest.fn();
+    const clearFollowState = jest.fn();
+    const setIsCurrentUserProfilePage = jest.fn();
+    const setShowCommentOptionsModal = jest.fn();
+    const deleteReactionStart = jest.fn();
+    const setShowPostEditForm = jest.fn();
+
+    render(
+      <MyProfilePage
+        currentUser={currentUser}
+        profilePhotoKey='test-photo-filestring'
+        profilePhotoFile={null}
+        postData={postData}
+        postFiles={postFiles}
+        postConfirm='confirm'
+        postError={null}
+        getPostDataStart={getPostDataStart}
+        getPostDataConfirm='confirm'
+        getPostDataError={null}
+        getPostFileStart={getPostFileStart}
+        getPostFileConfirm='confirm'
+        getPostFileError={null}
+        archivePostStart={archivePostStart}
+        archivePostConfirm={null}
+        archivePostError={null}
+        followers={followers}
+        currentUserUsersFollowing={currentUserUsersFollowing}
+        getUsersFollowingConfirm='confirm'
+        commentToDelete={commentToDelete}
+        showCommentOptionsModal={false}
+        postLikingUsersArray={postLikingUsersArray}
+        getSinglePostDataConfirm={null}
+        clearArchivePostStatuses={clearArchivePostStatuses}
+        clearPostState={clearPostState}
+        clearFollowPhotoFileArray={clearFollowPhotoFileArray}
+        getFollowersStart={getFollowersStart}
+        getUsersFollowingStart={getUsersFollowingStart}
+        clearFollowersAndFollowing={clearFollowersAndFollowing}
+        clearFollowState={clearFollowState}
+        setIsCurrentUserProfilePage={setIsCurrentUserProfilePage}
+        setShowCommentOptionsModal={setShowCommentOptionsModal}
+        deleteReactionStart={deleteReactionStart}
+        setShowPostEditForm={setShowPostEditForm}
+      />
+    );
+
+    return {
+      getPostDataStart,
+      getPostFileStart,
+      archivePostStart,
+      clearArchivePostStatuses,
+      clearPostState,
+      getFollowersStart,
+      clearFollowersAndFollowing,
+      clearFollowPhotoFileArray,
+      getUsersFollowingStart,
+      clearFollowState,
+      setIsCurrentUserProfilePage,
+      setShowCommentOptionsModal,
+      deleteReactionStart,
+      setShowPostEditForm,
+    };
+  };
+
+  it('renders a my-profil-page component', () => {
+    const {
+      getPostDataStart,
+      getPostFileStart,
+      getFollowersStart,
+      getUsersFollowingStart,
+    } = setup();
+
+    screen.debug();
+
+    const myProfilePage = screen.getByTestId('my-profile-page');
+
+    expect(myProfilePage).toBeInTheDocument();
+    expect(getPostDataStart).toBeCalled();
+    expect(getPostFileStart).toBeCalled();
+    expect(getFollowersStart).toBeCalled();
+    expect(getUsersFollowingStart).toBeCalled();
+  });
 });
