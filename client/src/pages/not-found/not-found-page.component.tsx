@@ -11,7 +11,7 @@ const NotFoundPage: React.FC = () => {
         <span className='not-found-body-text'>
           The link you followed may be broken, or the page may have been
           removed.
-          <NavLink className='link-text' to='/me'>
+          <NavLink className='link-text' to='/'>
             {' '}
             Go back to PhotoShare.
           </NavLink>
