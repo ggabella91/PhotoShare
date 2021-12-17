@@ -1,16 +1,24 @@
-import { render } from '../../test-utils/test-utils';
+import { render, screen } from '../../test-utils/test-utils';
 import { ResetPasswordPage } from '../reset-password/reset-password-page.component';
 
-import { resetPasswordStart } from '../../redux/user/user.actions';
+describe('reset password page component tests', () => {
+  const setup = () => {
+    const resetPasswordStart = jest.fn();
 
-it('renders a reset password page component', () => {
-  const { container: resetPasswordPage } = render(
-    <ResetPasswordPage
-      resetPasswordStart={(resetRequest) => resetPasswordStart(resetRequest)}
-      resetConfirm={null}
-      resetError={null}
-    />
-  );
+    render(
+      <ResetPasswordPage
+        resetPasswordStart={resetPasswordStart}
+        resetConfirm={null}
+        resetError={null}
+      />
+    );
+  };
 
-  expect(resetPasswordPage).toBeInTheDocument();
+  it('renders a reset password page component', () => {
+    setup();
+
+    const resetPasswordPage = screen.getByText('Set your new password below.');
+
+    expect(resetPasswordPage).toBeInTheDocument();
+  });
 });
