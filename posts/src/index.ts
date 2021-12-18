@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import redis from 'redis';
+import { createClient, RedisClientType } from 'redis';
 import AWS from 'aws-sdk';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
 
-let redisClient: redis.RedisClient;
+let redisClient: RedisClientType<any>;
 
 const start = async () => {
   console.log('Starting up posts service....');
@@ -38,6 +38,9 @@ const start = async () => {
   if (!process.env.REDIS_HOST) {
     throw new Error('REDIS_HOST must be defined');
   }
+  if (!process.env.REDIS_CACHE_EXPIRATION) {
+    throw new Error('REDIS_CACHE_EXPIRATION must be defined');
+  }
 
   await natsWrapper.connect(
     process.env.NATS_CLUSTER_ID,
@@ -58,7 +61,11 @@ const start = async () => {
   });
   console.log('Connected to MongoDB');
 
-  redisClient = redis.createClient({ host: process.env.REDIS_HOST });
+  redisClient = createClient({
+    socket: { host: process.env.REDIS_HOST },
+  });
+
+  redisClient.connect();
 
   AWS.config.update({
     credentials: {
@@ -73,5 +80,9 @@ const start = async () => {
   });
 };
 
-start();
+try {
+  start();
+} catch (err) {
+  console.log(err);
+}
 export { AWS, redisClient };

@@ -27,35 +27,51 @@ router.get(
       );
     }
 
-    redisClient.GET(s3Key, async (err, cachedFile) => {
-      if (!cachedFile) {
-        const s3 = new AWS.S3();
+    const cachedFile = await redisClient.get(s3Key);
 
-        const fetchParams: S3.Types.GetObjectRequest = {
-          Bucket: bucket,
-          Key: s3Key,
-        };
+    let keyDeleted: boolean | null = null;
 
-        s3.getObject(fetchParams, async (err, data) => {
-          if (err) {
-            console.log(err);
-            throw new Error('Error fetching the photo');
-          }
-          if (data) {
-            const buffer = data.Body;
+    if (cachedFile) {
+      const ttl = await redisClient.ttl(s3Key);
+      console.log('Current ttl of cached file: ', ttl);
 
-            const convertedFileString = encode(buffer as Buffer);
+      if (ttl <= 0) {
+        console.log('Cached redis value has expired, ttl is: ', ttl);
 
-            redisClient.SET(s3Key, convertedFileString);
-
-            res.send(convertedFileString);
-          }
-        });
-      } else {
-        console.log('Sending cached file!');
-        res.send(cachedFile);
+        await redisClient.del(s3Key);
+        keyDeleted = true;
       }
-    });
+    }
+
+    if (!cachedFile || keyDeleted) {
+      const s3 = new AWS.S3();
+
+      const fetchParams: S3.Types.GetObjectRequest = {
+        Bucket: bucket,
+        Key: s3Key,
+      };
+
+      s3.getObject(fetchParams, async (err, data) => {
+        if (err) {
+          console.log(err);
+          throw new Error('Error fetching the photo');
+        }
+        if (data) {
+          const buffer = data.Body;
+
+          const convertedFileString = encode(buffer as Buffer);
+
+          const expiration = parseInt(process.env.REDIS_CACHE_EXPIRATION!);
+
+          redisClient.setEx(s3Key, expiration, convertedFileString);
+
+          res.send(convertedFileString);
+        }
+      });
+    } else {
+      console.log('Sending cached file!');
+      res.send(cachedFile);
+    }
   }
 );
 

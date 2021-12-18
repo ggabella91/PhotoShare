@@ -48,6 +48,11 @@ spec:
                 secretKeyRef:
                   name: node-env
                   key: NODE_ENV
+            - name: REDIS_CACHE_EXPIRATION
+              valueFrom:
+                secretKeyRef:
+                  name: redis-cache-exp
+                  key: REDIS_CACHE_EXPIRATION
 ---
 apiVersion: v1
 kind: Service
