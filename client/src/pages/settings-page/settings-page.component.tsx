@@ -11,7 +11,7 @@ import './settings-page.styles.scss';
 
 export const SettingsPage: React.FC = () => {
   return (
-    <Tabs id='settings-page' transition={false}>
+    <Tabs id='settings-page' transition={false} data-testid='settings-page'>
       <Tab eventKey='update-profile-photo' title='Update Profile Photo'>
         <UpdateProfilePhoto />
       </Tab>

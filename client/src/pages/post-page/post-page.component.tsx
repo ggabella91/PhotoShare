@@ -68,9 +68,7 @@ export interface AlreadyLikedAndReactionId {
   reactionId: string;
 }
 
-interface PostPageProps {}
-
-const PostPage: React.FC<PostPageProps> = ({}) => {
+export const PostPage: React.FC = () => {
   const userState = useSelector((state: AppState) => state.user);
   const postState = useSelector((state: AppState) => state.post);
 
@@ -654,7 +652,7 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
     dispatch(setShowCommentOptionsModal(false));
 
   return (
-    <div className='post-page'>
+    <div className='post-page' data-testid='post-page'>
       <div className='post-container'>
         <div className='post-image-container'>
           {postFiles && postFiles.length ? (

@@ -1,8 +1,14 @@
-import { render } from '../../test-utils/test-utils';
+import { render, screen } from '../../test-utils/test-utils';
 import { SettingsPage } from '../settings-page/settings-page.component';
 
-it('renders a settings page component', () => {
-  const { container: settingsPageWrapper } = render(<SettingsPage />);
+describe('settings page component tests', () => {
+  const setup = () => render(<SettingsPage />);
 
-  expect(settingsPageWrapper).toBeInTheDocument();
+  it('renders a settings page component', () => {
+    setup();
+
+    const settingsPage = screen.getByTestId('settings-page');
+
+    expect(settingsPage).toBeInTheDocument();
+  });
 });

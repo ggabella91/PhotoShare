@@ -1,84 +1,122 @@
-import { render } from '../../test-utils/test-utils';
+import { render, screen } from '../../test-utils/test-utils';
 import { UserProfilePage } from '../user-profile-page/user-profile-page.component';
 
-import {
-  getOtherUserStart,
-  clearFollowersAndFollowing,
-  setIsCurrentUserProfilePage,
-} from '../../redux/user/user.actions';
+import { Post, PostFile, DeleteReactionReq } from '../../redux/post/post.types';
 
-import { PostDataReq, PostFileReq } from '../../redux/post/post.types';
-import {
-  getPostDataStart,
-  getPostFileStart,
-  clearFollowPhotoFileArray,
-  clearPostFilesAndData,
-  setShowCommentOptionsModal,
-  deleteReactionStart,
-  clearPostState,
-} from '../../redux/post/post.actions';
+import { User } from '../../redux/user/user.types';
 
-import {
-  followNewUserStart,
-  getFollowersStart,
-  getUsersFollowingStart,
-  unfollowUserStart,
-  clearFollowState,
-} from '../../redux/follower/follower.actions';
+import { Follower } from '../../redux/follower/follower.types';
 
-it('renders a my-profile-page component', () => {
-  const { container: userProfilePageWrapper } = render(
-    <UserProfilePage
-      username='giuliano_gabella'
-      otherUser={null}
-      otherUserError={null}
-      getOtherUserStart={(username) => getOtherUserStart(username)}
-      profilePhotoFile={null}
-      postData={null}
-      postFiles={[]}
-      postConfirm={null}
-      postError={null}
-      getPostDataStart={(postDataReq: PostDataReq) =>
-        getPostDataStart(postDataReq)
-      }
-      getPostDataConfirm={null}
-      getPostDataError={null}
-      getPostFileStart={(fileReq: PostFileReq) => getPostFileStart(fileReq)}
-      getPostFileConfirm={null}
-      getPostFileError={null}
-      followConfirm={null}
-      followers={[]}
-      currentUserUsersFollowing={[]}
-      otherUserUsersFollowing={[]}
-      getFollowersConfirm={null}
-      getUsersFollowingConfirm={null}
-      currentUser={null}
-      unfollowConfirm={null}
-      unfollowError={null}
-      isCurrentUserProfilePage={false}
-      commentToDelete={null}
-      showCommentOptionsModal={false}
-      postLikingUsersArray={[]}
-      clearFollowPhotoFileArray={() => clearFollowPhotoFileArray()}
-      followNewUserStart={(userToFollowId) =>
-        followNewUserStart(userToFollowId)
-      }
-      getFollowersStart={(userId) => getFollowersStart(userId)}
-      getUsersFollowingStart={(req) => getUsersFollowingStart(req)}
-      unfollowUserStart={(id) => unfollowUserStart(id)}
-      clearFollowersAndFollowing={() => clearFollowersAndFollowing()}
-      clearPostFilesAndData={() => clearPostFilesAndData()}
-      clearFollowState={() => clearFollowState()}
-      setIsCurrentUserProfilePage={(isCurrentUserProfilePage) =>
-        setIsCurrentUserProfilePage(isCurrentUserProfilePage)
-      }
-      setShowCommentOptionsModal={(show) => setShowCommentOptionsModal(show)}
-      deleteReactionStart={(deleteReactionReq) =>
-        deleteReactionStart(deleteReactionReq)
-      }
-      clearPostState={() => clearPostState()}
-    />
-  );
+import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
-  expect(userProfilePageWrapper).toBeInTheDocument();
+describe('user-profile-page component tests', () => {
+  const setup = () => {
+    const currentUser = {} as User;
+    const otherUser = {} as User;
+    const profilePhotoFile = {} as PostFile;
+    const postData = [{}, {}, {}, {}] as Post[];
+    const postFiles = [{}, {}, {}, {}] as PostFile[];
+    const followers = [{}, {}] as Follower[];
+    const currentUserUsersFollowing = [{}, {}] as Follower[];
+    const otherUserUsersFollowing = [{}, {}] as Follower[];
+    const commentToDelete = {} as DeleteReactionReq;
+    const postLikingUsersArray = [{}, {}] as UserInfoAndOtherData[];
+
+    const getOtherUserStart = jest.fn();
+    const getPostDataStart = jest.fn();
+    const getPostFileStart = jest.fn();
+    const followNewUserStart = jest.fn();
+    const clearPostState = jest.fn();
+    const getFollowersStart = jest.fn();
+    const clearFollowersAndFollowing = jest.fn();
+    const clearFollowPhotoFileArray = jest.fn();
+    const getUsersFollowingStart = jest.fn();
+    const clearFollowState = jest.fn();
+    const unfollowUserStart = jest.fn();
+    const clearPostFilesAndData = jest.fn();
+    const setIsCurrentUserProfilePage = jest.fn();
+    const setShowCommentOptionsModal = jest.fn();
+    const deleteReactionStart = jest.fn();
+
+    render(
+      <UserProfilePage
+        username='giuliano_gabella'
+        otherUser={otherUser}
+        otherUserError={null}
+        getOtherUserStart={getOtherUserStart}
+        profilePhotoFile={profilePhotoFile}
+        postData={postData}
+        postFiles={postFiles}
+        postConfirm='confirm'
+        postError={null}
+        getPostDataStart={getPostDataStart}
+        getPostDataConfirm='confirm'
+        getPostDataError={null}
+        getPostFileStart={getPostFileStart}
+        getPostFileConfirm='confirm'
+        getPostFileError={null}
+        followConfirm='confirm'
+        followers={followers}
+        currentUserUsersFollowing={currentUserUsersFollowing}
+        otherUserUsersFollowing={otherUserUsersFollowing}
+        getFollowersConfirm='confirm'
+        getUsersFollowingConfirm='confirm'
+        currentUser={currentUser}
+        unfollowConfirm={null}
+        unfollowError={null}
+        isCurrentUserProfilePage={false}
+        commentToDelete={commentToDelete}
+        showCommentOptionsModal={false}
+        postLikingUsersArray={postLikingUsersArray}
+        clearFollowPhotoFileArray={clearFollowPhotoFileArray}
+        followNewUserStart={followNewUserStart}
+        getFollowersStart={getFollowersStart}
+        getUsersFollowingStart={getUsersFollowingStart}
+        unfollowUserStart={unfollowUserStart}
+        clearFollowersAndFollowing={clearFollowersAndFollowing}
+        clearPostFilesAndData={clearPostFilesAndData}
+        clearFollowState={clearFollowState}
+        setIsCurrentUserProfilePage={setIsCurrentUserProfilePage}
+        setShowCommentOptionsModal={setShowCommentOptionsModal}
+        deleteReactionStart={deleteReactionStart}
+        clearPostState={clearPostState}
+      />
+    );
+
+    return {
+      getOtherUserStart,
+      getPostDataStart,
+      getPostFileStart,
+      followNewUserStart,
+      clearPostState,
+      getFollowersStart,
+      clearFollowersAndFollowing,
+      clearFollowPhotoFileArray,
+      getUsersFollowingStart,
+      clearFollowState,
+      unfollowUserStart,
+      clearPostFilesAndData,
+      setIsCurrentUserProfilePage,
+      setShowCommentOptionsModal,
+      deleteReactionStart,
+    };
+  };
+
+  it('renders a user-profile-page component', () => {
+    const {
+      getOtherUserStart,
+      getPostDataStart,
+      getPostFileStart,
+      getFollowersStart,
+      getUsersFollowingStart,
+    } = setup();
+
+    const userProfilePage = screen.getByTestId('user-profile-page');
+
+    expect(userProfilePage).toBeInTheDocument();
+    expect(getOtherUserStart).toBeCalled();
+    expect(getPostFileStart).toBeCalled();
+    expect(getFollowersStart).toBeCalled();
+    expect(getUsersFollowingStart).toBeCalled();
+  });
 });

@@ -91,7 +91,7 @@ describe('my-profile-page component tests', () => {
     };
   };
 
-  it('renders a my-profil-page component', () => {
+  it('renders a my-profile-page component', () => {
     const {
       getPostDataStart,
       getPostFileStart,

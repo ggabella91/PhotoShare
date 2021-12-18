@@ -614,7 +614,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }
 
   return (
-    <div className='profile-page'>
+    <div className='profile-page' data-testid='user-profile-page'>
       <div className='user-bio'>
         <div className='avatar-and-details'>
           <div className='avatar'>
