@@ -47,7 +47,7 @@
     "mongoose-update-if-current": "^1.4.0",
     "multer": "^1.4.2",
     "node-nats-streaming": "^0.3.2",
-    "redis": "^3.0.2",
+    "redis": "^4.0.1",
     "sharp": "^0.26.3",
     "slugify": "^1.4.6",
     "ts-node-dev": "^1.0.0",
