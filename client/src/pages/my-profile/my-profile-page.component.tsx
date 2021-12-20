@@ -169,6 +169,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   postLikingUsersArray,
   getSinglePostDataConfirm,
   setShowPostEditForm,
+  getPostDataConfirm,
 }) => {
   const [user, setUser] = useState<UserLite>(
     Map({
@@ -562,9 +563,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               <span className='edit-narrow-text'>Edit profile</span>
             </NavLink>
             <div className='posts-followers-following-stats'>
-              {postMetaDataForUser ? (
+              {getPostDataConfirm ? (
                 <span className='user-stat'>
-                  {postMetaDataForUser.queryLength} Posts
+                  {postMetaDataForUser?.queryLength || 0} Posts
                 </span>
               ) : (
                 <Box sx={{ display: 'flex' }}>
@@ -597,12 +598,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         </div>
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
-            {postMetaDataForUser ? (
+            {getPostDataConfirm ? (
               <li className='stats-item'>
-                {postMetaDataForUser.queryLength} Posts
+                {postMetaDataForUser?.queryLength || 0} Posts
               </li>
             ) : (
-              <Box sx={{ display: 'flex' }}>
+              <Box
+                sx={{ display: 'flex' }}
+                className='posts-followers-following-stats-narrow-screen'
+              >
                 <CircularProgress />
               </Box>
             )}
