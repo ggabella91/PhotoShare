@@ -197,6 +197,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   deleteReactionStart,
   postLikingUsersArray,
   clearPostState,
+  getPostDataConfirm,
 }) => {
   const [user, setUser] = useState<UserLite>(
     Map({
@@ -640,9 +641,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
             </div>
             {handleRenderFollowOrFollowingButton(true)}
             <div className='posts-followers-following-stats'>
-              {postMetaDataForUser ? (
+              {getPostDataConfirm ? (
                 <span className='user-stat'>
-                  {postMetaDataForUser.queryLength} Posts
+                  {postMetaDataForUser?.queryLength || 0} Posts
                 </span>
               ) : (
                 <Box sx={{ display: 'flex' }}>
@@ -675,12 +676,15 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         </div>
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
-            {postMetaDataForUser ? (
+            {getPostDataConfirm ? (
               <li className='stats-item'>
-                {postMetaDataForUser.queryLength} Posts
+                {postMetaDataForUser?.queryLength || 0} Posts
               </li>
             ) : (
-              <Box sx={{ display: 'flex' }}>
+              <Box
+                sx={{ display: 'flex' }}
+                className='posts-followers-following-stats-narrow-screen'
+              >
                 <CircularProgress />
               </Box>
             )}
