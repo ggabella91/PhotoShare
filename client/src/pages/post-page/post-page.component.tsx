@@ -89,6 +89,7 @@ export const PostPage: React.FC = () => {
     showPostEditForm,
     commentToDelete,
     showCommentOptionsModal,
+    editPostDetailsConfirm,
   } = postState;
 
   const [postData, setPostData] = useState<Post | null>(null);
@@ -230,6 +231,37 @@ export const PostPage: React.FC = () => {
       );
     }
   }, [postData, otherUser, otherUserProfilePhotoFile]);
+
+  useEffect(() => {
+    if (editPostDetailsConfirm) {
+      let newCaption = editPostDetailsConfirm.caption || '';
+      let newLocation = editPostDetailsConfirm.postLocation || '';
+
+      if (postData && otherUser && otherUserProfilePhotoFile && newCaption) {
+        setCaptionInfoList(
+          List([
+            {
+              username: otherUser.username,
+              name: '',
+              profilePhotoFileString: otherUserProfilePhotoFile.fileString,
+              comment: newCaption,
+              location: newLocation,
+              commentDate: postData.createdAt,
+            },
+          ])
+        );
+
+        setEditPostDetails({
+          editCaption: newCaption,
+          editLocation: newLocation,
+        });
+      } else {
+        setCaptionInfoList(List());
+      }
+
+      getSinglePostDataStart({ postId: editPostDetailsConfirm.id });
+    }
+  }, [postData, otherUser, otherUserProfilePhotoFile, editPostDetailsConfirm]);
 
   useEffect(() => {
     if (!areReactionsReadyForRendering) {

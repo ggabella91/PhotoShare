@@ -23,9 +23,10 @@
   width: 20vw;
   max-width: 200px;
   min-width: 120px;
-  max-height: 120px;
+  max-height: 150px;
   margin-top: 45vh;
   margin-left: 50%;
+  padding: 0 16px;
 
   &.shift-right {
     margin-left: 50vw !important;
@@ -42,10 +43,9 @@
     max-width: 200px;
     min-width: 120px;
     flex-direction: column;
-    height: fit-content !important;
     margin-top: 35vh;
     margin-left: -35vw;
-    min-height: 80px !important;
+    min-height: 50px !important;
 
     @include respond-narrow() {
       transform: translate(15vw, 85vh);
@@ -60,7 +60,7 @@
     width: 20vw;
     max-width: inherit;
     min-width: inherit;
-    max-height: 120px;
+    max-height: 150px;
 
     &:hover {
       cursor: pointer;
@@ -73,14 +73,16 @@
       width: 20vw;
       max-width: inherit;
       text-align: center;
-      padding-bottom: 1vh;
+      padding-top: 12px;
+      height: 50px;
     }
 
     .cancel {
       width: 20vw;
       max-width: inherit;
       text-align: center;
-      padding-top: 1vh;
+      padding-top: 12px;
+      height: 50px;
     }
 
     span {
