@@ -10,6 +10,7 @@ interface PostAttrs {
   s3Key: string;
   s3ObjectURL: string;
   archived?: boolean;
+  hashtags?: string[];
 }
 
 export interface PostDoc extends mongoose.Document {
@@ -21,6 +22,7 @@ export interface PostDoc extends mongoose.Document {
   s3Key: string;
   s3ObjectURL: string;
   archived?: boolean;
+  hashtags?: string[];
 }
 
 interface PostModel extends mongoose.Model<PostDoc> {
@@ -57,6 +59,9 @@ const postSchema = new mongoose.Schema(
     },
     archived: {
       type: Boolean,
+    },
+    hashtags: {
+      type: [String],
     },
   },
   {
