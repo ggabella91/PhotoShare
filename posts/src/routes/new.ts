@@ -5,6 +5,7 @@ import { Post } from '../models/post';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
 import { generateKey } from '../utils/generateKey';
+import { extractHashtags } from '../utils/extractHashtags';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 
@@ -34,6 +35,13 @@ router.post(
   async (req: Request, res: Response) => {
     const caption = req.body.caption || '';
     const postLocation = req.body.location || '';
+
+    let hashtags: string[];
+    if (caption) {
+      hashtags = extractHashtags(caption);
+    } else {
+      hashtags = [];
+    }
 
     const key = generateKey(req.file!.originalname);
 
@@ -77,6 +85,7 @@ router.post(
           userId: req.currentUser!.id,
           s3Key: key,
           s3ObjectURL: location,
+          hashtags,
         });
 
         await post.save();
