@@ -17,6 +17,7 @@ import { getReactionsRouter } from './routes/get-post-reactions';
 import { deleteReactionRouter } from './routes/delete-reaction';
 import { updatePostDataRouter } from './routes/update-data';
 import { getSinglePostDataRouter } from './routes/single-post-data';
+import { getPostsWithHashtagRouter } from './routes/get-posts-with-hashtag';
 
 const app = express();
 app.set('trust proxy', true);
@@ -40,6 +41,7 @@ app.use(getReactionsRouter);
 app.use(deleteReactionRouter);
 app.use(updatePostDataRouter);
 app.use(getSinglePostDataRouter);
+app.use(getPostsWithHashtagRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
