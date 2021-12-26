@@ -126,6 +126,39 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     }
   };
 
+  const handleRenderCaptionWithHashtagLinks = (caption: string) => {
+    const captionWithHashtagLinks = caption.split(' ').map((word) => {
+      if (word.indexOf('#') === 0) {
+        return (
+          <NavLink
+            to={`/explore/tags/${word.substring(1)}`}
+            className='hashtag'
+          >
+            {word}
+          </NavLink>
+        );
+      } else {
+        return <>{word}</>;
+      }
+    });
+
+    return (
+      <>
+        {captionWithHashtagLinks.reduce(
+          (acc: JSX.Element | null, val) =>
+            acc === null ? (
+              val
+            ) : (
+              <>
+                {acc} {val}
+              </>
+            ),
+          null
+        )}
+      </>
+    );
+  };
+
   const userInfo = userInfoList.map((el: UserInfoAndOtherData, idx: number) => (
     <div
       className='user-and-options'
@@ -168,7 +201,13 @@ export const UserInfo: React.FC<UserInfoProps> = ({
             )}
             <span className={`${styleType}-name`}>{el.name}</span>
             <span className={`${styleType}-location`}>{el.location}</span>
-            <span>{el.comment ? el.comment : null}</span>
+            <span>
+              {el.comment
+                ? isCaption
+                  ? handleRenderCaptionWithHashtagLinks(el.comment)
+                  : el.comment
+                : null}
+            </span>
           </div>
           {el.commentDate ? (
             <span className={`${styleType}-date`}>
