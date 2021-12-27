@@ -5,7 +5,10 @@ import { Post } from '../models/post';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
 import { generateKey } from '../utils/generateKey';
-import { extractHashtags } from '../utils/extractHashtags';
+import {
+  extractHashtags,
+  saveOrUpdateHashtagEntries,
+} from '../utils/hashtag-utils';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 
@@ -89,6 +92,10 @@ router.post(
         });
 
         await post.save();
+
+        if (hashtags.length) {
+          await saveOrUpdateHashtagEntries(hashtags);
+        }
 
         res.status(201).send(post);
       }

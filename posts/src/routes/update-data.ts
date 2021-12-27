@@ -1,7 +1,10 @@
 import express, { Request, Response } from 'express';
 import { Post } from '../models/post';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
-import { extractHashtags } from '../utils/extractHashtags';
+import {
+  extractHashtags,
+  saveOrUpdateHashtagEntries,
+} from '../utils/hashtag-utils';
 
 const router = express.Router();
 
@@ -24,6 +27,11 @@ router.patch(
       throw new BadRequestError('No post id was provided.');
     }
 
+    let hashtagEntriesToUpdate: string[] = [];
+
+    const postBeforeUpdate = await Post.findById(postId);
+    const oldHashtags = postBeforeUpdate?.hashtags;
+
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
       { caption, postLocation, hashtags },
@@ -32,6 +40,18 @@ router.patch(
         runValidators: true,
       }
     );
+
+    if (oldHashtags) {
+      hashtags.forEach((hashtag) => {
+        if (!oldHashtags.includes(hashtag)) {
+          hashtagEntriesToUpdate.push(hashtag);
+        }
+      });
+    }
+
+    if (hashtagEntriesToUpdate.length) {
+      saveOrUpdateHashtagEntries(hashtagEntriesToUpdate);
+    }
 
     res.status(200).send(updatedPost);
   }
