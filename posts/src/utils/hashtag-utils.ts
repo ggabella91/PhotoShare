@@ -5,7 +5,7 @@ const extractHashtags = (caption: string): string[] => {
   return caption
     .split(' ')
     .filter((word) => word.indexOf('#') === 0)
-    .map((word) => word.substring(1));
+    .map((word) => word.substring(1).toLowerCase());
 };
 
 const saveOrUpdateHashtagEntries = async (hashtags: string[]) => {
@@ -29,7 +29,14 @@ const saveOrUpdateHashtagEntries = async (hashtags: string[]) => {
       );
 
       hashtagPromises.push(
-        Hashtag.findOneAndUpdate({ hashtag }, { $inc: { postCount: 1 } }).exec()
+        Hashtag.findOneAndUpdate(
+          { hashtag },
+          { $inc: { postCount: 1 } },
+          {
+            new: true,
+            runValidators: true,
+          }
+        ).exec()
       );
     } else {
       console.log(
