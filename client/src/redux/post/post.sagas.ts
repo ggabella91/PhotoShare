@@ -19,6 +19,7 @@ import {
   Reaction,
   SinglePostDataReq,
   PostError,
+  PostsWithHashtagReq,
 } from './post.types';
 
 import {
@@ -52,6 +53,7 @@ import {
   editPostDetailsFailure,
   getSinglePostDataSuccess,
   getSinglePostDataFailure,
+  setPostMetaDataForHashtag,
 } from './post.actions';
 
 import axios from 'axios';
@@ -143,6 +145,35 @@ export function* getPostData({
       } else {
         yield put(addPostDataToFeedArray(data.posts));
       }
+    }
+  } catch (err) {
+    yield put(getPostDataFailure(err as PostError));
+  }
+}
+
+export function* getPostsWithHashtag({
+  payload: { hashtag, pageToShow, limit },
+}: {
+  payload: PostsWithHashtagReq;
+}): any {
+  try {
+    const { data }: { data: { posts: Post[]; queryLength?: number } } =
+      yield axios.get(
+        `/api/posts/hashtags/${hashtag}?pageToShow=${pageToShow}&limit=${limit}`
+      );
+
+    if (data.queryLength) {
+      yield all([
+        put(addToPostDataArray(data.posts)),
+        put(
+          setPostMetaDataForHashtag({
+            queryLength: data.queryLength,
+            hashtag,
+          })
+        ),
+      ]);
+    } else {
+      yield put(addToPostDataArray(data.posts));
     }
   } catch (err) {
     yield put(getPostDataFailure(err as PostError));
@@ -333,6 +364,13 @@ export function* onGetPostDataStart(): SagaIterator {
   );
 }
 
+export function* onGetPostsWithHashtagStart(): SagaIterator {
+  yield takeEvery<ActionPattern, Saga>(
+    PostActions.GET_POSTS_WITH_HASHTAG_START,
+    getPostsWithHashtag
+  );
+}
+
 export function* onGetPostReactionsStart(): SagaIterator {
   yield takeEvery<ActionPattern, Saga>(
     PostActions.GET_POST_REACTIONS_START,
@@ -381,6 +419,7 @@ export function* postSagas(): SagaIterator {
     call(onCreatePostReactionStart),
     call(onUpdateProfilePhotoStart),
     call(onGetPostDataStart),
+    call(onGetPostsWithHashtagStart),
     call(onGetPostReactionsStart),
     call(onGetPostFileStart),
     call(onArchivePostStart),
