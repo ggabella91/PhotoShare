@@ -68,6 +68,10 @@ export enum PostActions {
   // Actions specific to caching post modal reaction data
   SAVE_POST_MODAL_DATA_TO_CACHE = 'SAVE_POST_MODAL_DATA_TO_CACHE',
   REMOVE_POST_MODAL_DATA_FROM_CACHE = 'REMOVE_POST_MODAL_DATA_FROM_CACHE',
+
+  // Actions specific to hashtags associated with posts
+  GET_POSTS_WITH_HASHTAG_START = 'GET_POSTS_WITH_HASHTAG_START',
+  SET_META_DATA_FOR_HASHTAG = 'SET_META_DATA_FOR_HASHTAG',
 }
 
 export interface PostError {
@@ -149,6 +153,12 @@ export interface SinglePostDataReq {
   postId: string;
 }
 
+export interface PostsWithHashtagReq {
+  hashtag: string;
+  pageToShow?: number;
+  limit?: number;
+}
+
 export interface PostFileReq {
   s3Key: string;
   bucket: string;
@@ -188,6 +198,11 @@ export interface EditPostDetailsReq {
 export interface PostMetaData {
   queryLength: number;
   userId: string;
+}
+
+export interface PostHashtagMetaData {
+  queryLength: number;
+  hashtag: string;
 }
 
 export interface PostModalDataToCache {
@@ -233,6 +248,7 @@ export interface PostState {
   showCommentOptionsModal: boolean;
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
+  postMetaDataForHashtag: PostHashtagMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
   feedPagePostModalData: PostModalDataToFeed;
@@ -463,6 +479,11 @@ export interface SetPostMetaDataForUser {
   payload: PostMetaData;
 }
 
+export interface SetPostMetaDataForHashtag {
+  type: typeof PostActions.SET_META_DATA_FOR_HASHTAG;
+  payload: PostHashtagMetaData;
+}
+
 export interface SetPostLikingUsersArray {
   type: typeof PostActions.SET_POST_LIKING_USERS_ARRAY;
   payload: UserInfoAndOtherData[];
@@ -562,6 +583,13 @@ export interface RemovePostModalDataFromCache {
   payload: string;
 }
 
+// Interfaces related to actions involving hashtags
+
+export interface GetPostsWithHashtagStart {
+  type: typeof PostActions.GET_POSTS_WITH_HASHTAG_START;
+  payload: PostsWithHashtagReq;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -604,6 +632,7 @@ export type PostActionTypes =
   | SetShowCommentOptionsModal
   | ClearPostReactions
   | SetPostMetaDataForUser
+  | SetPostMetaDataForHashtag
   | SetPostLikingUsersArray
   | SetShowPostLikingUsersModal
   | SetFeedPagePostModalData
@@ -622,4 +651,5 @@ export type PostActionTypes =
   | GetUserPhotoForFeedReactorArraySuccess
   | SetFeedPagePostIdForNavigation
   | SavePostModalDataToCache
-  | RemovePostModalDataFromCache;
+  | RemovePostModalDataFromCache
+  | GetPostsWithHashtagStart;

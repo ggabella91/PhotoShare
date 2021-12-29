@@ -20,6 +20,8 @@ import {
   EditPostDetailsReq,
   SinglePostDataReq,
   PostModalDataToCache,
+  PostsWithHashtagReq,
+  PostHashtagMetaData,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -265,6 +267,13 @@ export const setPostMetaDataForUser = (
   payload: postMetaData,
 });
 
+export const setPostMetaDataForHashtag = (
+  postMetaData: PostHashtagMetaData
+): PostActionTypes => ({
+  type: PostActions.SET_META_DATA_FOR_HASHTAG,
+  payload: postMetaData,
+});
+
 export const setPostLikingUsersArray = (
   postLikingUsersArray: UserInfoAndOtherData[]
 ): PostActionTypes => ({
@@ -392,4 +401,11 @@ export const removePostModalDataFromCache = (
 ): PostActionTypes => ({
   type: PostActions.REMOVE_POST_MODAL_DATA_FROM_CACHE,
   payload: postId,
+});
+
+export const getPostsWithHashtagStart = (
+  postsWithHashtagReq: PostsWithHashtagReq
+): PostActionTypes => ({
+  type: PostActions.GET_POSTS_WITH_HASHTAG_START,
+  payload: postsWithHashtagReq,
 });
