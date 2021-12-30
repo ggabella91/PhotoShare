@@ -132,7 +132,7 @@ interface MyProfilePageProps {
   setShowPostEditForm: typeof setShowPostEditForm;
 }
 
-type PostModalMapProps = ImmutableMap<{
+export type PostModalMapProps = ImmutableMap<{
   id: string;
   s3Key: string;
   caption: string;
