@@ -157,14 +157,16 @@ export function* getPostsWithHashtag({
   payload: PostsWithHashtagReq;
 }): any {
   try {
-    const { data }: { data: { posts: Post[]; queryLength?: number } } =
+    const {
+      data,
+    }: { data: { postsWithHashtag: Post[]; queryLength?: number } } =
       yield axios.get(
         `/api/posts/hashtags/${hashtag}?pageToShow=${pageToShow}&limit=${limit}`
       );
 
     if (data.queryLength) {
       yield all([
-        put(addToPostDataArray(data.posts)),
+        put(addToPostDataArray(data.postsWithHashtag)),
         put(
           setPostMetaDataForHashtag({
             queryLength: data.queryLength,
@@ -173,7 +175,7 @@ export function* getPostsWithHashtag({
         ),
       ]);
     } else {
-      yield put(addToPostDataArray(data.posts));
+      yield put(addToPostDataArray(data.postsWithHashtag));
     }
   } catch (err) {
     yield put(getPostDataFailure(err as PostError));

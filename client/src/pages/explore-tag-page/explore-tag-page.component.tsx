@@ -10,13 +10,8 @@ import { OtherUserType } from '../../redux/user/user.types';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 import {
   Post,
-  DataRequestType,
   FileRequestType,
-  PostDataReq,
-  PostFileReq,
-  ArchivePostReq,
   PostFile,
-  PostError,
   UserType,
 } from '../../redux/post/post.types';
 import {
@@ -114,15 +109,18 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
   useEffect(
     // Clear post state and follow state when cleaning
     // up before component leaves the screen
-    () => () => {
-      dispatch(clearPostState());
-    },
-    []
-  );
+    () => {
+      dispatch(getPostsWithHashtagStart({ hashtag, pageToShow: 1, limit: 9 }));
+      setPostModalShow(false);
+      setPostOptionsModalShow(false);
+      setShowPostLikingUsersModal(false);
 
-  useEffect(() => {
-    dispatch(getPostsWithHashtagStart({ hashtag, pageToShow: 1, limit: 9 }));
-  }, [hashtag]);
+      return () => {
+        dispatch(clearPostState());
+      };
+    },
+    [hashtag]
+  );
 
   useEffect(() => {
     if (postData && postData.length) {
@@ -152,12 +150,14 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
   useEffect(() => {
     if (postData && postDataList.size === postData.length) {
       postDataList.forEach((post) => {
-        getPostFileStart({
-          s3Key: post.s3Key,
-          bucket: postsBucket,
-          user: UserType.self, // not relevant here but part of the request body
-          fileRequestType: FileRequestType.singlePost,
-        });
+        dispatch(
+          getPostFileStart({
+            s3Key: post.s3Key,
+            bucket: postsBucket,
+            user: UserType.self, // not relevant here but part of the request body
+            fileRequestType: FileRequestType.singlePost,
+          })
+        );
       });
     }
   }, [postDataList]);
@@ -325,6 +325,7 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
           ) : null}
         </div>
         <div className='hashtag-details'>
+          <span className='hashtag-name'>#{hashtag}</span>
           {getPostDataConfirm ? (
             <span className='hashtag-stat'>
               {postMetaDataForHashtag?.queryLength || 0} Posts
