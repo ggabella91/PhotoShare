@@ -131,7 +131,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       if (word.indexOf('#') === 0) {
         return (
           <NavLink
-            to={`/explore/tags/${word.substring(1)}`}
+            to={`/explore/tags/${word.substring(1).toLowerCase()}`}
             className='hashtag'
           >
             {word}

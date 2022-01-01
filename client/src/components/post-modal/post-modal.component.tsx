@@ -229,7 +229,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     if (props.show && postId) {
-      window.history.pushState({}, '', `p/${postId}`);
+      window.history.pushState({}, '', `/p/${postId}`);
     } else if (!props.show) {
       if (urlLocation.pathname === '/') {
         window.history.pushState({}, '', '/');

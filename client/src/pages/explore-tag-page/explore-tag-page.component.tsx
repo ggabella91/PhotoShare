@@ -322,7 +322,17 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
               src={`data:image/jpeg;base64,${postFileList.get(0)?.fileString}`}
               alt='hashtag-pic'
             />
-          ) : null}
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                marginTop: 'calc(1vh + 15px)',
+                marginRight: '2vw',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
         </div>
         <div className='hashtag-details'>
           <span className='hashtag-name'>#{hashtag}</span>
