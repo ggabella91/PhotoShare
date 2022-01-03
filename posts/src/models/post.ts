@@ -10,7 +10,9 @@ interface PostAttrs {
   s3Key: string;
   s3ObjectURL: string;
   archived?: boolean;
-  hashtags?: string[];
+  hashtags: string[];
+  comments: number;
+  likes: number;
 }
 
 export interface PostDoc extends mongoose.Document {
@@ -22,7 +24,9 @@ export interface PostDoc extends mongoose.Document {
   s3Key: string;
   s3ObjectURL: string;
   archived?: boolean;
-  hashtags?: string[];
+  hashtags: string[];
+  comments: number;
+  likes: number;
 }
 
 interface PostModel extends mongoose.Model<PostDoc> {
@@ -62,6 +66,15 @@ const postSchema = new mongoose.Schema(
     },
     hashtags: {
       type: [String],
+      required: true,
+    },
+    comments: {
+      type: Number,
+      required: true,
+    },
+    likes: {
+      type: Number,
+      required: true,
     },
   },
   {

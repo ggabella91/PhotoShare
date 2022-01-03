@@ -96,6 +96,7 @@ export enum OtherUserType {
   FOLLOWING = 'FOLLOWING',
   POST_REACTOR = 'POST_REACTOR',
   FEED_POST_REACTOR = 'FEED_POST_REACTOR',
+  EXPLORE_POST_MODAL = 'EXPLORE_POST_MODAL',
 }
 
 export interface OtherUserRequest {

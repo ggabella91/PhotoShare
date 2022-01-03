@@ -210,7 +210,7 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
       dispatch(
         getOtherUserStart({
           usernameOrId: postData.userId,
-          type: OtherUserType.OTHER,
+          type: OtherUserType.EXPLORE_POST_MODAL,
         })
       );
     }
