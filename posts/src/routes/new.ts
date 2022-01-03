@@ -39,11 +39,9 @@ router.post(
     const caption = req.body.caption || '';
     const postLocation = req.body.location || '';
 
-    let hashtags: string[];
+    let hashtags: string[] = [];
     if (caption) {
       hashtags = extractHashtags(caption);
-    } else {
-      hashtags = [];
     }
 
     const key = generateKey(req.file!.originalname);
@@ -70,6 +68,8 @@ router.post(
     uploadParams.Body = fileStream;
 
     let location = '';
+    const comments = 0;
+    const likes = 0;
 
     s3.upload(uploadParams, async (err, data) => {
       if (err) {
@@ -89,6 +89,8 @@ router.post(
           s3Key: key,
           s3ObjectURL: location,
           hashtags,
+          comments,
+          likes,
         });
 
         await post.save();

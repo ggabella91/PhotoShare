@@ -88,6 +88,9 @@ export interface Post {
   s3Key: string;
   s3ObjectURL: string;
   userId: string;
+  hashtags: string[];
+  comments: number;
+  likes: number;
 }
 
 export interface Reaction {
