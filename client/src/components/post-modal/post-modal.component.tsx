@@ -275,7 +275,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           ])
         )
       : setCaptionInfoList(List());
-  }, [caption]);
+  }, [caption, userProfilePhotoFile]);
 
   useEffect(() => {
     setEditPostDetails({ editCaption: caption, editLocation: location });

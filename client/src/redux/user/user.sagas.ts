@@ -137,6 +137,12 @@ export function* getOtherUser({
       );
 
       yield put(getFeedPostReactorsSuccess(data));
+    } else if (type === OtherUserType.EXPLORE_POST_MODAL) {
+      const { data }: { data: User } = yield axios.get(
+        `/api/users/id/${usernameOrId}`
+      );
+
+      yield put(getOtherUserSuccess(data));
     }
   } catch (err) {
     yield put(getOtherUserFailure(err as Error));
