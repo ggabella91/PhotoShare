@@ -1,4 +1,6 @@
 import React from 'react';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ModeCommentIcon from '@mui/icons-material/ModeComment';
 
 import './post-tile.styles.scss';
 
@@ -6,16 +8,20 @@ type CustomRef = (node: HTMLDivElement | null) => void;
 
 interface PostTileProps {
   fileString: string;
-  onClick: (event: React.MouseEvent<HTMLImageElement>) => void;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   custRef: CustomRef | null;
   dataS3Key: string;
+  postLikesCount: number;
+  postCommentsCount: number;
 }
 
 const PostTile: React.FC<PostTileProps> = ({
   fileString,
   custRef,
   dataS3Key,
-  ...props
+  postLikesCount,
+  postCommentsCount,
+  onClick,
 }) => {
   return (
     <div className='post-tile' ref={custRef}>
@@ -23,9 +29,24 @@ const PostTile: React.FC<PostTileProps> = ({
         className='post-tile-image'
         src={`data:image/jpeg;base64,${fileString}`}
         alt='post-pic'
-        data-s3key={dataS3Key}
-        {...props}
       />
+      <div
+        className='image-overlay'
+        data-testid='image-overlay'
+        data-s3key={dataS3Key}
+        onClick={onClick}
+      >
+        <ul className='likes-and-comments'>
+          <li className='item-container'>
+            <span className='item-count'>{postLikesCount}</span>
+            <FavoriteIcon className='item-icon' />
+          </li>
+          <li className='item-container'>
+            <span className='item-count'>{postCommentsCount}</span>
+            <ModeCommentIcon className='item-icon' />
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };

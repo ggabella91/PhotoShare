@@ -197,9 +197,9 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
     }
   }, [archivePostConfirm]);
 
-  const handleRenderPostModal = (event: React.MouseEvent<HTMLImageElement>) => {
-    const imageElement = event.target as HTMLElement;
-    const postS3Key = imageElement.dataset.s3key;
+  const handleRenderPostModal = (event: React.MouseEvent<HTMLDivElement>) => {
+    const overlayDivElement = event.target as HTMLElement;
+    const postS3Key = overlayDivElement.dataset.s3key;
 
     const postData = postDataList.find((el) => el.s3Key === postS3Key);
     const postFileString = postFileList?.find(
@@ -356,6 +356,8 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
                 dataS3Key={file.s3Key}
                 onClick={handleRenderPostModal}
                 custRef={idx === postFileList!.size - 1 ? lastElementRef : null}
+                postLikesCount={postDataList.get(idx)?.likes || 0}
+                postCommentsCount={postDataList.get(idx)?.comments || 0}
               />
             ))
           : null}

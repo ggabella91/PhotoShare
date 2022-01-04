@@ -11,6 +11,8 @@ describe('expect to render a PostTile component', () => {
         custRef={null}
         dataS3Key='test-s3-key'
         onClick={handleClick}
+        postLikesCount={2}
+        postCommentsCount={1}
       />
     );
 
@@ -28,9 +30,9 @@ describe('expect to render a PostTile component', () => {
   it('clicking the post tile image calls the click handler function', () => {
     const { handleClick } = setup();
 
-    const postTile = screen.getByRole('img');
+    const postTileOverlay = screen.getByTestId('image-overlay');
 
-    userEvent.click(postTile);
+    userEvent.click(postTileOverlay);
 
     expect(handleClick).toBeCalled();
   });
