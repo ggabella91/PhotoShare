@@ -1,9 +1,14 @@
 .post-tile {
+  position: relative;
   width: 30vw;
   height: 30vw;
   max-width: 293px;
   max-height: 293px;
   margin: 0.5vw;
+
+  &:hover > .image-overlay {
+    display: flex;
+  }
 
   .post-tile-image {
     width: 30vw;
@@ -11,6 +16,45 @@
     max-width: 293px;
     max-height: 293px;
     object-fit: cover;
+    z-index: 80;
+  }
+
+  .image-overlay {
+    display: none;
+    position: absolute;
+    width: 30vw;
+    height: 30vw;
+    max-width: 293px;
+    max-height: 293px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    z-index: 100;
+    top: 0;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+
+    span {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .likes-and-comments {
+      display: flex;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .item-container {
+        display: inline-flex;
+        flex-direction: row-reverse;
+        margin-right: 30px;
+
+        .item-icon {
+          margin-right: 7px;
+        }
+      }
+    }
   }
 }
