@@ -124,7 +124,21 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
 
   useEffect(() => {
     if (postData && postData.length) {
-      setPostDataList(List(postData));
+      let orderedPostDataListByTopPosts = List(postData);
+
+      orderedPostDataListByTopPosts = orderedPostDataListByTopPosts.sort(
+        (a, b) => {
+          if (a.comments + a.likes > b.comments + b.likes) {
+            return -1;
+          } else if (a.comments + a.likes < b.comments + b.likes) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }
+      );
+
+      setPostDataList(orderedPostDataListByTopPosts);
     }
   }, [postData]);
 
@@ -347,25 +361,32 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
           )}
         </div>
       </div>
-      <div className='posts-grid'>
-        {postFileList && postFileList.size
-          ? postFileList.map((file, idx) => (
-              <PostTile
-                fileString={file.fileString}
-                key={idx}
-                dataS3Key={file.s3Key}
-                onClick={handleRenderPostModal}
-                custRef={idx === postFileList!.size - 1 ? lastElementRef : null}
-                postLikesCount={postDataList.get(idx)?.likes || 0}
-                postCommentsCount={postDataList.get(idx)?.comments || 0}
-              />
-            ))
-          : null}
-        {isLoadingPostData ? (
-          <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-          </Box>
-        ) : null}
+      <div className='subhead-and-posts-grid'>
+        <div className='subhead'>
+          <span className='top-posts'>Top Posts</span>
+        </div>
+        <div className='posts-grid'>
+          {postFileList && postFileList.size
+            ? postFileList.map((file, idx) => (
+                <PostTile
+                  fileString={file.fileString}
+                  key={idx}
+                  dataS3Key={file.s3Key}
+                  onClick={handleRenderPostModal}
+                  custRef={
+                    idx === postFileList!.size - 1 ? lastElementRef : null
+                  }
+                  postLikesCount={postDataList.get(idx)?.likes || 0}
+                  postCommentsCount={postDataList.get(idx)?.comments || 0}
+                />
+              ))
+            : null}
+          {isLoadingPostData ? (
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress />
+            </Box>
+          ) : null}
+        </div>
       </div>
       <PostModal
         postId={postModalProps.get('id')}
