@@ -97,9 +97,26 @@
     }
   }
 
-  .posts-grid {
-    margin-top: calc(1vh + 10px);
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+  .subhead-and-posts-grid {
+    display: flex;
+    flex-direction: column;
+
+    .subhead {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+
+      .top-posts {
+        font-size: 14px;
+        font-weight: 600;
+        color: #8e8e8e;
+      }
+    }
+
+    .posts-grid {
+      margin-top: calc(1vh + 10px);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
   }
 }
