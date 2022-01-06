@@ -363,7 +363,7 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
       </div>
       <div className='subhead-and-posts-grid'>
         <div className='subhead'>
-          <span className='top-posts'>Top Posts</span>
+          <span className='top-posts'>Top posts</span>
         </div>
         <div className='posts-grid'>
           {postFileList && postFileList.size

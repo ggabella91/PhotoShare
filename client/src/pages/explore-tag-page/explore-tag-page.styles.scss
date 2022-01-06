@@ -46,25 +46,24 @@
     justify-content: flex-start;
     align-items: center;
     margin-top: calc(1vh + 10px);
-    margin-left: -380px;
-    margin-bottom: 50px;
+    width: 925.5px;
 
     .photo {
-      padding-left: 2vw;
       height: 22vh;
       position: relative;
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
+      margin-bottom: 10px;
 
       @include respond-medium() {
         height: 14vh;
       }
 
       .hashtag-photo {
-        margin-left: 2vw;
+        margin-left: 0.5vw;
         margin-top: calc(1vh + 15px);
-        margin-right: 4vw;
+        margin-right: 50px;
         object-fit: cover;
         @include avatar-dimensions();
 
@@ -110,11 +109,12 @@
         font-size: 14px;
         font-weight: 600;
         color: #8e8e8e;
+        margin-left: 0.5vw;
       }
     }
 
     .posts-grid {
-      margin-top: calc(1vh + 10px);
+      margin-top: 1vh;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
     }
