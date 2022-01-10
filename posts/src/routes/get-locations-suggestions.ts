@@ -16,7 +16,7 @@ router.get(
     const { location } = req.params;
 
     const params = {
-      access_key: '1869037cc2ffd8a6df4c3e4a620128d4',
+      access_key: process.env.POSITION_STACK_API_KEY,
       query: location,
     };
 

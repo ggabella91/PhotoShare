@@ -53,6 +53,11 @@ spec:
                 secretKeyRef:
                   name: redis-cache-exp
                   key: REDIS_CACHE_EXPIRATION
+            - name: POSITION_STACK_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: position-stack-api-key
+                  key: POSITION_STACK_API_KEY
 ---
 apiVersion: v1
 kind: Service

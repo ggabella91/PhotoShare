@@ -38,8 +38,13 @@ const start = async () => {
   if (!process.env.REDIS_HOST) {
     throw new Error('REDIS_HOST must be defined');
   }
+
   if (!process.env.REDIS_CACHE_EXPIRATION) {
     throw new Error('REDIS_CACHE_EXPIRATION must be defined');
+  }
+
+  if (!process.env.POSITION_STACK_API_KEY) {
+    throw new Error('POSITION_STACK_API_KEY must be defined');
   }
 
   await natsWrapper.connect(
