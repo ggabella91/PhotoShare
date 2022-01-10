@@ -91,6 +91,12 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     setShowCommentOptionsButtonForIdx({ show: false, idx });
   };
 
+  const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+    if (styleType === StyleType.suggestion) {
+      event.preventDefault();
+    }
+  };
+
   const handleSetCommentToDelete = (event: React.MouseEvent<HTMLElement>) => {
     const spanElement = event.currentTarget;
     let idx = parseInt(spanElement.dataset.idx || '0');
@@ -169,6 +175,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       onClick={handleClickComponent}
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseLeave}
+      onMouseDown={handleMouseDown}
     >
       <div className={`user-${styleType}-element`}>
         <div className={`${styleType}-avatar`}>

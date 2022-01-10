@@ -193,9 +193,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget)) {
-      setTimeout(() => {
-        setHideSuggestionsOnBlur(true);
-      }, 150);
+      setHideSuggestionsOnBlur(true);
     }
   };
 
