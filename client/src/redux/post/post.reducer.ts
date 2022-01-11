@@ -72,6 +72,9 @@ const INITIAL_STATE: PostState = {
 
   // Post modal data cache
   postModalDataCache: Map<string, PostModalCacheObj>(),
+
+  // Location suggestions for posts
+  locationsSuggestions: [],
 };
 
 const postReducer = (
