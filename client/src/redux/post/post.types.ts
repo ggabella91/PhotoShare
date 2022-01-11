@@ -72,6 +72,11 @@ export enum PostActions {
   // Actions specific to hashtags associated with posts
   GET_POSTS_WITH_HASHTAG_START = 'GET_POSTS_WITH_HASHTAG_START',
   SET_META_DATA_FOR_HASHTAG = 'SET_META_DATA_FOR_HASHTAG',
+
+  // Actions specific to locations suggestions for posts
+  GET_LOCATIONS_SUGGESTIONS_START = 'GET_LOCATIONS_SUGGESTIONS_START',
+  GET_LOCATIONS_SUGGESTIONS_SUCCESS = 'GET_LOCATIONS_SUGGESTIONS_SUCCESS',
+  GET_LOCATIONS_SUGGESTIONS_FAILURE = 'GET_LOCATIONS_SUGGESTIONS_FAILURE',
 }
 
 export interface PostError {
@@ -219,6 +224,27 @@ export interface PostModalCacheObj {
   alreadyLikedPostAndReactionId: AlreadyLikedAndReactionId;
 }
 
+export interface LocationSuggestion {
+  latitude: number;
+  longitude: number;
+  type: string | null;
+  name: string | null;
+  number: number | null;
+  postal_code: string | null;
+  street: string | null;
+  confidence: number;
+  region: string | null;
+  region_code: string | null;
+  county: string | null;
+  locality: string | null;
+  administrative_area: string | null;
+  neighbourhood: string | null;
+  country: string | null;
+  country_code: string | null;
+  continent: string | null;
+  label: string | null;
+}
+
 export interface PostState {
   postData: Post[] | null;
   postDataFeedArray: Post[][];
@@ -275,6 +301,9 @@ export interface PostState {
 
   // Post modal data cache
   postModalDataCache: Map<string, any>;
+
+  // Locations suggestions
+  locationsSuggestions: LocationSuggestion[];
 }
 
 export interface CreatePostStart {
@@ -593,6 +622,21 @@ export interface GetPostsWithHashtagStart {
   payload: PostsWithHashtagReq;
 }
 
+export interface GetLocationsSuggestionsStart {
+  type: typeof PostActions.GET_LOCATIONS_SUGGESTIONS_START;
+  payload: string;
+}
+
+export interface GetLocationsSuggestionsSuccess {
+  type: typeof PostActions.GET_LOCATIONS_SUGGESTIONS_SUCCESS;
+  payload: LocationSuggestion[];
+}
+
+export interface GetLocationsSuggestionsFailure {
+  type: typeof PostActions.GET_LOCATIONS_SUGGESTIONS_FAILURE;
+  payload: PostError;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -655,4 +699,7 @@ export type PostActionTypes =
   | SetFeedPagePostIdForNavigation
   | SavePostModalDataToCache
   | RemovePostModalDataFromCache
-  | GetPostsWithHashtagStart;
+  | GetPostsWithHashtagStart
+  | GetLocationsSuggestionsStart
+  | GetLocationsSuggestionsSuccess
+  | GetLocationsSuggestionsFailure;
