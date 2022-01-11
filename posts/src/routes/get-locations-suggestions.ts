@@ -15,18 +15,25 @@ router.get(
   async (req: Request, res: Response) => {
     const { location } = req.params;
 
+    if (!location) {
+      throw new BadRequestError('No location was provided.');
+    }
+
     const params = {
       access_key: process.env.POSITION_STACK_API_KEY,
       query: location,
     };
 
     try {
-      const { data } = await axios.get(
-        'https://api.positionstack.com/v1/forward',
-        { params }
-      );
+      const {
+        data: { data: locationsSuggesions },
+      } = await axios.get('http://api.positionstack.com/v1/forward', {
+        params,
+      });
 
-      console.log('Locations search results: ', data);
+      console.log('Locations search results: ', locationsSuggesions);
+
+      res.status(200).send(locationsSuggesions);
     } catch (err) {
       console.log('Error with request to positionstack API: ', err);
     }
