@@ -47,7 +47,6 @@ describe('user-profile-page component tests', () => {
         profilePhotoFile={profilePhotoFile}
         postData={postData}
         postFiles={postFiles}
-        postConfirm='confirm'
         postError={null}
         getPostDataStart={getPostDataStart}
         getPostDataConfirm='confirm'

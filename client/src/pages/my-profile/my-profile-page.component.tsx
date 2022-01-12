@@ -36,7 +36,6 @@ import {
   selectPostData,
   selectPostFiles,
   selectPostError,
-  selectPostConfirm,
   selectGetPostDataConfirm,
   selectGetPostDataError,
   selectGetPostFileConfirm,
@@ -101,7 +100,6 @@ interface MyProfilePageProps {
   profilePhotoFile: PostFile | null;
   postData: Post[] | null;
   postFiles: PostFile[];
-  postConfirm: string | null;
   postError: PostError | null;
   getPostDataConfirm: string | null;
   getPostDataError: PostError | null;
@@ -706,7 +704,6 @@ interface LinkStateProps {
   postFiles: PostFile[];
   profilePhotoKey: string | null;
   profilePhotoFile: PostFile | null;
-  postConfirm: string | null;
   postError: PostError | null;
   getPostDataConfirm: string | null;
   getPostDataError: PostError | null;
@@ -729,7 +726,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   postFiles: selectPostFiles,
   profilePhotoKey: selectProfilePhotoKey,
   profilePhotoFile: selectProfilePhotoFile,
-  postConfirm: selectPostConfirm,
   postError: selectPostError,
   getPostDataConfirm: selectGetPostDataConfirm,
   getPostDataError: selectGetPostDataError,

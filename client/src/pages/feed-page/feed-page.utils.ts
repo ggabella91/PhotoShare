@@ -30,7 +30,7 @@ export const prepareUserInfoAndFileList = (
           if (innerEl.s3Key === el.s3Key) {
             let date = innerEl.createdAt;
 
-            location = innerEl.postLocation || '';
+            location = innerEl.postLocation?.label || '';
             id = innerEl.userId;
             postId = innerEl.id;
             postS3Key = innerEl.s3Key;

@@ -87,7 +87,7 @@ export interface PostError {
 export interface Post {
   fileName: string;
   caption?: string;
-  postLocation?: string;
+  postLocation?: Location;
   createdAt: Date;
   id: string;
   s3Key: string;
@@ -200,7 +200,7 @@ export interface DeleteReactionConfirm {
 export interface EditPostDetailsReq {
   postId: string;
   caption: string;
-  location: string;
+  location: Location;
 }
 
 export interface PostMetaData {
@@ -224,25 +224,25 @@ export interface PostModalCacheObj {
   alreadyLikedPostAndReactionId: AlreadyLikedAndReactionId;
 }
 
-export interface LocationSuggestion {
+export interface Location {
   latitude: number;
   longitude: number;
-  type: string | null;
-  name: string | null;
+  type: string;
+  name: string;
   number: number | null;
   postal_code: string | null;
   street: string | null;
   confidence: number;
-  region: string | null;
-  region_code: string | null;
-  county: string | null;
+  region: string;
+  region_code: string;
+  county: string;
   locality: string | null;
   administrative_area: string | null;
   neighbourhood: string | null;
-  country: string | null;
-  country_code: string | null;
-  continent: string | null;
-  label: string | null;
+  country: string;
+  country_code: string;
+  continent: string;
+  label: string;
 }
 
 export interface PostState {
@@ -259,7 +259,7 @@ export interface PostState {
   getPostReactionsError: PostError | null;
   getPostReactionsConfirm: string | null;
   postError: PostError | null;
-  postConfirm: string | null;
+  postConfirm: Post | null;
   profilePhotoKey: string | null;
   profilePhotoFile: PostFile | null;
   profilePhotoError: PostError | null;
@@ -303,7 +303,7 @@ export interface PostState {
   postModalDataCache: Map<string, any>;
 
   // Locations suggestions
-  locationsSuggestions: LocationSuggestion[];
+  locationsSuggestions: Location[];
 }
 
 export interface CreatePostStart {
@@ -629,7 +629,7 @@ export interface GetLocationsSuggestionsStart {
 
 export interface GetLocationsSuggestionsSuccess {
   type: typeof PostActions.GET_LOCATIONS_SUGGESTIONS_SUCCESS;
-  payload: LocationSuggestion[];
+  payload: Location[];
 }
 
 export interface GetLocationsSuggestionsFailure {

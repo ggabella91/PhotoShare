@@ -5,6 +5,7 @@ import {
   extractHashtags,
   saveOrUpdateHashtagEntries,
 } from '../utils/hashtag-utils';
+import { createLocationObject } from '../utils/location-utils';
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.patch(
     const { postId } = req.params;
 
     const caption = req.body.caption || '';
-    const postLocation = req.body.location || '';
+    const postLocation = createLocationObject(req.body.location) || undefined;
     let hashtags: string[];
     if (caption) {
       hashtags = extractHashtags(caption);

@@ -1,11 +1,14 @@
+/* eslint-disable jest/no-conditional-expect */
 import { render, screen, userEvent } from '../../test-utils/test-utils';
 import { CreatePostPage } from '../create-post-page/create-post-page.component';
 
 import { User } from '../../redux/user/user.types';
+import { Post } from '../../redux/post/post.types';
 
 describe('create-post page component tests', () => {
   const setup = () => {
     const currentUser = {} as User;
+    const postConfirm = {} as Post;
 
     const createPostStart = jest.fn();
     const clearPostStatuses = jest.fn();
@@ -16,7 +19,7 @@ describe('create-post page component tests', () => {
       <CreatePostPage
         currentUser={currentUser}
         createPostStart={createPostStart}
-        postConfirm='confirm'
+        postConfirm={postConfirm}
         postError={null}
         clearPostStatuses={clearPostStatuses}
         getUsersFollowingStart={getUsersFollowingStart}
