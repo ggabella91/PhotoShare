@@ -42,7 +42,6 @@ import {
   selectPostDataFeedArray,
   selectFollowPhotoFileArray,
   selectPostError,
-  selectPostConfirm,
   selectGetFeedPostDataConfirm,
   selectGetPostDataError,
   selectGetPostFileConfirm,
@@ -137,7 +136,6 @@ interface FeedPageProps {
   currentUser: User | null;
   postDataFeedArray: Post[][];
   postFiles: PostFile[];
-  postConfirm: string | null;
   postError: PostError | null;
   getFeedPostDataConfirm: string | null;
   getPostDataError: PostError | null;
@@ -701,7 +699,6 @@ interface LinkStateProps {
   currentUser: User | null;
   postDataFeedArray: Post[][];
   postFiles: PostFile[];
-  postConfirm: string | null;
   postError: PostError | null;
   getFeedPostDataConfirm: string | null;
   getPostDataError: PostError | null;
@@ -727,7 +724,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
   postDataFeedArray: selectPostDataFeedArray,
   postFiles: selectFeedPostFiles,
-  postConfirm: selectPostConfirm,
   postError: selectPostError,
   getFeedPostDataConfirm: selectGetFeedPostDataConfirm,
   getPostDataError: selectGetPostDataError,

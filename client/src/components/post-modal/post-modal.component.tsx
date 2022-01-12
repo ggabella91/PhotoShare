@@ -284,7 +284,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (editPostDetailsConfirm) {
       let newCaption = editPostDetailsConfirm.caption || '';
-      let newLocation = editPostDetailsConfirm.postLocation || '';
+      let newLocation = editPostDetailsConfirm.postLocation?.label || '';
 
       if (newCaption) {
         setCaptionInfoList(

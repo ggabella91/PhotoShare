@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
 import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { PostError } from '../../redux/post/post.types';
+import { Post, PostError, Location } from '../../redux/post/post.types';
 import {
-  selectPostError,
   selectPostConfirm,
+  selectPostError,
 } from '../../redux/post/post.selectors';
 import {
   createPostStart,
   clearPostStatuses,
+  editPostDetailsStart,
 } from '../../redux/post/post.actions';
 
 import {
-  Follower,
   UsersFollowingRequest,
   WhoseUsersFollowing,
 } from '../../redux/follower/follower.types';
 import { getUsersFollowingStart } from '../../redux/follower/follower.actions';
+import { useDebounce } from '../hooks';
 
 import {
   FormInput,
@@ -40,7 +41,7 @@ interface PostStatus {
 interface CreatePostPageProps {
   currentUser: User | null;
   createPostStart: typeof createPostStart;
-  postConfirm: string | null;
+  postConfirm: Post | null;
   postError: PostError | null;
   clearPostStatuses: typeof clearPostStatuses;
   getUsersFollowingStart: typeof getUsersFollowingStart;
@@ -59,12 +60,12 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   clearPostStatuses,
   getUsersFollowingStart,
 }) => {
-  const [name, setName] = useState('');
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
-  const [location, setLocation] = useState('');
+  const [locationSearchString, setLocationSearchString] = useState('');
+  const [location, setLocation] = useState<Location | null>(null);
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
-  const [fileInputKey, setFileInputKey] = useState(1610162520423);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
 
   const [showAlert, setShowAlert] = useState(false);
   const [postStatus, setPostStatus] = useState<PostStatus>({
@@ -72,11 +73,10 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     error: false,
   });
 
-  useEffect(() => {
-    if (currentUser) {
-      setName(currentUser.name);
-    }
-  }, [currentUser]);
+  const dispatch = useDispatch();
+  const editPostDetailsConfirm = useSelector(
+    (state: AppState) => state.post.editPostDetailsConfirm
+  );
 
   useEffect(() => {
     if (currentUser) {
@@ -90,10 +90,38 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   useEffect(() => {
     if (postError) {
       setPostStatus({ ...postStatus, error: true });
-    } else if (postConfirm) {
+    } else if (editPostDetailsConfirm) {
       setPostStatus({ ...postStatus, success: true });
     }
-  }, [postError, postConfirm]);
+  }, [postError, editPostDetailsConfirm]);
+
+  useEffect(() => {
+    if (postConfirm) {
+      dispatch(
+        editPostDetailsStart({
+          postId: postConfirm.id,
+          caption: postConfirm.caption || '',
+          location: { label: debouncedLocationSearchString } as Location,
+        })
+      );
+
+      setPost(null);
+      setImgPreview(null);
+      setCaption('');
+      setLocationSearchString('');
+    }
+  }, [postConfirm]);
+
+  const debouncedLocationSearchString = useDebounce(locationSearchString, 1000);
+
+  useEffect(() => {
+    console.log(
+      'New debounced location search string: ',
+      debouncedLocationSearchString
+    );
+  }, [debouncedLocationSearchString]);
+
+  useEffect(() => {}, [debouncedLocationSearchString]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
@@ -109,7 +137,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
       setPost(null);
       setImgPreview(null);
       setCaption('');
-      setLocation('');
+      setLocationSearchString('');
     }
   };
 
@@ -122,7 +150,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    setLocation(value);
+    setLocationSearchString(value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -135,19 +163,12 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
       if (caption) {
         post.append('caption', caption);
       }
-      if (location) {
-        post.append('location', location);
-      }
+
       createPostStart(post);
       setTimeout(() => setShowAlert(false), 5000);
     }
 
     setFileInputKey(Date.now());
-
-    setPost(null);
-    setImgPreview(null);
-    setCaption('');
-    setLocation('');
   };
 
   const handleRenderAlert = (type: string, message: string) => {
@@ -222,7 +243,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
             name='location'
             type='text'
             label='Where was this taken?'
-            value={location}
+            value={locationSearchString}
             onChange={handleLocationChange}
           />
           <div className='button'>
@@ -238,7 +259,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
 
 interface LinkStateProps {
   currentUser: User | null;
-  postConfirm: string | null;
+  postConfirm: Post | null;
   postError: PostError | null;
 }
 

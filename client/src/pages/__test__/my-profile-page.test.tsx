@@ -41,7 +41,6 @@ describe('my-profile-page component tests', () => {
         profilePhotoFile={null}
         postData={postData}
         postFiles={postFiles}
-        postConfirm='confirm'
         postError={null}
         getPostDataStart={getPostDataStart}
         getPostDataConfirm='confirm'

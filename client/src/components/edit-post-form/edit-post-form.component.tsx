@@ -9,6 +9,7 @@ import {
   Post,
   EditPostDetailsReq,
   PostError,
+  Location,
 } from '../../redux/post/post.types';
 import {
   setShowPostEditForm,
@@ -57,7 +58,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
     editPostDetailsStart({
       postId,
       caption,
-      location,
+      location: { label: location } as Location,
     });
     setShowPostEditForm(false);
   };

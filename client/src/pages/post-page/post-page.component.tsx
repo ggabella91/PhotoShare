@@ -173,7 +173,7 @@ export const PostPage: React.FC = () => {
       setPostData(getSinglePostDataConfirm);
       setEditPostDetails({
         editCaption: getSinglePostDataConfirm.caption || '',
-        editLocation: getSinglePostDataConfirm.postLocation || '',
+        editLocation: getSinglePostDataConfirm.postLocation?.label || '',
       });
 
       const { userId } = getSinglePostDataConfirm;
@@ -235,7 +235,7 @@ export const PostPage: React.FC = () => {
   useEffect(() => {
     if (editPostDetailsConfirm) {
       let newCaption = editPostDetailsConfirm.caption || '';
-      let newLocation = editPostDetailsConfirm.postLocation || '';
+      let newLocation = editPostDetailsConfirm.postLocation?.label || '';
 
       if (postData && otherUser && otherUserProfilePhotoFile && newCaption) {
         setCaptionInfoList(

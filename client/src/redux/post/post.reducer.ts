@@ -93,7 +93,7 @@ const postReducer = (
       return {
         ...state,
         postError: null,
-        postConfirm: 'Post uploaded!',
+        postConfirm: action.payload,
       };
     case PostActions.CREATE_POST_REACTION_SUCCESS:
       return {

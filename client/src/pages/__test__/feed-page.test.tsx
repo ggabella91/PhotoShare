@@ -57,7 +57,6 @@ describe('feed page component tests', () => {
         clearFollowersAndFollowing={clearFollowersAndFollowing}
         clearPostState={clearPostState}
         postDataFeedArray={postDataFeedArray}
-        postConfirm=''
         postError={null}
         postFiles={postFiles}
         getPostDataError={null}
