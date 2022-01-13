@@ -20,6 +20,7 @@ import {
   SinglePostDataReq,
   PostError,
   PostsWithHashtagReq,
+  Location,
 } from './post.types';
 
 import {
@@ -54,6 +55,8 @@ import {
   getSinglePostDataSuccess,
   getSinglePostDataFailure,
   setPostMetaDataForHashtag,
+  getLocationsSuggestionsSuccess,
+  getLocationsSuggestionsFailure,
 } from './post.actions';
 
 import axios from 'axios';
@@ -338,6 +341,21 @@ export function* getSinglePostData({
   }
 }
 
+export function* getLocationsSuggestions({
+  payload: location,
+}: {
+  payload: string;
+}): any {
+  try {
+    const { data: locationsSuggestions }: { data: Location[] } =
+      yield axios.get(`/api/posts/locations/${location}`);
+
+    yield put(getLocationsSuggestionsSuccess(locationsSuggestions));
+  } catch (err) {
+    yield put(getLocationsSuggestionsFailure(err as PostError));
+  }
+}
+
 export function* onCreatePostStart(): SagaIterator {
   yield takeEvery<ActionPattern, Saga>(
     PostActions.CREATE_POST_START,
@@ -415,6 +433,13 @@ export function* onGetSinglePostDataStart(): SagaIterator {
   );
 }
 
+export function* onGetLocationsSuggestionsStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    PostActions.GET_LOCATIONS_SUGGESTIONS_START,
+    getLocationsSuggestions
+  );
+}
+
 export function* postSagas(): SagaIterator {
   yield all([
     call(onCreatePostStart),
@@ -428,5 +453,6 @@ export function* postSagas(): SagaIterator {
     call(onDeleteReactionStart),
     call(onEditPostDetailsStart),
     call(onGetSinglePostDataStart),
+    call(onGetLocationsSuggestionsStart),
   ]);
 }
