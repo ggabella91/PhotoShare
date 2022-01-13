@@ -75,6 +75,7 @@ const INITIAL_STATE: PostState = {
 
   // Location suggestions for posts
   locationsSuggestions: [],
+  getLocationsSuggestionsError: null,
 };
 
 const postReducer = (
@@ -251,6 +252,12 @@ const postReducer = (
         editPostDetailsConfirm: action.payload,
         editPostDetailsFailure: null,
       };
+    case PostActions.GET_LOCATIONS_SUGGESTIONS_SUCCESS:
+      return {
+        ...state,
+        locationsSuggestions: action.payload,
+        getLocationsSuggestionsError: null,
+      };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
         ...state,
@@ -307,6 +314,12 @@ const postReducer = (
         ...state,
         editPostDetailsConfirm: null,
         editPostDetailsFailure: action.payload,
+      };
+    case PostActions.GET_LOCATIONS_SUGGESTIONS_FAILURE:
+      return {
+        ...state,
+        locationsSuggestions: [],
+        getLocationsSuggestionsError: action.payload,
       };
     case PostActions.CLEAR_POST_STATUSES:
       return {

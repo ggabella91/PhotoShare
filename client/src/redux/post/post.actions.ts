@@ -22,6 +22,7 @@ import {
   PostModalDataToCache,
   PostsWithHashtagReq,
   PostHashtagMetaData,
+  Location,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -408,4 +409,25 @@ export const getPostsWithHashtagStart = (
 ): PostActionTypes => ({
   type: PostActions.GET_POSTS_WITH_HASHTAG_START,
   payload: postsWithHashtagReq,
+});
+
+export const getLocationsSuggestionsStart = (
+  location: string
+): PostActionTypes => ({
+  type: PostActions.GET_LOCATIONS_SUGGESTIONS_START,
+  payload: location,
+});
+
+export const getLocationsSuggestionsSuccess = (
+  locationsSuggestions: Location[]
+): PostActionTypes => ({
+  type: PostActions.GET_LOCATIONS_SUGGESTIONS_SUCCESS,
+  payload: locationsSuggestions,
+});
+
+export const getLocationsSuggestionsFailure = (
+  error: PostError
+): PostActionTypes => ({
+  type: PostActions.GET_LOCATIONS_SUGGESTIONS_FAILURE,
+  payload: error,
 });

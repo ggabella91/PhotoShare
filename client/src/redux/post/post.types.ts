@@ -304,6 +304,7 @@ export interface PostState {
 
   // Locations suggestions
   locationsSuggestions: Location[];
+  getLocationsSuggestionsError: PostError | null;
 }
 
 export interface CreatePostStart {
