@@ -10,11 +10,15 @@ import { Post, PostError, Location } from '../../redux/post/post.types';
 import {
   selectPostConfirm,
   selectPostError,
+  selectEditPostDetailsConfirm,
+  selectLocationsSuggestions,
+  selectGetLocationsSuggestionsError,
 } from '../../redux/post/post.selectors';
 import {
   createPostStart,
   clearPostStatuses,
   editPostDetailsStart,
+  getLocationsSuggestionsStart,
 } from '../../redux/post/post.actions';
 
 import {
@@ -74,8 +78,10 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   });
 
   const dispatch = useDispatch();
-  const editPostDetailsConfirm = useSelector(
-    (state: AppState) => state.post.editPostDetailsConfirm
+  const editPostDetailsConfirm = useSelector(selectEditPostDetailsConfirm);
+  const locationsSuggestions = useSelector(selectLocationsSuggestions);
+  const getLocationsSuggestionsError = useSelector(
+    selectGetLocationsSuggestionsError
   );
 
   useEffect(() => {
@@ -119,9 +125,16 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
       'New debounced location search string: ',
       debouncedLocationSearchString
     );
+    if (debouncedLocationSearchString.length >= 3) {
+      dispatch(getLocationsSuggestionsStart(debouncedLocationSearchString));
+    }
   }, [debouncedLocationSearchString]);
 
-  useEffect(() => {}, [debouncedLocationSearchString]);
+  useEffect(() => {
+    if (locationsSuggestions.length) {
+      console.log('locationsSuggestions: ', locationsSuggestions);
+    }
+  }, [locationsSuggestions]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {

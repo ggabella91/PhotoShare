@@ -246,3 +246,13 @@ export const selectPostModalDataCache = createSelector(
   [selectPostState],
   (postState: PostState) => postState.postModalDataCache
 );
+
+export const selectLocationsSuggestions = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.locationsSuggestions
+);
+
+export const selectGetLocationsSuggestionsError = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.getLocationsSuggestionsError
+);
