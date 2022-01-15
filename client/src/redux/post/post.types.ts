@@ -77,6 +77,7 @@ export enum PostActions {
   GET_LOCATIONS_SUGGESTIONS_START = 'GET_LOCATIONS_SUGGESTIONS_START',
   GET_LOCATIONS_SUGGESTIONS_SUCCESS = 'GET_LOCATIONS_SUGGESTIONS_SUCCESS',
   GET_LOCATIONS_SUGGESTIONS_FAILURE = 'GET_LOCATIONS_SUGGESTIONS_FAILURE',
+  SET_LOCATION_SELECTION = 'SET_LOCATION_SELECTION',
 }
 
 export interface PostError {
@@ -302,9 +303,10 @@ export interface PostState {
   // Post modal data cache
   postModalDataCache: Map<string, any>;
 
-  // Locations suggestions
+  // Locations suggestions / selection
   locationsSuggestions: Location[];
   getLocationsSuggestionsError: PostError | null;
+  locationSelection: Location | null;
 }
 
 export interface CreatePostStart {
@@ -638,6 +640,11 @@ export interface GetLocationsSuggestionsFailure {
   payload: PostError;
 }
 
+export interface SetLocationSelection {
+  type: typeof PostActions.SET_LOCATION_SELECTION;
+  payload: Location;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -703,4 +710,5 @@ export type PostActionTypes =
   | GetPostsWithHashtagStart
   | GetLocationsSuggestionsStart
   | GetLocationsSuggestionsSuccess
-  | GetLocationsSuggestionsFailure;
+  | GetLocationsSuggestionsFailure
+  | SetLocationSelection;

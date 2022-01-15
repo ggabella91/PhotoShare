@@ -1,0 +1,40 @@
+@mixin container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 20;
+}
+
+@mixin element {
+  width: inherit;
+  background-color: white;
+  border-bottom: solid 1px rgb(180, 180, 180);
+}
+
+.create-post-locations-suggestions-container {
+  @include container();
+  width: 100%;
+  min-width: 250px;
+
+  .create-post-locations-suggestion {
+    @include element();
+
+    .create-post-location-label {
+      font-size: 18px;
+    }
+  }
+}
+
+.edit-post-locations-suggestions-container {
+  @include container();
+
+  .edit-post-locations-suggestion {
+    @include element();
+
+    .edit-post-location-label {
+      font-size: 14px;
+      font-weight: 480;
+    }
+  }
+}
