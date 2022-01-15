@@ -431,3 +431,10 @@ export const getLocationsSuggestionsFailure = (
   type: PostActions.GET_LOCATIONS_SUGGESTIONS_FAILURE,
   payload: error,
 });
+
+export const setLocationSelection = (
+  locationSelection: Location
+): PostActionTypes => ({
+  type: PostActions.SET_LOCATION_SELECTION,
+  payload: locationSelection,
+});

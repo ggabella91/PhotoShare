@@ -76,6 +76,7 @@ const INITIAL_STATE: PostState = {
   // Location suggestions for posts
   locationsSuggestions: [],
   getLocationsSuggestionsError: null,
+  locationSelection: null,
 };
 
 const postReducer = (
@@ -437,6 +438,11 @@ const postReducer = (
       return {
         ...state,
         showPostEditForm: action.payload,
+      };
+    case PostActions.SET_LOCATION_SELECTION:
+      return {
+        ...state,
+        locationSelection: action.payload,
       };
     case PostActions.SAVE_POST_MODAL_DATA_TO_CACHE:
       return {

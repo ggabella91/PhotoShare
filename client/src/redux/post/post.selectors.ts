@@ -256,3 +256,8 @@ export const selectGetLocationsSuggestionsError = createSelector(
   [selectPostState],
   (postState: PostState) => postState.getLocationsSuggestionsError
 );
+
+export const selectLocationSelection = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.locationSelection
+);
