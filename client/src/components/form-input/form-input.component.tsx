@@ -10,6 +10,8 @@ export interface FormInputProps {
   label: string;
   tall?: boolean;
   modal?: boolean;
+  onFocus?: () => void;
+  onBlur?: (event: React.FocusEvent) => void;
 }
 
 export interface FormFileInputType {

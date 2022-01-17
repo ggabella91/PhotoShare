@@ -13,6 +13,7 @@ import {
   selectEditPostDetailsConfirm,
   selectLocationsSuggestions,
   selectGetLocationsSuggestionsError,
+  selectLocationSelection,
 } from '../../redux/post/post.selectors';
 import {
   createPostStart,
@@ -34,6 +35,9 @@ import {
 } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
 import Alert from 'react-bootstrap/Alert';
+import LocationsSuggestionsContainer, {
+  StyleType,
+} from '../../components/locations-suggestions-container/locations-suggestions-container.component';
 
 import './create-post-page.styles.scss';
 
@@ -76,13 +80,12 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     success: false,
     error: false,
   });
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const dispatch = useDispatch();
   const editPostDetailsConfirm = useSelector(selectEditPostDetailsConfirm);
   const locationsSuggestions = useSelector(selectLocationsSuggestions);
-  const getLocationsSuggestionsError = useSelector(
-    selectGetLocationsSuggestionsError
-  );
+  const locationSelection = useSelector(selectLocationSelection);
 
   useEffect(() => {
     if (currentUser) {
@@ -125,16 +128,18 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
       'New debounced location search string: ',
       debouncedLocationSearchString
     );
-    if (debouncedLocationSearchString.length >= 3) {
+    if (debouncedLocationSearchString.length >= 3 && showSuggestions) {
       dispatch(getLocationsSuggestionsStart(debouncedLocationSearchString));
     }
   }, [debouncedLocationSearchString]);
 
   useEffect(() => {
-    if (locationsSuggestions.length) {
-      console.log('locationsSuggestions: ', locationsSuggestions);
+    if (locationSelection) {
+      setLocation(locationSelection);
+      setLocationSearchString(locationSelection.label);
+      setShowSuggestions(false);
     }
-  }, [locationsSuggestions]);
+  }, [locationSelection]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
@@ -201,6 +206,14 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
 
   const handleCloseAlert = () => setShowAlert(false);
 
+  const handleFocus = () => setShowSuggestions(true);
+
+  const handleBlur = (event: React.FocusEvent) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setShowSuggestions(false);
+    }
+  };
+
   return (
     <div className='create-post-page'>
       <div>
@@ -258,7 +271,12 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
             label='Where was this taken?'
             value={locationSearchString}
             onChange={handleLocationChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
+          {showSuggestions ? (
+            <LocationsSuggestionsContainer styleType={StyleType.createPost} />
+          ) : null}
           <div className='button'>
             <Button className='submit-button' onClick={handleSubmit}>
               Upload photo
