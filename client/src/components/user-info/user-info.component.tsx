@@ -205,7 +205,9 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               <span className={`${styleType}-username`}>{el.username}</span>
             )}
             <span className={`${styleType}-name`}>{el.name}</span>
-            <span className={`${styleType}-location`}>{el.location.label}</span>
+            <span className={`${styleType}-location`}>
+              {el.location?.label || ''}
+            </span>
             <span>
               {el.comment
                 ? isCaption

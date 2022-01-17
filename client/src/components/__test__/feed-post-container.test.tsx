@@ -4,7 +4,11 @@ import {
   PostModalDataToFeed,
 } from '../feed-post-container/feed-post-container.component';
 
-import { DeleteReactionReq, PostFileReq } from '../../redux/post/post.types';
+import {
+  DeleteReactionReq,
+  PostFileReq,
+  Location,
+} from '../../redux/post/post.types';
 import {
   createPostReactionStart,
   getPostReactionsStart,
@@ -22,7 +26,9 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 import { UserInfoAndOtherData } from '../user-info/user-info.component';
 
 describe('feed post container component tests', () => {
-  const setup = () =>
+  const setup = () => {
+    const testLocation = { label: 'Bali' } as Location;
+
     render(
       <FeedPostContainer
         s3Key='post-key'
@@ -38,7 +44,7 @@ describe('feed post container component tests', () => {
         userInfo={{
           profilePhotoFileString: 'sndfjnbss',
           username: 'test-user',
-          location: 'Bali',
+          location: testLocation,
           name: 'Test User',
           userId: 'user-id',
           postId: 'post-id',
@@ -91,6 +97,7 @@ describe('feed post container component tests', () => {
         clearPostReactions={() => clearPostReactions()}
       />
     );
+  };
 
   it('expect to render a feed post container component', () => {
     setup();

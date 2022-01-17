@@ -23,8 +23,6 @@ describe('forgot password page component tests', () => {
       'Enter your email below, and you will be sent a link to reset your password!'
     );
 
-    screen.debug();
-
     expect(forgotPassword).toBeInTheDocument();
   });
 

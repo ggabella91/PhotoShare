@@ -2,6 +2,8 @@ import { render, screen, userEvent } from '../../test-utils/test-utils';
 
 import { List } from 'immutable';
 
+import { Location } from '../../redux/post/post.types';
+
 import {
   UserInfo,
   StyleType,
@@ -21,8 +23,12 @@ describe('user info component tests', () => {
       {},
       {},
     ]) as List<UserInfoAndOtherData>;
+    const testLocation = { label: 'test location' } as Location;
     const userCaption = List([
-      { comment: 'test caption', location: 'test location' },
+      {
+        comment: 'test caption',
+        location: testLocation,
+      },
     ]) as List<UserInfoAndOtherData>;
     const userInfoList = List([{}, {}, {}]) as List<UserInfoAndOtherData>;
     const userInfoListFeed = List([{}]) as List<UserInfoAndOtherData>;
@@ -128,8 +134,6 @@ describe('user info component tests', () => {
     const firstComment = screen.getByTestId('user-comment-element-0');
 
     userEvent.hover(firstComment);
-
-    screen.debug();
 
     const ellipsisButton = screen.getByTestId('caption-ellipsis-button');
 

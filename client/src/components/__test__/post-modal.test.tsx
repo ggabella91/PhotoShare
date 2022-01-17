@@ -1,8 +1,10 @@
 import { render, screen, userEvent } from '../../test-utils/test-utils';
+import { Location } from '../../redux/post/post.types';
 import { PostModal } from '../post-modal/post-modal.component';
 
 describe('post modal component tests', () => {
   const setup = () => {
+    const testLocation = { label: 'test location' } as Location;
     const handleHide = jest.fn();
     const handleOptionsClick = jest.fn();
     const createPostReactionStart = jest.fn();
@@ -19,7 +21,7 @@ describe('post modal component tests', () => {
     render(
       <PostModal
         caption='hi'
-        location='here'
+        location={testLocation}
         createdAt={new Date('Sat Jan 02 2021')}
         show={true}
         fileString='string'

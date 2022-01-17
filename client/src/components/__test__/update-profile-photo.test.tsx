@@ -40,8 +40,6 @@ describe('update-profile-photo component tests', () => {
   it('renders an update-profile-photo component', () => {
     setup();
 
-    screen.debug();
-
     const updateProfilePhoto = screen.getByText(/Update your profile photo/i);
 
     expect(updateProfilePhoto).toBeInTheDocument();
