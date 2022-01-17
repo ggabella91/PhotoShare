@@ -48,6 +48,28 @@
           border-radius: 50%;
         }
 
+        .user-photo-placeholder {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+          width: 36px;
+          height: 36px;
+          border: solid 1px;
+          border-color: black;
+          border-radius: 50%;
+
+          .user-photo-placeholder-text {
+            position: relative;
+            margin-top: 50%;
+            text-align: center;
+            font-size: 9px;
+            color: black;
+            transform: translateY(-55%);
+          }
+        }
+
         .text-and-options {
           margin-left: 12px;
           min-width: 250px;
@@ -99,6 +121,7 @@
         border-color: rgba(0, 0, 0, 0.2);
 
         .post-page-edit-post {
+          margin: 8px 10px 0 0;
           font-size: 14px;
           font-weight: 480;
           cursor: pointer;

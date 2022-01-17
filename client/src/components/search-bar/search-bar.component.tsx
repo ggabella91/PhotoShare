@@ -22,6 +22,7 @@ import {
   PostFile,
   PostFileReq,
   UserType,
+  Location,
 } from '../../redux/post/post.types';
 import {
   selectSuggestionPhotoFileArray,
@@ -55,7 +56,7 @@ export interface UserInfoData {
   username: string;
   name: string;
   photo: string | null;
-  location: string;
+  location: Location;
   comment: string;
 }
 
@@ -139,7 +140,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             username: el.username,
             photo: el.photo || '',
             profilePhotoFileString: photoFileString!,
-            location: '',
+            location: {} as Location,
             comment: '',
           };
         }
@@ -159,7 +160,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           username: el.username,
           photo: el.photo || '',
           profilePhotoFileString: '',
-          location: '',
+          location: {} as Location,
           comment: '',
         })
       );

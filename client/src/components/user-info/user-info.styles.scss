@@ -370,8 +370,11 @@
 
     .comment-avatar {
       position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       width: 36px;
-      height: 36px;
+      height: inherit;
       border-radius: 50%;
 
       .comment-profile-photo {
@@ -384,19 +387,19 @@
 
       .comment-photo-placeholder {
         position: relative;
+        display: flex;
+        align-items: center;
         width: 36px;
         height: 36px;
         border-radius: 50%;
         border: solid 1px;
         border-color: black;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
 
         .comment-photo-placeholder-text {
           position: relative;
-          font-size: 10px;
+          margin-top: 40%;
+          text-align: center;
+          font-size: 9px;
           color: black;
         }
       }

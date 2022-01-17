@@ -10,15 +10,11 @@ import { Post, PostError, Location } from '../../redux/post/post.types';
 import {
   selectPostConfirm,
   selectPostError,
-  selectEditPostDetailsConfirm,
-  selectLocationsSuggestions,
-  selectGetLocationsSuggestionsError,
   selectLocationSelection,
 } from '../../redux/post/post.selectors';
 import {
   createPostStart,
   clearPostStatuses,
-  editPostDetailsStart,
   getLocationsSuggestionsStart,
 } from '../../redux/post/post.actions';
 
@@ -83,8 +79,6 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const dispatch = useDispatch();
-  const editPostDetailsConfirm = useSelector(selectEditPostDetailsConfirm);
-  const locationsSuggestions = useSelector(selectLocationsSuggestions);
   const locationSelection = useSelector(selectLocationSelection);
 
   useEffect(() => {
@@ -99,35 +93,14 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   useEffect(() => {
     if (postError) {
       setPostStatus({ ...postStatus, error: true });
-    } else if (editPostDetailsConfirm) {
+    } else if (postConfirm) {
       setPostStatus({ ...postStatus, success: true });
     }
-  }, [postError, editPostDetailsConfirm]);
-
-  useEffect(() => {
-    if (postConfirm) {
-      dispatch(
-        editPostDetailsStart({
-          postId: postConfirm.id,
-          caption: postConfirm.caption || '',
-          location: { label: debouncedLocationSearchString } as Location,
-        })
-      );
-
-      setPost(null);
-      setImgPreview(null);
-      setCaption('');
-      setLocationSearchString('');
-    }
-  }, [postConfirm]);
+  }, [postError, postConfirm]);
 
   const debouncedLocationSearchString = useDebounce(locationSearchString, 1000);
 
   useEffect(() => {
-    console.log(
-      'New debounced location search string: ',
-      debouncedLocationSearchString
-    );
     if (debouncedLocationSearchString.length >= 3 && showSuggestions) {
       dispatch(getLocationsSuggestionsStart(debouncedLocationSearchString));
     }
@@ -155,7 +128,6 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
       setPost(null);
       setImgPreview(null);
       setCaption('');
-      setLocationSearchString('');
     }
   };
 
@@ -182,11 +154,23 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
         post.append('caption', caption);
       }
 
+      if (location) {
+        const locationObjString = JSON.stringify(location);
+
+        post.append('location', locationObjString);
+      }
+
       createPostStart(post);
       setTimeout(() => setShowAlert(false), 5000);
     }
 
     setFileInputKey(Date.now());
+
+    setPost(null);
+    setImgPreview(null);
+    setCaption('');
+    setLocationSearchString('');
+    setLocation(null);
   };
 
   const handleRenderAlert = (type: string, message: string) => {

@@ -21,6 +21,7 @@ import {
   PostFile,
   ReactionRequestType,
   UserType,
+  Location,
 } from '../../redux/post/post.types';
 import {
   getSinglePostDataStart,
@@ -90,6 +91,7 @@ export const PostPage: React.FC = () => {
     commentToDelete,
     showCommentOptionsModal,
     editPostDetailsConfirm,
+    isLoadingPostData,
   } = postState;
 
   const [postData, setPostData] = useState<Post | null>(null);
@@ -224,7 +226,7 @@ export const PostPage: React.FC = () => {
             name: '',
             profilePhotoFileString: otherUserProfilePhotoFile.fileString,
             comment: postData.caption || '',
-            location: '',
+            location: {} as Location,
             commentDate: postData.createdAt,
           },
         ])
@@ -235,7 +237,7 @@ export const PostPage: React.FC = () => {
   useEffect(() => {
     if (editPostDetailsConfirm) {
       let newCaption = editPostDetailsConfirm.caption || '';
-      let newLocation = editPostDetailsConfirm.postLocation?.label || '';
+      let newLocation = editPostDetailsConfirm.postLocation || ({} as Location);
 
       if (postData && otherUser && otherUserProfilePhotoFile && newCaption) {
         setCaptionInfoList(
@@ -253,7 +255,7 @@ export const PostPage: React.FC = () => {
 
         setEditPostDetails({
           editCaption: newCaption,
-          editLocation: newLocation,
+          editLocation: newLocation.label || '',
         });
       } else {
         setCaptionInfoList(List());
@@ -509,7 +511,7 @@ export const PostPage: React.FC = () => {
             name: name!,
             profilePhotoFileString: fileString!,
             comment: '',
-            location: '',
+            location: {} as Location,
             reactionId: reactionEl.id,
             postId: postId,
           });
@@ -519,7 +521,7 @@ export const PostPage: React.FC = () => {
             name: name!,
             profilePhotoFileString: fileString!,
             comment,
-            location: '',
+            location: {} as Location,
             commentDate: reactionEl.createdAt,
             reactionId: reactionEl.id,
             reactingUserId: reactionEl.reactingUserId,
@@ -714,7 +716,8 @@ export const PostPage: React.FC = () => {
                 src={`data:image/jpeg;base64,${otherUserProfilePhotoFile.fileString}`}
                 alt='user'
               />
-            ) : (
+            ) : null}
+            {!otherUserProfilePhotoFile && isLoadingPostData ? (
               <Box
                 sx={{
                   display: 'flex',
@@ -725,7 +728,12 @@ export const PostPage: React.FC = () => {
               >
                 <CircularProgress />
               </Box>
-            )}
+            ) : null}
+            {!otherUserProfilePhotoFile && !isLoadingPostData ? (
+              <div className='user-photo-placeholder'>
+                <p className='user-photo-placeholder-text'>No photo</p>
+              </div>
+            ) : null}
             <div className='text-and-options'>
               <div className='user-and-location'>
                 {otherUser ? (

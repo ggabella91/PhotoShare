@@ -21,6 +21,7 @@ import {
   PostFileReq,
   PostFile,
   UserType,
+  Location,
 } from '../../redux/post/post.types';
 import {
   selectFollowPhotoFileArray,
@@ -62,184 +63,185 @@ export interface UserInfoData {
   username: string;
   name: string;
   photo: string | null;
-  location: string;
+  location: Location;
   comment: string;
 }
 
-export const FollowersOrFollowingOrLikesModal: React.FC<FollowersOrFollowingOrLikesModalProps> =
-  ({
-    users,
-    isFollowersModal,
-    isPostLikingUsersModal,
-    postLikingUsersList,
-    onHide,
-    followers,
-    following,
-    followPhotoFileArray,
-    usersProfilePhotoConfirm,
-    getOtherUserStart,
-    getPostFileStart,
-    clearFollowPhotoFileArray,
-    ...props
-  }) => {
-    const [userInfoAndPhotoList, setUserInfoAndPhotoList] = useState<
-      List<UserInfoData>
-    >(List());
+export const FollowersOrFollowingOrLikesModal: React.FC<
+  FollowersOrFollowingOrLikesModalProps
+> = ({
+  users,
+  isFollowersModal,
+  isPostLikingUsersModal,
+  postLikingUsersList,
+  onHide,
+  followers,
+  following,
+  followPhotoFileArray,
+  usersProfilePhotoConfirm,
+  getOtherUserStart,
+  getPostFileStart,
+  clearFollowPhotoFileArray,
+  ...props
+}) => {
+  const [userInfoAndPhotoList, setUserInfoAndPhotoList] = useState<
+    List<UserInfoData>
+  >(List());
 
-    let usersLoaded = useRef(false);
+  let usersLoaded = useRef(false);
 
-    let bucket: string;
+  let bucket: string;
 
-    if (process.env.NODE_ENV === 'production') {
-      bucket = 'photo-share-app-profile-photos';
+  if (process.env.NODE_ENV === 'production') {
+    bucket = 'photo-share-app-profile-photos';
+  } else {
+    bucket = 'photo-share-app-profile-photos-dev';
+  }
+
+  useEffect(() => {
+    if (users && users.length && !usersLoaded.current) {
+      usersLoaded.current = true;
+      clearFollowPhotoFileArray();
+
+      if (isFollowersModal) {
+        users.forEach((user) => {
+          getOtherUserStart({
+            type: OtherUserType.FOLLOWERS,
+            usernameOrId: user.followerId,
+          });
+        });
+      } else {
+        users.forEach((user) => {
+          getOtherUserStart({
+            type: OtherUserType.FOLLOWING,
+            usernameOrId: user.userId,
+          });
+        });
+      }
+    }
+  }, [users]);
+
+  useEffect(() => {
+    if (!isPostLikingUsersModal) {
+      if (isFollowersModal && followers) {
+        handleRenderFollowersOrFollowingInfoArray(followers);
+      } else if (!isFollowersModal && following) {
+        handleRenderFollowersOrFollowingInfoArray(following);
+      }
+    }
+  }, [followers, following, followPhotoFileArray, usersProfilePhotoConfirm]);
+
+  const handleRenderFollowersOrFollowingInfoArray = (
+    followersOrFollowing: User[]
+  ) => {
+    let followersOrFollowingList: List<User>;
+
+    if (followersOrFollowing.length) {
+      followersOrFollowingList = List(followersOrFollowing);
     } else {
-      bucket = 'photo-share-app-profile-photos-dev';
+      followersOrFollowingList = List();
     }
 
-    useEffect(() => {
-      if (users && users.length && !usersLoaded.current) {
-        usersLoaded.current = true;
-        clearFollowPhotoFileArray();
-
-        if (isFollowersModal) {
-          users.forEach((user) => {
-            getOtherUserStart({
-              type: OtherUserType.FOLLOWERS,
-              usernameOrId: user.followerId,
-            });
-          });
-        } else {
-          users.forEach((user) => {
-            getOtherUserStart({
-              type: OtherUserType.FOLLOWING,
-              usernameOrId: user.userId,
-            });
+    if (
+      users &&
+      followersOrFollowingList.size === users.length &&
+      !followPhotoFileArray
+    ) {
+      followersOrFollowing.forEach((user) => {
+        if (user.photo) {
+          getPostFileStart({
+            user: UserType.followArray,
+            s3Key: user.photo,
+            bucket,
+            fileRequestType: FileRequestType.singlePost,
           });
         }
-      }
-    }, [users]);
+      });
+    } else if (followPhotoFileArray && followPhotoFileArray.length) {
+      const followerOrFollowing: List<UserInfoData> =
+        followersOrFollowingList.map((el: User) => {
+          let photoFileString: string;
 
-    useEffect(() => {
-      if (!isPostLikingUsersModal) {
-        if (isFollowersModal && followers) {
-          handleRenderFollowersOrFollowingInfoArray(followers);
-        } else if (!isFollowersModal && following) {
-          handleRenderFollowersOrFollowingInfoArray(following);
-        }
-      }
-    }, [followers, following, followPhotoFileArray, usersProfilePhotoConfirm]);
-
-    const handleRenderFollowersOrFollowingInfoArray = (
-      followersOrFollowing: User[]
-    ) => {
-      let followersOrFollowingList: List<User>;
-
-      if (followersOrFollowing.length) {
-        followersOrFollowingList = List(followersOrFollowing);
-      } else {
-        followersOrFollowingList = List();
-      }
-
-      if (
-        users &&
-        followersOrFollowingList.size === users.length &&
-        !followPhotoFileArray
-      ) {
-        followersOrFollowing.forEach((user) => {
-          if (user.photo) {
-            getPostFileStart({
-              user: UserType.followArray,
-              s3Key: user.photo,
-              bucket,
-              fileRequestType: FileRequestType.singlePost,
-            });
-          }
-        });
-      } else if (followPhotoFileArray && followPhotoFileArray.length) {
-        const followerOrFollowing: List<UserInfoData> =
-          followersOrFollowingList.map((el: User) => {
-            let photoFileString: string;
-
-            followPhotoFileArray.forEach((file) => {
-              if (el.photo === file.s3Key) {
-                photoFileString = file.fileString;
-              }
-            });
-
-            return {
-              name: el.name,
-              username: el.username,
-              profilePhotoFileString: photoFileString!,
-              photo: el.photo || '',
-              location: '',
-              comment: '',
-            };
+          followPhotoFileArray.forEach((file) => {
+            if (el.photo === file.s3Key) {
+              photoFileString = file.fileString;
+            }
           });
 
-        setUserInfoAndPhotoList(followerOrFollowing);
-      } else if (!followPhotoFileArray && usersProfilePhotoConfirm) {
-        const followerOrFollowing: List<UserInfoData> =
-          followersOrFollowingList.map((el: User) => {
-            return {
-              name: el.name,
-              username: el.username,
-              profilePhotoFileString: '',
-              photo: el.photo || '',
-              location: '',
-              comment: '',
-            };
-          });
-
-        setUserInfoAndPhotoList(followerOrFollowing);
-      }
-    };
-
-    useEffect(() => {
-      if (isPostLikingUsersModal && postLikingUsersList) {
-        let postLikerArray: List<UserInfoData>;
-
-        postLikerArray = postLikingUsersList.map((el) => {
           return {
-            profilePhotoFileString: el.profilePhotoFileString,
-            username: el.username,
             name: el.name,
-            photo: '',
-            location: '',
+            username: el.username,
+            profilePhotoFileString: photoFileString!,
+            photo: el.photo || '',
+            location: {} as Location,
             comment: '',
           };
         });
 
-        setUserInfoAndPhotoList(postLikerArray);
-      }
-    }, [postLikingUsersList]);
+      setUserInfoAndPhotoList(followerOrFollowing);
+    } else if (!followPhotoFileArray && usersProfilePhotoConfirm) {
+      const followerOrFollowing: List<UserInfoData> =
+        followersOrFollowingList.map((el: User) => {
+          return {
+            name: el.name,
+            username: el.username,
+            profilePhotoFileString: '',
+            photo: el.photo || '',
+            location: {} as Location,
+            comment: '',
+          };
+        });
 
-    return (
-      <Modal
-        {...props}
-        dialogClassName='followers-following-modal'
-        animation={false}
-        onHide={onHide}
-        centered
-        data-testid='followers-following-or-likes-modal'
-      >
-        <Modal.Header className='followers-following-modal-header' closeButton>
-          <span className='header-text'>
-            {isPostLikingUsersModal
-              ? 'Likes'
-              : isFollowersModal
-              ? 'Followers'
-              : 'Following'}
-          </span>
-        </Modal.Header>
-        <Modal.Body className='followers-following-modal-body'>
-          <UserInfo
-            userInfoList={userInfoAndPhotoList}
-            styleType={StyleType.modal}
-          />
-        </Modal.Body>
-      </Modal>
-    );
+      setUserInfoAndPhotoList(followerOrFollowing);
+    }
   };
+
+  useEffect(() => {
+    if (isPostLikingUsersModal && postLikingUsersList) {
+      let postLikerArray: List<UserInfoData>;
+
+      postLikerArray = postLikingUsersList.map((el) => {
+        return {
+          profilePhotoFileString: el.profilePhotoFileString,
+          username: el.username,
+          name: el.name,
+          photo: '',
+          location: {} as Location,
+          comment: '',
+        };
+      });
+
+      setUserInfoAndPhotoList(postLikerArray);
+    }
+  }, [postLikingUsersList]);
+
+  return (
+    <Modal
+      {...props}
+      dialogClassName='followers-following-modal'
+      animation={false}
+      onHide={onHide}
+      centered
+      data-testid='followers-following-or-likes-modal'
+    >
+      <Modal.Header className='followers-following-modal-header' closeButton>
+        <span className='header-text'>
+          {isPostLikingUsersModal
+            ? 'Likes'
+            : isFollowersModal
+            ? 'Followers'
+            : 'Following'}
+        </span>
+      </Modal.Header>
+      <Modal.Body className='followers-following-modal-body'>
+        <UserInfo
+          userInfoList={userInfoAndPhotoList}
+          styleType={StyleType.modal}
+        />
+      </Modal.Body>
+    </Modal>
+  );
+};
 
 interface LinkStateProps {
   followers: User[] | null;

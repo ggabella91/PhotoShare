@@ -1,6 +1,11 @@
 import { Follower } from '../../redux/follower/follower.types';
 import { User } from '../../redux/user/user.types';
-import { Post, PostFile, Reaction } from '../../redux/post/post.types';
+import {
+  Post,
+  PostFile,
+  Reaction,
+  Location,
+} from '../../redux/post/post.types';
 import { List, Map } from 'immutable';
 
 import { UserInfoAndPostFile } from './feed-page.component';
@@ -14,7 +19,7 @@ export const prepareUserInfoAndFileList = (
 ) => {
   let userInfoAndPostObjList: List<UserInfoAndPostFile> = postFileFeedList.map(
     (el) => {
-      let location: string;
+      let location: Location;
       let dateString: string;
       let dateInt: number;
       let id: string;
@@ -30,7 +35,7 @@ export const prepareUserInfoAndFileList = (
           if (innerEl.s3Key === el.s3Key) {
             let date = innerEl.createdAt;
 
-            location = innerEl.postLocation?.label || '';
+            location = innerEl.postLocation || ({} as Location);
             id = innerEl.userId;
             postId = innerEl.id;
             postS3Key = innerEl.s3Key;
@@ -58,7 +63,7 @@ export const prepareUserInfoAndFileList = (
         profilePhotoString = '';
       }
       if (!location!) {
-        location = '';
+        location = {} as Location;
       }
 
       if (!caption!) {
