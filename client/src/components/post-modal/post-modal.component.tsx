@@ -38,6 +38,7 @@ import {
   ReactionRequestType,
   UserType,
   SinglePostDataReq,
+  Location,
 } from '../../redux/post/post.types';
 import {
   selectPostReactionsArray,
@@ -95,7 +96,7 @@ interface PostModalProps {
   postId: string;
   caption: string;
   createdAt: Date | string;
-  location: string;
+  location: Location;
   show: boolean;
   clearLocalState: boolean;
   onHide: () => void;
@@ -269,7 +270,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               name: '',
               profilePhotoFileString: userProfilePhotoFile,
               comment: caption,
-              location: '',
+              location: {} as Location,
               commentDate: createdAt,
             },
           ])
@@ -278,13 +279,13 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [caption, userProfilePhotoFile]);
 
   useEffect(() => {
-    setEditPostDetails({ editCaption: caption, editLocation: location });
+    setEditPostDetails({ editCaption: caption, editLocation: location.label });
   }, [caption, location]);
 
   useEffect(() => {
     if (editPostDetailsConfirm) {
       let newCaption = editPostDetailsConfirm.caption || '';
-      let newLocation = editPostDetailsConfirm.postLocation?.label || '';
+      let newLocation = editPostDetailsConfirm.postLocation || ({} as Location);
 
       if (newCaption) {
         setCaptionInfoList(
@@ -302,7 +303,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
         setEditPostDetails({
           editCaption: newCaption,
-          editLocation: newLocation,
+          editLocation: newLocation.label || '',
         });
       } else {
         setCaptionInfoList(List());
@@ -582,7 +583,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             name: name!,
             profilePhotoFileString: fileString!,
             comment: '',
-            location: '',
+            location: {} as Location,
             reactionId: reactionEl.id,
             postId: localPostId,
           });
@@ -592,7 +593,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             name: name!,
             profilePhotoFileString: fileString!,
             comment,
-            location: '',
+            location: {} as Location,
             commentDate: reactionEl.createdAt,
             reactionId: reactionEl.id,
             reactingUserId: reactionEl.reactingUserId,
@@ -740,11 +741,17 @@ export const PostModal: React.FC<PostModalProps> = ({
         />
         <div className='post-modal-details'>
           <div className='post-user-and-location'>
-            <img
-              className='user-photo'
-              src={`data:image/jpeg;base64,${userProfilePhotoFile}`}
-              alt='user'
-            />
+            {userProfilePhotoFile ? (
+              <img
+                className='user-photo'
+                src={`data:image/jpeg;base64,${userProfilePhotoFile}`}
+                alt='user'
+              />
+            ) : (
+              <div className='user-photo-placeholder'>
+                <p className='user-photo-placeholder-text'>No photo</p>
+              </div>
+            )}
             <div className='text-and-options'>
               <div className='user-and-location'>
                 <span className='user-name'>{userName}</span>

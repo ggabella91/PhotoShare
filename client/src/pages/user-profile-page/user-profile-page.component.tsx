@@ -39,6 +39,7 @@ import {
   PostError,
   UserType,
   DeleteReactionReq,
+  Location,
 } from '../../redux/post/post.types';
 import {
   selectPostData,
@@ -155,7 +156,7 @@ type PostModalMapProps = ImmutableMap<{
   id: string;
   s3Key: string;
   caption: string;
-  location: string;
+  location: Location;
   createdAt: Date | null;
   fileString: string;
 }>;
@@ -223,7 +224,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       id: '',
       s3Key: '',
       caption: '',
-      location: '',
+      location: {} as Location,
       createdAt: null,
       fileString: '',
     })

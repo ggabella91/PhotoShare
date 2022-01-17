@@ -1,6 +1,6 @@
 import { LocationType } from '../models/location';
 
-interface LocationReq {
+export interface LocationReq {
   latitude: number;
   longitude: number;
   type: string;

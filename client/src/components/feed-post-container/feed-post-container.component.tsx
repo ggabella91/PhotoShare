@@ -32,6 +32,7 @@ import {
   PostError,
   DeleteReactionReq,
   DeleteReactionConfirm,
+  Location,
 } from '../../redux/post/post.types';
 import {
   selectFeedPostReactionsArray,
@@ -110,7 +111,7 @@ export interface UserInfoData {
   userId: string;
   username: string;
   postId: string;
-  location: string;
+  location: Location;
   name: string;
   comment: string;
 }
@@ -120,7 +121,7 @@ export interface PostModalDataToFeed {
   postS3Key: string;
   postPhotoFileString: string;
   caption: string;
-  location: string;
+  location: Location;
   date: string;
   profilePhotoFileString: string;
   postUserId: string;
@@ -132,7 +133,7 @@ export const POST_MODAL_DATA_INITIAL_STATE: PostModalDataToFeed = {
   postS3Key: '',
   caption: '',
   postPhotoFileString: '',
-  location: '',
+  location: {} as Location,
   date: '',
   profilePhotoFileString: '',
   postUserId: '',
@@ -452,7 +453,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             name: name!,
             comment: '',
             profilePhotoFileString: profilePhotoFileString!,
-            location: '',
+            location: {} as Location,
           });
         } else {
           commentsList = commentsList.push({
@@ -460,7 +461,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             name: '',
             comment,
             profilePhotoFileString: '',
-            location: '',
+            location: {} as Location,
             reactionId: reactionEl.id,
             reactingUserId: reactionEl.reactingUserId,
           });

@@ -37,6 +37,7 @@ import {
   UserType,
   PostMetaData,
   DeleteReactionReq,
+  Location,
 } from '../../redux/post/post.types';
 import {
   selectPostDataFeedArray,
@@ -123,7 +124,7 @@ export interface UserInfoAndPostFile {
   profilePhotoFileString: string;
   username: string;
   userId: string;
-  location: string;
+  location: Location;
   postId: string;
   postS3Key: string;
   postFileString: string;

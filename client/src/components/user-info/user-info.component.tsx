@@ -8,7 +8,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { AppState } from '../../redux/root-reducer';
 
-import { DeleteReactionReq } from '../../redux/post/post.types';
+import { DeleteReactionReq, Location } from '../../redux/post/post.types';
 
 import {
   setCommentToDelete,
@@ -32,7 +32,7 @@ export interface UserInfoAndOtherData {
   profilePhotoFileString: string;
   username: string;
   name: string;
-  location: string;
+  location: Location;
   comment: string;
   commentDate?: Date | string;
   reactionId?: string;
@@ -188,9 +188,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
           ) : null}
           {!el.profilePhotoFileString ? (
             <div className={`${styleType}-photo-placeholder`}>
-              <span className={`${styleType}-photo-placeholder-text`}>
-                No photo
-              </span>
+              <p className={`${styleType}-photo-placeholder-text`}>No photo</p>
             </div>
           ) : null}
         </div>
@@ -207,7 +205,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
               <span className={`${styleType}-username`}>{el.username}</span>
             )}
             <span className={`${styleType}-name`}>{el.name}</span>
-            <span className={`${styleType}-location`}>{el.location}</span>
+            <span className={`${styleType}-location`}>{el.location.label}</span>
             <span>
               {el.comment
                 ? isCaption

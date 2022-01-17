@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 import { compressPhoto } from '../utils/photoManipulation';
 import { Post } from '../models/post';
+import { LocationType } from '../models/location';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
 import { generateKey } from '../utils/generateKey';
@@ -9,6 +10,7 @@ import {
   extractHashtags,
   saveOrUpdateHashtagEntries,
 } from '../utils/hashtag-utils';
+import { createLocationObject, LocationReq } from '../utils/location-utils';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 
@@ -37,10 +39,18 @@ router.post(
   compressPhoto,
   async (req: Request, res: Response) => {
     const caption = req.body.caption || '';
+    let postLocation: string | LocationReq | LocationType =
+      req.body.location || '';
 
     let hashtags: string[] = [];
     if (caption) {
       hashtags = extractHashtags(caption);
+    }
+    if (postLocation) {
+      postLocation = JSON.parse(postLocation as string);
+      postLocation = createLocationObject(postLocation as LocationReq);
+    } else {
+      postLocation = createLocationObject({} as LocationReq);
     }
 
     const key = generateKey(req.file!.originalname);
@@ -82,6 +92,7 @@ router.post(
         const post = Post.build({
           fileName: req.file!.originalname,
           caption,
+          postLocation: postLocation as LocationType,
           createdAt: new Date(),
           userId: req.currentUser!.id,
           s3Key: key,
