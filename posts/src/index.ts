@@ -4,7 +4,7 @@ import AWS from 'aws-sdk';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
 
-let redisClient: RedisClientType<any>;
+let redisClient: RedisClientType<any, any>;
 
 const start = async () => {
   console.log('Starting up posts service....');

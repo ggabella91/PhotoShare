@@ -98,8 +98,6 @@ describe('my-profile-page component tests', () => {
       getUsersFollowingStart,
     } = setup();
 
-    screen.debug();
-
     const myProfilePage = screen.getByTestId('my-profile-page');
 
     expect(myProfilePage).toBeInTheDocument();
