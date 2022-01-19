@@ -14,11 +14,12 @@ export enum StyleType {
 
 interface LocationsSuggestionsContainerProps {
   styleType: StyleType;
+  postPage?: boolean;
 }
 
 const LocationsSuggestionsContainer: React.FC<
   LocationsSuggestionsContainerProps
-> = ({ styleType }) => {
+> = ({ styleType, postPage }) => {
   const dispatch = useDispatch();
   const locationsSuggestions = useSelector(selectLocationsSuggestions);
 
@@ -42,7 +43,9 @@ const LocationsSuggestionsContainer: React.FC<
   const locationSuggestionsComponents = locationsSuggestions.map(
     (location: Location, idx: number) => (
       <div
-        className={`${styleType}-locations-suggestion`}
+        className={`${styleType}-locations-suggestion${
+          postPage ? ' post-page' : ''
+        }`}
         key={idx}
         data-idx={idx}
         data-testid={`location-element-${idx}`}
@@ -56,7 +59,9 @@ const LocationsSuggestionsContainer: React.FC<
 
   return (
     <div
-      className={`${styleType}-locations-suggestions-container`}
+      className={`${styleType}-locations-suggestions-container${
+        postPage ? ' post-page' : ''
+      }`}
       data-testid='locations-suggestions-container'
     >
       {locationSuggestionsComponents}

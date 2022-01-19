@@ -40,9 +40,24 @@
 
 .edit-post-locations-suggestions-container {
   @include container();
+  min-width: 282px;
+  height: 90px;
+  max-height: 90px;
+  margin-top: 59px;
+
+  &.post-page {
+    max-width: 294px;
+  }
 
   .edit-post-locations-suggestion {
     @include element();
+    width: 264px;
+    min-height: 30px;
+    padding: 4px 8px;
+
+    &.post-page {
+      width: 276px;
+    }
 
     .edit-post-location-label {
       font-size: 14px;
