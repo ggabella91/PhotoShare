@@ -652,7 +652,7 @@ export const PostPage: React.FC = () => {
     } else return null;
   };
 
-  const handleShowPostEditForm = () => setShowPostEditForm(true);
+  const handleShowPostEditForm = () => dispatch(setShowPostEditForm(true));
 
   const handleShowPostLikingUsersModal = () =>
     setShowPostLikingUsersModal(true);
