@@ -77,6 +77,9 @@ const INITIAL_STATE: PostState = {
   locationsSuggestions: [],
   getLocationsSuggestionsError: null,
   locationSelection: null,
+
+  // Used by locations-suggestions-container component
+  isPostPage: false,
 };
 
 const postReducer = (
@@ -443,6 +446,11 @@ const postReducer = (
       return {
         ...state,
         locationSelection: action.payload,
+      };
+    case PostActions.SET_IS_POST_PAGE:
+      return {
+        ...state,
+        isPostPage: action.payload,
       };
     case PostActions.SAVE_POST_MODAL_DATA_TO_CACHE:
       return {

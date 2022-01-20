@@ -36,6 +36,7 @@ import {
   setShowPostEditForm,
   clearPostState,
   setShowCommentOptionsModal,
+  setIsPostPage,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -160,8 +161,13 @@ export const PostPage: React.FC = () => {
   useEffect(
     // Clear post state when cleaning up before component
     // leaves the screen
-    () => () => {
-      clearPostState();
+    () => {
+      dispatch(setIsPostPage(true));
+
+      return () => {
+        dispatch(clearPostState());
+        dispatch(setIsPostPage(false));
+      };
     },
     []
   );

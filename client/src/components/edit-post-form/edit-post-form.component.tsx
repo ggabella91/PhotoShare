@@ -25,14 +25,12 @@ interface EditPostFormProps {
   editLocation: string;
   setShowPostEditForm: typeof setShowPostEditForm;
   editPostDetailsStart: typeof editPostDetailsStart;
-  postPage?: boolean;
 }
 
 const EditPostForm: React.FC<EditPostFormProps> = ({
   postId,
   editCaption,
   editLocation,
-  postPage,
   setShowPostEditForm,
   editPostDetailsStart,
 }) => {
@@ -120,10 +118,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
         onBlur={handleBlur}
       />
       {showSuggestions ? (
-        <LocationsSuggestionsContainer
-          styleType={StyleType.editPost}
-          postPage={postPage ? true : false}
-        />
+        <LocationsSuggestionsContainer styleType={StyleType.editPost} />
       ) : null}
       <div className='buttons-container'>
         <button

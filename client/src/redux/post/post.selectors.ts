@@ -261,3 +261,8 @@ export const selectLocationSelection = createSelector(
   [selectPostState],
   (postState: PostState) => postState.locationSelection
 );
+
+export const selectIsPostPage = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.isPostPage
+);

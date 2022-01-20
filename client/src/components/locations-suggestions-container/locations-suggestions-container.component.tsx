@@ -2,7 +2,10 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Location } from '../../redux/post/post.types';
-import { selectLocationsSuggestions } from '../../redux/post/post.selectors';
+import {
+  selectLocationsSuggestions,
+  selectIsPostPage,
+} from '../../redux/post/post.selectors';
 import { setLocationSelection } from '../../redux/post/post.actions';
 
 import './locations-suggestions-container.styles.scss';
@@ -14,14 +17,14 @@ export enum StyleType {
 
 interface LocationsSuggestionsContainerProps {
   styleType: StyleType;
-  postPage?: boolean;
 }
 
 const LocationsSuggestionsContainer: React.FC<
   LocationsSuggestionsContainerProps
-> = ({ styleType, postPage }) => {
+> = ({ styleType }) => {
   const dispatch = useDispatch();
   const locationsSuggestions = useSelector(selectLocationsSuggestions);
+  const isPostPage = useSelector(selectIsPostPage);
 
   const handleClickComponent = (event: React.MouseEvent<HTMLElement>) => {
     const divElement = event.currentTarget;
@@ -44,7 +47,7 @@ const LocationsSuggestionsContainer: React.FC<
     (location: Location, idx: number) => (
       <div
         className={`${styleType}-locations-suggestion${
-          postPage ? ' post-page' : ''
+          isPostPage ? ' within-post-page' : ''
         }`}
         key={idx}
         data-idx={idx}
@@ -60,7 +63,7 @@ const LocationsSuggestionsContainer: React.FC<
   return (
     <div
       className={`${styleType}-locations-suggestions-container${
-        postPage ? ' post-page' : ''
+        isPostPage ? ' within-post-page' : ''
       }`}
       data-testid='locations-suggestions-container'
     >

@@ -438,3 +438,8 @@ export const setLocationSelection = (
   type: PostActions.SET_LOCATION_SELECTION,
   payload: locationSelection,
 });
+
+export const setIsPostPage = (isPostPage: boolean): PostActionTypes => ({
+  type: PostActions.SET_IS_POST_PAGE,
+  payload: isPostPage,
+});

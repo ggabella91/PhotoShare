@@ -78,6 +78,10 @@ export enum PostActions {
   GET_LOCATIONS_SUGGESTIONS_SUCCESS = 'GET_LOCATIONS_SUGGESTIONS_SUCCESS',
   GET_LOCATIONS_SUGGESTIONS_FAILURE = 'GET_LOCATIONS_SUGGESTIONS_FAILURE',
   SET_LOCATION_SELECTION = 'SET_LOCATION_SELECTION',
+
+  // Set if on post-page for locations-suggestions-container
+  // component
+  SET_IS_POST_PAGE = 'SET_IS_POST_PAGE',
 }
 
 export interface PostError {
@@ -307,6 +311,9 @@ export interface PostState {
   locationsSuggestions: Location[];
   getLocationsSuggestionsError: PostError | null;
   locationSelection: Location | null;
+
+  // Used by locations-suggestions-container component
+  isPostPage: boolean;
 }
 
 export interface CreatePostStart {
@@ -645,6 +652,11 @@ export interface SetLocationSelection {
   payload: Location;
 }
 
+export interface SetIsPostPage {
+  type: typeof PostActions.SET_IS_POST_PAGE;
+  payload: boolean;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -711,4 +723,5 @@ export type PostActionTypes =
   | GetLocationsSuggestionsStart
   | GetLocationsSuggestionsSuccess
   | GetLocationsSuggestionsFailure
-  | SetLocationSelection;
+  | SetLocationSelection
+  | SetIsPostPage;
