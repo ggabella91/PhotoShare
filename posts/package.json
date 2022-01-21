@@ -34,7 +34,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "5.10.1",
     "@types/multer": "^1.4.4",
-    "@types/redis": "^2.8.28",
+    "@types/redis": "^2.8.32",
     "@types/sharp": "^0.26.1",
     "@types/uuid": "^8.3.0",
     "aws-sdk": "^2.784.0",

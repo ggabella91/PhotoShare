@@ -1,12 +1,20 @@
-import { render } from '../test-utils/test-utils';
+import { render, screen } from '../test-utils/test-utils';
 import { App } from '../App';
 
 import { checkUserSession } from '../redux/user/user.actions';
 
-it('renders app component', () => {
-  const { container: app } = render(
-    <App checkUserSession={() => checkUserSession()} currentUser={null} />
-  );
+describe('Main app component tests', () => {
+  const setup = () => {
+    render(
+      <App checkUserSession={() => checkUserSession()} currentUser={null} />
+    );
+  };
 
-  expect(app).toBeInTheDocument();
+  it('renders app component', () => {
+    setup();
+
+    const app = screen.getByTestId('main-app-component');
+
+    expect(app).toBeInTheDocument();
+  });
 });
