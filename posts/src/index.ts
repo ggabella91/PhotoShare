@@ -47,6 +47,10 @@ const start = async () => {
     throw new Error('POSITION_STACK_API_KEY must be defined');
   }
 
+  if (!process.env.MAPBOX_GL_ACCESS_TOKEN) {
+    throw new Error('MAPBOX_GL_ACCESS_TOKEN must be defined');
+  }
+
   await natsWrapper.connect(
     process.env.NATS_CLUSTER_ID,
     process.env.NATS_CLIENT_ID,

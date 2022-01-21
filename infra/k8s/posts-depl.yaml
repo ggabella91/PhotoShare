@@ -58,6 +58,11 @@ spec:
                 secretKeyRef:
                   name: position-stack-api-key
                   key: POSITION_STACK_API_KEY
+            - name: MAPBOX_GL_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mapbox-gl-access-token
+                  key: MAPBOX_GL_ACCESS_TOKEN
 ---
 apiVersion: v1
 kind: Service
