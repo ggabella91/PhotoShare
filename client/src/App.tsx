@@ -36,7 +36,7 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
   }, []);
 
   return (
-    <div className='App'>
+    <div className='App' data-testid='main-app-component'>
       <Header />
       <Switch>
         <Route

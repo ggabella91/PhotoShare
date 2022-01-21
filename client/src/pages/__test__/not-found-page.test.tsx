@@ -13,8 +13,6 @@ describe('not-found page component tests', () => {
 
     const notFoundPage = screen.getByText("Sorry, this page isn't available.");
 
-    console.log('window.location.pathname: ', window.location.pathname);
-
     expect(notFoundPage).toBeInTheDocument();
   });
 
