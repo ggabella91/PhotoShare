@@ -23,6 +23,7 @@ import UserProfilePage from './pages/user-profile-page/user-profile-page.compone
 import ForgotPasswordPage from './pages/forgot-password/forgot-password-page.component';
 import ResetPasswordPage from './pages/reset-password/reset-password-page.component';
 import ExploreTagPage from './pages/explore-tag-page/explore-tag-page.component';
+import ExploreLocationPage from './pages/explore-location-page/explore-location-page.component';
 
 interface AppProps {
   checkUserSession: typeof checkUserSession;
@@ -67,6 +68,16 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
         <Route
           path='/p/:postId'
           render={() => (currentUser ? <PostPage /> : <Redirect to='/' />)}
+        />
+        <Route
+          path='/explore/locations/:location'
+          render={({ match }) =>
+            currentUser ? (
+              <ExploreLocationPage location={match.params.location} />
+            ) : (
+              <Redirect to='/' />
+            )
+          }
         />
         <Route
           path='/explore/tags/:hashtag'
