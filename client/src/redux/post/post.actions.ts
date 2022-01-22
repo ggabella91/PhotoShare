@@ -443,3 +443,22 @@ export const setIsPostPage = (isPostPage: boolean): PostActionTypes => ({
   type: PostActions.SET_IS_POST_PAGE,
   payload: isPostPage,
 });
+
+export const getMapBoxAccessTokenStart = (): PostActionTypes => ({
+  type: PostActions.GET_MAPBOX_TOKEN_START,
+  payload: null,
+});
+
+export const getMapBoxAccessTokenSuccess = (
+  mapBoxAccessToken: string
+): PostActionTypes => ({
+  type: PostActions.GET_MAPBOX_TOKEN_SUCCESS,
+  payload: mapBoxAccessToken,
+});
+
+export const getMapBoxAccessTokenFailure = (
+  error: PostError
+): PostActionTypes => ({
+  type: PostActions.GET_MAPBOX_TOKEN_FAILURE,
+  payload: error,
+});

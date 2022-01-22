@@ -13,3 +13,5 @@ router.get(
     res.status(200).send(mapBoxApiAccessToken);
   }
 );
+
+export { router as getMapBoxApiAccessTokenRouter };

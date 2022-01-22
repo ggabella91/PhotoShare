@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -8,6 +8,9 @@ import { AppState } from './redux/root-reducer';
 import { User } from './redux/user/user.types';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { checkUserSession } from './redux/user/user.actions';
+
+import { selectMapBoxAccessToken } from './redux/post/post.selectors';
+import { getMapBoxAccessTokenStart } from './redux/post/post.actions';
 
 import './App.scss';
 import Header from './components/header/header.component';
@@ -31,9 +34,18 @@ interface AppProps {
 }
 
 export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
+  const mapBoxAccessToken = useSelector(selectMapBoxAccessToken);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     checkUserSession();
   }, []);
+
+  useEffect(() => {
+    if (currentUser && !mapBoxAccessToken) {
+      dispatch(getMapBoxAccessTokenStart());
+    }
+  }, [currentUser]);
 
   return (
     <div className='App' data-testid='main-app-component'>
