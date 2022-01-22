@@ -266,3 +266,8 @@ export const selectIsPostPage = createSelector(
   [selectPostState],
   (postState: PostState) => postState.isPostPage
 );
+
+export const selectMapBoxAccessToken = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.mapBoxAccessToken
+);

@@ -80,6 +80,10 @@ const INITIAL_STATE: PostState = {
 
   // Used by locations-suggestions-container component
   isPostPage: false,
+
+  // Mapbox access token fetched from posts service
+  mapBoxAccessToken: null,
+  getMapBoxAccessTokenError: null,
 };
 
 const postReducer = (
@@ -262,6 +266,12 @@ const postReducer = (
         locationsSuggestions: action.payload,
         getLocationsSuggestionsError: null,
       };
+    case PostActions.GET_MAPBOX_TOKEN_SUCCESS:
+      return {
+        ...state,
+        mapBoxAccessToken: action.payload,
+        getMapBoxAccessTokenError: null,
+      };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
         ...state,
@@ -324,6 +334,12 @@ const postReducer = (
         ...state,
         locationsSuggestions: [],
         getLocationsSuggestionsError: action.payload,
+      };
+    case PostActions.GET_MAPBOX_TOKEN_FAILURE:
+      return {
+        ...state,
+        getMapBoxAccessTokenError: action.payload,
+        mapBoxAccessToken: null,
       };
     case PostActions.CLEAR_POST_STATUSES:
       return {

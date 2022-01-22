@@ -19,6 +19,7 @@ import { updatePostDataRouter } from './routes/update-data';
 import { getSinglePostDataRouter } from './routes/single-post-data';
 import { getPostsWithHashtagRouter } from './routes/get-posts-with-hashtag';
 import { getLocationsSuggestionsRouter } from './routes/get-locations-suggestions';
+import { getMapBoxApiAccessTokenRouter } from './routes/get-mapbox-api-key';
 
 const app = express();
 app.set('trust proxy', true);
@@ -44,6 +45,7 @@ app.use(updatePostDataRouter);
 app.use(getSinglePostDataRouter);
 app.use(getPostsWithHashtagRouter);
 app.use(getLocationsSuggestionsRouter);
+app.use(getMapBoxApiAccessTokenRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();

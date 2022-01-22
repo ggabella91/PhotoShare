@@ -82,6 +82,12 @@ export enum PostActions {
   // Set if on post-page for locations-suggestions-container
   // component
   SET_IS_POST_PAGE = 'SET_IS_POST_PAGE',
+
+  // Actions specific to fetching mapbox access token from
+  // posts service
+  GET_MAPBOX_TOKEN_START = 'GET_MAPBOX_TOKEN_START',
+  GET_MAPBOX_TOKEN_SUCCESS = 'GET_MAPBOX_TOKEN_SUCCESS',
+  GET_MAPBOX_TOKEN_FAILURE = 'GET_MAPBOX_TOKEN_FAILURE',
 }
 
 export interface PostError {
@@ -314,6 +320,10 @@ export interface PostState {
 
   // Used by locations-suggestions-container component
   isPostPage: boolean;
+
+  // Mapbox access token fetched from posts service
+  mapBoxAccessToken: string | null;
+  getMapBoxAccessTokenError: PostError | null;
 }
 
 export interface CreatePostStart {
@@ -657,6 +667,21 @@ export interface SetIsPostPage {
   payload: boolean;
 }
 
+export interface GetMapBoxTokenStart {
+  type: typeof PostActions.GET_MAPBOX_TOKEN_START;
+  payload: null;
+}
+
+export interface GetMapBoxTokenSuccess {
+  type: typeof PostActions.GET_MAPBOX_TOKEN_SUCCESS;
+  payload: string;
+}
+
+export interface GetMapBoxTokenFailure {
+  type: typeof PostActions.GET_MAPBOX_TOKEN_FAILURE;
+  payload: PostError;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -724,4 +749,7 @@ export type PostActionTypes =
   | GetLocationsSuggestionsSuccess
   | GetLocationsSuggestionsFailure
   | SetLocationSelection
-  | SetIsPostPage;
+  | SetIsPostPage
+  | GetMapBoxTokenStart
+  | GetMapBoxTokenSuccess
+  | GetMapBoxTokenFailure;
