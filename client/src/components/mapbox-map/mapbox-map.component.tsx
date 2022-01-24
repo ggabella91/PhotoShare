@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import mapboxgl, { Map } from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { selectMapBoxAccessToken } from '../../redux/post/post.selectors';
 
@@ -28,10 +29,17 @@ const MapBoxMap: React.FC = () => {
 
       map.current = new mapboxgl.Map({
         container: mapContainer.current as HTMLElement,
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/ggabella91/ckyrj84lx0o9g14thr0bl3vba',
         center: [lng, lat],
         zoom: 9,
       });
+
+      const marker = new mapboxgl.Marker({
+        color: '#015987',
+        scale: 0.5,
+      })
+        .setLngLat([lng, lat])
+        .addTo(map.current);
     }
   }, [mapBoxAccessToken]);
 
