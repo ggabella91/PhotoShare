@@ -1,11 +1,15 @@
 import express, { Request, Response } from 'express';
-import { Post } from '../models/post';
+import { Post, PostResponseObj } from '../models/post';
+import { LocationDoc } from '../models/location';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import {
   extractHashtags,
   saveOrUpdateHashtagEntries,
 } from '../utils/hashtag-utils';
-import { createLocationObject } from '../utils/location-utils';
+import {
+  createLocationObject,
+  saveNewOrGetExistingLocation,
+} from '../utils/location-utils';
 
 const router = express.Router();
 
@@ -28,6 +32,11 @@ router.patch(
       throw new BadRequestError('No post id was provided.');
     }
 
+    let savedPostLocation: LocationDoc | null = null;
+    if (postLocation) {
+      savedPostLocation = await saveNewOrGetExistingLocation(postLocation);
+    }
+
     let hashtagEntriesToUpdate: string[] = [];
 
     const postBeforeUpdate = await Post.findById(postId);
@@ -35,7 +44,7 @@ router.patch(
 
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
-      { caption, postLocation, hashtags },
+      { caption, location: savedPostLocation?.id || undefined, hashtags },
       {
         new: true,
         runValidators: true,
@@ -54,7 +63,18 @@ router.patch(
       saveOrUpdateHashtagEntries(hashtagEntriesToUpdate);
     }
 
-    res.status(200).send(updatedPost);
+    if (updatedPost) {
+      const updatedPostObj = updatedPost.toObject();
+
+      const updatedPostResponseObj: PostResponseObj = {
+        ...updatedPostObj,
+        postLocation: savedPostLocation || undefined,
+      };
+
+      res.status(200).send(updatedPostResponseObj);
+    } else {
+      res.status(204).send(null);
+    }
   }
 );
 

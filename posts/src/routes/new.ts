@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
 import { compressPhoto } from '../utils/photoManipulation';
-import { Post } from '../models/post';
-import { LocationType } from '../models/location';
+import { Post, PostResponseObj } from '../models/post';
+import { LocationAttrs, LocationDoc } from '../models/location';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
 import { generateKey } from '../utils/generateKey';
@@ -10,7 +10,11 @@ import {
   extractHashtags,
   saveOrUpdateHashtagEntries,
 } from '../utils/hashtag-utils';
-import { createLocationObject, LocationReq } from '../utils/location-utils';
+import {
+  createLocationObject,
+  LocationReq,
+  saveNewOrGetExistingLocation,
+} from '../utils/location-utils';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 
@@ -39,7 +43,7 @@ router.post(
   compressPhoto,
   async (req: Request, res: Response) => {
     const caption = req.body.caption || '';
-    let postLocation: string | LocationReq | LocationType =
+    let postLocation: string | LocationReq | LocationAttrs =
       req.body.location || '';
 
     let hashtags: string[] = [];
@@ -49,8 +53,6 @@ router.post(
     if (postLocation) {
       postLocation = JSON.parse(postLocation as string);
       postLocation = createLocationObject(postLocation as LocationReq);
-    } else {
-      postLocation = createLocationObject({} as LocationReq);
     }
 
     const key = generateKey(req.file!.originalname);
@@ -79,6 +81,7 @@ router.post(
     let location = '';
     const comments = 0;
     const likes = 0;
+    const totalReactions = 0;
 
     s3.upload(uploadParams, async (err, data) => {
       if (err) {
@@ -89,10 +92,17 @@ router.post(
         location = data.Location;
         console.log('Upload success!', location);
 
+        let savedPostLocation: LocationDoc | null = null;
+        if (postLocation) {
+          savedPostLocation = await saveNewOrGetExistingLocation(
+            postLocation as LocationAttrs
+          );
+        }
+
         const post = Post.build({
           fileName: req.file!.originalname,
           caption,
-          postLocation: postLocation as LocationType,
+          postLocation: savedPostLocation?.id || undefined,
           createdAt: new Date(),
           userId: req.currentUser!.id,
           s3Key: key,
@@ -100,6 +110,7 @@ router.post(
           hashtags,
           comments,
           likes,
+          totalReactions,
         });
 
         await post.save();
@@ -108,7 +119,14 @@ router.post(
           await saveOrUpdateHashtagEntries(hashtags);
         }
 
-        res.status(201).send(post);
+        const postObj = post.toObject();
+
+        const postResponseObj: PostResponseObj = {
+          ...postObj,
+          postLocation: savedPostLocation || undefined,
+        };
+
+        res.status(201).send(postResponseObj);
       }
     });
   }

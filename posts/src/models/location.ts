@@ -1,55 +1,142 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
-type ConstructorMapping<T> = T extends NumberConstructor
-  ? number
-  : T extends StringConstructor
-  ? string
-  : never;
+export interface LocationAttrs {
+  latitude: number;
+  longitude: number;
+  type: string;
+  name: string;
+  confidence: number;
+  region: string;
+  regionCode: string;
+  county: string;
+  country: string;
+  countryCode: string;
+  continent: string;
+  label: string;
+  number?: number;
+  postalCode?: string;
+  street?: string;
+  locality?: string;
+  administrativeArea?: string;
+  neighbourhood?: string;
+}
 
-const locationSchemaObjRequired = {
-  latitude: Number,
-  longitude: Number,
-  type: String,
-  name: String,
-  confidence: Number,
-  region: String,
-  regionCode: String,
-  county: String,
-  country: String,
-  countryCode: String,
-  continent: String,
-  label: String,
+export interface LocationDoc extends mongoose.Document {
+  latitude: number;
+  longitude: number;
+  type: string;
+  name: string;
+  confidence: number;
+  region: string;
+  regionCode: string;
+  county: string;
+  country: string;
+  countryCode: string;
+  continent: string;
+  label: string;
+  number?: number;
+  postalCode?: string;
+  street?: string;
+  locality?: string;
+  administrativeArea?: string;
+  neighbourhood?: string;
+}
+
+interface LocationModel extends mongoose.Model<LocationDoc> {
+  build(attrs: LocationAttrs): LocationDoc;
+}
+
+const locationSchema = new mongoose.Schema(
+  {
+    latitude: {
+      type: Number,
+      required: true,
+    },
+    longitude: {
+      type: Number,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    confidence: {
+      type: Number,
+      required: true,
+    },
+    region: {
+      type: String,
+      required: true,
+    },
+    regionCode: {
+      type: String,
+      required: true,
+    },
+    county: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+    countryCode: {
+      type: String,
+      required: true,
+    },
+    continent: {
+      type: String,
+      required: true,
+    },
+    label: {
+      type: String,
+      required: true,
+    },
+    number: {
+      type: Number,
+    },
+    postalCode: {
+      type: String,
+    },
+    street: {
+      type: String,
+    },
+    locality: {
+      type: String,
+    },
+    administrativeArea: {
+      type: String,
+    },
+    neighbourhood: {
+      type: String,
+    },
+  },
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
+  }
+);
+
+locationSchema.set('versionKey', 'version');
+
+locationSchema.plugin(updateIfCurrentPlugin);
+
+locationSchema.statics.build = (attrs: LocationAttrs) => {
+  return new Location(attrs);
 };
 
-const locationSchemaObjOptional = {
-  number: Number,
-  postalCode: String,
-  street: String,
-  locality: String,
-  administrativeArea: String,
-  neighbourhood: String,
-};
+const Location = mongoose.model<LocationDoc, LocationModel>(
+  'Location',
+  locationSchema
+);
 
-const locationSchema = {
-  ...locationSchemaObjRequired,
-  ...locationSchemaObjOptional,
-};
-
-export const LocationSchema = new mongoose.Schema(locationSchema);
-
-type LocationSchemaObjRequired = typeof locationSchemaObjRequired;
-type LocationSchemaObjOptional = typeof locationSchemaObjOptional;
-
-type LocationTypeRequired = {
-  [prop in keyof LocationSchemaObjRequired]: ConstructorMapping<
-    LocationSchemaObjRequired[prop]
-  >;
-};
-
-type LocationTypeOptional = {
-  [prop in keyof LocationSchemaObjOptional]?: ConstructorMapping<
-    LocationSchemaObjOptional[prop]
-  >;
-};
-
-export type LocationType = LocationTypeRequired & LocationTypeOptional;
+export { Location };

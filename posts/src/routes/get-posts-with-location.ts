@@ -9,19 +9,19 @@ import { Post } from '../models/post';
 const router = express.Router();
 
 router.get(
-  '/api/posts/hashtags/:hashtag',
+  '/api/posts/locations/:locationId',
   requireAuth,
   currentUser,
   async (req: Request, res: Response) => {
-    const { hashtag } = req.params;
+    const { locationId } = req.params;
     const pageToShow = parseInt(req.query.pageToShow as string) || null;
     const limit = parseInt(req.query.limit as string) || null;
 
-    if (!hashtag) {
-      throw new BadRequestError('No hashtag was provided.');
+    if (!locationId) {
+      throw new BadRequestError('No location id was provided.');
     }
 
-    let postsWithHashtag;
+    let postsWithLocation;
 
     if (pageToShow && limit) {
       let queryLength = 0;
@@ -29,7 +29,7 @@ router.get(
       if (pageToShow === 1) {
         queryLength = (
           await Post.find(
-            { hashtags: hashtag, archived: { $ne: true } },
+            { postLocation: locationId, archived: { $ne: true } },
             null,
             {
               sort: { totalReactions: -1 },
@@ -38,8 +38,8 @@ router.get(
         ).length;
       }
 
-      postsWithHashtag = await Post.find(
-        { hashtags: hashtag, archived: { $ne: true } },
+      postsWithLocation = await Post.find(
+        { postLocation: locationId, archived: { $ne: true } },
         null,
         {
           sort: { totalReactions: -1 },
@@ -47,26 +47,30 @@ router.get(
       )
         .limit(limit)
         .skip((pageToShow - 1) * limit);
-      console.log(`Data for posts with hashtag: ${hashtag}`, postsWithHashtag);
+      console.log(
+        `Data for posts with location id: ${locationId}`,
+        postsWithLocation
+      );
 
       if (queryLength) {
-        res.status(200).send({ postsWithHashtag, queryLength });
+        res.status(200).send({ postsWithLocation, queryLength });
       } else {
-        res.status(200).send({ postsWithHashtag });
+        res.status(200).send({ postsWithLocation });
       }
     } else {
-      postsWithHashtag = await Post.find(
-        { hashtags: hashtag, archived: { $ne: true } },
+      postsWithLocation = await Post.find(
+        { postLocation: locationId, archived: { $ne: true } },
         null,
         {
           sort: { totalReactions: -1 },
         }
       );
-      console.log(`Data for posts with hashtag: ${hashtag}`, postsWithHashtag);
+      console.log(
+        `Data for posts with location id: ${locationId}`,
+        postsWithLocation
+      );
 
-      res.status(200).send({ postsWithHashtag });
+      res.status(200).send({ postsWithLocation });
     }
   }
 );
-
-export { router as getPostsWithHashtagRouter };
