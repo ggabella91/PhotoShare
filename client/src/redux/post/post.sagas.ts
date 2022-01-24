@@ -21,6 +21,7 @@ import {
   PostFileReq,
   ArchivePostReq,
   DeleteReactionReq,
+  DeleteReactionConfirm,
   PostActions,
   UserType,
   EditPostDetailsReq,
@@ -84,7 +85,7 @@ type PostSaga<Args extends any[] = any[]> = (...args: Args) => Generator<
 
 export function* createPost({ payload: post }: { payload: FormData }) {
   try {
-    const { data } = yield axios.post('/api/posts/new', post);
+    const { data }: { data: Post } = yield axios.post('/api/posts/new', post);
 
     yield put(createPostSuccess(data));
   } catch (err) {
@@ -118,7 +119,10 @@ export function* createPostReaction({
 
 export function* updateProfilePhoto({ payload: photo }: { payload: FormData }) {
   try {
-    const { data } = yield axios.post('/api/posts/profilePhoto', photo);
+    const { data }: { data: Post } = yield axios.post(
+      '/api/posts/profilePhoto',
+      photo
+    );
 
     yield put(updateProfilePhotoSuccess(data));
   } catch (err) {
@@ -208,7 +212,9 @@ export function* getPostReactions({
   payload: GetPostReactionsReq;
 }) {
   try {
-    const { data } = yield axios.get(`/api/reactions/${postId}`);
+    const { data }: { data: Reaction[] } = yield axios.get(
+      `/api/reactions/${postId}`
+    );
 
     if (reactionReqType === ReactionRequestType.singlePost) {
       yield put(getPostReactionsSuccess(data));
@@ -226,7 +232,7 @@ export function* getPostFile({
   payload: PostFileReq;
 }) {
   try {
-    const { data } = yield axios.get(
+    const { data }: { data: string } = yield axios.get(
       `/api/posts/files?s3Key=${s3Key}&bucket=${bucket}`
     );
 
@@ -281,11 +287,14 @@ export function* archivePost({
   payload: ArchivePostReq;
 }) {
   try {
-    const { data } = yield axios.delete(`/api/posts/${postId}`, {
-      data: {
-        s3Key,
-      },
-    });
+    const { data }: { data: { message: string } } = yield axios.delete(
+      `/api/posts/${postId}`,
+      {
+        data: {
+          s3Key,
+        },
+      }
+    );
 
     yield put(archivePostSuccess(data.message));
   } catch (err) {
@@ -299,9 +308,12 @@ export function* deleteReaction({
   payload: DeleteReactionReq;
 }) {
   try {
-    const { data } = yield axios.delete(`/api/reactions`, {
-      data: deleteReactionReq,
-    });
+    const { data }: { data: DeleteReactionConfirm } = yield axios.delete(
+      `/api/reactions`,
+      {
+        data: deleteReactionReq,
+      }
+    );
 
     if (deleteReactionReq.isLikeRemoval) {
       yield put(

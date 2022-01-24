@@ -1,4 +1,4 @@
-import { LocationType } from '../models/location';
+import { Location, LocationAttrs } from '../models/location';
 
 export interface LocationReq {
   latitude: number;
@@ -22,7 +22,7 @@ export interface LocationReq {
 }
 
 export const createLocationObject = (location: LocationReq) => {
-  let locationObj: LocationType = {
+  let locationObj: LocationAttrs = {
     latitude: location.latitude || -1,
     longitude: location.longitude || -1,
     type: location.type || '',
@@ -44,4 +44,29 @@ export const createLocationObject = (location: LocationReq) => {
   };
 
   return locationObj;
+};
+
+export const saveNewOrGetExistingLocation = async (location: LocationAttrs) => {
+  const existingLocation = await Location.findOne({
+    latitude: location.latitude,
+    longitude: location.longitude,
+  });
+
+  if (existingLocation) {
+    console.log('Found existing location: ', existingLocation);
+    return existingLocation;
+  } else {
+    const newLocation = Location.build({ ...location });
+
+    try {
+      await newLocation.save();
+
+      console.log('Saved new location: ', newLocation);
+      return newLocation;
+    } catch (err) {
+      console.log('Error saving location: ', err);
+
+      return null;
+    }
+  }
 };

@@ -22,7 +22,6 @@ const MapBoxMap: React.FC = () => {
 
   useEffect(() => {
     if (mapboxgl.accessToken) {
-      console.log('mapboxgl.accessToken: ', mapboxgl.accessToken);
       if (map.current) {
         return;
       }
@@ -32,9 +31,10 @@ const MapBoxMap: React.FC = () => {
         style: 'mapbox://styles/ggabella91/ckyrj84lx0o9g14thr0bl3vba',
         center: [lng, lat],
         zoom: 9,
-      });
+        attributionControl: false,
+      }).addControl(new mapboxgl.AttributionControl({ compact: true }));
 
-      const marker = new mapboxgl.Marker({
+      new mapboxgl.Marker({
         color: '#015987',
         scale: 0.5,
       })

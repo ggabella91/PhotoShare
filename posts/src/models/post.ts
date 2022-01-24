@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
-import { LocationSchema, LocationType } from './location';
+import { LocationDoc } from './location';
 
 interface PostAttrs {
   fileName: string;
   caption?: string;
-  postLocation?: LocationType;
+  postLocation?: string;
   createdAt: Date;
   userId: string;
   s3Key: string;
@@ -19,7 +19,21 @@ interface PostAttrs {
 export interface PostDoc extends mongoose.Document {
   fileName: string;
   caption?: string;
-  postLocation?: LocationType;
+  postLocation?: string;
+  createdAt: Date;
+  userId: string;
+  s3Key: string;
+  s3ObjectURL: string;
+  archived?: boolean;
+  hashtags: string[];
+  comments: number;
+  likes: number;
+}
+
+export interface PostResponseObj {
+  fileName: string;
+  caption?: string;
+  postLocation?: LocationDoc;
   createdAt: Date;
   userId: string;
   s3Key: string;
@@ -44,7 +58,7 @@ const postSchema = new mongoose.Schema(
       type: String,
     },
     postLocation: {
-      type: LocationSchema,
+      type: String,
     },
     createdAt: {
       type: Date,
@@ -83,9 +97,12 @@ const postSchema = new mongoose.Schema(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
-        if (ret.postLocation) {
-          delete ret.postLocation._id;
-        }
+      },
+    },
+    toObject: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
       },
     },
   }
