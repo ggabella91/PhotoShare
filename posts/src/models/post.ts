@@ -14,6 +14,7 @@ interface PostAttrs {
   hashtags: string[];
   comments: number;
   likes: number;
+  totalReactions: number;
 }
 
 export interface PostDoc extends mongoose.Document {
@@ -28,6 +29,7 @@ export interface PostDoc extends mongoose.Document {
   hashtags: string[];
   comments: number;
   likes: number;
+  totalReactions: number;
 }
 
 export interface PostResponseObj {
@@ -42,6 +44,7 @@ export interface PostResponseObj {
   hashtags: string[];
   comments: number;
   likes: number;
+  totalReactions: number;
 }
 
 interface PostModel extends mongoose.Model<PostDoc> {
@@ -88,6 +91,10 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     likes: {
+      type: Number,
+      required: true,
+    },
+    totalReactions: {
       type: Number,
       required: true,
     },

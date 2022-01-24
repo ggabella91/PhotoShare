@@ -124,21 +124,9 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
 
   useEffect(() => {
     if (postData && postData.length) {
-      let orderedPostDataListByTopPosts = List(postData);
+      let postDataList = List(postData);
 
-      orderedPostDataListByTopPosts = orderedPostDataListByTopPosts.sort(
-        (a, b) => {
-          if (a.comments + a.likes > b.comments + b.likes) {
-            return -1;
-          } else if (a.comments + a.likes < b.comments + b.likes) {
-            return 1;
-          } else {
-            return 0;
-          }
-        }
-      );
-
-      setPostDataList(orderedPostDataListByTopPosts);
+      setPostDataList(postDataList);
     }
   }, [postData]);
 

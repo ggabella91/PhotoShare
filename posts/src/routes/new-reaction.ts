@@ -26,7 +26,7 @@ router.post(
     if (likedPost) {
       updatedPost = await Post.findByIdAndUpdate(
         req.body.postId,
-        { $inc: { likes: 1 } },
+        { $inc: { likes: 1, totalReactions: 1 } },
         {
           new: true,
           runValidators: true,
@@ -39,7 +39,7 @@ router.post(
     } else {
       updatedPost = await Post.findByIdAndUpdate(
         req.body.postId,
-        { $inc: { comments: 1 } },
+        { $inc: { comments: 1, totalReactions: 1 } },
         {
           new: true,
           runValidators: true,

@@ -81,6 +81,7 @@ router.post(
     let location = '';
     const comments = 0;
     const likes = 0;
+    const totalReactions = 0;
 
     s3.upload(uploadParams, async (err, data) => {
       if (err) {
@@ -109,6 +110,7 @@ router.post(
           hashtags,
           comments,
           likes,
+          totalReactions,
         });
 
         await post.save();
