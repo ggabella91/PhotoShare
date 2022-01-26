@@ -123,6 +123,12 @@ const locationSchema = new mongoose.Schema(
         delete ret._id;
       },
     },
+    toObject: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
   }
 );
 

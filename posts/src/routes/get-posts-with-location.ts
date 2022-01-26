@@ -76,7 +76,7 @@ router.get(
 
         const postResponseObj: PostResponseObj = {
           ...postObj,
-          postLocation: savedPostLocationObjs[idx] || undefined,
+          postLocation: savedPostLocationObjs[idx]?.toObject() || undefined,
         };
 
         postsWithLocation.push(postResponseObj);
@@ -127,7 +127,7 @@ router.get(
 
         const postResponseObj: PostResponseObj = {
           ...postObj,
-          postLocation: savedPostLocationObjs[idx] || undefined,
+          postLocation: savedPostLocationObjs[idx]?.toObject() || undefined,
         };
 
         postsWithLocation.push(postResponseObj);

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { LeanDocument } from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { LocationDoc } from './location';
 
@@ -35,7 +35,7 @@ export interface PostDoc extends mongoose.Document {
 export interface PostResponseObj {
   fileName: string;
   caption?: string;
-  postLocation?: LocationDoc;
+  postLocation?: LeanDocument<LocationDoc>;
   createdAt: Date;
   userId: string;
   s3Key: string;
