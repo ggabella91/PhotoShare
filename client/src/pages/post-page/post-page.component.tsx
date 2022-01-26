@@ -189,13 +189,6 @@ export const PostPage: React.FC = () => {
       });
 
       if (getSinglePostDataConfirm.postLocation) {
-        setSlugifiedLocationLabel(
-          slugify(getSinglePostDataConfirm.postLocation.label, {
-            lower: true,
-            strict: true,
-          })
-        );
-
         dispatch(
           setLocationCoordinates({
             latitude: getSinglePostDataConfirm.postLocation.latitude,
@@ -233,19 +226,11 @@ export const PostPage: React.FC = () => {
       handleSetIsCurrentUserPost(postData);
 
       if (postData.postLocation) {
-        setSlugifiedLocationLabel(
-          slugify(postData.postLocation.label, {
-            lower: true,
-            strict: true,
-          })
-        );
-
-        dispatch(
-          setLocationCoordinates({
-            latitude: postData.postLocation.latitude,
-            longitude: postData.postLocation.longitude,
-          })
-        );
+        const slugifiedString = slugify(postData.postLocation.label, {
+          lower: true,
+          strict: true,
+        });
+        setSlugifiedLocationLabel(slugifiedString);
       }
 
       dispatch(
@@ -299,6 +284,24 @@ export const PostPage: React.FC = () => {
           editCaption: newCaption,
           editLocation: newLocation.label || '',
         });
+
+        if (editPostDetailsConfirm.postLocation) {
+          const slugifiedString = slugify(
+            editPostDetailsConfirm.postLocation.label,
+            {
+              lower: true,
+              strict: true,
+            }
+          );
+          setSlugifiedLocationLabel(slugifiedString);
+
+          dispatch(
+            setLocationCoordinates({
+              latitude: editPostDetailsConfirm.postLocation.latitude,
+              longitude: editPostDetailsConfirm.postLocation.longitude,
+            })
+          );
+        }
       } else {
         setCaptionInfoList(List());
       }
