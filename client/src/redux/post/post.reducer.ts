@@ -49,7 +49,6 @@ const INITIAL_STATE: PostState = {
   isLoadingPostData: false,
   postMetaDataForUser: null,
   postMetaDataForHashtag: null,
-  postMetaDataForLocation: null,
   postLikingUsersArray: null,
   showPostLikingUsersModal: false,
   feedPagePostModalData: POST_MODAL_DATA_INITIAL_STATE,
@@ -85,6 +84,10 @@ const INITIAL_STATE: PostState = {
   // Mapbox access token fetched from posts service
   mapBoxAccessToken: null,
   getMapBoxAccessTokenError: null,
+
+  // Used for posts with location
+  postMetaDataForLocation: null,
+  locationCoordinates: null,
 };
 
 const postReducer = (
@@ -468,6 +471,11 @@ const postReducer = (
       return {
         ...state,
         locationSelection: action.payload,
+      };
+    case PostActions.SET_LOCATION_COORDINATES:
+      return {
+        ...state,
+        locationCoordinates: action.payload,
       };
     case PostActions.SET_IS_POST_PAGE:
       return {

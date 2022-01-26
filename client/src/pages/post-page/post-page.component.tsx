@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import slugify from 'slugify';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -37,6 +38,7 @@ import {
   clearPostState,
   setShowCommentOptionsModal,
   setIsPostPage,
+  setLocationCoordinates,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -148,6 +150,8 @@ export const PostPage: React.FC = () => {
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
 
+  const [slugifiedLocationLabel, setSlugifiedLocationLabel] = useState('');
+
   let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -184,6 +188,22 @@ export const PostPage: React.FC = () => {
         editLocation: getSinglePostDataConfirm.postLocation?.label || '',
       });
 
+      if (getSinglePostDataConfirm.postLocation) {
+        setSlugifiedLocationLabel(
+          slugify(getSinglePostDataConfirm.postLocation.label, {
+            lower: true,
+            strict: true,
+          })
+        );
+
+        dispatch(
+          setLocationCoordinates({
+            latitude: getSinglePostDataConfirm.postLocation.latitude,
+            longitude: getSinglePostDataConfirm.postLocation.longitude,
+          })
+        );
+      }
+
       const { userId } = getSinglePostDataConfirm;
 
       dispatch(
@@ -211,6 +231,22 @@ export const PostPage: React.FC = () => {
   useEffect(() => {
     if (postData) {
       handleSetIsCurrentUserPost(postData);
+
+      if (postData.postLocation) {
+        setSlugifiedLocationLabel(
+          slugify(postData.postLocation.label, {
+            lower: true,
+            strict: true,
+          })
+        );
+
+        dispatch(
+          setLocationCoordinates({
+            latitude: postData.postLocation.latitude,
+            longitude: postData.postLocation.longitude,
+          })
+        );
+      }
 
       dispatch(
         getPostFileStart({
@@ -745,11 +781,14 @@ export const PostPage: React.FC = () => {
                 {otherUser ? (
                   <span className='user-name'>{otherUser.username}</span>
                 ) : null}
-                <span className='post-page-location'>
-                  {editPostDetails.editLocation
-                    ? editPostDetails.editLocation
-                    : null}
-                </span>
+                <NavLink
+                  to={`/${
+                    postData?.postLocation?.id || ''
+                  }/${slugifiedLocationLabel}`}
+                  className='post-page-location'
+                >
+                  {editPostDetails?.editLocation || null}
+                </NavLink>
               </div>
               <button
                 className='post-page-options'

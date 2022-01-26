@@ -92,6 +92,7 @@ export enum PostActions {
   // Actions specific to fetching posts associated with a location id
   GET_POSTS_WITH_LOCATION_START = 'GET_POSTS_WITH_LOCATION_START',
   SET_META_DATA_FOR_LOCATION = 'SET_META_DATA_FOR_LOCATION',
+  SET_LOCATION_COORDINATES = 'SET_LOCATION_COORDINATES',
 }
 
 export interface PostError {
@@ -239,6 +240,11 @@ export interface PostLocationMetaData {
   locationId: string;
 }
 
+export interface LocationCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
 export interface PostModalDataToCache {
   postId: string;
   cacheObj: PostModalCacheObj;
@@ -305,7 +311,6 @@ export interface PostState {
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
   postMetaDataForHashtag: PostHashtagMetaData | null;
-  postMetaDataForLocation: PostLocationMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
   feedPagePostModalData: PostModalDataToFeed;
@@ -343,6 +348,8 @@ export interface PostState {
   getMapBoxAccessTokenError: PostError | null;
 
   // Used for posts with location
+  postMetaDataForLocation: PostLocationMetaData | null;
+  locationCoordinates: LocationCoordinates | null;
 }
 
 export interface CreatePostStart {
@@ -713,6 +720,11 @@ export interface SetPostMetaDataForLocation {
   payload: PostLocationMetaData;
 }
 
+export interface SetLocationCoordinates {
+  type: typeof PostActions.SET_LOCATION_COORDINATES;
+  payload: LocationCoordinates;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -785,4 +797,5 @@ export type PostActionTypes =
   | GetMapBoxTokenSuccess
   | GetMapBoxTokenFailure
   | GetPostsWithLocationStart
-  | SetPostMetaDataForLocation;
+  | SetPostMetaDataForLocation
+  | SetLocationCoordinates;

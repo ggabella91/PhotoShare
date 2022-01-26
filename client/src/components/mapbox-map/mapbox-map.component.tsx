@@ -3,16 +3,20 @@ import { useSelector } from 'react-redux';
 import mapboxgl, { Map } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import { selectMapBoxAccessToken } from '../../redux/post/post.selectors';
+import {
+  selectMapBoxAccessToken,
+  selectPostLocationCoordinates,
+} from '../../redux/post/post.selectors';
 
 import './mapbox-map.styles.scss';
 
 const MapBoxMap: React.FC = () => {
   const mapBoxAccessToken = useSelector(selectMapBoxAccessToken);
+  const postLocationCoordinates = useSelector(selectPostLocationCoordinates);
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<Map | null>(null);
-  const [lng, setLng] = useState(-70.9);
-  const [lat, setLat] = useState(42.35);
+  const [lng] = useState(postLocationCoordinates?.latitude || -70.9);
+  const [lat] = useState(postLocationCoordinates?.longitude || 42.35);
 
   useEffect(() => {
     if (mapBoxAccessToken) {

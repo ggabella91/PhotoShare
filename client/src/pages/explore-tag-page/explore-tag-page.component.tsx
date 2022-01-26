@@ -192,9 +192,9 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
       );
       setPostDataList(newDataArray);
 
-      const newFileArray =
-        postFileList &&
-        postFileList.filter((el) => el.s3Key !== postModalProps.get('s3Key'));
+      const newFileArray = postFileList?.filter(
+        (el) => el.s3Key !== postModalProps.get('s3Key')
+      );
       postFileList = newFileArray;
     }
   }, [archivePostConfirm]);

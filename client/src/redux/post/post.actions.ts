@@ -25,6 +25,7 @@ import {
   Location,
   PostsWithLocationReq,
   PostLocationMetaData,
+  LocationCoordinates,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -477,4 +478,11 @@ export const setPostMetaDataForLocation = (
 ): PostActionTypes => ({
   type: PostActions.SET_META_DATA_FOR_LOCATION,
   payload: postMetaData,
+});
+
+export const setLocationCoordinates = (
+  coordinates: LocationCoordinates
+): PostActionTypes => ({
+  type: PostActions.SET_LOCATION_COORDINATES,
+  payload: coordinates,
 });

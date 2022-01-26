@@ -271,3 +271,18 @@ export const selectMapBoxAccessToken = createSelector(
   [selectPostState],
   (postState: PostState) => postState.mapBoxAccessToken
 );
+
+export const selectPostMetaDataForHashtag = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postMetaDataForHashtag
+);
+
+export const selectPostMetaDataForLocation = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.postMetaDataForLocation
+);
+
+export const selectPostLocationCoordinates = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.locationCoordinates
+);
