@@ -31,6 +31,7 @@ import {
   PostsWithHashtagReq,
   Location,
   PostActionTypes,
+  PostsWithLocationReq,
 } from './post.types';
 
 import {
@@ -65,6 +66,7 @@ import {
   getSinglePostDataSuccess,
   getSinglePostDataFailure,
   setPostMetaDataForHashtag,
+  setPostMetaDataForLocation,
   getLocationsSuggestionsSuccess,
   getLocationsSuggestionsFailure,
   getMapBoxAccessTokenSuccess,
@@ -397,6 +399,37 @@ export function* getMapBoxAccessToken() {
   }
 }
 
+export function* getPostsWithLocation({
+  payload: { locationId, pageToShow, limit },
+}: {
+  payload: PostsWithLocationReq;
+}) {
+  try {
+    const {
+      data,
+    }: { data: { postsWithLocation: Post[]; queryLength?: number } } =
+      yield axios.get(
+        `/api/posts/locations/${locationId}?pageToShow=${pageToShow}&limit=${limit}`
+      );
+
+    if (data.queryLength) {
+      yield all([
+        put(addToPostDataArray(data.postsWithLocation)),
+        put(
+          setPostMetaDataForLocation({
+            queryLength: data.queryLength,
+            locationId,
+          })
+        ),
+      ]);
+    } else {
+      yield put(addToPostDataArray(data.postsWithLocation));
+    }
+  } catch (err) {
+    yield put(getPostDataFailure(err as PostError));
+  }
+}
+
 export function* onCreatePostStart(): SagaIterator {
   yield takeEvery<ActionPattern, PostSaga>(
     PostActions.CREATE_POST_START,
@@ -488,6 +521,13 @@ export function* onGetMapBoxAccessTokenStart(): SagaIterator {
   );
 }
 
+export function* onGetPostsWithLocationStart(): SagaIterator {
+  yield takeEvery<ActionPattern, PostSaga>(
+    PostActions.GET_POSTS_WITH_LOCATION_START,
+    getPostsWithLocation
+  );
+}
+
 export function* postSagas(): SagaIterator {
   yield all([
     call(onCreatePostStart),
@@ -503,5 +543,6 @@ export function* postSagas(): SagaIterator {
     call(onGetSinglePostDataStart),
     call(onGetLocationsSuggestionsStart),
     call(onGetMapBoxAccessTokenStart),
+    call(onGetPostsWithLocationStart),
   ]);
 }

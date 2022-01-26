@@ -1,3 +1,26 @@
+@mixin avatar-dimensions {
+  position: relative;
+  width: 14vw;
+  max-width: 150px;
+  max-height: 150px;
+  min-width: 75px;
+  min-height: 75px;
+  height: 14vw;
+  border-radius: 50%;
+}
+
+@mixin respond-medium {
+  @media (max-width: 724px) {
+    @content;
+  }
+}
+
+@mixin respond-wide {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
 .explore-location-page {
   min-height: 800px;
   display: flex;
@@ -6,4 +29,84 @@
   align-items: center;
   margin-left: 50%;
   transform: translate(-50%);
+
+  @include respond-wide() {
+    width: 70vw;
+    padding: 1vh 0;
+  }
+
+  @include respond-medium() {
+    width: 95vw;
+  }
+
+  .avatar-and-location {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: calc(1vh + 10px);
+    width: 93vw;
+    max-width: 925.5px;
+
+    .location-avatar-container {
+      height: 22vh;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      margin-bottom: 10px;
+
+      @include respond-medium() {
+        height: 14vh;
+      }
+
+      .location-avatar {
+        margin-left: 0.5vw;
+        margin-top: calc(1vh + 15px);
+        margin-right: 50px;
+        object-fit: cover;
+        @include avatar-dimensions();
+      }
+    }
+
+    .location-label-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 30vw;
+      height: 18vh;
+      margin-top: 3.5vh;
+      justify-content: flex-start;
+
+      .location-label {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .subhead-and-posts-grid {
+    display: flex;
+    flex-direction: column;
+
+    .subhead {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+
+      .top-posts {
+        font-size: 14px;
+        font-weight: 600;
+        color: #8e8e8e;
+        margin-left: 0.5vw;
+      }
+    }
+
+    .posts-grid {
+      margin-top: 1vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
 }

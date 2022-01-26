@@ -84,6 +84,10 @@ const INITIAL_STATE: PostState = {
   // Mapbox access token fetched from posts service
   mapBoxAccessToken: null,
   getMapBoxAccessTokenError: null,
+
+  // Used for posts with location
+  postMetaDataForLocation: null,
+  locationCoordinates: null,
 };
 
 const postReducer = (
@@ -418,6 +422,11 @@ const postReducer = (
         ...state,
         postMetaDataForHashtag: action.payload,
       };
+    case PostActions.SET_META_DATA_FOR_LOCATION:
+      return {
+        ...state,
+        postMetaDataForLocation: action.payload,
+      };
     case PostActions.SET_POST_LIKING_USERS_ARRAY:
       return {
         ...state,
@@ -462,6 +471,11 @@ const postReducer = (
       return {
         ...state,
         locationSelection: action.payload,
+      };
+    case PostActions.SET_LOCATION_COORDINATES:
+      return {
+        ...state,
+        locationCoordinates: action.payload,
       };
     case PostActions.SET_IS_POST_PAGE:
       return {

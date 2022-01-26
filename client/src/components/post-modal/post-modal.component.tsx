@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -9,6 +9,7 @@ import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import slugify from 'slugify';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -207,6 +208,10 @@ export const PostModal: React.FC<PostModalProps> = ({
   const [areReactionsReadyForRendering, setAreReactionsReadyForRendering] =
     useState(false);
 
+  const [slugifiedLocationLabel, setSlugifiedLocationLabel] = useState(
+    slugify(location.label, { lower: true, strict: true })
+  );
+
   const postModalDataCache = useSelector(
     (state: AppState) => state.post.postModalDataCache
   );
@@ -280,6 +285,9 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     setEditPostDetails({ editCaption: caption, editLocation: location.label });
+    setSlugifiedLocationLabel(
+      slugify(location.label, { lower: true, strict: true })
+    );
   }, [caption, location]);
 
   useEffect(() => {
@@ -755,9 +763,12 @@ export const PostModal: React.FC<PostModalProps> = ({
             <div className='text-and-options'>
               <div className='user-and-location'>
                 <span className='user-name'>{userName}</span>
-                <span className='post-location'>
+                <NavLink
+                  to={`/${location.id}/${slugifiedLocationLabel}`}
+                  className='post-location'
+                >
                   {editPostDetails.editLocation}
-                </span>
+                </NavLink>
               </div>
               <button
                 className='post-options'
