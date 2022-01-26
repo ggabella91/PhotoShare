@@ -775,7 +775,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               <div className='user-and-location'>
                 <span className='user-name'>{userName}</span>
                 <NavLink
-                  to={`/${location.id}/${slugifiedLocationLabel}`}
+                  to={`/explore/locations/${location.id}/${slugifiedLocationLabel}`}
                   className='post-location'
                 >
                   {editPostDetails.editLocation}

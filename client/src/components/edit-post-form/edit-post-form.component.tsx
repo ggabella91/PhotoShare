@@ -54,7 +54,11 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
   }, []);
 
   useEffect(() => {
-    if (debouncedLocationSearchString.length >= 3 && showSuggestions) {
+    if (
+      debouncedLocationSearchString &&
+      debouncedLocationSearchString.length >= 3 &&
+      showSuggestions
+    ) {
       dispatch(getLocationsSuggestionsStart(debouncedLocationSearchString));
     }
   }, [debouncedLocationSearchString]);
