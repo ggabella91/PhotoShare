@@ -208,9 +208,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   const [areReactionsReadyForRendering, setAreReactionsReadyForRendering] =
     useState(false);
 
-  const [slugifiedLocationLabel, setSlugifiedLocationLabel] = useState(
-    slugify(location.label, { lower: true, strict: true })
-  );
+  const [slugifiedLocationLabel, setSlugifiedLocationLabel] = useState('');
 
   const postModalDataCache = useSelector(
     (state: AppState) => state.post.postModalDataCache
@@ -263,6 +261,12 @@ export const PostModal: React.FC<PostModalProps> = ({
         editCaption: '',
         editLocation: '',
       });
+
+      const slugifiedString = slugify(location.label, {
+        lower: true,
+        strict: true,
+      });
+      setSlugifiedLocationLabel(slugifiedString);
     }
   }, [postId]);
 
@@ -285,9 +289,12 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     setEditPostDetails({ editCaption: caption, editLocation: location.label });
-    setSlugifiedLocationLabel(
-      slugify(location.label, { lower: true, strict: true })
-    );
+
+    const slugifiedString = slugify(location.label, {
+      lower: true,
+      strict: true,
+    });
+    setSlugifiedLocationLabel(slugifiedString);
   }, [caption, location]);
 
   useEffect(() => {
