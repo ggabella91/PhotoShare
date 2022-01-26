@@ -262,11 +262,13 @@ export const PostModal: React.FC<PostModalProps> = ({
         editLocation: '',
       });
 
-      const slugifiedString = slugify(location.label, {
-        lower: true,
-        strict: true,
-      });
-      setSlugifiedLocationLabel(slugifiedString);
+      if (location.label) {
+        const slugifiedString = slugify(location.label, {
+          lower: true,
+          strict: true,
+        });
+        setSlugifiedLocationLabel(slugifiedString);
+      }
     }
   }, [postId]);
 
@@ -290,11 +292,13 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     setEditPostDetails({ editCaption: caption, editLocation: location.label });
 
-    const slugifiedString = slugify(location.label, {
-      lower: true,
-      strict: true,
-    });
-    setSlugifiedLocationLabel(slugifiedString);
+    if (location.label) {
+      const slugifiedString = slugify(location.label, {
+        lower: true,
+        strict: true,
+      });
+      setSlugifiedLocationLabel(slugifiedString);
+    }
   }, [caption, location]);
 
   useEffect(() => {

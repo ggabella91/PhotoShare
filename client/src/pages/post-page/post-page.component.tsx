@@ -225,7 +225,7 @@ export const PostPage: React.FC = () => {
     if (postData) {
       handleSetIsCurrentUserPost(postData);
 
-      if (postData.postLocation) {
+      if (postData.postLocation && postData.postLocation.label) {
         const slugifiedString = slugify(postData.postLocation.label, {
           lower: true,
           strict: true,
@@ -286,14 +286,16 @@ export const PostPage: React.FC = () => {
         });
 
         if (editPostDetailsConfirm.postLocation) {
-          const slugifiedString = slugify(
-            editPostDetailsConfirm.postLocation.label,
-            {
-              lower: true,
-              strict: true,
-            }
-          );
-          setSlugifiedLocationLabel(slugifiedString);
+          if (editPostDetailsConfirm.postLocation.label) {
+            const slugifiedString = slugify(
+              editPostDetailsConfirm.postLocation.label,
+              {
+                lower: true,
+                strict: true,
+              }
+            );
+            setSlugifiedLocationLabel(slugifiedString);
+          }
 
           dispatch(
             setLocationCoordinates({
