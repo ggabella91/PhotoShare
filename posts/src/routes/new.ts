@@ -123,7 +123,7 @@ router.post(
 
         const postResponseObj: PostResponseObj = {
           ...postObj,
-          postLocation: savedPostLocation || undefined,
+          postLocation: savedPostLocation?.toObject() || undefined,
         };
 
         res.status(201).send(postResponseObj);

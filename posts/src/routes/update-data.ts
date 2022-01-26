@@ -68,7 +68,7 @@ router.patch(
 
       const updatedPostResponseObj: PostResponseObj = {
         ...updatedPostObj,
-        postLocation: savedPostLocation || undefined,
+        postLocation: savedPostLocation?.toObject() || undefined,
       };
 
       res.status(200).send(updatedPostResponseObj);

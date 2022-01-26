@@ -4,7 +4,9 @@ import {
   requireAuth,
   BadRequestError,
 } from '@ggabella-photo-share/common';
-import { Post } from '../models/post';
+import { Post, PostDoc, PostResponseObj } from '../models/post';
+import { LocationDoc, LocationAttrs } from '../models/location';
+import { getLocationObjFromId } from '../utils/location-utils';
 
 const router = express.Router();
 
@@ -21,7 +23,7 @@ router.get(
       throw new BadRequestError('No user ID was provided.');
     }
 
-    let posts;
+    let postsWithoutLocationObj: PostDoc[] = [];
 
     if (pageToShow && limit) {
       let queryLength: number;
@@ -34,12 +36,49 @@ router.get(
         ).length;
       }
 
-      posts = await Post.find({ userId, archived: { $ne: true } }, null, {
-        sort: { _id: -1 },
-      })
+      postsWithoutLocationObj = await Post.find(
+        { userId, archived: { $ne: true } },
+        null,
+        {
+          sort: { _id: -1 },
+        }
+      )
         .limit(limit)
         .skip((pageToShow - 1) * limit);
-      console.log(posts);
+      console.log(
+        'Posts data without location object: ',
+        postsWithoutLocationObj
+      );
+
+      let posts: PostResponseObj[] = [];
+      let savedPostLocationObjPromises: Promise<LocationDoc | null>[] = [];
+
+      postsWithoutLocationObj.forEach(async (post) => {
+        if (post.postLocation) {
+          savedPostLocationObjPromises.push(
+            getLocationObjFromId(post.postLocation)
+          );
+        }
+      });
+
+      const savedPostLocationObjs = await Promise.all(
+        savedPostLocationObjPromises
+      );
+
+      console.log('Saved post location objects: ', savedPostLocationObjs);
+
+      postsWithoutLocationObj.forEach((post, idx) => {
+        const postObj = post.toObject();
+
+        const postResponseObj: PostResponseObj = {
+          ...postObj,
+          postLocation: savedPostLocationObjs[idx]?.toObject() || undefined,
+        };
+
+        posts.push(postResponseObj);
+      });
+
+      console.log('Posts data with location objects: ', posts);
 
       if (queryLength!) {
         res.status(200).send({ posts, queryLength });
@@ -47,10 +86,47 @@ router.get(
         res.status(200).send({ posts });
       }
     } else {
-      posts = await Post.find({ userId, archived: { $ne: true } }, null, {
-        sort: { _id: -1 },
+      postsWithoutLocationObj = await Post.find(
+        { userId, archived: { $ne: true } },
+        null,
+        {
+          sort: { _id: -1 },
+        }
+      );
+      console.log(
+        'Posts data without location objects: ',
+        postsWithoutLocationObj
+      );
+
+      let posts: PostResponseObj[] = [];
+      let savedPostLocationObjPromises: Promise<LocationDoc | null>[] = [];
+
+      postsWithoutLocationObj.forEach(async (post) => {
+        if (post.postLocation) {
+          savedPostLocationObjPromises.push(
+            getLocationObjFromId(post.postLocation)
+          );
+        }
       });
-      console.log('Posts Data: ', posts);
+
+      const savedPostLocationObjs = await Promise.all(
+        savedPostLocationObjPromises
+      );
+
+      console.log('Saved post location objects: ', savedPostLocationObjs);
+
+      postsWithoutLocationObj.forEach((post, idx) => {
+        const postObj = post.toObject();
+
+        const postResponseObj: PostResponseObj = {
+          ...postObj,
+          postLocation: savedPostLocationObjs[idx]?.toObject() || undefined,
+        };
+
+        posts.push(postResponseObj);
+      });
+
+      console.log('Posts data with location objects: ', posts);
 
       res.status(200).send({ posts });
     }

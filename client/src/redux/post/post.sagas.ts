@@ -409,7 +409,7 @@ export function* getPostsWithLocation({
       data,
     }: { data: { postsWithLocation: Post[]; queryLength?: number } } =
       yield axios.get(
-        `/api/posts/locations/${locationId}?pageToShow=${pageToShow}&limit=${limit}`
+        `/api/posts/locations/id/${locationId}?pageToShow=${pageToShow}&limit=${limit}`
       );
 
     if (data.queryLength) {

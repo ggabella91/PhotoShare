@@ -67,6 +67,7 @@ import {
   savePostModalDataToCache,
   removePostModalDataFromCache,
   clearPostState,
+  setLocationCoordinates,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -261,14 +262,6 @@ export const PostModal: React.FC<PostModalProps> = ({
         editCaption: '',
         editLocation: '',
       });
-
-      if (location.label) {
-        const slugifiedString = slugify(location.label, {
-          lower: true,
-          strict: true,
-        });
-        setSlugifiedLocationLabel(slugifiedString);
-      }
     }
   }, [postId]);
 
@@ -299,6 +292,15 @@ export const PostModal: React.FC<PostModalProps> = ({
       });
       setSlugifiedLocationLabel(slugifiedString);
     }
+
+    if (location.latitude && location.longitude) {
+      dispatch(
+        setLocationCoordinates({
+          latitude: location.latitude,
+          longitude: location.longitude,
+        })
+      );
+    }
   }, [caption, location]);
 
   useEffect(() => {
@@ -324,6 +326,23 @@ export const PostModal: React.FC<PostModalProps> = ({
           editCaption: newCaption,
           editLocation: newLocation.label || '',
         });
+
+        if (newLocation.label) {
+          const slugifiedString = slugify(newLocation.label, {
+            lower: true,
+            strict: true,
+          });
+          setSlugifiedLocationLabel(slugifiedString);
+        }
+
+        if (newLocation.latitude && newLocation.longitude) {
+          dispatch(
+            setLocationCoordinates({
+              latitude: newLocation.latitude,
+              longitude: newLocation.longitude,
+            })
+          );
+        }
       } else {
         setCaptionInfoList(List());
       }
@@ -775,7 +794,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               <div className='user-and-location'>
                 <span className='user-name'>{userName}</span>
                 <NavLink
-                  to={`/${location.id}/${slugifiedLocationLabel}`}
+                  to={`/explore/locations/${location.id}/${slugifiedLocationLabel}`}
                   className='post-location'
                 >
                   {editPostDetails.editLocation}

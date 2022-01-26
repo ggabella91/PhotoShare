@@ -4,7 +4,9 @@ import {
   requireAuth,
   BadRequestError,
 } from '@ggabella-photo-share/common';
-import { Post } from '../models/post';
+import { Post, PostResponseObj } from '../models/post';
+import { LocationDoc } from '../models/location';
+import { getLocationObjFromId } from '../utils/location-utils';
 
 const router = express.Router();
 
@@ -21,11 +23,32 @@ router.get(
       throw new BadRequestError('No post ID was provided.');
     }
 
-    const singlePost = await Post.findOne({
+    const singlePostWithoutLocationObj = await Post.findOne({
       _id: postId,
       archived: { $ne: true },
     });
-    console.log('Single Post Data: ', singlePost);
+    console.log('Single Post Data: ', singlePostWithoutLocationObj);
+
+    let singlePost: PostResponseObj | null = null;
+
+    let savedPostLocationObj: LocationDoc | null = null;
+    if (
+      singlePostWithoutLocationObj &&
+      singlePostWithoutLocationObj.postLocation
+    ) {
+      savedPostLocationObj = await getLocationObjFromId(
+        singlePostWithoutLocationObj.postLocation
+      );
+
+      const postObj = singlePostWithoutLocationObj.toObject();
+
+      singlePost = {
+        ...postObj,
+        postLocation: savedPostLocationObj || undefined,
+      };
+    }
+
+    console.log('Single Post Data With Location Object: ', singlePost);
 
     res.status(200).send(singlePost);
   }

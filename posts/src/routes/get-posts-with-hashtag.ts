@@ -4,7 +4,9 @@ import {
   requireAuth,
   BadRequestError,
 } from '@ggabella-photo-share/common';
-import { Post } from '../models/post';
+import { Post, PostResponseObj } from '../models/post';
+import { LocationDoc } from '../models/location';
+import { getLocationObjFromId } from '../utils/location-utils';
 
 const router = express.Router();
 
@@ -21,7 +23,7 @@ router.get(
       throw new BadRequestError('No hashtag was provided.');
     }
 
-    let postsWithHashtag;
+    let postsWithHashtagWithoutLocationObj;
 
     if (pageToShow && limit) {
       let queryLength = 0;
@@ -38,7 +40,7 @@ router.get(
         ).length;
       }
 
-      postsWithHashtag = await Post.find(
+      postsWithHashtagWithoutLocationObj = await Post.find(
         { hashtags: hashtag, archived: { $ne: true } },
         null,
         {
@@ -47,7 +49,43 @@ router.get(
       )
         .limit(limit)
         .skip((pageToShow - 1) * limit);
-      console.log(`Data for posts with hashtag: ${hashtag}`, postsWithHashtag);
+      console.log(
+        `Data for posts with hashtag: ${hashtag}`,
+        postsWithHashtagWithoutLocationObj
+      );
+
+      let postsWithHashtag: PostResponseObj[] = [];
+      let savedPostLocationObjPromises: Promise<LocationDoc | null>[] = [];
+
+      postsWithHashtagWithoutLocationObj.forEach(async (post) => {
+        if (post.postLocation) {
+          savedPostLocationObjPromises.push(
+            getLocationObjFromId(post.postLocation)
+          );
+        }
+      });
+
+      const savedPostLocationObjs = await Promise.all(
+        savedPostLocationObjPromises
+      );
+
+      console.log('Saved post location objects: ', savedPostLocationObjs);
+
+      postsWithHashtagWithoutLocationObj.forEach((post, idx) => {
+        const postObj = post.toObject();
+
+        const postResponseObj: PostResponseObj = {
+          ...postObj,
+          postLocation: savedPostLocationObjs[idx]?.toObject() || undefined,
+        };
+
+        postsWithHashtag.push(postResponseObj);
+      });
+
+      console.log(
+        'Data for posts with hashtag with location objects: ',
+        postsWithHashtag
+      );
 
       if (queryLength) {
         res.status(200).send({ postsWithHashtag, queryLength });
@@ -55,14 +93,50 @@ router.get(
         res.status(200).send({ postsWithHashtag });
       }
     } else {
-      postsWithHashtag = await Post.find(
+      postsWithHashtagWithoutLocationObj = await Post.find(
         { hashtags: hashtag, archived: { $ne: true } },
         null,
         {
           sort: { totalReactions: -1 },
         }
       );
-      console.log(`Data for posts with hashtag: ${hashtag}`, postsWithHashtag);
+      console.log(
+        `Data for posts with hashtag: ${hashtag}`,
+        postsWithHashtagWithoutLocationObj
+      );
+
+      let postsWithHashtag: PostResponseObj[] = [];
+      let savedPostLocationObjPromises: Promise<LocationDoc | null>[] = [];
+
+      postsWithHashtagWithoutLocationObj.forEach(async (post) => {
+        if (post.postLocation) {
+          savedPostLocationObjPromises.push(
+            getLocationObjFromId(post.postLocation)
+          );
+        }
+      });
+
+      const savedPostLocationObjs = await Promise.all(
+        savedPostLocationObjPromises
+      );
+
+      console.log('Saved post location objects: ', savedPostLocationObjs);
+
+      postsWithHashtagWithoutLocationObj.forEach((post, idx) => {
+        const postObj = post.toObject();
+
+        const postResponseObj: PostResponseObj = {
+          ...postObj,
+          postLocation: savedPostLocationObjs[idx]?.toObject() || undefined,
+        };
+
+        postsWithHashtag.push(postResponseObj);
+      });
+
+      console.log(
+        'Data for posts with hashtag with location objects: ',
+        postsWithHashtag
+      );
 
       res.status(200).send({ postsWithHashtag });
     }

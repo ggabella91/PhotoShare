@@ -787,7 +787,7 @@ export const PostPage: React.FC = () => {
                   <span className='user-name'>{otherUser.username}</span>
                 ) : null}
                 <NavLink
-                  to={`/${
+                  to={`/explore/locations/${
                     postData?.postLocation?.id || ''
                   }/${slugifiedLocationLabel}`}
                   className='post-page-location'

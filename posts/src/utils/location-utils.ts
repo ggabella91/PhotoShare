@@ -70,3 +70,9 @@ export const saveNewOrGetExistingLocation = async (location: LocationAttrs) => {
     }
   }
 };
+
+export const getLocationObjFromId = async (locationId: string) => {
+  const locationObj = await Location.findById(locationId);
+
+  return locationObj;
+};
