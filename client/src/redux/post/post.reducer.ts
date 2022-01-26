@@ -49,6 +49,7 @@ const INITIAL_STATE: PostState = {
   isLoadingPostData: false,
   postMetaDataForUser: null,
   postMetaDataForHashtag: null,
+  postMetaDataForLocation: null,
   postLikingUsersArray: null,
   showPostLikingUsersModal: false,
   feedPagePostModalData: POST_MODAL_DATA_INITIAL_STATE,
@@ -417,6 +418,11 @@ const postReducer = (
       return {
         ...state,
         postMetaDataForHashtag: action.payload,
+      };
+    case PostActions.SET_META_DATA_FOR_LOCATION:
+      return {
+        ...state,
+        postMetaDataForLocation: action.payload,
       };
     case PostActions.SET_POST_LIKING_USERS_ARRAY:
       return {

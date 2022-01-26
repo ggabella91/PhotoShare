@@ -23,6 +23,8 @@ import {
   PostsWithHashtagReq,
   PostHashtagMetaData,
   Location,
+  PostsWithLocationReq,
+  PostLocationMetaData,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -461,4 +463,18 @@ export const getMapBoxAccessTokenFailure = (
 ): PostActionTypes => ({
   type: PostActions.GET_MAPBOX_TOKEN_FAILURE,
   payload: error,
+});
+
+export const getPostsWithLocationStart = (
+  postsWithLocationReq: PostsWithLocationReq
+): PostActionTypes => ({
+  type: PostActions.GET_POSTS_WITH_LOCATION_START,
+  payload: postsWithLocationReq,
+});
+
+export const setPostMetaDataForLocation = (
+  postMetaData: PostLocationMetaData
+): PostActionTypes => ({
+  type: PostActions.SET_META_DATA_FOR_LOCATION,
+  payload: postMetaData,
 });

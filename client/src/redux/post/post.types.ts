@@ -69,7 +69,7 @@ export enum PostActions {
   SAVE_POST_MODAL_DATA_TO_CACHE = 'SAVE_POST_MODAL_DATA_TO_CACHE',
   REMOVE_POST_MODAL_DATA_FROM_CACHE = 'REMOVE_POST_MODAL_DATA_FROM_CACHE',
 
-  // Actions specific to hashtags associated with posts
+  // Actions specific to fetching posts associated with hashtags
   GET_POSTS_WITH_HASHTAG_START = 'GET_POSTS_WITH_HASHTAG_START',
   SET_META_DATA_FOR_HASHTAG = 'SET_META_DATA_FOR_HASHTAG',
 
@@ -88,6 +88,10 @@ export enum PostActions {
   GET_MAPBOX_TOKEN_START = 'GET_MAPBOX_TOKEN_START',
   GET_MAPBOX_TOKEN_SUCCESS = 'GET_MAPBOX_TOKEN_SUCCESS',
   GET_MAPBOX_TOKEN_FAILURE = 'GET_MAPBOX_TOKEN_FAILURE',
+
+  // Actions specific to fetching posts associated with a location id
+  GET_POSTS_WITH_LOCATION_START = 'GET_POSTS_WITH_LOCATION_START',
+  SET_META_DATA_FOR_LOCATION = 'SET_META_DATA_FOR_LOCATION',
 }
 
 export interface PostError {
@@ -178,6 +182,12 @@ export interface PostsWithHashtagReq {
   limit?: number;
 }
 
+export interface PostsWithLocationReq {
+  locationId: string;
+  pageToShow?: number;
+  limit?: number;
+}
+
 export interface PostFileReq {
   s3Key: string;
   bucket: string;
@@ -222,6 +232,11 @@ export interface PostMetaData {
 export interface PostHashtagMetaData {
   queryLength: number;
   hashtag: string;
+}
+
+export interface PostLocationMetaData {
+  queryLength: number;
+  locationId: string;
 }
 
 export interface PostModalDataToCache {
@@ -290,6 +305,7 @@ export interface PostState {
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
   postMetaDataForHashtag: PostHashtagMetaData | null;
+  postMetaDataForLocation: PostLocationMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
   feedPagePostModalData: PostModalDataToFeed;
@@ -325,6 +341,8 @@ export interface PostState {
   // Mapbox access token fetched from posts service
   mapBoxAccessToken: string | null;
   getMapBoxAccessTokenError: PostError | null;
+
+  // Used for posts with location
 }
 
 export interface CreatePostStart {
@@ -643,6 +661,8 @@ export interface GetPostsWithHashtagStart {
   payload: PostsWithHashtagReq;
 }
 
+// Interfaces related to actions involving locations
+
 export interface GetLocationsSuggestionsStart {
   type: typeof PostActions.GET_LOCATIONS_SUGGESTIONS_START;
   payload: string;
@@ -681,6 +701,16 @@ export interface GetMapBoxTokenSuccess {
 export interface GetMapBoxTokenFailure {
   type: typeof PostActions.GET_MAPBOX_TOKEN_FAILURE;
   payload: PostError;
+}
+
+export interface GetPostsWithLocationStart {
+  type: typeof PostActions.GET_POSTS_WITH_LOCATION_START;
+  payload: PostsWithLocationReq;
+}
+
+export interface SetPostMetaDataForLocation {
+  type: typeof PostActions.SET_META_DATA_FOR_LOCATION;
+  payload: PostLocationMetaData;
 }
 
 export type PostActionTypes =
@@ -753,4 +783,6 @@ export type PostActionTypes =
   | SetIsPostPage
   | GetMapBoxTokenStart
   | GetMapBoxTokenSuccess
-  | GetMapBoxTokenFailure;
+  | GetMapBoxTokenFailure
+  | GetPostsWithLocationStart
+  | SetPostMetaDataForLocation;

@@ -82,10 +82,13 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           render={() => (currentUser ? <PostPage /> : <Redirect to='/' />)}
         />
         <Route
-          path='/explore/locations/:location'
+          path='/explore/locations/:locationId/:location'
           render={({ match }) =>
             currentUser ? (
-              <ExploreLocationPage location={match.params.location} />
+              <ExploreLocationPage
+                locationId={match.params.locationId}
+                location={match.params.location}
+              />
             ) : (
               <Redirect to='/' />
             )
