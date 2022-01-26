@@ -15,8 +15,8 @@ const MapBoxMap: React.FC = () => {
   const postLocationCoordinates = useSelector(selectPostLocationCoordinates);
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<Map | null>(null);
-  const [lng] = useState(postLocationCoordinates?.latitude || null);
-  const [lat] = useState(postLocationCoordinates?.longitude || null);
+  const [lat] = useState(postLocationCoordinates?.latitude || null);
+  const [lng] = useState(postLocationCoordinates?.longitude || null);
 
   useEffect(() => {
     if (mapBoxAccessToken) {
