@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -49,6 +49,8 @@ interface UserInfoProps {
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
   setShowPostEditForm: typeof setShowPostEditForm;
   setFeedPagePostOptionsModalShow: typeof setFeedPagePostOptionsModalShow;
+  selectedSuggestion?: number | null;
+  navigate?: boolean;
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({
@@ -60,6 +62,8 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   setShowCommentOptionsModal,
   setShowPostEditForm,
   setFeedPagePostOptionsModalShow,
+  selectedSuggestion,
+  navigate,
 }) => {
   const [showCommentOptionsButtonForIdx, setShowCommentOptionsButtonForIdx] =
     useState({ show: false, idx: -1 });
@@ -165,6 +169,23 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     );
   };
 
+  useEffect(() => {
+    if (
+      styleType === StyleType.suggestion &&
+      typeof selectedSuggestion === 'number' &&
+      navigate
+    ) {
+      const userProfile = userInfoList.find(
+        (user, idx) => idx === selectedSuggestion
+      );
+
+      if (userProfile) {
+        const username = userProfile.username;
+        history.push(`/${username}`);
+      }
+    }
+  }, [selectedSuggestion, navigate]);
+
   const userInfo = userInfoList.map((el: UserInfoAndOtherData, idx: number) => (
     <div
       className='user-and-options'
@@ -177,7 +198,11 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       onMouseLeave={handleOnMouseLeave}
       onMouseDown={handleMouseDown}
     >
-      <div className={`user-${styleType}-element`}>
+      <div
+        className={`user-${styleType}-element${
+          selectedSuggestion === idx ? ' selected' : ''
+        }`}
+      >
         <div className={`${styleType}-avatar`}>
           {el.profilePhotoFileString ? (
             <img
