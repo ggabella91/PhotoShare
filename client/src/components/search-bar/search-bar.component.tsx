@@ -79,6 +79,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
   const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
+  const [selectedSuggestion, setSelectedSuggestion] = useState<number | null>(
+    null
+  );
+  const [navigate, setNavigate] = useState(false);
 
   let bucket: string;
 
@@ -195,6 +199,35 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget)) {
       setHideSuggestionsOnBlur(true);
+      setSelectedSuggestion(null);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (userSuggestionsList.size) {
+      if (event.key === 'ArrowUp') {
+        if (selectedSuggestion === null) {
+          setSelectedSuggestion(userSuggestionsList.size - 1);
+        } else {
+          selectedSuggestion === 0
+            ? setSelectedSuggestion(null)
+            : setSelectedSuggestion(
+                (selectedSuggestion) => selectedSuggestion! - 1
+              );
+        }
+      } else if (event.key === 'ArrowDown') {
+        if (selectedSuggestion === null) {
+          setSelectedSuggestion(0);
+        } else {
+          selectedSuggestion === userSuggestionsList.size - 1
+            ? setSelectedSuggestion(null)
+            : setSelectedSuggestion(
+                (selectedSuggestion) => selectedSuggestion! + 1
+              );
+        }
+      } else if (event.key === 'Enter') {
+        setNavigate(true);
+      }
     }
   };
 
@@ -214,11 +247,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           value={searchString}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
         />
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
           <UserInfo
             userInfoList={userSuggestionsList}
             styleType={StyleType.suggestion}
+            selectedSuggestion={selectedSuggestion}
+            navigate={navigate}
           />
         )}
         {showUserSuggestions &&
