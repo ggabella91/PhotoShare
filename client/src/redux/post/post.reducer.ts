@@ -396,6 +396,11 @@ const postReducer = (
         deleteReactionConfirm: null,
         feedPostReactionsArray: [],
       };
+    case PostActions.CLEAR_LOCATIONS_SUGGESTIONS:
+      return {
+        ...state,
+        locationsSuggestions: [],
+      };
     case PostActions.CLEAR_POST_STATE:
       return {
         ...INITIAL_STATE,

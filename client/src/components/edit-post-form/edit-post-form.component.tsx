@@ -11,6 +11,7 @@ import {
   setShowPostEditForm,
   editPostDetailsStart,
   getLocationsSuggestionsStart,
+  clearLocationsSuggestions,
 } from '../../redux/post/post.actions';
 import { useDebounce } from '../../pages/hooks';
 import LocationsSuggestionsContainer, {
@@ -97,6 +98,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
 
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget)) {
+      dispatch(clearLocationsSuggestions());
       setShowSuggestions(false);
     }
   };

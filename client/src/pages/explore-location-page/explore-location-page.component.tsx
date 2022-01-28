@@ -6,6 +6,7 @@ import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import { useLazyLoading } from '../hooks';
 import MapBoxMap from '../../components/mapbox-map/mapbox-map.component';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import { OtherUserType } from '../../redux/user/user.types';
 import { getOtherUserStart } from '../../redux/user/user.actions';
@@ -24,6 +25,7 @@ import {
   deleteReactionStart,
   setShowCommentOptionsModal,
   clearArchivePostStatuses,
+  setLocationCoordinates,
 } from '../../redux/post/post.actions';
 
 import PostModal from '../../components/post-modal/post-modal.component';
@@ -85,7 +87,6 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
   const { currentUser, otherUser } = userState;
   const {
     postData,
-    getPostDataConfirm,
     postFiles,
     postMetaDataForLocation,
     isLoadingPostData,
@@ -94,6 +95,7 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
     showCommentOptionsModal,
     otherUserProfilePhotoFile,
     archivePostConfirm,
+    locationCoordinates,
   } = postState;
 
   const { intersectionCounter, lastElementRef } =
@@ -134,6 +136,13 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
       let postDataList = List(postData);
 
       setPostDataList(postDataList);
+
+      if (!locationCoordinates) {
+        if (postData.length && postData[0].postLocation) {
+          const { latitude, longitude } = postData[0].postLocation;
+          dispatch(setLocationCoordinates({ latitude, longitude }));
+        }
+      }
     }
   }, [postData]);
 
@@ -326,10 +335,14 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
       <MapBoxMap />
       <div className='avatar-and-location'>
         <div className='location-avatar-container'>
-          <div className='location-avatar'></div>
+          <div className='location-avatar'>
+            <LocationOnIcon fontSize='large' />
+          </div>
         </div>
         <div className='location-label-container'>
-          <span className='location-label'>{location}</span>
+          <span className='location-label'>
+            {postDataList.get(0)?.postLocation?.label || location}
+          </span>
         </div>
       </div>
       <div className='subhead-and-posts-grid'>

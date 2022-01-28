@@ -447,6 +447,11 @@ export const setIsPostPage = (isPostPage: boolean): PostActionTypes => ({
   payload: isPostPage,
 });
 
+export const clearLocationsSuggestions = (): PostActionTypes => ({
+  type: PostActions.CLEAR_LOCATIONS_SUGGESTIONS,
+  payload: null,
+});
+
 export const getMapBoxAccessTokenStart = (): PostActionTypes => ({
   type: PostActions.GET_MAPBOX_TOKEN_START,
   payload: null,

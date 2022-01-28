@@ -32,7 +32,6 @@
 
   @include respond-wide() {
     width: 70vw;
-    padding: 1vh 0;
   }
 
   @include respond-medium() {
@@ -62,10 +61,14 @@
       }
 
       .location-avatar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin-left: 0.5vw;
         margin-top: calc(1vh + 15px);
         margin-right: 50px;
         object-fit: cover;
+        border: 1px solid #bdbdbd;
         @include avatar-dimensions();
       }
     }
@@ -78,7 +81,7 @@
       width: 30vw;
       height: 18vh;
       margin-top: 3.5vh;
-      justify-content: flex-start;
+      padding-top: 3vh;
 
       .location-label {
         font-size: 28px;
