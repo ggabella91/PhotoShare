@@ -15,14 +15,21 @@ const MapBoxMap: React.FC = () => {
   const postLocationCoordinates = useSelector(selectPostLocationCoordinates);
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<Map | null>(null);
-  const [lat] = useState(postLocationCoordinates?.latitude || null);
-  const [lng] = useState(postLocationCoordinates?.longitude || null);
+  const [lat, setLat] = useState(postLocationCoordinates?.latitude || null);
+  const [lng, setLng] = useState(postLocationCoordinates?.longitude || null);
 
   useEffect(() => {
     if (mapBoxAccessToken) {
       mapboxgl.accessToken = mapBoxAccessToken!;
     }
   }, [mapBoxAccessToken]);
+
+  useEffect(() => {
+    if (postLocationCoordinates) {
+      setLat(postLocationCoordinates.latitude);
+      setLng(postLocationCoordinates.longitude);
+    }
+  }, [postLocationCoordinates]);
 
   useEffect(() => {
     if (mapboxgl.accessToken && lat && lng) {

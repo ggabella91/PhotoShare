@@ -16,6 +16,7 @@ import {
   createPostStart,
   clearPostStatuses,
   getLocationsSuggestionsStart,
+  clearLocationsSuggestions,
 } from '../../redux/post/post.actions';
 
 import {
@@ -194,6 +195,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
 
   const handleBlur = (event: React.FocusEvent) => {
     if (!event.currentTarget.contains(event.relatedTarget)) {
+      dispatch(clearLocationsSuggestions());
       setShowSuggestions(false);
     }
   };

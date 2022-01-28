@@ -78,6 +78,7 @@ export enum PostActions {
   GET_LOCATIONS_SUGGESTIONS_SUCCESS = 'GET_LOCATIONS_SUGGESTIONS_SUCCESS',
   GET_LOCATIONS_SUGGESTIONS_FAILURE = 'GET_LOCATIONS_SUGGESTIONS_FAILURE',
   SET_LOCATION_SELECTION = 'SET_LOCATION_SELECTION',
+  CLEAR_LOCATIONS_SUGGESTIONS = 'CLEAR_LOCATIONS_SUGGESTIONS',
 
   // Set if on post-page for locations-suggestions-container
   // component
@@ -690,6 +691,11 @@ export interface SetLocationSelection {
   payload: Location;
 }
 
+export interface ClearLocationsSuggestions {
+  type: typeof PostActions.CLEAR_LOCATIONS_SUGGESTIONS;
+  payload: null;
+}
+
 export interface SetIsPostPage {
   type: typeof PostActions.SET_IS_POST_PAGE;
   payload: boolean;
@@ -792,6 +798,7 @@ export type PostActionTypes =
   | GetLocationsSuggestionsSuccess
   | GetLocationsSuggestionsFailure
   | SetLocationSelection
+  | ClearLocationsSuggestions
   | SetIsPostPage
   | GetMapBoxTokenStart
   | GetMapBoxTokenSuccess
