@@ -42,7 +42,7 @@ router.post(
   upload.single('photo'),
   compressPhoto,
   async (req: Request, res: Response) => {
-    const caption = req.body.caption || '';
+    const caption: string = req.body.caption || '';
     let postLocation: string | LocationReq | LocationAttrs =
       req.body.location || '';
 
@@ -85,7 +85,7 @@ router.post(
 
     s3.upload(uploadParams, async (err, data) => {
       if (err) {
-        console.log(err);
+        console.log('S3 upload error: ', err);
         throw new Error('Error uploading the photo');
       }
       if (data) {
