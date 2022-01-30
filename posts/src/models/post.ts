@@ -15,6 +15,7 @@ interface PostAttrs {
   comments: number;
   likes: number;
   totalReactions: number;
+  isVideo?: boolean;
 }
 
 export interface PostDoc extends mongoose.Document {
@@ -30,6 +31,7 @@ export interface PostDoc extends mongoose.Document {
   comments: number;
   likes: number;
   totalReactions: number;
+  isVideo?: boolean;
 }
 
 export interface PostResponseObj {
@@ -45,6 +47,7 @@ export interface PostResponseObj {
   comments: number;
   likes: number;
   totalReactions: number;
+  isVideo?: boolean;
 }
 
 interface PostModel extends mongoose.Model<PostDoc> {
@@ -97,6 +100,9 @@ const postSchema = new mongoose.Schema(
     totalReactions: {
       type: Number,
       required: true,
+    },
+    isVideo: {
+      type: Boolean,
     },
   },
   {

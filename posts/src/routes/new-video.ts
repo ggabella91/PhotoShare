@@ -42,20 +42,12 @@ router.post(
   async (req: Request, res: Response) => {
     const createNewMultipartUpload: boolean =
       req.body.createNewMultipartUpload || false;
-    const partNumber: number = req.body.partNumber || 1;
+    const completeMultipartUpload: boolean =
+      req.body.completeMultipartUpload || false;
+    const partNumber: number = req.body.partNumber;
 
-    // TODO: Move below logic to after final part upload
-    // successfully completes
-    const caption: string = req.body.caption || '';
-    let postLocation: string | LocationReq | LocationAttrs =
-      req.body.location || '';
-    let hashtags: string[] = [];
-    if (caption) {
-      hashtags = extractHashtags(caption);
-    }
-    if (postLocation) {
-      postLocation = JSON.parse(postLocation as string);
-      postLocation = createLocationObject(postLocation as LocationReq);
+    if (!partNumber) {
+      throw new BadRequestError('Part number not provided');
     }
 
     const key = generateKey(req.file!.originalname);
@@ -76,11 +68,7 @@ router.post(
         Key: key,
       };
 
-      let location = '';
       let uploadId: string = '';
-      const comments = 0;
-      const likes = 0;
-      const totalReactions = 0;
 
       s3.createMultipartUpload(uploadParams, (err, data) => {
         if (err) {
@@ -124,10 +112,135 @@ router.post(
           });
         }
       });
+    } else if (completeMultipartUpload) {
+      const multiPartUploadArray: { ETag: string; PartNumber: number }[] =
+        req.body.multiPartUploadArray;
+      const uploadId: string = req.body.uploadId;
+
+      if (!uploadId) {
+        throw new BadRequestError('Upload Id not provided');
+      }
+
+      if (!multiPartUploadArray || !multiPartUploadArray.length) {
+        throw new BadRequestError('Missing or empty multipart upload array');
+      }
+
+      console.log('Proceeding to complete multipart upload request...');
+
+      const completeMultipartUploadParams: S3.Types.CompleteMultipartUploadRequest =
+        {
+          Bucket: bucket,
+          Key: key,
+          MultipartUpload: { Parts: multiPartUploadArray },
+          UploadId: uploadId,
+        };
+
+      s3.completeMultipartUpload(
+        completeMultipartUploadParams,
+        async (err, data) => {
+          if (err) {
+            console.log('S3 completeMultipartUpload error: ', err);
+            throw new Error('Error complete multipart upload in S3');
+          }
+          if (data) {
+            const location = data.Location || '';
+            console.log(
+              'Multipart uploaded completed successfully in S3!',
+              location
+            );
+
+            const caption: string = req.body.caption || '';
+            let postLocation: string | LocationReq | LocationAttrs =
+              req.body.location || '';
+            let hashtags: string[] = [];
+            if (caption) {
+              hashtags = extractHashtags(caption);
+            }
+            if (postLocation) {
+              postLocation = JSON.parse(postLocation as string);
+              postLocation = createLocationObject(postLocation as LocationReq);
+            }
+
+            const comments = 0;
+            const likes = 0;
+            const totalReactions = 0;
+
+            let savedPostLocation: LocationDoc | null = null;
+            if (postLocation) {
+              savedPostLocation = await saveNewOrGetExistingLocation(
+                postLocation as LocationAttrs
+              );
+            }
+
+            const post = Post.build({
+              fileName: req.file!.originalname,
+              caption,
+              postLocation: savedPostLocation?.id || undefined,
+              createdAt: new Date(),
+              userId: req.currentUser!.id,
+              s3Key: key,
+              s3ObjectURL: location,
+              hashtags,
+              comments,
+              likes,
+              totalReactions,
+              isVideo: true,
+            });
+
+            await post.save();
+
+            if (hashtags.length) {
+              await saveOrUpdateHashtagEntries(hashtags);
+            }
+
+            const postObj = post.toObject();
+
+            const postResponseObj: PostResponseObj = {
+              ...postObj,
+              postLocation: savedPostLocation?.toObject() || undefined,
+            };
+
+            res.status(201).send(postResponseObj);
+          }
+        }
+      );
     } else {
-      // TODO: Send subsequent part upload requests
-      // TODO: Complete multipart upload request and save
-      // video post
+      // Send subsequent part upload requests
+      const uploadId: string = req.body.uploadId;
+
+      if (!uploadId) {
+        throw new BadRequestError('Upload Id not provided');
+      }
+
+      const uploadPartParms: S3.Types.UploadPartRequest = {
+        Bucket: bucket,
+        Key: key,
+        UploadId: uploadId,
+        PartNumber: partNumber,
+      };
+
+      const fileChunkBuffer = req.file!.buffer;
+      const fileChunkStream = buffToStream(fileChunkBuffer);
+
+      uploadPartParms.Body = fileChunkStream;
+
+      s3.uploadPart(uploadPartParms, (err, data) => {
+        if (err) {
+          console.log('S3 uploadPart error: ', err);
+          throw new Error('Error uploading file part into S3');
+        }
+        if (data) {
+          console.log('File part uploaded successfully!');
+
+          const successfulPartUploadRes = {
+            eTag: data.ETag,
+            partNumber,
+            key,
+          };
+
+          res.status(201).send(successfulPartUploadRes);
+        }
+      });
     }
   }
 );
