@@ -26,10 +26,11 @@ const videoFilter = (
   file: Express.Multer.File,
   cb: multer.FileFilterCallback
 ): void => {
-  if (file.mimetype.startsWith('video')) {
+  if (file.mimetype.startsWith('application')) {
     cb(null, true);
   } else {
-    cb(new BadRequestError('Only videos can be uploaded'));
+    console.log('file.mimetype: ', file.mimetype);
+    cb(new BadRequestError('Only octet-streams can be uploaded'));
   }
 };
 
@@ -38,13 +39,15 @@ const upload = multer({ storage: fileStorage, fileFilter: videoFilter });
 router.post(
   '/api/posts/new-video',
   requireAuth,
-  upload.single('video'),
+  upload.single('videoChunk'),
   async (req: Request, res: Response) => {
+    console.log('req.body: ', req.body);
+
     const createNewMultipartUpload: boolean =
-      req.body.createNewMultipartUpload || false;
+      req.body.createNewMultipartUpload === 'true' || false;
     const completeMultipartUpload: boolean =
-      req.body.completeMultipartUpload || false;
-    const partNumber: number = req.body.partNumber;
+      req.body.completeMultipartUpload === 'true' || false;
+    const partNumber: number = parseInt(req.body.partNumber);
 
     if (!partNumber) {
       throw new BadRequestError('Part number not provided');
@@ -114,7 +117,7 @@ router.post(
       });
     } else if (completeMultipartUpload) {
       const multiPartUploadArray: { ETag: string; PartNumber: number }[] =
-        req.body.multiPartUploadArray;
+        JSON.parse(req.body.multiPartUploadArray);
       const uploadId: string = req.body.uploadId;
 
       if (!uploadId) {

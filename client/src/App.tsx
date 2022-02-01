@@ -27,6 +27,7 @@ import ForgotPasswordPage from './pages/forgot-password/forgot-password-page.com
 import ResetPasswordPage from './pages/reset-password/reset-password-page.component';
 import ExploreTagPage from './pages/explore-tag-page/explore-tag-page.component';
 import ExploreLocationPage from './pages/explore-location-page/explore-location-page.component';
+import CreateVideoPostPage from './pages/create-video-post-page/create-video-post-page.component';
 
 interface AppProps {
   checkUserSession: typeof checkUserSession;
@@ -56,6 +57,13 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           path='/post'
           render={() =>
             !currentUser ? <Redirect to='/' /> : <CreatePostPage />
+          }
+        />
+        <Route
+          exact
+          path='/video-post'
+          render={() =>
+            !currentUser ? <Redirect to='/' /> : <CreateVideoPostPage />
           }
         />
         <Route
