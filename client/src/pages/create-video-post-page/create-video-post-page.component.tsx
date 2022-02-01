@@ -228,7 +228,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             </div>
           ) : null}
           {videoPreview ? (
-            <video className='video-preview' preload='auto' controls muted>
+            <video className='video-preview' preload='metadata' controls muted>
               <source src={videoPreview.src} type={videoPreview.type} />
             </video>
           ) : null}
