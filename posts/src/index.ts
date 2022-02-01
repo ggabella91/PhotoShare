@@ -84,9 +84,11 @@ const start = async () => {
     region: 'us-west-1',
   });
 
-  app.listen(3000, () => {
-    console.log('Listening on port 3000!!!!');
-  });
+  app
+    .listen(3000, () => {
+      console.log('Listening on port 3000!!!!');
+    })
+    .setTimeout(5000);
 };
 
 try {
