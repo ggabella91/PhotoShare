@@ -21,6 +21,7 @@ import { getPostsWithHashtagRouter } from './routes/get-posts-with-hashtag';
 import { getLocationsSuggestionsRouter } from './routes/get-locations-suggestions';
 import { getMapBoxApiAccessTokenRouter } from './routes/get-mapbox-api-key';
 import { getPostsWithLocationRouter } from './routes/get-posts-with-location';
+import { createVideoPostRouter } from './routes/new-video';
 
 const app = express();
 app.set('trust proxy', true);
@@ -48,6 +49,7 @@ app.use(getPostsWithHashtagRouter);
 app.use(getLocationsSuggestionsRouter);
 app.use(getMapBoxApiAccessTokenRouter);
 app.use(getPostsWithLocationRouter);
+app.use(createVideoPostRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();

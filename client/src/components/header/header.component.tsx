@@ -107,7 +107,14 @@ export const Header: React.FC<HeaderProps> = ({
           </NavLink>
           <nav className='header-menu'>
             <NavLink className='link' to='/post' data-testid='create-post-link'>
-              New Post
+              Post Image
+            </NavLink>
+            <NavLink
+              className='link'
+              to='/video-post'
+              data-testid='create-video-post-link'
+            >
+              Post Video
             </NavLink>
             <NavLink
               className='link'

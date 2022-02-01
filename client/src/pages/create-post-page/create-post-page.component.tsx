@@ -203,7 +203,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   return (
     <div className='create-post-page'>
       <div>
-        <h2>Create a New Post</h2>
+        <h2>Create a New Image Post</h2>
       </div>
       <div className='upload'>
         <div className='img-preview-container'>
