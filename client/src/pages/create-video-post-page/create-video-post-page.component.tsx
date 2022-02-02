@@ -46,7 +46,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   const [videoPreview, setVideoPreview] = useState<VideoPreview | null>(null);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
 
-  const [chunksArray, setChunksArray] = useState();
+  const [chunkIndex, setChunkIndex] = useState();
 
   const [showAlert, setShowAlert] = useState(false);
   const [postStatus, setPostStatus] = useState<PostStatus>({
@@ -111,7 +111,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
       const firstFileChunk = getCurrentChunkToUpload(file, 1);
 
-      formData.append('videoChunk', firstFileChunk, file.name);
+      formData.append('videoChunk', firstFileChunk);
 
       // const reader = new FileReader();
       // reader.onload = (e) => {
@@ -138,15 +138,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
       formDataToSend.append('createNewMultipartUpload', 'true');
       formDataToSend.append('partNumber', '1');
-
-      axios.post('/api/posts/new-video', formDataToSend).then(
-        (data) => {
-          console.log('data after response to axios post request: ', data);
-        },
-        (e) => {
-          console.log('axios error: ', e);
-        }
-      );
 
       // TODO: Send other formData properties in final request
       // (Add effect to handle this)
@@ -230,6 +221,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
           {videoPreview ? (
             <video className='video-preview' preload='metadata' controls muted>
               <source src={videoPreview.src} type={videoPreview.type} />
+              Your browser does not support the video tag.
             </video>
           ) : null}
         </div>
@@ -238,7 +230,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             name='video'
             type='file'
             label='Select video'
-            accept='video/mp4'
+            accept='video/*'
             onChange={handleFileChange}
             key={fileInputKey}
           />

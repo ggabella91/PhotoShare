@@ -286,3 +286,8 @@ export const selectPostLocationCoordinates = createSelector(
   [selectPostState],
   (postState: PostState) => postState.locationCoordinates
 );
+
+export const selectVideoPostFileChunkMetaData = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.videoPostFileChunkMetaData
+);

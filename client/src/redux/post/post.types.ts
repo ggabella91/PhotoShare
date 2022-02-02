@@ -94,6 +94,11 @@ export enum PostActions {
   GET_POSTS_WITH_LOCATION_START = 'GET_POSTS_WITH_LOCATION_START',
   SET_META_DATA_FOR_LOCATION = 'SET_META_DATA_FOR_LOCATION',
   SET_LOCATION_COORDINATES = 'SET_LOCATION_COORDINATES',
+
+  // Actions specific to creating video posts
+  UPLOAD_VIDEO_POST_FILE_CHUNK_START = 'UPLOAD_VIDEO_POST_FILE_CHUNK_START',
+  UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS = 'UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS',
+  UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE = 'UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE',
 }
 
 export interface PostError {
@@ -113,6 +118,7 @@ export interface Post {
   hashtags: string[];
   comments: number;
   likes: number;
+  isVideo?: boolean;
 }
 
 export interface Reaction {
@@ -279,6 +285,17 @@ export interface Location {
   label: string;
 }
 
+export interface UploadVideoPostFileChunkReq {
+  formData: FormData;
+  lastChunk?: boolean;
+}
+
+export interface UploadVideoPostFileChunkResponse {
+  eTag: string;
+  partNumber: number;
+  key: string;
+}
+
 export interface PostState {
   postData: Post[] | null;
   postDataFeedArray: Post[][];
@@ -351,6 +368,9 @@ export interface PostState {
   // Used for posts with location
   postMetaDataForLocation: PostLocationMetaData | null;
   locationCoordinates: LocationCoordinates | null;
+
+  // Used for multipart video file chunk uploads
+  videoPostFileChunkMetaData: UploadVideoPostFileChunkResponse | null;
 }
 
 export interface CreatePostStart {
@@ -731,6 +751,21 @@ export interface SetLocationCoordinates {
   payload: LocationCoordinates;
 }
 
+export interface UploadVideoPostFileChunkStart {
+  type: typeof PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_START;
+  payload: UploadVideoPostFileChunkReq;
+}
+
+export interface UploadVideoPostFileChunkSuccess {
+  type: typeof PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS;
+  payload: UploadVideoPostFileChunkResponse;
+}
+
+export interface UploadVideoPostFileChunkFailure {
+  type: typeof PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE;
+  payload: PostError;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -805,4 +840,7 @@ export type PostActionTypes =
   | GetMapBoxTokenFailure
   | GetPostsWithLocationStart
   | SetPostMetaDataForLocation
-  | SetLocationCoordinates;
+  | SetLocationCoordinates
+  | UploadVideoPostFileChunkStart
+  | UploadVideoPostFileChunkSuccess
+  | UploadVideoPostFileChunkFailure;

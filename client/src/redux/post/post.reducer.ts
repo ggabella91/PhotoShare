@@ -88,6 +88,9 @@ const INITIAL_STATE: PostState = {
   // Used for posts with location
   postMetaDataForLocation: null,
   locationCoordinates: null,
+
+  // Used for multipart video file chunk uploads
+  videoPostFileChunkMetaData: null,
 };
 
 const postReducer = (
@@ -276,6 +279,12 @@ const postReducer = (
         mapBoxAccessToken: action.payload,
         getMapBoxAccessTokenError: null,
       };
+    case PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS:
+      return {
+        ...state,
+        videoPostFileChunkMetaData: action.payload,
+        postError: null,
+      };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
         ...state,
@@ -344,6 +353,12 @@ const postReducer = (
         ...state,
         getMapBoxAccessTokenError: action.payload,
         mapBoxAccessToken: null,
+      };
+    case PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE:
+      return {
+        ...state,
+        postError: action.payload,
+        videoPostFileChunkMetaData: null,
       };
     case PostActions.CLEAR_POST_STATUSES:
       return {
