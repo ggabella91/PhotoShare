@@ -92,9 +92,8 @@ router.post(
           };
 
           const fileChunkBuffer = req.file!.buffer;
-          const fileChunkStream = buffToStream(fileChunkBuffer);
 
-          uploadPartParms.Body = fileChunkStream;
+          uploadPartParms.Body = fileChunkBuffer;
 
           s3.uploadPart(uploadPartParms, (err, data) => {
             if (err) {
@@ -223,9 +222,8 @@ router.post(
       };
 
       const fileChunkBuffer = req.file!.buffer;
-      const fileChunkStream = buffToStream(fileChunkBuffer);
 
-      uploadPartParms.Body = fileChunkStream;
+      uploadPartParms.Body = fileChunkBuffer;
 
       s3.uploadPart(uploadPartParms, (err, data) => {
         if (err) {

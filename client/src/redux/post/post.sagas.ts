@@ -32,6 +32,8 @@ import {
   Location,
   PostActionTypes,
   PostsWithLocationReq,
+  UploadVideoPostFileChunkReq,
+  UploadVideoPostFileChunkResponse,
 } from './post.types';
 
 import {
@@ -71,6 +73,8 @@ import {
   getLocationsSuggestionsFailure,
   getMapBoxAccessTokenSuccess,
   getMapBoxAccessTokenFailure,
+  uploadVideoPostFileChunkSuccess,
+  uploadVideoPostFileChunkFailure,
 } from './post.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -430,6 +434,34 @@ export function* getPostsWithLocation({
   }
 }
 
+export function* uploadVideoPostFileChunk({
+  payload: { formData, lastChunk },
+}: {
+  payload: UploadVideoPostFileChunkReq;
+}) {
+  try {
+    if (!lastChunk) {
+      const {
+        data: videoFileChunkMetaData,
+      }: { data: UploadVideoPostFileChunkResponse } = yield axios.post(
+        '/api/posts/new-video',
+        formData
+      );
+
+      yield put(uploadVideoPostFileChunkSuccess(videoFileChunkMetaData));
+    } else {
+      const { data: postData }: { data: Post } = yield axios.post(
+        '/api/posts/new-video',
+        formData
+      );
+
+      yield put(createPostSuccess(postData));
+    }
+  } catch (err) {
+    yield put(uploadVideoPostFileChunkFailure(err as PostError));
+  }
+}
+
 export function* onCreatePostStart(): SagaIterator {
   yield takeEvery<ActionPattern, PostSaga>(
     PostActions.CREATE_POST_START,
@@ -528,6 +560,13 @@ export function* onGetPostsWithLocationStart(): SagaIterator {
   );
 }
 
+export function* onUploadVideoPostFileChunkStart(): SagaIterator {
+  yield takeEvery<ActionPattern, PostSaga>(
+    PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_START,
+    uploadVideoPostFileChunk
+  );
+}
+
 export function* postSagas(): SagaIterator {
   yield all([
     call(onCreatePostStart),
@@ -544,5 +583,6 @@ export function* postSagas(): SagaIterator {
     call(onGetLocationsSuggestionsStart),
     call(onGetMapBoxAccessTokenStart),
     call(onGetPostsWithLocationStart),
+    call(onUploadVideoPostFileChunkStart),
   ]);
 }

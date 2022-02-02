@@ -26,6 +26,8 @@ import {
   PostsWithLocationReq,
   PostLocationMetaData,
   LocationCoordinates,
+  UploadVideoPostFileChunkReq,
+  UploadVideoPostFileChunkResponse,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -490,4 +492,25 @@ export const setLocationCoordinates = (
 ): PostActionTypes => ({
   type: PostActions.SET_LOCATION_COORDINATES,
   payload: coordinates,
+});
+
+export const uploadVideoPostFileChunkStart = (
+  uploadVideoPostFileChunkReq: UploadVideoPostFileChunkReq
+): PostActionTypes => ({
+  type: PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_START,
+  payload: uploadVideoPostFileChunkReq,
+});
+
+export const uploadVideoPostFileChunkSuccess = (
+  uploadVideoPostFileChunkResponse: UploadVideoPostFileChunkResponse
+): PostActionTypes => ({
+  type: PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS,
+  payload: uploadVideoPostFileChunkResponse,
+});
+
+export const uploadVideoPostFileChunkFailure = (
+  error: PostError
+): PostActionTypes => ({
+  type: PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE,
+  payload: error,
 });
