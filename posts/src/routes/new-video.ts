@@ -107,6 +107,7 @@ router.post(
                 eTag: data.ETag,
                 partNumber,
                 key,
+                uploadId,
               };
 
               res.status(201).send(successfulPartUploadRes);
@@ -237,6 +238,7 @@ router.post(
             eTag: data.ETag,
             partNumber,
             key,
+            uploadId,
           };
 
           res.status(201).send(successfulPartUploadRes);

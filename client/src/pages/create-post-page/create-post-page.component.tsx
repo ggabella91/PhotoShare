@@ -4,8 +4,6 @@ import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
-import { User } from '../../redux/user/user.types';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { Post, PostError, Location } from '../../redux/post/post.types';
 import {
   selectPostConfirm,
@@ -19,10 +17,7 @@ import {
   clearLocationsSuggestions,
 } from '../../redux/post/post.actions';
 
-import {
-  UsersFollowingRequest,
-  WhoseUsersFollowing,
-} from '../../redux/follower/follower.types';
+import { UsersFollowingRequest } from '../../redux/follower/follower.types';
 import { getUsersFollowingStart } from '../../redux/follower/follower.actions';
 import { useDebounce } from '../hooks';
 
@@ -44,7 +39,6 @@ interface PostStatus {
 }
 
 interface CreatePostPageProps {
-  currentUser: User | null;
   createPostStart: typeof createPostStart;
   postConfirm: Post | null;
   postError: PostError | null;
@@ -58,7 +52,6 @@ interface ImgPreview {
 }
 
 export const CreatePostPage: React.FC<CreatePostPageProps> = ({
-  currentUser,
   createPostStart,
   postConfirm,
   postError,
@@ -81,15 +74,6 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
 
   const dispatch = useDispatch();
   const locationSelection = useSelector(selectLocationSelection);
-
-  useEffect(() => {
-    if (currentUser) {
-      getUsersFollowingStart({
-        userId: currentUser.id,
-        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
-      });
-    }
-  }, [currentUser]);
 
   useEffect(() => {
     if (postError) {
@@ -275,13 +259,11 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
 };
 
 interface LinkStateProps {
-  currentUser: User | null;
   postConfirm: Post | null;
   postError: PostError | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
   postConfirm: selectPostConfirm,
   postError: selectPostError,
 });

@@ -294,6 +294,7 @@ export interface UploadVideoPostFileChunkResponse {
   eTag: string;
   partNumber: number;
   key: string;
+  uploadId: string;
 }
 
 export interface PostState {
