@@ -435,12 +435,12 @@ export function* getPostsWithLocation({
 }
 
 export function* uploadVideoPostFileChunk({
-  payload: { formData, lastChunk },
+  payload: { formData, complete },
 }: {
   payload: UploadVideoPostFileChunkReq;
 }) {
   try {
-    if (!lastChunk) {
+    if (!complete) {
       const {
         data: videoFileChunkMetaData,
       }: { data: UploadVideoPostFileChunkResponse } = yield axios.post(

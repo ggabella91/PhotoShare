@@ -84,11 +84,23 @@ const start = async () => {
     region: 'us-west-1',
   });
 
-  app
-    .listen(3000, () => {
-      console.log('Listening on port 3000!!!!');
-    })
-    .setTimeout(5000);
+  const server = app.listen(3000, () => {
+    console.log('Listening on port 3000!!!!');
+  });
+  server.keepAliveTimeout = 60 * 1000;
+  server.headersTimeout = 75 * 1000;
+
+  server.on('connection', () => {
+    console.log('New connection!');
+  });
+
+  server.on('listening', () => {
+    console.log('Listening for connections!');
+  });
+
+  server.on('close', () => {
+    console.log('Connection closed!');
+  });
 };
 
 try {

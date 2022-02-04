@@ -36,7 +36,7 @@ interface VideoPreview {
 
 interface ChunkIndex {
   idx: number;
-  lastChunk: boolean;
+  completed: boolean;
 }
 
 interface UploadPart {
@@ -98,8 +98,10 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
       const modifiedUploadPartArray = uploadPartArray;
       modifiedUploadPartArray.push(newUploadPart);
       setUploadPartArray(modifiedUploadPartArray);
-      const lastChunk = getIsLastChunk(file);
-      setChunkIndex({ idx: chunkIndex.idx + 1, lastChunk });
+      const completed = getAllChunksSent(file);
+      console.log('completed: ', completed);
+      const idx = completed ? chunkIndex.idx : chunkIndex.idx + 1;
+      setChunkIndex({ idx: idx, completed });
     }
   }, [videoPostFileChunkMetaData]);
 
@@ -109,14 +111,14 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
       prepareAndSendFileChunkRequest(file);
     }
-  }, [chunkIndex]);
+  }, [chunkIndex, uploadPartArray]);
 
   const CHUNK_SIZE = 5 * 1024 * 1024;
 
-  const getIsLastChunk = (file: File) => {
+  const getAllChunksSent = (file: File) => {
     const fileSize = file.size;
     const from = chunkIndex!.idx * CHUNK_SIZE;
-    return fileSize < from + CHUNK_SIZE;
+    return fileSize < from;
   };
 
   const getCurrentChunkToUpload = (file: File) => {
@@ -127,8 +129,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     const from = currentIdx * CHUNK_SIZE;
     const to = Math.min(from + CHUNK_SIZE, fileSize);
     const blob = file.slice(from, to);
-
-    console.log('blob: ', blob);
 
     return blob;
   };
@@ -159,19 +159,18 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     if (file) {
       setShowAlert(true);
 
-      const lastChunk = getIsLastChunk(file);
-      setChunkIndex({ idx: 1, lastChunk });
+      setChunkIndex({ idx: 1, completed: false });
 
       // setTimeout(() => setShowAlert(false), 5000);
     }
 
     setFileInputKey(Date.now());
 
-    setFile(null);
+    // setFile(null);
     setVideoPreview(null);
-    setCaption('');
-    setLocationSearchString('');
-    setLocation(null);
+    // setCaption('');
+    // setLocationSearchString('');
+    // setLocation(null);
   };
 
   const prepareAndSendFileChunkRequest = (file: File) => {
@@ -180,31 +179,31 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     formData.append('videoChunk', fileChunk);
 
     if (chunkIndex!.idx === 1) {
+      formData.append('fileName', file.name);
       formData.append('createNewMultipartUpload', 'true');
       formData.append('partNumber', `${chunkIndex!.idx}`);
 
       dispatch(uploadVideoPostFileChunkStart({ formData }));
-    } else if (chunkIndex!.lastChunk) {
-      const { uploadId } = videoPostFileChunkMetaData!;
+    } else if (chunkIndex!.completed) {
+      const { uploadId, key } = videoPostFileChunkMetaData!;
       formData.append('uploadId', uploadId);
-
+      formData.append('key', key);
       if (caption) {
         formData.append('caption', caption);
       }
-
       if (location) {
         const locationObjString = JSON.stringify(location);
         formData.append('location', locationObjString);
       }
-
       const multiPartUploadArray = JSON.stringify(uploadPartArray);
       formData.append('multiPartUploadArray', multiPartUploadArray);
-
-      dispatch(uploadVideoPostFileChunkStart({ formData, lastChunk: true }));
+      formData.append('completeMultipartUpload', 'true');
+      dispatch(uploadVideoPostFileChunkStart({ formData, complete: true }));
     } else {
-      const { uploadId } = videoPostFileChunkMetaData!;
+      const { uploadId, key } = videoPostFileChunkMetaData!;
       formData.append('uploadId', uploadId);
-
+      formData.append('partNumber', `${chunkIndex!.idx}`);
+      formData.append('key', key);
       dispatch(uploadVideoPostFileChunkStart({ formData }));
     }
   };

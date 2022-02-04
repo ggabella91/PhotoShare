@@ -53,8 +53,6 @@ router.post(
       throw new BadRequestError('Part number not provided');
     }
 
-    const key = generateKey(req.file!.originalname);
-
     const s3 = new AWS.S3();
 
     let bucket: string;
@@ -66,6 +64,14 @@ router.post(
     }
 
     if (createNewMultipartUpload) {
+      const fileName: string = req.body.fileName;
+
+      if (!fileName) {
+        throw new BadRequestError('File name not provided');
+      }
+
+      const key = generateKey(fileName);
+
       const uploadParams: S3.Types.CreateMultipartUploadRequest = {
         Bucket: bucket,
         Key: key,
@@ -82,6 +88,7 @@ router.post(
           console.log(
             'Multipart upload successfully created! Proceeding to uploading of first file chunk...'
           );
+          console.log('data: ', data);
           uploadId = data.UploadId || '';
 
           const uploadPartParms: S3.Types.UploadPartRequest = {
@@ -102,6 +109,7 @@ router.post(
             }
             if (data) {
               console.log('File part uploaded successfully!');
+              console.log('data: ', data);
 
               const successfulPartUploadRes = {
                 eTag: data.ETag,
@@ -119,9 +127,14 @@ router.post(
       const multiPartUploadArray: { ETag: string; PartNumber: number }[] =
         JSON.parse(req.body.multiPartUploadArray);
       const uploadId: string = req.body.uploadId;
+      const key: string = req.body.key;
 
       if (!uploadId) {
         throw new BadRequestError('Upload Id not provided');
+      }
+
+      if (!key) {
+        throw new BadRequestError('Key not provided');
       }
 
       if (!multiPartUploadArray || !multiPartUploadArray.length) {
@@ -147,10 +160,8 @@ router.post(
           }
           if (data) {
             const location = data.Location || '';
-            console.log(
-              'Multipart uploaded completed successfully in S3!',
-              location
-            );
+            console.log('Multipart uploaded completed successfully in S3!');
+            console.log('data: ', data);
 
             const caption: string = req.body.caption || '';
             let postLocation: string | LocationReq | LocationAttrs =
@@ -210,6 +221,11 @@ router.post(
     } else {
       // Send subsequent part upload requests
       const uploadId: string = req.body.uploadId;
+      const key: string = req.body.key;
+
+      if (!key) {
+        throw new BadRequestError('Key not provided');
+      }
 
       if (!uploadId) {
         throw new BadRequestError('Upload Id not provided');

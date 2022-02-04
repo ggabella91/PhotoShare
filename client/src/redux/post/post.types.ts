@@ -287,7 +287,7 @@ export interface Location {
 
 export interface UploadVideoPostFileChunkReq {
   formData: FormData;
-  lastChunk?: boolean;
+  complete?: boolean;
 }
 
 export interface UploadVideoPostFileChunkResponse {
