@@ -3,7 +3,10 @@ import slugify from 'slugify';
 
 const generateKey = (fileName: string): string => {
   const id = v4();
-  const slugName = slugify(fileName);
+
+  const fileNameWithoutExt = fileName.substring(0, fileName.indexOf('.'));
+
+  const slugName = slugify(fileNameWithoutExt, { lower: true, strict: true });
 
   const key = `${id}-${slugName}`;
 

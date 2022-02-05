@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Location } from '../../redux/post/post.types';
+import {
+  Location,
+  UploadPart,
+  UploadVideoPostFileChunkReq,
+} from '../../redux/post/post.types';
 import {
   selectLocationSelection,
   selectVideoPostFileChunkMetaData,
@@ -37,11 +41,6 @@ interface VideoPreview {
 interface ChunkIndex {
   idx: number;
   completed: boolean;
-}
-
-interface UploadPart {
-  ETag: string;
-  PartNumber: number;
 }
 
 interface VideoPostPageProps {}
@@ -109,7 +108,12 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     if (chunkIndex && file) {
       console.log('chunkIndex: ', chunkIndex);
 
-      prepareAndSendFileChunkRequest(file);
+      const reader = new FileReader();
+
+      const fileChunk = getCurrentChunkToUpload(file);
+
+      reader.onload = (e) => prepareAndSendFileChunkRequest(e);
+      reader.readAsDataURL(fileChunk);
     }
   }, [chunkIndex, uploadPartArray]);
 
@@ -117,19 +121,23 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
   const getAllChunksSent = (file: File) => {
     const fileSize = file.size;
-    const from = chunkIndex!.idx * CHUNK_SIZE;
+    const from = chunkIndex!.idx * CHUNK_SIZE + 1;
     return fileSize < from;
   };
 
   const getCurrentChunkToUpload = (file: File) => {
     const fileSize = file.size;
 
-    const currentIdx = chunkIndex!.idx;
+    const currentIdx = chunkIndex!.idx - 1;
 
-    const from = currentIdx * CHUNK_SIZE;
+    const from = currentIdx * CHUNK_SIZE + 1;
     const to = Math.min(from + CHUNK_SIZE, fileSize);
+    console.log('from: ', from);
+    console.log('to: ', to);
     const blob = file.slice(from, to);
 
+    console.log('blob size: ', blob.size);
+    console.log('blob type: ', blob.type);
     return blob;
   };
 
@@ -173,38 +181,45 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     // setLocation(null);
   };
 
-  const prepareAndSendFileChunkRequest = (file: File) => {
-    const fileChunk = getCurrentChunkToUpload(file);
-    const formData = new FormData();
-    formData.append('videoChunk', fileChunk);
+  const prepareAndSendFileChunkRequest = (e: ProgressEvent<FileReader>) => {
+    // const fileChunk = getCurrentChunkToUpload(file);
 
-    if (chunkIndex!.idx === 1) {
-      formData.append('fileName', file.name);
-      formData.append('createNewMultipartUpload', 'true');
-      formData.append('partNumber', `${chunkIndex!.idx}`);
+    const fileChunk = e.target?.result;
 
-      dispatch(uploadVideoPostFileChunkStart({ formData }));
-    } else if (chunkIndex!.completed) {
-      const { uploadId, key } = videoPostFileChunkMetaData!;
-      formData.append('uploadId', uploadId);
-      formData.append('key', key);
-      if (caption) {
-        formData.append('caption', caption);
+    if (fileChunk) {
+      const uploadReq: UploadVideoPostFileChunkReq = { fileChunk: fileChunk };
+
+      if (chunkIndex!.idx === 1) {
+        uploadReq.fileName = file!.name;
+        uploadReq.contentType = file!.type;
+        uploadReq.createNewMultipartUpload = true;
+        uploadReq.partNumber = chunkIndex!.idx;
+
+        dispatch(uploadVideoPostFileChunkStart(uploadReq));
+      } else if (chunkIndex!.completed) {
+        const { uploadId, key } = videoPostFileChunkMetaData!;
+        uploadReq.uploadId = uploadId;
+        uploadReq.key = key;
+
+        if (caption) {
+          uploadReq.caption = caption;
+        }
+        if (location) {
+          uploadReq.location = location;
+        }
+
+        uploadReq.multiPartUploadArray = uploadPartArray;
+        uploadReq.completeMultipartUpload = true;
+
+        dispatch(uploadVideoPostFileChunkStart(uploadReq));
+      } else {
+        const { uploadId, key } = videoPostFileChunkMetaData!;
+        uploadReq.uploadId = uploadId;
+        uploadReq.partNumber = chunkIndex!.idx;
+        uploadReq.key = key;
+
+        dispatch(uploadVideoPostFileChunkStart(uploadReq));
       }
-      if (location) {
-        const locationObjString = JSON.stringify(location);
-        formData.append('location', locationObjString);
-      }
-      const multiPartUploadArray = JSON.stringify(uploadPartArray);
-      formData.append('multiPartUploadArray', multiPartUploadArray);
-      formData.append('completeMultipartUpload', 'true');
-      dispatch(uploadVideoPostFileChunkStart({ formData, complete: true }));
-    } else {
-      const { uploadId, key } = videoPostFileChunkMetaData!;
-      formData.append('uploadId', uploadId);
-      formData.append('partNumber', `${chunkIndex!.idx}`);
-      formData.append('key', key);
-      dispatch(uploadVideoPostFileChunkStart({ formData }));
     }
   };
 

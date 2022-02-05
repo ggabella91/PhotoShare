@@ -19,37 +19,34 @@ import { S3 } from 'aws-sdk';
 
 const router = express.Router();
 
-const fileStorage = multer.memoryStorage();
+// const fileStorage = multer.memoryStorage();
 
-const videoFilter = (
-  req: Request,
-  file: Express.Multer.File,
-  cb: multer.FileFilterCallback
-): void => {
-  if (file.mimetype.startsWith('application')) {
-    cb(null, true);
-  } else {
-    console.log('file.mimetype: ', file.mimetype);
-    cb(new BadRequestError('Only octet-streams can be uploaded'));
-  }
-};
+// const videoFilter = (
+//   req: Request,
+//   file: Express.Multer.File,
+//   cb: multer.FileFilterCallback
+// ): void => {
+//   if (file.mimetype.startsWith('application')) {
+//     cb(null, true);
+//   } else {
+//     console.log('file.mimetype: ', file.mimetype);
+//     cb(new BadRequestError('Only octet-streams can be uploaded'));
+//   }
+// };
 
-const upload = multer({ storage: fileStorage, fileFilter: videoFilter });
+// const upload = multer({ storage: fileStorage, fileFilter: videoFilter });
 
 router.post(
   '/api/posts/new-video',
   requireAuth,
-  upload.single('videoChunk'),
   async (req: Request, res: Response) => {
-    console.log('req.body: ', req.body);
-
     const createNewMultipartUpload: boolean =
-      req.body.createNewMultipartUpload === 'true' || false;
+      req.body.createNewMultipartUpload || false;
     const completeMultipartUpload: boolean =
-      req.body.completeMultipartUpload === 'true' || false;
-    const partNumber: number = parseInt(req.body.partNumber);
+      req.body.completeMultipartUpload || false;
+    const partNumber: number = req.body.partNumber;
 
-    if (!partNumber) {
+    if (!partNumber && !completeMultipartUpload) {
       throw new BadRequestError('Part number not provided');
     }
 
@@ -65,9 +62,14 @@ router.post(
 
     if (createNewMultipartUpload) {
       const fileName: string = req.body.fileName;
+      const contentType: string = req.body.contentType;
 
       if (!fileName) {
         throw new BadRequestError('File name not provided');
+      }
+
+      if (!contentType) {
+        throw new BadRequestError('Content type not provided');
       }
 
       const key = generateKey(fileName);
@@ -75,57 +77,85 @@ router.post(
       const uploadParams: S3.Types.CreateMultipartUploadRequest = {
         Bucket: bucket,
         Key: key,
+        ContentType: contentType,
       };
 
       let uploadId: string = '';
 
-      s3.createMultipartUpload(uploadParams, (err, data) => {
-        if (err) {
-          console.log('S3 createMultipartUpload error: ', err);
-          throw new Error('Error creating the multipart upload in S3');
-        }
-        if (data) {
-          console.log(
-            'Multipart upload successfully created! Proceeding to uploading of first file chunk...'
-          );
-          console.log('data: ', data);
-          uploadId = data.UploadId || '';
+      s3.createMultipartUpload(uploadParams)
+        .promise()
+        .then(
+          (data) => {
+            console.log(
+              'Multipart upload successfully created! Proceeding to uploading of first file chunk...'
+            );
+            console.log('data: ', data);
+            uploadId = data.UploadId || '';
 
-          const uploadPartParms: S3.Types.UploadPartRequest = {
-            Bucket: bucket,
-            Key: key,
-            UploadId: uploadId,
-            PartNumber: 1,
-          };
+            const uploadPartParms: S3.Types.UploadPartRequest = {
+              Bucket: bucket,
+              Key: key,
+              UploadId: uploadId,
+              PartNumber: 1,
+            };
 
-          const fileChunkBuffer = req.file!.buffer;
+            const fileChunkArrayBuffer: ArrayBuffer = req.body.fileChunk;
+            const fileChunkBuffer = Buffer.from(fileChunkArrayBuffer);
 
-          uploadPartParms.Body = fileChunkBuffer;
+            uploadPartParms.Body = fileChunkBuffer;
 
-          s3.uploadPart(uploadPartParms, (err, data) => {
-            if (err) {
-              console.log('S3 uploadPart error: ', err);
-              throw new Error('Error uploading file part into S3');
-            }
-            if (data) {
-              console.log('File part uploaded successfully!');
-              console.log('data: ', data);
+            return uploadPartParms;
+          },
+          (reason) => {
+            console.log('S3 createMultipartUpload error: ', reason);
+            throw new Error('Error creating the multipart upload in S3');
+          }
+        )
+        .then((uploadPartParms) => {
+          s3.uploadPart(uploadPartParms)
+            .promise()
+            .then(
+              (data) => {
+                if (data) {
+                  console.log('File part uploaded successfully!');
+                  console.log('data: ', data);
 
-              const successfulPartUploadRes = {
-                eTag: data.ETag,
-                partNumber,
-                key,
-                uploadId,
-              };
+                  const successfulPartUploadRes = {
+                    eTag: data.ETag,
+                    partNumber,
+                    key,
+                    uploadId,
+                  };
 
-              res.status(201).send(successfulPartUploadRes);
-            }
-          });
-        }
-      });
+                  res.status(201).send(successfulPartUploadRes);
+                }
+              },
+              (reason) => {
+                console.log('S3 uploadPart error: ', reason);
+
+                const abortMultipartUploadParams: S3.Types.AbortMultipartUploadRequest =
+                  { Bucket: bucket, Key: key, UploadId: uploadId };
+
+                s3.abortMultipartUpload(abortMultipartUploadParams)
+                  .promise()
+                  .then((data) => {
+                    console.log('Aborted multipart upload: ', data);
+
+                    throw new Error(
+                      'Error uploading file part into S3 - Multipart upload aborted'
+                    );
+                  })
+                  .catch((err) => {
+                    console.log('Error aborting multipart upload: ', err);
+
+                    throw new Error('Error aborting multipart upload');
+                  });
+              }
+            );
+        });
     } else if (completeMultipartUpload) {
       const multiPartUploadArray: { ETag: string; PartNumber: number }[] =
-        JSON.parse(req.body.multiPartUploadArray);
+        req.body.multiPartUploadArray;
       const uploadId: string = req.body.uploadId;
       const key: string = req.body.key;
 
@@ -151,73 +181,91 @@ router.post(
           UploadId: uploadId,
         };
 
-      s3.completeMultipartUpload(
-        completeMultipartUploadParams,
-        async (err, data) => {
-          if (err) {
-            console.log('S3 completeMultipartUpload error: ', err);
-            throw new Error('Error complete multipart upload in S3');
+      s3.completeMultipartUpload(completeMultipartUploadParams)
+        .promise()
+        .then(
+          async (data) => {
+            if (data) {
+              const location = data.Location || '';
+              console.log('Multipart uploaded completed successfully in S3!');
+              console.log('data: ', data);
+
+              const caption: string = req.body.caption || '';
+              let postLocation: LocationReq | LocationAttrs = req.body.location;
+              let hashtags: string[] = [];
+              if (caption) {
+                hashtags = extractHashtags(caption);
+              }
+              if (postLocation) {
+                postLocation = createLocationObject(
+                  postLocation as LocationReq
+                );
+              }
+
+              const comments = 0;
+              const likes = 0;
+              const totalReactions = 0;
+
+              let savedPostLocation: LocationDoc | null = null;
+              if (postLocation) {
+                savedPostLocation = await saveNewOrGetExistingLocation(
+                  postLocation as LocationAttrs
+                );
+              }
+
+              const post = Post.build({
+                fileName: req.body.fileName,
+                caption,
+                postLocation: savedPostLocation?.id || undefined,
+                createdAt: new Date(),
+                userId: req.currentUser!.id,
+                s3Key: key,
+                s3ObjectURL: location,
+                hashtags,
+                comments,
+                likes,
+                totalReactions,
+                isVideo: true,
+              });
+
+              await post.save();
+
+              if (hashtags.length) {
+                await saveOrUpdateHashtagEntries(hashtags);
+              }
+
+              const postObj = post.toObject();
+
+              const postResponseObj: PostResponseObj = {
+                ...postObj,
+                postLocation: savedPostLocation?.toObject() || undefined,
+              };
+
+              res.status(201).send(postResponseObj);
+            }
+          },
+          (reason) => {
+            console.log('S3 completeMultipartUpload error: ', reason);
+
+            const abortMultipartUploadParams: S3.Types.AbortMultipartUploadRequest =
+              { Bucket: bucket, Key: key, UploadId: uploadId };
+
+            s3.abortMultipartUpload(abortMultipartUploadParams)
+              .promise()
+              .then((data) => {
+                console.log('Aborted multipart upload: ', data);
+
+                throw new Error(
+                  'Error completing multipart upload in S3 - Multipart upload aborted'
+                );
+              })
+              .catch((err) => {
+                console.log('Error aborting multipart upload: ', err);
+
+                throw new Error('Error aborting multipart upload');
+              });
           }
-          if (data) {
-            const location = data.Location || '';
-            console.log('Multipart uploaded completed successfully in S3!');
-            console.log('data: ', data);
-
-            const caption: string = req.body.caption || '';
-            let postLocation: string | LocationReq | LocationAttrs =
-              req.body.location || '';
-            let hashtags: string[] = [];
-            if (caption) {
-              hashtags = extractHashtags(caption);
-            }
-            if (postLocation) {
-              postLocation = JSON.parse(postLocation as string);
-              postLocation = createLocationObject(postLocation as LocationReq);
-            }
-
-            const comments = 0;
-            const likes = 0;
-            const totalReactions = 0;
-
-            let savedPostLocation: LocationDoc | null = null;
-            if (postLocation) {
-              savedPostLocation = await saveNewOrGetExistingLocation(
-                postLocation as LocationAttrs
-              );
-            }
-
-            const post = Post.build({
-              fileName: req.file!.originalname,
-              caption,
-              postLocation: savedPostLocation?.id || undefined,
-              createdAt: new Date(),
-              userId: req.currentUser!.id,
-              s3Key: key,
-              s3ObjectURL: location,
-              hashtags,
-              comments,
-              likes,
-              totalReactions,
-              isVideo: true,
-            });
-
-            await post.save();
-
-            if (hashtags.length) {
-              await saveOrUpdateHashtagEntries(hashtags);
-            }
-
-            const postObj = post.toObject();
-
-            const postResponseObj: PostResponseObj = {
-              ...postObj,
-              postLocation: savedPostLocation?.toObject() || undefined,
-            };
-
-            res.status(201).send(postResponseObj);
-          }
-        }
-      );
+        );
     } else {
       // Send subsequent part upload requests
       const uploadId: string = req.body.uploadId;
@@ -238,28 +286,52 @@ router.post(
         PartNumber: partNumber,
       };
 
-      const fileChunkBuffer = req.file!.buffer;
+      const fileChunkArrayBuffer: ArrayBuffer = req.body.fileChunk;
+      const fileChunkBuffer = Buffer.from(fileChunkArrayBuffer);
 
       uploadPartParms.Body = fileChunkBuffer;
 
-      s3.uploadPart(uploadPartParms, (err, data) => {
-        if (err) {
-          console.log('S3 uploadPart error: ', err);
-          throw new Error('Error uploading file part into S3');
-        }
-        if (data) {
-          console.log('File part uploaded successfully!');
+      uploadPartParms.Body = fileChunkBuffer;
 
-          const successfulPartUploadRes = {
-            eTag: data.ETag,
-            partNumber,
-            key,
-            uploadId,
-          };
+      s3.uploadPart(uploadPartParms)
+        .promise()
+        .then(
+          (data) => {
+            if (data) {
+              console.log('File part uploaded successfully!');
 
-          res.status(201).send(successfulPartUploadRes);
-        }
-      });
+              const successfulPartUploadRes = {
+                eTag: data.ETag,
+                partNumber,
+                key,
+                uploadId,
+              };
+
+              res.status(201).send(successfulPartUploadRes);
+            }
+          },
+          (reason) => {
+            console.log('S3 uploadPart error: ', reason);
+
+            const abortMultipartUploadParams: S3.Types.AbortMultipartUploadRequest =
+              { Bucket: bucket, Key: key, UploadId: uploadId };
+
+            s3.abortMultipartUpload(abortMultipartUploadParams)
+              .promise()
+              .then((data) => {
+                console.log('Aborted multipart upload: ', data);
+
+                throw new Error(
+                  'Error uploading file part into S3 - Multipart upload aborted'
+                );
+              })
+              .catch((err) => {
+                console.log('Error aborting multipart upload');
+
+                throw new Error('Error aborting multipart upload');
+              });
+          }
+        );
     }
   }
 );
