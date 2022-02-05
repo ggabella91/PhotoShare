@@ -1,6 +1,6 @@
 import express from 'express';
 import 'express-async-errors';
-import { json } from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import cookieSession from 'cookie-session';
 import {
   errorHandler,
@@ -25,7 +25,8 @@ import { createVideoPostRouter } from './routes/new-video';
 
 const app = express();
 app.set('trust proxy', true);
-app.use(json());
+app.use(json({ limit: '50mb' }));
+app.use(urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 app.use(
   cookieSession({
     signed: false,

@@ -285,9 +285,24 @@ export interface Location {
   label: string;
 }
 
+export interface UploadPart {
+  ETag: string;
+  PartNumber: number;
+}
+
 export interface UploadVideoPostFileChunkReq {
-  formData: FormData;
-  complete?: boolean;
+  fileChunk: ArrayBuffer | string;
+  fileName?: string;
+  contentType?: string;
+  createNewMultipartUpload?: boolean;
+  partNumber?: number;
+  uploadId?: string;
+  key?: string;
+  caption?: string;
+  location?: Location;
+  multiPartUploadArray?: UploadPart[];
+  completeMultipartUpload?: boolean;
+  // complete?: boolean;
 }
 
 export interface UploadVideoPostFileChunkResponse {

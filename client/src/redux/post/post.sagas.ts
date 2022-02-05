@@ -34,6 +34,7 @@ import {
   PostsWithLocationReq,
   UploadVideoPostFileChunkReq,
   UploadVideoPostFileChunkResponse,
+  UploadPart,
 } from './post.types';
 
 import {
@@ -435,24 +436,24 @@ export function* getPostsWithLocation({
 }
 
 export function* uploadVideoPostFileChunk({
-  payload: { formData, complete },
+  payload: { completeMultipartUpload, ...uploadReq },
 }: {
   payload: UploadVideoPostFileChunkReq;
 }) {
   try {
-    if (!complete) {
+    if (!completeMultipartUpload) {
       const {
         data: videoFileChunkMetaData,
       }: { data: UploadVideoPostFileChunkResponse } = yield axios.post(
         '/api/posts/new-video',
-        formData
+        uploadReq
       );
 
       yield put(uploadVideoPostFileChunkSuccess(videoFileChunkMetaData));
     } else {
       const { data: postData }: { data: Post } = yield axios.post(
         '/api/posts/new-video',
-        formData
+        { ...uploadReq, completeMultipartUpload }
       );
 
       yield put(createPostSuccess(postData));
