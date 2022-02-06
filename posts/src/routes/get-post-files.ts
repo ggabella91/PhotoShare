@@ -7,7 +7,7 @@ import {
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 import { redisClient } from '../index';
-import { encode } from '../utils/encode';
+import { encode } from '../utils/converters';
 
 const router = express.Router();
 
