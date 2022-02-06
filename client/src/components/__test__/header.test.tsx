@@ -41,7 +41,7 @@ describe('header component tests', () => {
   it('clicking new post link causes navigation to create-post page', () => {
     setup();
 
-    const createPostLink = screen.getByRole('link', { name: 'New Post' });
+    const createPostLink = screen.getByRole('link', { name: 'Post Image' });
 
     fireEvent.click(createPostLink);
 

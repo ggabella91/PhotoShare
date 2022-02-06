@@ -7,7 +7,6 @@ import { Post } from '../../redux/post/post.types';
 
 describe('create-post page component tests', () => {
   const setup = () => {
-    const currentUser = {} as User;
     const postConfirm = {} as Post;
 
     const createPostStart = jest.fn();
@@ -17,7 +16,6 @@ describe('create-post page component tests', () => {
 
     render(
       <CreatePostPage
-        currentUser={currentUser}
         createPostStart={createPostStart}
         postConfirm={postConfirm}
         postError={null}
@@ -38,7 +36,7 @@ describe('create-post page component tests', () => {
   it('renders a create-post page component', () => {
     setup();
 
-    const createPostPage = screen.getByText('Create a New Post');
+    const createPostPage = screen.getByText('Create a New Image Post');
 
     expect(createPostPage).toBeInTheDocument();
   });
