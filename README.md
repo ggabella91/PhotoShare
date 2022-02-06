@@ -2,6 +2,8 @@
 
 A social networking app where users can upload and share their photos.
 
+Coming soon - support for uploading and sharing videos!
+
 The backend implements a microservices-oriented architecture in Node.js, with NATS Streaming Server facilitating communication between different services. Each service is containerized with Docker, and container management and orchestration is handled by Kubernetes.
 
 The auth service uses jwt and cookies for user athentication.

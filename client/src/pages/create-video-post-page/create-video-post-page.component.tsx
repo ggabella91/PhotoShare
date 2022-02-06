@@ -9,11 +9,14 @@ import {
 import {
   selectLocationSelection,
   selectVideoPostFileChunkMetaData,
+  selectPostConfirm,
+  selectPostError,
 } from '../../redux/post/post.selectors';
 import {
   getLocationsSuggestionsStart,
   clearLocationsSuggestions,
   uploadVideoPostFileChunkStart,
+  clearPostStatuses,
 } from '../../redux/post/post.actions';
 
 import Button from '../../components/button/button.component';
@@ -25,12 +28,13 @@ import LocationsSuggestionsContainer, {
   StyleType,
 } from '../../components/locations-suggestions-container/locations-suggestions-container.component';
 import { useDebounce } from '../hooks';
+import Alert from 'react-bootstrap/Alert';
 
 import './create-video-post-page.styles.scss';
 
 interface PostStatus {
   success: boolean;
-  error: boolean;
+  error: { error: boolean; message: string };
 }
 
 interface VideoPreview {
@@ -59,13 +63,18 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [postStatus, setPostStatus] = useState<PostStatus>({
     success: false,
-    error: false,
+    error: { error: false, message: '' },
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const videoPostFileChunkMetaData = useSelector(
     selectVideoPostFileChunkMetaData
   );
+  const postConfirm = useSelector(selectPostConfirm);
+  const postError = useSelector(selectPostError);
+
+  const CHUNK_SIZE = 5 * 1024 * 1024;
+
   const locationSelection = useSelector(selectLocationSelection);
 
   const dispatch = useDispatch();
@@ -88,8 +97,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
   useEffect(() => {
     if (videoPostFileChunkMetaData && file && chunkIndex) {
-      console.log('videoPostFileChunkMetaData: ', videoPostFileChunkMetaData);
-
       const { eTag, partNumber } = videoPostFileChunkMetaData;
 
       const newUploadPart: UploadPart = { ETag: eTag, PartNumber: partNumber };
@@ -98,7 +105,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
       modifiedUploadPartArray.push(newUploadPart);
       setUploadPartArray(modifiedUploadPartArray);
       const completed = getAllChunksSent(file);
-      console.log('completed: ', completed);
       const idx = completed ? chunkIndex.idx : chunkIndex.idx + 1;
       setChunkIndex({ idx: idx, completed });
     }
@@ -106,8 +112,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
   useEffect(() => {
     if (chunkIndex && file) {
-      console.log('chunkIndex: ', chunkIndex);
-
       const reader = new FileReader();
 
       const fileChunk = getCurrentChunkToUpload(file);
@@ -117,7 +121,16 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     }
   }, [chunkIndex, uploadPartArray]);
 
-  const CHUNK_SIZE = 5 * 1024 * 1024;
+  useEffect(() => {
+    if (postError) {
+      setPostStatus({
+        ...postStatus,
+        error: { error: true, message: postError.message },
+      });
+    } else if (postConfirm) {
+      setPostStatus({ ...postStatus, success: true });
+    }
+  }, [postError, postConfirm]);
 
   const getAllChunksSent = (file: File) => {
     const fileSize = file.size;
@@ -132,12 +145,8 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
     const from = currentIdx * CHUNK_SIZE;
     const to = Math.min(from + CHUNK_SIZE, fileSize);
-    console.log('from: ', from);
-    console.log('to: ', to);
     const blob = file.slice(from, to);
 
-    console.log('blob size: ', blob.size);
-    console.log('blob type: ', blob.type);
     return blob;
   };
 
@@ -145,14 +154,36 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     if (event.target.files?.length) {
       const file = event.target.files[0];
 
-      setVideoPreview({
-        src: URL.createObjectURL(file),
-        type: file.type,
-      });
 
-      console.log('file: ', file);
+      if (file.size >= 104857600) {
+        setFileInputKey(Date.now());
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 5000);
+        setTimeout(
+          () =>
+            setPostStatus({
+              ...postStatus,
+              error: { error: false, message: '' },
+            }),
+          5000
+        );
 
-      setFile(file);
+        setPostStatus({
+          ...postStatus,
+          error: {
+            error: true,
+            message:
+              'File size too large. Select a file of maximum 100 MB in size.',
+          },
+        });
+      } else {
+        setVideoPreview({
+          src: URL.createObjectURL(file),
+          type: file.type,
+        });
+
+        setFile(file);
+      }
     } else {
       setFile(null);
       setVideoPreview(null);
@@ -162,28 +193,16 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setPostStatus({ success: false, error: false });
+    setPostStatus({ success: false, error: { error: false, message: '' } });
 
     if (file) {
       setShowAlert(true);
 
       setChunkIndex({ idx: 1, completed: false });
-
-      // setTimeout(() => setShowAlert(false), 5000);
     }
-
-    setFileInputKey(Date.now());
-
-    // setFile(null);
-    setVideoPreview(null);
-    // setCaption('');
-    // setLocationSearchString('');
-    // setLocation(null);
   };
 
   const prepareAndSendFileChunkRequest = (e: ProgressEvent<FileReader>) => {
-    // const fileChunk = getCurrentChunkToUpload(file);
-
     const fileChunk = e.target?.result;
 
     if (fileChunk) {
@@ -223,8 +242,32 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
       }
+
+      setFile(null);
+      setVideoPreview(null);
+      setCaption('');
+      setLocationSearchString('');
+      setLocation(null);
+      setFileInputKey(Date.now());
     }
   };
+
+  const handleRenderAlert = (type: string, message: string) => {
+    if (showAlert) {
+      dispatch(clearPostStatuses());
+      setTimeout(() => {
+        setPostStatus({ success: false, error: { error: false, message: '' } });
+        setShowAlert(false);
+      }, 3000);
+      return (
+        <Alert variant={type} onClose={handleCloseAlert} dismissible>
+          {message}
+        </Alert>
+      );
+    }
+  };
+
+  const handleCloseAlert = () => setShowAlert(false);
 
   const handleCaptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -263,17 +306,12 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
           )}
           {!videoPreview && showAlert ? (
             <div className='alert'>
-              {/*
-            {postStatus.error
-              ? handleRenderAlert(
-                'danger',
-                  'Error uploading post. Please try again.'
-                )
-              : null}
-            {postStatus.success
-              ? handleRenderAlert('success', 'Post uploaded successfully!')
-              : null}
-            */}
+              {postStatus.error.error
+                ? handleRenderAlert('danger', postStatus.error.message)
+                : null}
+              {postStatus.success
+                ? handleRenderAlert('success', 'Post uploaded successfully!')
+                : null}
             </div>
           ) : null}
           {videoPreview ? (
