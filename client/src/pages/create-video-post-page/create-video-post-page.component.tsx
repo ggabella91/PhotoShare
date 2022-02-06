@@ -130,7 +130,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
     const currentIdx = chunkIndex!.idx - 1;
 
-    const from = currentIdx * CHUNK_SIZE + 1;
+    const from = currentIdx * CHUNK_SIZE;
     const to = Math.min(from + CHUNK_SIZE, fileSize);
     console.log('from: ', from);
     console.log('to: ', to);
@@ -187,9 +187,10 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     const fileChunk = e.target?.result;
 
     if (fileChunk) {
-      const uploadReq: UploadVideoPostFileChunkReq = { fileChunk: fileChunk };
+      const uploadReq: UploadVideoPostFileChunkReq = {};
 
       if (chunkIndex!.idx === 1) {
+        uploadReq.fileChunk = fileChunk as string;
         uploadReq.fileName = file!.name;
         uploadReq.contentType = file!.type;
         uploadReq.createNewMultipartUpload = true;
@@ -198,6 +199,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
       } else if (chunkIndex!.completed) {
         const { uploadId, key } = videoPostFileChunkMetaData!;
+        uploadReq.fileName = file!.name;
         uploadReq.uploadId = uploadId;
         uploadReq.key = key;
 
@@ -213,6 +215,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
       } else {
+        uploadReq.fileChunk = fileChunk as string;
         const { uploadId, key } = videoPostFileChunkMetaData!;
         uploadReq.uploadId = uploadId;
         uploadReq.partNumber = chunkIndex!.idx;

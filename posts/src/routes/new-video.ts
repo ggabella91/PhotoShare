@@ -3,7 +3,7 @@ import multer from 'multer';
 import { Post, PostResponseObj } from '../models/post';
 import { LocationAttrs, LocationDoc } from '../models/location';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
-import { buffToStream } from '../utils/buffToStream';
+import { decodeChunk } from '../utils/converters';
 import { generateKey } from '../utils/generateKey';
 import {
   extractHashtags,
@@ -78,6 +78,7 @@ router.post(
         Bucket: bucket,
         Key: key,
         ContentType: contentType,
+        ContentEncoding: 'base64',
       };
 
       let uploadId: string = '';
@@ -99,10 +100,10 @@ router.post(
               PartNumber: 1,
             };
 
-            const fileChunkArrayBuffer: ArrayBuffer = req.body.fileChunk;
-            const fileChunkBuffer = Buffer.from(fileChunkArrayBuffer);
+            const fileChunkString: string = req.body.fileChunk;
+            const chunkBuffer = decodeChunk(fileChunkString);
 
-            uploadPartParms.Body = fileChunkBuffer;
+            uploadPartParms.Body = chunkBuffer;
 
             return uploadPartParms;
           },
@@ -138,18 +139,16 @@ router.post(
 
                 s3.abortMultipartUpload(abortMultipartUploadParams)
                   .promise()
-                  .then((data) => {
-                    console.log('Aborted multipart upload: ', data);
-
-                    throw new Error(
-                      'Error uploading file part into S3 - Multipart upload aborted'
-                    );
+                  .then(() => {
+                    console.log('Aborted multipart upload');
                   })
                   .catch((err) => {
                     console.log('Error aborting multipart upload: ', err);
-
-                    throw new Error('Error aborting multipart upload');
                   });
+
+                throw new Error(
+                  'Error uploading file part into S3 - Multipart upload aborted'
+                );
               }
             );
         });
@@ -158,6 +157,11 @@ router.post(
         req.body.multiPartUploadArray;
       const uploadId: string = req.body.uploadId;
       const key: string = req.body.key;
+      const fileName: string = req.body.fileName;
+
+      if (!fileName) {
+        throw new BadRequestError('File name not provided');
+      }
 
       if (!uploadId) {
         throw new BadRequestError('Upload Id not provided');
@@ -252,18 +256,16 @@ router.post(
 
             s3.abortMultipartUpload(abortMultipartUploadParams)
               .promise()
-              .then((data) => {
-                console.log('Aborted multipart upload: ', data);
-
-                throw new Error(
-                  'Error completing multipart upload in S3 - Multipart upload aborted'
-                );
+              .then(() => {
+                console.log('Aborted multipart upload');
               })
               .catch((err) => {
                 console.log('Error aborting multipart upload: ', err);
-
-                throw new Error('Error aborting multipart upload');
               });
+
+            throw new Error(
+              'Error uploading file part into S3 - Multipart upload aborted'
+            );
           }
         );
     } else {
@@ -286,12 +288,10 @@ router.post(
         PartNumber: partNumber,
       };
 
-      const fileChunkArrayBuffer: ArrayBuffer = req.body.fileChunk;
-      const fileChunkBuffer = Buffer.from(fileChunkArrayBuffer);
+      const fileChunkString: string = req.body.fileChunk;
+      const chunkBuffer = decodeChunk(fileChunkString);
 
-      uploadPartParms.Body = fileChunkBuffer;
-
-      uploadPartParms.Body = fileChunkBuffer;
+      uploadPartParms.Body = chunkBuffer;
 
       s3.uploadPart(uploadPartParms)
         .promise()
@@ -299,6 +299,7 @@ router.post(
           (data) => {
             if (data) {
               console.log('File part uploaded successfully!');
+              console.log('data: ', data);
 
               const successfulPartUploadRes = {
                 eTag: data.ETag,
@@ -320,16 +321,14 @@ router.post(
               .promise()
               .then((data) => {
                 console.log('Aborted multipart upload: ', data);
-
-                throw new Error(
-                  'Error uploading file part into S3 - Multipart upload aborted'
-                );
               })
               .catch((err) => {
                 console.log('Error aborting multipart upload');
-
-                throw new Error('Error aborting multipart upload');
               });
+
+            throw new Error(
+              'Error uploading file part into S3 - Multipart upload aborted'
+            );
           }
         );
     }

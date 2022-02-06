@@ -291,7 +291,7 @@ export interface UploadPart {
 }
 
 export interface UploadVideoPostFileChunkReq {
-  fileChunk: ArrayBuffer | string;
+  fileChunk?: string;
   fileName?: string;
   contentType?: string;
   createNewMultipartUpload?: boolean;
@@ -302,7 +302,6 @@ export interface UploadVideoPostFileChunkReq {
   location?: Location;
   multiPartUploadArray?: UploadPart[];
   completeMultipartUpload?: boolean;
-  // complete?: boolean;
 }
 
 export interface UploadVideoPostFileChunkResponse {
