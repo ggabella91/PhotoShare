@@ -29,6 +29,7 @@ import LocationsSuggestionsContainer, {
 } from '../../components/locations-suggestions-container/locations-suggestions-container.component';
 import { useDebounce } from '../hooks';
 import Alert from 'react-bootstrap/Alert';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import './create-video-post-page.styles.scss';
 
@@ -59,6 +60,9 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
   const [chunkIndex, setChunkIndex] = useState<ChunkIndex | null>(null);
   const [uploadPartArray, setUploadPartArray] = useState<UploadPart[]>([]);
+  const [totalChunkCount, setTotalChunkCount] = useState<number | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const [showAlert, setShowAlert] = useState(false);
   const [postStatus, setPostStatus] = useState<PostStatus>({
@@ -111,7 +115,8 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   }, [videoPostFileChunkMetaData]);
 
   useEffect(() => {
-    if (chunkIndex && file) {
+    if (chunkIndex && file && totalChunkCount) {
+      setUploadProgress((chunkIndex.idx / totalChunkCount) * 100);
       const reader = new FileReader();
 
       const fileChunk = getCurrentChunkToUpload(file);
@@ -123,11 +128,15 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
   useEffect(() => {
     if (postError) {
+      setVideoPreview(null);
+      setIsUploading(false);
       setPostStatus({
         ...postStatus,
         error: { error: true, message: postError.message },
       });
     } else if (postConfirm) {
+      setVideoPreview(null);
+      setIsUploading(false);
       setPostStatus({ ...postStatus, success: true });
     }
   }, [postError, postConfirm]);
@@ -153,7 +162,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
       const file = event.target.files[0];
-
 
       if (file.size >= 104857600) {
         setFileInputKey(Date.now());
@@ -183,6 +191,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
         });
 
         setFile(file);
+        setTotalChunkCount(Math.ceil(file.size / CHUNK_SIZE));
       }
     } else {
       setFile(null);
@@ -216,6 +225,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
         uploadReq.partNumber = chunkIndex!.idx;
 
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
+        setIsUploading(true);
       } else if (chunkIndex!.completed) {
         const { uploadId, key } = videoPostFileChunkMetaData!;
         uploadReq.fileName = file!.name;
@@ -233,6 +243,12 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
         uploadReq.completeMultipartUpload = true;
 
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
+
+        setFile(null);
+        setCaption('');
+        setLocationSearchString('');
+        setLocation(null);
+        setFileInputKey(Date.now());
       } else {
         uploadReq.fileChunk = fileChunk as string;
         const { uploadId, key } = videoPostFileChunkMetaData!;
@@ -242,13 +258,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
       }
-
-      setFile(null);
-      setVideoPreview(null);
-      setCaption('');
-      setLocationSearchString('');
-      setLocation(null);
-      setFileInputKey(Date.now());
     }
   };
 
@@ -319,6 +328,13 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
               <source src={videoPreview.src} type={videoPreview.type} />
               Your browser does not support the video tag.
             </video>
+          ) : null}
+          {isUploading ? (
+            <LinearProgress
+              className='upload-progress-bar'
+              variant='determinate'
+              value={uploadProgress}
+            />
           ) : null}
         </div>
         <form encType='multipart/form-data' onSubmit={handleSubmit}>
