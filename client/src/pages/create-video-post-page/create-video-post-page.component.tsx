@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -52,6 +52,7 @@ interface VideoPostPageProps {}
 
 const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState('');
   const [caption, setCaption] = useState('');
   const [locationSearchString, setLocationSearchString] = useState('');
   const [location, setLocation] = useState<Location | null>(null);
@@ -70,6 +71,9 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     error: { error: false, message: '' },
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const videoPostFileChunkMetaData = useSelector(
     selectVideoPostFileChunkMetaData
@@ -98,6 +102,33 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
       setShowSuggestions(false);
     }
   }, [locationSelection]);
+
+  const handleLoadedVideoMetaData = () => {
+    drawCanvasAndSetThumbnail();
+  };
+
+  const handleVideoTimeUpdate = () => {
+    drawCanvasAndSetThumbnail();
+  };
+
+  const drawCanvasAndSetThumbnail = () => {
+    if (canvasRef.current && videoRef.current) {
+      const { current: videoEl } = videoRef;
+      const { current: canvasEl } = canvasRef;
+
+      const canvasCtx = canvasEl.getContext('2d');
+      canvasCtx?.drawImage(
+        videoEl,
+        5,
+        -8,
+        videoEl.videoWidth * 0.15,
+        videoEl.videoHeight * 0.15
+      );
+
+      const canvasDataURL = canvasEl.toDataURL();
+      setThumbnail(canvasDataURL);
+    }
+  };
 
   useEffect(() => {
     if (videoPostFileChunkMetaData && file && chunkIndex) {
@@ -324,19 +355,30 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             </div>
           ) : null}
           {videoPreview ? (
-            <video className='video-preview' preload='metadata' controls muted>
-              <source src={videoPreview.src} type={videoPreview.type} />
-              Your browser does not support the video tag.
-            </video>
-          ) : null}
-          {isUploading ? (
-            <LinearProgress
-              className='upload-progress-bar'
-              variant='determinate'
-              value={uploadProgress}
-            />
+            <>
+              <video
+                className='video-preview'
+                preload='metadata'
+                controls
+                muted
+                ref={videoRef}
+                onLoadedMetadata={handleLoadedVideoMetaData}
+                onTimeUpdate={handleVideoTimeUpdate}
+              >
+                <source src={videoPreview.src} type={videoPreview.type} />
+                Your browser does not support the video tag.
+              </video>
+              <canvas ref={canvasRef}></canvas>
+            </>
           ) : null}
         </div>
+        {isUploading ? (
+          <LinearProgress
+            className='upload-progress-bar'
+            variant='determinate'
+            value={uploadProgress}
+          />
+        ) : null}
         <form encType='multipart/form-data' onSubmit={handleSubmit}>
           <FormFileInput
             name='video'
