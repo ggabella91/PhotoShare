@@ -1,61 +1,66 @@
 .create-video-post-page {
   min-height: 800px;
   padding: 40px 0;
-}
 
-.upload-video {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .upload-video {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-.video-preview-container {
-  margin-top: 20px;
-  height: 400px;
-  width: 400px;
-  border: solid 3px;
-
-  .video-preview-placeholder {
-    position: relative;
-    font-size: 20px;
-    margin-top: 50%;
-    margin-left: 50%;
-    transform: translate(-50%, -50%);
-    width: 300px;
-    height: 300px;
-    border: dashed 2px;
-
-    .placeholder-text-container {
+    .video-preview-container {
+      display: flex;
       position: relative;
-      margin-top: 50%;
-      margin-left: 50%;
-      transform: translate(-50%, -50%);
+      margin-top: 20px;
+      height: 400px;
+      width: 400px;
+      border: solid 3px;
 
-      .placeholder-text {
-        font-weight: 420;
+      .video-preview-placeholder {
+        position: absolute;
+        font-size: 20px;
+        width: 300px;
+        height: 300px;
+        border: dashed 2px;
+        top: 50px;
+        left: 50px;
+
+        .placeholder-text-container {
+          position: relative;
+          margin-top: 50%;
+          margin-left: 50%;
+          transform: translate(-50%, -50%);
+
+          .placeholder-text {
+            font-weight: 420;
+          }
+        }
+      }
+
+      .alert {
+        position: relative;
+        width: 300px;
+        margin-top: 50%;
+        margin-left: 50%;
+        transform: translate(-50%, -65%);
+      }
+
+      .video-preview {
+        position: absolute;
+        top: 25%;
+        left: 25px;
+        max-width: 350px;
       }
     }
-  }
 
-  .alert {
-    position: relative;
-    width: 300px;
-    margin-top: 50%;
-    margin-left: 50%;
-    transform: translate(-50%, -65%);
-  }
+    .upload-progress-bar {
+      position: relative;
+      margin-top: 50px;
+      width: 400px;
+    }
 
-  .video-preview {
-    margin-top: 40%;
-    transform: translateY(-50%);
-    max-width: 300px;
-    max-height: 300px;
-    height: 300px;
-  }
-
-  .upload-progress-bar {
-    position: relative;
-    transform: translateY(-80%);
+    .post-video-form-container {
+      position: relative;
+    }
   }
 }
