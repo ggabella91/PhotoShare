@@ -302,6 +302,7 @@ export interface UploadVideoPostFileChunkReq {
   location?: Location;
   multiPartUploadArray?: UploadPart[];
   completeMultipartUpload?: boolean;
+  videoThumbnail?: string;
 }
 
 export interface UploadVideoPostFileChunkResponse {

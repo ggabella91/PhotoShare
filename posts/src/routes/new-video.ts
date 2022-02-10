@@ -3,7 +3,7 @@ import multer from 'multer';
 import { Post, PostResponseObj } from '../models/post';
 import { LocationAttrs, LocationDoc } from '../models/location';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
-import { decodeChunk } from '../utils/converters';
+import { decodeBase64Data } from '../utils/converters';
 import { generateKey } from '../utils/generateKey';
 import {
   extractHashtags,
@@ -16,7 +16,11 @@ import {
 } from '../utils/location-utils';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
-import { abortMultipartUpload, deleteObject } from '../utils/s3HelperUtils';
+import {
+  abortMultipartUpload,
+  uploadObject,
+  deleteObject,
+} from '../utils/s3HelperUtils';
 
 const router = express.Router();
 
@@ -81,7 +85,7 @@ router.post(
             };
 
             const fileChunkString: string = req.body.fileChunk;
-            const chunkBuffer = decodeChunk(fileChunkString);
+            const chunkBuffer = decodeBase64Data(fileChunkString);
 
             uploadPartParms.Body = chunkBuffer;
 
@@ -158,7 +162,10 @@ router.post(
 
               const caption: string = req.body.caption || '';
               let postLocation: LocationReq | LocationAttrs = req.body.location;
+              const videoThumbnail: string = req.body.videoThumbnail || '';
               let hashtags: string[] = [];
+
+              let videoThumbnailS3Key: string = '';
               if (caption) {
                 hashtags = extractHashtags(caption);
               }
@@ -166,6 +173,18 @@ router.post(
                 postLocation = createLocationObject(
                   postLocation as LocationReq
                 );
+              }
+              if (videoThumbnail.length) {
+                const thumbnailBuffer = decodeBase64Data(videoThumbnail);
+
+                const thumbnailKey = key + '_thumbnail';
+
+                const { Key } = await uploadObject(
+                  thumbnailKey,
+                  thumbnailBuffer
+                );
+
+                videoThumbnailS3Key = Key;
               }
 
               const comments = 0;
@@ -192,6 +211,7 @@ router.post(
                 likes,
                 totalReactions,
                 isVideo: true,
+                videoThumbnailS3Key,
               });
 
               await post.save();
@@ -236,7 +256,7 @@ router.post(
       };
 
       const fileChunkString: string = req.body.fileChunk;
-      const chunkBuffer = decodeChunk(fileChunkString);
+      const chunkBuffer = decodeBase64Data(fileChunkString);
 
       uploadPartParms.Body = chunkBuffer;
 

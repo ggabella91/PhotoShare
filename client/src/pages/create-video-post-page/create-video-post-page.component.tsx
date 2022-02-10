@@ -103,7 +103,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     }
   }, [locationSelection]);
 
-  const handleLoadedVideoMetaData = () => {
+  const handleLoadedVideoData = () => {
     drawCanvasAndSetThumbnail();
   };
 
@@ -161,6 +161,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     if (postError) {
       setVideoPreview(null);
       setIsUploading(false);
+      setUploadPartArray([]);
       setPostStatus({
         ...postStatus,
         error: { error: true, message: postError.message },
@@ -168,6 +169,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     } else if (postConfirm) {
       setVideoPreview(null);
       setIsUploading(false);
+      setUploadPartArray([]);
       setPostStatus({ ...postStatus, success: true });
     }
   }, [postError, postConfirm]);
@@ -269,6 +271,9 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
         if (location) {
           uploadReq.location = location;
         }
+        if (thumbnail.length) {
+          uploadReq.videoThumbnail = thumbnail;
+        }
 
         uploadReq.multiPartUploadArray = uploadPartArray;
         uploadReq.completeMultipartUpload = true;
@@ -358,17 +363,17 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             <>
               <video
                 className='video-preview'
-                preload='metadata'
+                preload='auto'
                 controls
                 muted
                 ref={videoRef}
-                onLoadedMetadata={handleLoadedVideoMetaData}
+                onLoadedData={handleLoadedVideoData}
                 onTimeUpdate={handleVideoTimeUpdate}
               >
                 <source src={videoPreview.src} type={videoPreview.type} />
                 Your browser does not support the video tag.
               </video>
-              <canvas ref={canvasRef}></canvas>
+              <canvas className='thumbnail-canvas' ref={canvasRef}></canvas>
             </>
           ) : null}
         </div>
