@@ -3,7 +3,7 @@ export const encode = (data: Buffer) => {
   return base64;
 };
 
-export const decodeChunk = (base64StringData: string) => {
+export const decodeBase64Data = (base64StringData: string) => {
   const rawData = base64StringData.replace(/data.*;base64,/, '');
 
   const buffer = Buffer.from(rawData, 'base64');
