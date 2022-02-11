@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { List } from 'immutable';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -425,9 +426,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
-        let comment = reactionEl.comment;
-        let photoKey: string;
-        let profilePhotoFileString: string;
+        let comment = reactionEl.comment || '';
+        let photoKey: string = '';
+        let profilePhotoFileString: string = '';
 
         reactingUserInfoList.forEach((infoEl) => {
           if (infoEl.id === userId) {
@@ -438,18 +439,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         });
 
         userProfilePhotoList.forEach((photoEl) => {
-          if (photoEl.s3Key === photoKey!) {
+          if (photoEl.s3Key === photoKey) {
             profilePhotoFileString = photoEl.fileString;
           }
         });
-
-        if (!photoKey!) {
-          profilePhotoFileString = '';
-        }
-
-        if (!comment) {
-          comment = '';
-        }
 
         if (reactionEl.likedPost) {
           likesList = likesList.push({
@@ -573,6 +566,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           src={`data:image/jpeg;base64,${fileString}`}
           alt='user'
         />
+        <PlayArrowIcon className='play-arrow-icon' />
       </div>
       <div className='caption-and-reactions'>
         {handleRenderLikeOrLikedButton()}
