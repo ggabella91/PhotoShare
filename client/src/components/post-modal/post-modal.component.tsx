@@ -9,6 +9,7 @@ import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import slugify from 'slugify';
 
 import { AppState } from '../../redux/root-reducer';
@@ -100,6 +101,7 @@ interface PostModalProps {
   createdAt: Date | string;
   location: Location;
   show: boolean;
+  isVideo?: boolean;
   clearLocalState: boolean;
   onHide: () => void;
   fileString: string;
@@ -769,6 +771,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           src={`data:image/jpeg;base64,${fileString}`}
           alt='post-pic'
         />
+        <PlayArrowIcon className='play-arrow-icon' />
       </div>
       <Modal.Header className='post-modal-header' closeButton />
       <Modal.Body className='post-modal-body'>

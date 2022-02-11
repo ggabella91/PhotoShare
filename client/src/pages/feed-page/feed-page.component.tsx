@@ -131,6 +131,7 @@ export interface UserInfoAndPostFile {
   caption?: string;
   dateString: string;
   dateInt: number;
+  isVideo?: boolean;
 }
 
 interface FeedPageProps {
@@ -443,6 +444,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         innerObj.postData.forEach((el) => {
           getPostFileStart({
             s3Key: el.s3Key,
+            isVideo: el.isVideo,
+            videoThumbnailS3Key: el.videoThumbnailS3Key,
             bucket: postsBucket,
             user: UserType.other,
             fileRequestType: FileRequestType.feedPost,
@@ -630,6 +633,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 location: el.location,
                 name: '',
                 comment: '',
+                isVideo: el.isVideo,
               }}
               s3Key={el.postS3Key}
               fileString={el.postFileString}
@@ -665,6 +669,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       <PostModal
         postId={postModalProps.id}
         show={postModalShow}
+        isVideo={postModalProps.isVideo}
         fileString={postModalProps.postPhotoFileString}
         caption={postModalProps.caption}
         location={postModalProps.location}

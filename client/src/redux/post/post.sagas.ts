@@ -234,13 +234,27 @@ export function* getPostReactions({
 }
 
 export function* getPostFile({
-  payload: { s3Key, bucket, user, fileRequestType },
+  payload: {
+    s3Key,
+    bucket,
+    user,
+    fileRequestType,
+    isVideo,
+    videoThumbnailS3Key,
+  },
 }: {
   payload: PostFileReq;
 }) {
   try {
+    const params = new URLSearchParams({ s3Key, bucket });
+
+    if (isVideo && videoThumbnailS3Key) {
+      params.append('isVideo', 'true');
+      params.append('videoThumbnailS3Key', videoThumbnailS3Key);
+    }
+
     const { data }: { data: string } = yield axios.get(
-      `/api/posts/files?s3Key=${s3Key}&bucket=${bucket}`
+      `/api/posts/files?${params.toString()}`
     );
 
     if (bucket === 'photo-share-app' || bucket === 'photo-share-app-dev') {

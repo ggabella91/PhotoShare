@@ -155,6 +155,8 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
         dispatch(
           getPostFileStart({
             s3Key: post.s3Key,
+            isVideo: post.isVideo,
+            videoThumbnailS3Key: post.videoThumbnailS3Key,
             bucket: postsBucket,
             user: UserType.self, // not relevant here but part of the request body
             fileRequestType: FileRequestType.singlePost,

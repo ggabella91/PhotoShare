@@ -119,6 +119,7 @@ export interface Post {
   comments: number;
   likes: number;
   isVideo?: boolean;
+  videoThumbnailS3Key?: string;
 }
 
 export interface Reaction {
@@ -201,6 +202,8 @@ export interface PostFileReq {
   bucket: string;
   user: UserType;
   fileRequestType: FileRequestType;
+  isVideo?: boolean;
+  videoThumbnailS3Key?: string;
 }
 
 export interface PostFile {

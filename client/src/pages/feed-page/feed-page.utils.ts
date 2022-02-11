@@ -19,16 +19,17 @@ export const prepareUserInfoAndFileList = (
 ) => {
   let userInfoAndPostObjList: List<UserInfoAndPostFile> = postFileFeedList.map(
     (el) => {
-      let location: Location;
-      let dateString: string;
-      let dateInt: number;
+      let location: Location = {} as Location;
+      let dateString: string = '';
+      let dateInt: number = Date.now();
       let id: string;
       let username: string;
       let postId: string;
       let postS3Key: string;
       let profilePhotoS3Key: string;
-      let profilePhotoString: string;
-      let caption: string;
+      let profilePhotoString: string = '';
+      let caption: string = '';
+      let isVideo: boolean = false;
 
       dataFeedMultiList.forEach((innerArray) => {
         innerArray.forEach((innerEl) => {
@@ -42,6 +43,7 @@ export const prepareUserInfoAndFileList = (
             caption = innerEl.caption || '';
             dateString = new Date(date).toDateString();
             dateInt = new Date(date).getTime();
+            isVideo = innerEl.isVideo || false;
           }
         });
       });
@@ -54,29 +56,10 @@ export const prepareUserInfoAndFileList = (
       });
 
       followingProfilePhotoList.forEach((userEl) => {
-        if (profilePhotoS3Key! && userEl.s3Key === profilePhotoS3Key) {
+        if (profilePhotoS3Key && userEl.s3Key === profilePhotoS3Key) {
           profilePhotoString = userEl.fileString;
         }
       });
-
-      if (!profilePhotoString!) {
-        profilePhotoString = '';
-      }
-      if (!location!) {
-        location = {} as Location;
-      }
-
-      if (!caption!) {
-        caption = '';
-      }
-
-      if (!dateString!) {
-        dateString = '';
-      }
-
-      if (!dateInt!) {
-        dateInt = Date.now();
-      }
 
       return {
         username: username!,
@@ -89,6 +72,7 @@ export const prepareUserInfoAndFileList = (
         caption,
         dateString,
         dateInt,
+        isVideo,
       };
     }
   );

@@ -159,6 +159,7 @@ type PostModalMapProps = ImmutableMap<{
   location: Location;
   createdAt: Date | null;
   fileString: string;
+  isVideo?: boolean;
 }>;
 
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
@@ -227,6 +228,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       location: {} as Location,
       createdAt: null,
       fileString: '',
+      isVideo: false,
     })
   );
 
@@ -411,6 +413,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       postDataList.forEach((post) => {
         getPostFileStart({
           s3Key: post.s3Key,
+          isVideo: post.isVideo,
+          videoThumbnailS3Key: post.videoThumbnailS3Key,
           bucket: postsBucket,
           user: UserType.other,
           fileRequestType: FileRequestType.singlePost,
@@ -458,6 +462,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
           location,
           createdAt,
           fileString: postFileString,
+          isVideo: postData.isVideo,
         })
       );
       setClearPostModalLocalState(false);
@@ -474,6 +479,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         location: '',
         createdAt: null,
         fileString: '',
+        isVideo: false,
       })
     );
     setPostModalShow(false);
