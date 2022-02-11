@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import multer from 'multer';
 import { Post, PostResponseObj } from '../models/post';
 import { LocationAttrs, LocationDoc } from '../models/location';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';

@@ -591,9 +591,9 @@ export const PostModal: React.FC<PostModalProps> = ({
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
-        let comment = reactionEl.comment;
+        let comment = reactionEl.comment || '';
         let photoKey: string;
-        let fileString: string;
+        let fileString: string = '';
 
         reactingUserInfoList.forEach((infoEl) => {
           if (infoEl.id === userId) {
@@ -608,14 +608,6 @@ export const PostModal: React.FC<PostModalProps> = ({
             fileString = photoEl.fileString;
           }
         });
-
-        if (!photoKey!) {
-          fileString = '';
-        }
-
-        if (!comment) {
-          comment = '';
-        }
 
         if (reactionEl.likedPost) {
           likesList = likesList.push({
