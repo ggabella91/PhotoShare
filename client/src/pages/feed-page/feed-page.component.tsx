@@ -443,6 +443,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         innerObj.postData.forEach((el) => {
           getPostFileStart({
             s3Key: el.s3Key,
+            isVideo: el.isVideo,
+            videoThumbnailS3Key: el.videoThumbnailS3Key,
             bucket: postsBucket,
             user: UserType.other,
             fileRequestType: FileRequestType.feedPost,

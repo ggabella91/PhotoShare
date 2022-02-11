@@ -10,7 +10,7 @@ import {
 import { createPostRouter } from './routes/new';
 import { profilePhotoRouter } from './routes/profile-photo';
 import { getPostDataRouter } from './routes/data';
-import { getPostFilesRouter } from './routes/get-post-files';
+import { getPostFileRouter } from './routes/get-post-file';
 import { archivePostRouter } from './routes/archive';
 import { newReactionRouter } from './routes/new-reaction';
 import { getReactionsRouter } from './routes/get-post-reactions';
@@ -39,7 +39,7 @@ app.use(currentUser);
 app.use(createPostRouter);
 app.use(profilePhotoRouter);
 app.use(getPostDataRouter);
-app.use(getPostFilesRouter);
+app.use(getPostFileRouter);
 app.use(archivePostRouter);
 app.use(newReactionRouter);
 app.use(getReactionsRouter);

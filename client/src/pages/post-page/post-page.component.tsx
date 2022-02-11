@@ -236,6 +236,8 @@ export const PostPage: React.FC = () => {
       dispatch(
         getPostFileStart({
           s3Key: postData.s3Key,
+          isVideo: postData.isVideo,
+          videoThumbnailS3Key: postData.videoThumbnailS3Key,
           bucket: postsBucket,
           user: UserType.other,
           fileRequestType: FileRequestType.singlePost,

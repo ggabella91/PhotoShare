@@ -365,6 +365,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       postDataList.forEach((post) => {
         getPostFileStart({
           s3Key: post.s3Key,
+          isVideo: post.isVideo,
+          videoThumbnailS3Key: post.videoThumbnailS3Key,
           bucket: postsBucket,
           user: UserType.self,
           fileRequestType: FileRequestType.singlePost,

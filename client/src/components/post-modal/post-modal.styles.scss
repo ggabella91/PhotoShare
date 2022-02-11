@@ -134,6 +134,16 @@ $image-height: 62.5vw;
         width: 50vw;
       }
     }
+
+    .play-arrow-icon {
+      position: absolute;
+      font-size: 60px;
+      left: calc(50% - 42.5px);
+      color: white;
+      background-color: #a7a7a7;
+      border-radius: 4px;
+      width: 85px;
+    }
   }
 
   .post-modal-header {

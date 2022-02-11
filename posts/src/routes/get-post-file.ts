@@ -19,12 +19,18 @@ router.get(
     const user = req.currentUser;
 
     const bucket: string = (req.query.bucket as string) || '';
-    const s3Key = (req.query.s3Key as string) || '';
+    let s3Key: string = (req.query.s3Key as string) || '';
+    const isVideo = req.query.isVideo === 'true' || false;
+    const videoThumbnailS3Key: string = req.query.videoThumbnailS3Key as string;
 
     if (!user) {
       throw new BadRequestError(
         'No user signed in. Please sign in to access this route.'
       );
+    }
+
+    if (isVideo) {
+      s3Key = videoThumbnailS3Key;
     }
 
     const cachedFile = await redisClient.get(s3Key);
@@ -75,4 +81,4 @@ router.get(
   }
 );
 
-export { router as getPostFilesRouter };
+export { router as getPostFileRouter };
