@@ -101,6 +101,7 @@ interface PostModalProps {
   createdAt: Date | string;
   location: Location;
   show: boolean;
+  isVideo?: boolean;
   clearLocalState: boolean;
   onHide: () => void;
   fileString: string;

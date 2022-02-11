@@ -114,6 +114,7 @@ export interface UserInfoData {
   location: Location;
   name: string;
   comment: string;
+  isVideo?: boolean;
 }
 
 export interface PostModalDataToFeed {
@@ -126,6 +127,7 @@ export interface PostModalDataToFeed {
   profilePhotoFileString: string;
   postUserId: string;
   postUserName: string;
+  isVideo?: boolean;
 }
 
 export const POST_MODAL_DATA_INITIAL_STATE: PostModalDataToFeed = {
@@ -138,6 +140,7 @@ export const POST_MODAL_DATA_INITIAL_STATE: PostModalDataToFeed = {
   profilePhotoFileString: '',
   postUserId: '',
   postUserName: '',
+  isVideo: false,
 };
 
 export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
@@ -205,6 +208,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     profilePhotoFileString: userInfo.profilePhotoFileString,
     postUserId: userInfo.userId,
     postUserName: userInfo.username,
+    isVideo: userInfo.isVideo,
   };
 
   let bucket: string;

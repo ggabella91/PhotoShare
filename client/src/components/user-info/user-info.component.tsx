@@ -38,6 +38,7 @@ export interface UserInfoAndOtherData {
   reactionId?: string;
   reactingUserId?: string;
   postId?: string;
+  isVideo?: boolean;
 }
 
 interface UserInfoProps {
