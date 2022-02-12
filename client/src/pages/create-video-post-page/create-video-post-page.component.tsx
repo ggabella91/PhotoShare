@@ -389,7 +389,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             name='video'
             type='file'
             label='Select video'
-            accept='video/*'
+            accept='video/mp4'
             onChange={handleFileChange}
             key={fileInputKey}
           />

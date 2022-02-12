@@ -681,6 +681,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         userName={postModalProps.postUserName}
         userId={postModalProps.postUserId}
         clearLocalState={clearPostModalState}
+        s3Key={postModalProps.postS3Key}
       />
       <PostOrCommentOptionsModal
         show={postOptionsModalShow}

@@ -144,6 +144,16 @@ $image-height: 62.5vw;
       border-radius: 4px;
       width: 85px;
     }
+
+    .post-modal-video {
+      height: auto;
+      width: 480px;
+      position: relative;
+
+      @include respond-medium-wide() {
+        width: 50vw;
+      }
+    }
   }
 
   .post-modal-header {

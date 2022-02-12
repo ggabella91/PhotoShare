@@ -742,6 +742,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         userName={user.get('username')}
         userId={user.get('id')}
         clearLocalState={clearPostModalLocalState}
+        isVideo={postModalProps.get('isVideo')}
+        s3Key={postModalProps.get('s3Key')}
       />
       <PostOrCommentOptionsModal
         show={postOptionsModalShow}

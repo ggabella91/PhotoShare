@@ -52,6 +52,7 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
       location: '',
       createdAt: null,
       fileString: '',
+      isVideo: false,
     })
   );
 
@@ -232,6 +233,7 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
           location,
           createdAt,
           fileString: postFileString,
+          isVideo: postData.isVideo,
         })
       );
       setPostModalShow(true);
@@ -261,6 +263,7 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
         location: '',
         createdAt: null,
         fileString: '',
+        isVideo: false,
       })
     );
     setPostModalShow(false);
@@ -392,6 +395,8 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
         userName={otherUser?.username || ''}
         userId={otherUser?.id || ''}
         clearLocalState={clearPostModalLocalState}
+        isVideo={postModalProps.get('isVideo')}
+        s3Key={postModalProps.get('s3Key')}
         isCurrentUserPost
       />
       <PostOrCommentOptionsModal
