@@ -59,6 +59,7 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
       location: '',
       createdAt: null,
       fileString: '',
+      isVideo: false,
     })
   );
 
@@ -248,6 +249,7 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
           location,
           createdAt,
           fileString: postFileString,
+          isVideo: postData.isVideo,
         })
       );
       setPostModalShow(true);
@@ -277,6 +279,7 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
         location: '',
         createdAt: null,
         fileString: '',
+        isVideo: false,
       })
     );
     setPostModalShow(false);
@@ -388,6 +391,8 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
         userName={otherUser?.username || ''}
         userId={otherUser?.id || ''}
         clearLocalState={clearPostModalLocalState}
+        isVideo={postModalProps.get('isVideo')}
+        s3Key={postModalProps.get('s3Key')}
         isCurrentUserPost
       />
       <PostOrCommentOptionsModal

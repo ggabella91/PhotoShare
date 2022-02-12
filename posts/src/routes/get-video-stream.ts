@@ -1,11 +1,8 @@
 import express, { Request, Response } from 'express';
-import { Post, PostResponseObj } from '../models/post';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
-import { decodeBase64Data } from '../utils/converters';
 
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
-import { uploadObject, deleteObject } from '../utils/s3HelperUtils';
 
 const router = express.Router();
 
@@ -58,7 +55,7 @@ router.get(
               const totalSize = data.Contents[0].Size;
               const end = bytes[1] ? parseInt(bytes[1]) : totalSize! - 1;
               const chunkSize = end - start + 1;
-              console.log('Set rangem bytes, start, total, end, and chunkSize');
+              console.log('Set range, bytes, start, total, end, and chunkSize');
 
               res.writeHead(206, {
                 'Content-Range': `bytes ${start}-${end}/${totalSize}`,

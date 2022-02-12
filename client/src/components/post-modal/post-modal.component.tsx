@@ -102,6 +102,7 @@ interface PostModalProps {
   location: Location;
   show: boolean;
   isVideo?: boolean;
+  s3Key?: string;
   clearLocalState: boolean;
   onHide: () => void;
   fileString: string;
@@ -139,6 +140,8 @@ export const PostModal: React.FC<PostModalProps> = ({
   currentUser,
   isCurrentUserPost,
   postId,
+  isVideo,
+  s3Key,
   fileString,
   caption,
   location,
@@ -212,6 +215,8 @@ export const PostModal: React.FC<PostModalProps> = ({
     useState(false);
 
   const [slugifiedLocationLabel, setSlugifiedLocationLabel] = useState('');
+
+  const [playVideo, setPlayVideo] = useState(false);
 
   const postModalDataCache = useSelector(
     (state: AppState) => state.post.postModalDataCache
@@ -750,6 +755,8 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const handleShowPostEditForm = () => setShowPostEditForm(true);
 
+  const handleClickPlayArrowIcon = () => setPlayVideo(true);
+
   return (
     <Modal
       {...props}
@@ -758,12 +765,26 @@ export const PostModal: React.FC<PostModalProps> = ({
       centered
     >
       <div className='large-image-adjustments'>
-        <img
-          className='post-modal-image-large'
-          src={`data:image/jpeg;base64,${fileString}`}
-          alt='post-pic'
-        />
-        <PlayArrowIcon className='play-arrow-icon' />
+        {!playVideo ? (
+          <>
+            <img
+              className='post-modal-image-large'
+              src={`data:image/jpeg;base64,${fileString}`}
+              alt='post-pic'
+            />
+            {isVideo && (
+              <PlayArrowIcon
+                className='play-arrow-icon'
+                onClick={handleClickPlayArrowIcon}
+              />
+            )}
+          </>
+        ) : null}
+        {playVideo && (
+          <video className='post-modal-video' controls muted>
+            <source src={`/api/posts/video?s3Key=${s3Key}`} />
+          </video>
+        )}
       </div>
       <Modal.Header className='post-modal-header' closeButton />
       <Modal.Body className='post-modal-body'>
