@@ -197,6 +197,10 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
 
+  const [playVideo, setPlayVideo] = useState(false);
+
+  const { isVideo } = userInfo;
+
   const dispatch = useDispatch();
 
   let postModalProps: PostModalDataToFeed = {
@@ -551,6 +555,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     setFeedPagePostModalData(postModalProps);
   };
 
+  const handleClickPlayArrowIcon = () => setPlayVideo(true);
+
   return (
     <div
       className='feed-post-container'
@@ -560,13 +566,27 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       <div className='profile-and-options'>
         <UserInfo styleType={StyleType.feed} userInfoList={List([userInfo])} />
       </div>
-      <div className='image-background'>
-        <img
-          className='feed-post-photo'
-          src={`data:image/jpeg;base64,${fileString}`}
-          alt='user'
-        />
-        <PlayArrowIcon className='play-arrow-icon' />
+      <div className='media-background'>
+        {!playVideo ? (
+          <>
+            <img
+              className='feed-post-photo'
+              src={`data:image/jpeg;base64,${fileString}`}
+              alt='user'
+            />
+            {isVideo && (
+              <PlayArrowIcon
+                className='play-arrow-icon'
+                onClick={handleClickPlayArrowIcon}
+              />
+            )}
+            {playVideo && (
+              <video className='feed-post-video' controls muted>
+                <source src={`/api/posts/video?s3Key=${s3Key}`} />
+              </video>
+            )}
+          </>
+        ) : null}
       </div>
       <div className='caption-and-reactions'>
         {handleRenderLikeOrLikedButton()}

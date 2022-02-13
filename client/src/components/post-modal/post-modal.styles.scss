@@ -106,7 +106,7 @@ $image-height: 62.5vw;
     }
   }
 
-  .large-image-adjustments {
+  .large-media-adjustments {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -143,6 +143,7 @@ $image-height: 62.5vw;
       background-color: #a7a7a7;
       border-radius: 4px;
       width: 85px;
+      cursor: pointer;
     }
 
     .post-modal-video {
