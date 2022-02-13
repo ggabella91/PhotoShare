@@ -31,7 +31,7 @@
     display: flex;
   }
 
-  .image-background {
+  .media-background {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -53,6 +53,13 @@
       background-color: #a7a7a7;
       border-radius: 4px;
       width: 85px;
+      cursor: pointer;
+    }
+
+    .feed-post-video {
+      display: flex;
+      height: auto;
+      width: 600px;
     }
   }
 

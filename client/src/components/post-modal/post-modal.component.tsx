@@ -764,7 +764,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       animation={false}
       centered
     >
-      <div className='large-image-adjustments'>
+      <div className='large-media-adjustments'>
         {!playVideo ? (
           <>
             <img

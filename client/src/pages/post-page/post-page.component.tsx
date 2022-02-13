@@ -737,14 +737,15 @@ export const PostPage: React.FC = () => {
   return (
     <div className='post-page' data-testid='post-page'>
       <div className='post-container'>
-        <div className='post-image-container'>
-          {postFiles && postFiles.length ? (
+        <div className='post-media-container'>
+          {postFiles.length && !postData?.isVideo ? (
             <img
               className='post-image'
               src={`data:image/jpeg;base64,${postFiles[0].fileString}`}
               alt='post-pic'
             />
-          ) : (
+          ) : null}
+          {!postFiles.length && !postData?.isVideo && (
             <Box
               sx={{
                 display: 'flex',
@@ -755,6 +756,11 @@ export const PostPage: React.FC = () => {
             >
               <CircularProgress />
             </Box>
+          )}
+          {postData?.isVideo && (
+            <video className='post-video' controls muted>
+              <source src={`/api/video?s3Key=${postData.s3Key}`} />
+            </video>
           )}
         </div>
         <div className='post-page-details'>
