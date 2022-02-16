@@ -83,6 +83,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     null
   );
   const [navigate, setNavigate] = useState(false);
+  const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
 
   let bucket: string;
 
@@ -108,8 +109,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     if (userSuggestions && userSuggestions.length) {
+      let count = 0;
+
       for (let user of userSuggestions) {
         if (user.photo) {
+          count++;
           getPostFileStart({
             user: UserType.suggestionArray,
             bucket,
@@ -118,15 +122,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           });
         }
       }
+
+      if (count === 0) {
+        setNoProfilePhotosToFetch(true);
+      }
     }
   }, [userSuggestions]);
 
   useEffect(() => {
-    if (
-      userSuggestions &&
-      userSuggestionProfilePhotoFiles &&
-      userSuggestionProfilePhotoFiles.length
-    ) {
+    if (userSuggestions && userSuggestionProfilePhotoFiles?.length) {
       const userSuggestionsAsList = List(userSuggestions);
 
       const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
@@ -151,11 +155,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       );
 
       setUserSuggestionsList(suggestedUser);
-    } else if (
-      userSuggestions &&
-      !userSuggestionProfilePhotoFiles &&
-      userSuggestionProfilePhotoConfirm
-    ) {
+    } else if (userSuggestions && noProfilePhotosToFetch) {
       const userSuggestionsAsList = List(userSuggestions);
 
       const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
@@ -174,7 +174,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   }, [
     userSuggestions,
     userSuggestionProfilePhotoFiles,
-    userSuggestionProfilePhotoConfirm,
+    noProfilePhotosToFetch,
   ]);
 
   useEffect(() => {

@@ -580,13 +580,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
                 onClick={handleClickPlayArrowIcon}
               />
             )}
-            {playVideo && (
-              <video className='feed-post-video' controls muted>
-                <source src={`/api/posts/video?s3Key=${s3Key}`} />
-              </video>
-            )}
           </>
         ) : null}
+        {playVideo && (
+          <video className='feed-post-video' controls muted>
+            <source src={`/api/posts/video?s3Key=${s3Key}`} />
+          </video>
+        )}
       </div>
       <div className='caption-and-reactions'>
         {handleRenderLikeOrLikedButton()}
