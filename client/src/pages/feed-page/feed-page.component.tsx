@@ -258,6 +258,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const [currentUserPostOrComment, setCurrentUserPostOrComment] =
     useState<boolean>(false);
 
+  const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
+
   let history = useHistory();
 
   const postState = useSelector((state: AppState) => state.post);
@@ -425,8 +427,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (currentUser) {
+      let fetchCount = 0;
       followingInfoList.forEach((el) => {
         if (el.photo) {
+          fetchCount++;
           getPostFileStart({
             s3Key: el.photo,
             bucket: profileBucket,
@@ -435,6 +439,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           });
         }
       });
+
+      if (fetchCount === 0) {
+        setNoProfilePhotosToFetch(true);
+      }
     }
   }, [followingInfoList]);
 
@@ -486,7 +494,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const userInfoAndPostFileList = useMemo(() => {
     if (
       dataFeedMapList.size &&
-      followingProfilePhotoList.size &&
+      (followingProfilePhotoList.size || noProfilePhotosToFetch) &&
       postFileFeedArray
     ) {
       let postDataMultiList: List<List<Post>> = List();
@@ -513,7 +521,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     dataFeedMapList,
     followingProfilePhotoList,
     postFileFeedArray,
-    getFeedPostDataConfirm,
+    noProfilePhotosToFetch,
   ]);
 
   useEffect(() => {

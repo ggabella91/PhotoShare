@@ -87,6 +87,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   const [userInfoAndPhotoList, setUserInfoAndPhotoList] = useState<
     List<UserInfoData>
   >(List());
+  const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
 
   let usersLoaded = useRef(false);
 
@@ -129,7 +130,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
         handleRenderFollowersOrFollowingInfoArray(following);
       }
     }
-  }, [followers, following, followPhotoFileArray, usersProfilePhotoConfirm]);
+  }, [followers, following, followPhotoFileArray, noProfilePhotosToFetch]);
 
   const handleRenderFollowersOrFollowingInfoArray = (
     followersOrFollowing: User[]
@@ -145,10 +146,14 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
     if (
       users &&
       followersOrFollowingList.size === users.length &&
-      !followPhotoFileArray
+      !followPhotoFileArray &&
+      !noProfilePhotosToFetch
     ) {
+      let fetchCount = 0;
+
       followersOrFollowing.forEach((user) => {
         if (user.photo) {
+          fetchCount++;
           getPostFileStart({
             user: UserType.followArray,
             s3Key: user.photo,
@@ -157,6 +162,10 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
           });
         }
       });
+
+      if (fetchCount === 0) {
+        setNoProfilePhotosToFetch(true);
+      }
     } else if (followPhotoFileArray && followPhotoFileArray.length) {
       const followerOrFollowing: List<UserInfoData> =
         followersOrFollowingList.map((el: User) => {
@@ -179,7 +188,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
         });
 
       setUserInfoAndPhotoList(followerOrFollowing);
-    } else if (!followPhotoFileArray && usersProfilePhotoConfirm) {
+    } else if (!followPhotoFileArray && noProfilePhotosToFetch) {
       const followerOrFollowing: List<UserInfoData> =
         followersOrFollowingList.map((el: User) => {
           return {
