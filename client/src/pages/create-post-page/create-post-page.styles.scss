@@ -47,11 +47,12 @@
 
       .img-preview {
         position: absolute;
-        top: 25%;
-        left: 50px;
+        top: 50%;
+        left: 50%;
         max-width: 300px;
         max-height: 300px;
         height: auto;
+        transform: translate(-50%, -50%);
       }
     }
   }
