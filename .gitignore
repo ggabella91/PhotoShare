@@ -1,6 +1,7 @@
 node_modules/
 build/
-.vscode
+dist/
+.vscode/*
 request-photo-share.us.csr
 photo-share.us.key
 photo-share_us.ca-bundle
