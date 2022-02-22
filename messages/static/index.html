@@ -15,11 +15,13 @@
     <h1>{{ title }}</h1>
     <form>
       <input v-model="text" type="text" />
-      <button type="submit" @click.prevent="sendMessage()">Send</button>
+      <button type="submit" @click.prevent="sendChatMessage()">Send</button>
     </form>
     <p>
     <ul>
-      <li v-for="msg of messages">{{ msg }}</li>
+      <li v-for="msg of messages">
+        <strong>{{msg.sender}}: </strong>{{ msg.message }}
+      </li>
     </ul>
     </p>
   </div>
@@ -27,22 +29,35 @@
     var app = new Vue({
       el: '#v-app',
       data: {
+        username: '',
+        room: '',
         title: 'Websockets Tester',
         text: '',
-        messages: ['Some message', 'Another message'],
+        messages: [],
         socket: { chat: null },
       },
       methods: {
         sendChatMessage() {
-          this.socket.chat.emit('chatToServer', this.text);
+          this.socket.chat.emit('chatToServer', { sender: this.username, room: this.room, message: this.text });
           this.text = '';
         },
         receiveChatMessage(msg) {
           this.messages.push(msg);
+        },
+        joinRoom() {
+          this.socket.chat.emit('joinRoom', this.room);
         }
       },
       created() {
+        this.username = prompt('Enter your username:');
+        this.room = prompt('Enter your room:');
+
         this.socket.chat = io('http://localhost:3000/chat', { path: '/api/messages' });
+
+        this.socket.chat.on('connect', () => { 
+          this.joinRoom(); 
+        });
+
         this.socket.chat.on('chatToClient', (msg) => {
           this.receiveChatMessage(msg);
         });
