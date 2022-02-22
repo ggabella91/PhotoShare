@@ -1,18 +1,25 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { MessagesAppController } from './messages-app.controller';
 import { MessagesAppService } from './messages-app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MessagesAppGateway } from './messages-app.gateway';
+import { MessagesAppChatGateway } from './messages-app-chat.gateway';
+import { WsAuthGuard } from './guards/ws-auth.guard';
+import { requireAuth } from '@ggabella-photo-share/common';
 
 @Module({
   imports: [
+    /*
     MongooseModule.forRoot(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
-    }),
+    }),*/
   ],
   controllers: [MessagesAppController],
-  providers: [MessagesAppService, MessagesAppGateway],
+  providers: [MessagesAppService, MessagesAppChatGateway, WsAuthGuard],
 })
-export class MessagesAppModule {}
+export class MessagesAppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(requireAuth).forRoutes(MessagesAppChatGateway);
+  }
+}
