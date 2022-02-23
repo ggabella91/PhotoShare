@@ -25,6 +25,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: ggabella91/messages
+      context: messages
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
     - image: ggabella91/followers
       context: followers
       docker:

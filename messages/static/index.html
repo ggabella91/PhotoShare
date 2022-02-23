@@ -52,7 +52,7 @@
         this.username = prompt('Enter your username:');
         this.room = prompt('Enter your room:');
 
-        this.socket.chat = io('http://localhost:3000/chat', { path: '/api/messages' });
+        this.socket.chat = io('http://localhost:3000/', { path: '/api/messages/chat' });
 
         this.socket.chat.on('connect', () => { 
           this.joinRoom(); 

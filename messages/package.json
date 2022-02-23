@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@ggabella-photo-share/common": "^1.0.25",
+    "@nestjs-plugins/nestjs-nats-streaming-transport": "^1.1.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/mongoose": "^9.0.2",
