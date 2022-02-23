@@ -24,6 +24,10 @@ spec:
             backend:
               serviceName: posts-srv
               servicePort: 3000
+          - path: /api/messages/?(.*)
+            backend:
+              serviceName: messages-srv
+              servicePort: 3000
           - path: /api/reactions/?(.*)
             backend:
               serviceName: posts-srv

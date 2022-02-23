@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messages-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messages
+  template:
+    metadata:
+      labels:
+        app: messages
+    spec:
+      containers:
+        - name: messages
+          image: ggabella91/messages
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: 'http://nats-srv:4222'
+            - name: NATS_CLUSTER_ID
+              value: photo-share
+            - name: MONGO_URI
+              value: 'mongodb://messages-mongo-srv:27017/messages'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: node-env
+                  key: NODE_ENV
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messages-srv
+spec:
+  selector:
+    app: messages
+  ports:
+    - name: messages
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
