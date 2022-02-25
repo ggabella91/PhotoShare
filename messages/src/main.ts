@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { MessagesAppModule } from './messages-app.module';
-import { natsWrapper } from './nats-wrapper';
+import { NatsWrapper } from './nats-wrapper';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 
@@ -38,11 +38,11 @@ async function bootstrap() {
   // process.on('SIGINT', () => natsWrapper.client.close());
   // process.on('SIGTERM', () => natsWrapper.client.close());
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    MessagesAppModule,
-    { transport: Transport.NATS }
+  const app = await NestFactory.create<NestExpressApplication>(
+    MessagesAppModule
   );
-  // app.useStaticAssets(join(__dirname, '..', 'static'));
-  await app.listen();
+
+  app.useStaticAssets(join(__dirname, '..', 'static'));
+  await app.listen(3000);
 }
 bootstrap();
