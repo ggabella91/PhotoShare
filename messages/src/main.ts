@@ -1,8 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { MicroserviceOptions } from '@nestjs/microservices';
 import { MessagesAppModule } from './messages-app.module';
 import { NatsWrapper } from './nats-wrapper';
-import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 
 async function bootstrap() {
@@ -26,23 +25,14 @@ async function bootstrap() {
     throw new Error('CLUSTER_ID must be defined');
   }
 
-  // await natsWrapper.connect(
-  //   process.env.NATS_CLUSTER_ID,
-  //   process.env.NATS_CLIENT_ID,
-  //   process.env.NATS_URL
-  // );
-  // natsWrapper.client.on('close', () => {
-  //   console.log('NATS connection closed!');
-  //   process.exit();
-  // });
-  // process.on('SIGINT', () => natsWrapper.client.close());
-  // process.on('SIGTERM', () => natsWrapper.client.close());
-
-  const app = await NestFactory.create<NestExpressApplication>(
-    MessagesAppModule
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    MessagesAppModule,
+    {
+      strategy: new NatsWrapper(),
+    }
   );
 
-  app.useStaticAssets(join(__dirname, '..', 'static'));
-  await app.listen(3000);
+  // app.useStaticAssets(join(__dirname, '..', 'static'));
+  await app.listen();
 }
 bootstrap();
