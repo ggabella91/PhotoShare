@@ -28,6 +28,7 @@ import ResetPasswordPage from './pages/reset-password/reset-password-page.compon
 import ExploreTagPage from './pages/explore-tag-page/explore-tag-page.component';
 import ExploreLocationPage from './pages/explore-location-page/explore-location-page.component';
 import CreateVideoPostPage from './pages/create-video-post-page/create-video-post-page.component';
+import MessagesPage from './pages/messages-page/messages-page.component';
 
 interface AppProps {
   checkUserSession: typeof checkUserSession;
@@ -52,6 +53,11 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
     <div className='App' data-testid='main-app-component'>
       <Header />
       <Switch>
+        <Route
+          exact
+          path='/direct/inbox'
+          render={() => (!currentUser ? <Redirect to='/' /> : <MessagesPage />)}
+        />
         <Route
           exact
           path='/post'
