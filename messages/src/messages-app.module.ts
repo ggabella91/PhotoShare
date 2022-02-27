@@ -9,7 +9,7 @@ import { requireAuth } from '@ggabella-photo-share/common';
 @Module({
   imports: [MongooseModule.forRoot(process.env.MONGO_URI)],
   controllers: [MessagesAppController],
-  providers: [MessagesAppService, MessagesAppChatGateway, WsAuthGuard],
+  providers: [MessagesAppService, MessagesAppChatGateway],
 })
 export class MessagesAppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -12,7 +12,7 @@ import { Server, Socket } from 'socket.io';
 import { WsAuthGuard } from './guards/ws-auth.guard';
 
 @UseGuards(WsAuthGuard)
-@WebSocketGateway({ path: '/chat' })
+@WebSocketGateway({ path: '/api/messages/chat' })
 export class MessagesAppChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {

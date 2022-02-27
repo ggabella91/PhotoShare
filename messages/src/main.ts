@@ -3,6 +3,7 @@ import { MicroserviceOptions } from '@nestjs/microservices';
 import { MessagesAppModule } from './messages-app.module';
 import { NatsWrapper } from './nats-wrapper';
 import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
   console.log('Starting up messages service...');
@@ -33,6 +34,7 @@ async function bootstrap() {
   );
 
   // app.useStaticAssets(join(__dirname, '..', 'static'));
+  // app.enableCors();
   await app.listen();
 }
 bootstrap();
