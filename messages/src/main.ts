@@ -26,15 +26,16 @@ async function bootstrap() {
     throw new Error('CLUSTER_ID must be defined');
   }
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    MessagesAppModule,
-    {
-      strategy: new NatsWrapper(),
-    }
+  const app = await NestFactory.create<NestExpressApplication>(
+    MessagesAppModule
   );
+  app.connectMicroservice<MicroserviceOptions>({
+    strategy: new NatsWrapper(),
+  });
+  await app.startAllMicroservices();
 
-  // app.useStaticAssets(join(__dirname, '..', 'static'));
-  // app.enableCors();
-  await app.listen();
+  app.useStaticAssets(join(__dirname, '..', 'static'));
+  app.enableCors();
+  await app.listen(3000);
 }
 bootstrap();
