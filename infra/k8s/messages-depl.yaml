@@ -15,6 +15,9 @@ spec:
       containers:
         - name: messages
           image: ggabella91/messages
+          resources:
+            requests:
+              memory: '250M'
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

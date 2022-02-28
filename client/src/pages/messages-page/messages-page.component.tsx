@@ -8,8 +8,10 @@ const MessagesPage: React.FC = () => {
   const [message, setMessage] = useState();
   const location = useLocation();
 
-  const socket = io(/*window.location.origin*/ 'http://localhost:3000/', {
-    path: '/api/messages/chat/socket.io',
+  console.log('window location origin: ', window.location.origin);
+
+  const socket = io(`${window.location.origin}:3000`, {
+    path: '/api/messages/chat',
   });
 
   useEffect(() => {

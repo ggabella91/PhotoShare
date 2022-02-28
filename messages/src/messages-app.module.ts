@@ -3,7 +3,6 @@ import { MessagesAppController } from './messages-app.controller';
 import { MessagesAppService } from './messages-app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MessagesAppChatGateway } from './messages-app-chat.gateway';
-import { WsAuthGuard } from './guards/ws-auth.guard';
 import { requireAuth } from '@ggabella-photo-share/common';
 
 @Module({

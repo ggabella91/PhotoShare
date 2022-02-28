@@ -15,6 +15,9 @@ spec:
       containers:
         - name: client
           image: ggabella91/client
+          resources:
+            requests:
+              memory: '450M'
           env:
             - name: NODE_ENV
               valueFrom:
