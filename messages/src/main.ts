@@ -35,7 +35,7 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   app.useStaticAssets(join(__dirname, '..', 'static'));
-  app.enableCors();
+  app.enableCors({ origin: true });
   await app.listen(3000);
 }
 bootstrap();
