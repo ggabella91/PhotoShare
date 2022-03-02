@@ -8,11 +8,10 @@ const MessagesPage: React.FC = () => {
   const [message, setMessage] = useState();
   const location = useLocation();
 
-  console.log('window location hostname: ', window.location.hostname);
+  console.log('window location origin: ', window.location.origin);
 
-  const socket = io(`${window.location.hostname}`, {
+  const socket = io(`${window.location.origin}`, {
     path: '/api/messages/chat',
-    port: 3000,
   });
 
   useEffect(() => {
