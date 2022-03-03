@@ -34,7 +34,6 @@ import {
   PostsWithLocationReq,
   UploadVideoPostFileChunkReq,
   UploadVideoPostFileChunkResponse,
-  UploadPart,
 } from './post.types';
 
 import {
