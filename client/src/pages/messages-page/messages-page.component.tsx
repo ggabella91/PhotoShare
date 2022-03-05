@@ -10,7 +10,7 @@ const MessagesPage: React.FC = () => {
 
   console.log('window location host: ', window.location.host);
 
-  const socket = io(`http://${window.location.host}`, {
+  const socket = io(`https://${window.location.host}`, {
     path: '/api/messages/chat',
   });
 
