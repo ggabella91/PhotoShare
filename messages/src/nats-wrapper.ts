@@ -1,9 +1,31 @@
 import nats, { Stan } from 'node-nats-streaming';
-import { CustomTransportStrategy, Server } from '@nestjs/microservices';
-import { Logger } from '@nestjs/common';
+import {
+  CustomTransportStrategy,
+  Server,
+  ClientProxy,
+  ReadPacket,
+  WritePacket,
+} from '@nestjs/microservices';
+import { Injectable, Logger } from '@nestjs/common';
 
-class NatsWrapper extends Server implements CustomTransportStrategy {
+@Injectable()
+class NatsWrapper extends ClientProxy {
+  constructor() {
+    super();
+    this.connect().then(() => console.log('Connected to NATS'));
+  }
+
   private _client?: Stan;
+
+  protected publish(
+    packet: ReadPacket<any>,
+    callback: (packet: WritePacket<any>) => void
+  ): () => void {
+    return;
+  }
+  protected dispatchEvent<T = any>(packet: ReadPacket<any>): Promise<T> {
+    return new Promise(() => {});
+  }
 
   logger: Logger = new Logger('Nats Wrapper');
 
@@ -15,23 +37,21 @@ class NatsWrapper extends Server implements CustomTransportStrategy {
     return this._client;
   }
 
-  listen() {
-    this.connect(
-      process.env.NATS_CLUSTER_ID,
-      process.env.NATS_CLIENT_ID,
-      process.env.NATS_URL
-    );
-
-    this.client.on('close', () => {
-      this.logger.log('NATS connection closed!');
-      process.exit();
-    });
-  }
-  close() {
+  async close() {
     this.client.close();
   }
 
-  connect(clusterId: string, clientId: string, url: string) {
+  async connect() {
+    return new Promise(() =>
+      this._connect(
+        process.env.NATS_CLUSTER_ID,
+        process.env.NATS_CLIENT_ID,
+        process.env.NATS_URL
+      )
+    );
+  }
+
+  async _connect(clusterId: string, clientId: string, url: string) {
     this._client = nats.connect(clusterId, clientId, { url });
 
     return new Promise((resolve, reject) => {
