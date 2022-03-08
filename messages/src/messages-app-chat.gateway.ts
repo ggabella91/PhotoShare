@@ -34,16 +34,21 @@ export class MessagesAppChatGateway
 
   @SubscribeMessage('chatToServer')
   handleMessage(
-    @MessageBody() message: { sender: string; room: string; message: string }
+    @MessageBody()
+    message: {
+      sender: string;
+      conversationId: string;
+      message: string;
+    }
   ) {
-    const { room, ...restOfMessage } = message;
+    const { conversationId, ...restOfMessage } = message;
 
-    this.wss.to(room).emit('chatToClient', restOfMessage);
+    this.wss.to(conversationId).emit('chatToClient', restOfMessage);
   }
 
-  @SubscribeMessage('joinRoom')
-  handleJoinRoom(client: Socket, room: string) {
-    client.join(room);
-    client.emit(`Joined room ${room}`);
+  @SubscribeMessage('joinConversation')
+  handleJoinRoom(client: Socket, conversationId: string) {
+    client.join(conversationId);
+    client.emit(`Joined conversationId ${conversationId}`);
   }
 }

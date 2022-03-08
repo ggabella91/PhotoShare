@@ -10,12 +10,15 @@ import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 class NatsWrapper extends ClientProxy {
+  private _client?: Stan;
+  logger: Logger;
+
   constructor() {
     super();
-    this.connect().then(() => console.log('Connected to NATS'));
-  }
+    this.logger = new Logger('Nats Wrapper');
 
-  private _client?: Stan;
+    this.connect().then(() => this.logger.log('Connected to NATS'));
+  }
 
   protected publish(
     packet: ReadPacket<any>,
@@ -26,8 +29,6 @@ class NatsWrapper extends ClientProxy {
   protected dispatchEvent<T = any>(packet: ReadPacket<any>): Promise<T> {
     return new Promise(() => {});
   }
-
-  logger: Logger = new Logger('Nats Wrapper');
 
   get client() {
     if (!this._client) {
