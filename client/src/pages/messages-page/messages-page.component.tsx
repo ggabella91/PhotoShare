@@ -19,7 +19,7 @@ const MessagesPage: React.FC = () => {
     socket.on('connect', () => {
       console.log('Socket connection established with messages server');
 
-      socket.emit('joinRoom', 1);
+      socket.emit('joinConversation', 1);
     });
   }, [socket]);
 
