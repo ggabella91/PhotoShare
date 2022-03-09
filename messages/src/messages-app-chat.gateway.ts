@@ -10,12 +10,15 @@ import {
 import { Logger, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { WsAuthGuard } from './guards/ws-auth.guard';
+import { MessagesAppService } from './messages-app.service';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
 export class MessagesAppChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
+  constructor(private readonly appService: MessagesAppService) {}
+
   @WebSocketServer() wss: Server;
 
   private logger: Logger = new Logger('Chat Gateway');
