@@ -9,6 +9,7 @@ import { User, UserDocument } from './database/schemas/user.schema';
 import { Message, MessageDocument } from './database/schemas/message.schema';
 import { CreateConvoDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
+import { CreateUserDto } from './database/dto/create-user.dto';
 import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
 
 @Injectable()
@@ -29,6 +30,19 @@ export class MessagesAppService {
   ): Promise<Conversation> {
     const createdConvo = new this.conversationModel(createConvoDto);
     return await createdConvo.save();
+  }
+
+  async findOrCreateUser(createUserDto: CreateUserDto) {
+    const existingUser = await this.userModel
+      .findById(createUserDto.userId)
+      .exec();
+
+    if (existingUser) {
+      return existingUser;
+    } else {
+      const createdUser = new this.userModel(createUserDto);
+      return await createdUser.save();
+    }
   }
 
   async findAllConversationsForUser(userId: string) {
