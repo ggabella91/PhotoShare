@@ -11,6 +11,8 @@ import { Logger, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { WsAuthGuard } from './guards/ws-auth.guard';
 import { MessagesAppService } from './messages-app.service';
+import mongoose, { Document, Types } from 'mongoose';
+import { CreateConvoDto } from './database/dto/create-convo.dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -49,9 +51,28 @@ export class MessagesAppChatGateway
     this.wss.to(conversationId).emit('chatToClient', restOfMessage);
   }
 
+  @SubscribeMessage('createConversation')
+  async handleCreateConversation(
+    client: Socket,
+    createConvoDto: CreateConvoDto
+  ) {
+    const createdConvo = await this.appService.createConversation(
+      createConvoDto
+    );
+
+    this.logger.log('Created conversation: ', createdConvo);
+
+    this.handleJoinConversation(client, createdConvo._id);
+  }
+
   @SubscribeMessage('joinConversation')
-  handleJoinRoom(client: Socket, conversationId: string) {
-    client.join(conversationId);
+  handleJoinConversation(
+    client: Socket,
+    conversationId: string | Types.ObjectId
+  ) {
+    const conversationIdString = conversationId.toString();
+
+    client.join(conversationIdString);
     client.emit(`Joined conversationId ${conversationId}`);
   }
 }
