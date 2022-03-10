@@ -6,10 +6,21 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MessagesAppChatGateway } from './messages-app-chat.gateway';
 import { requireAuth } from '@ggabella-photo-share/common';
 import { NatsWrapper } from './nats-wrapper';
+import {
+  Conversation,
+  ConversationSchema,
+} from './database/schemas/conversation.schema';
+import { Message, MessageSchema } from './database/schemas/message.schema';
+import { User, UserSchema } from './database/schemas/user.schema';
 
 @Module({
   imports: [
     MongooseModule.forRoot(process.env.MONGO_URI),
+    MongooseModule.forFeature([
+      { name: Conversation.name, schema: ConversationSchema },
+      { name: Message.name, schema: MessageSchema },
+      { name: User.name, schema: UserSchema },
+    ]),
     ClientsModule.register([{ name: 'NatsWrapper', customClass: NatsWrapper }]),
   ],
   controllers: [MessagesAppController],

@@ -4,12 +4,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Conversation,
   ConversationDocument,
-} from './schemas/conversation.schema';
-import { User, UserDocument } from './schemas/user.schema';
-import { Message, MessageDocument } from './schemas/message.schema';
-import { CreateConvoDto } from './dto/create-convo.dto';
-import { CreateMessageDto } from './dto/create-message.dto';
-import { FindMessagesFromConvo } from './dto/find-message-from-convo.dto';
+} from './database/schemas/conversation.schema';
+import { User, UserDocument } from './database/schemas/user.schema';
+import { Message, MessageDocument } from './database/schemas/message.schema';
+import { CreateConvoDto } from './database/dto/create-convo.dto';
+import { CreateMessageDto } from './database/dto/create-message.dto';
+import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -28,7 +28,7 @@ export class MessagesAppService {
     createConvoDto: CreateConvoDto
   ): Promise<Conversation> {
     const createdConvo = new this.conversationModel(createConvoDto);
-    return createdConvo.save();
+    return await createdConvo.save();
   }
 
   async findAllConversationsForUser(userId: string) {
@@ -43,7 +43,7 @@ export class MessagesAppService {
 
   async createMessage(createMessageDto: CreateMessageDto): Promise<Message> {
     const createdMessage = new this.messageModel(createMessageDto);
-    return createdMessage.save();
+    return await createdMessage.save();
   }
 
   async findMessagesFromConvo({
