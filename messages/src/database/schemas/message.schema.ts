@@ -20,14 +20,14 @@ export class Message {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  owner: User;
+  ownerId: User;
 
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Conversation',
   })
-  conversation: Conversation;
+  conversationId: Conversation;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

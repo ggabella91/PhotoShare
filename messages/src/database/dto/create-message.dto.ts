@@ -1,4 +1,6 @@
 export class CreateMessageDto {
   text: string;
-  userIdsToConnect: string[];
+  created: Date;
+  ownerId: string;
+  conversationId: string;
 }

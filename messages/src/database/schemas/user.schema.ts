@@ -8,6 +8,9 @@ export type UserDocument = User & Document;
 export class User {
   // _id: ObjectId;
 
+  @Prop({ required: true })
+  userId: string;
+
   @Prop({ required: true, minlength: 5, maxlength: 20 })
   name: string;
 

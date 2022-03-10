@@ -11,8 +11,9 @@ import { Logger, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { WsAuthGuard } from './guards/ws-auth.guard';
 import { MessagesAppService } from './messages-app.service';
-import mongoose, { Document, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { CreateConvoDto } from './database/dto/create-convo.dto';
+import { CreateMessageDto } from './database/dto/create-message.dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -38,15 +39,13 @@ export class MessagesAppChatGateway
   }
 
   @SubscribeMessage('chatToServer')
-  handleMessage(
+  async handleMessage(
     @MessageBody()
-    message: {
-      sender: string;
-      conversationId: string;
-      message: string;
-    }
+    message: CreateMessageDto
   ) {
     const { conversationId, ...restOfMessage } = message;
+
+    await this.appService.createMessage({ conversationId, ...restOfMessage });
 
     this.wss.to(conversationId).emit('chatToClient', restOfMessage);
   }
@@ -65,6 +64,21 @@ export class MessagesAppChatGateway
     this.handleJoinConversation(client, createdConvo._id);
   }
 
+  @SubscribeMessage('joinAllExistingConversations')
+  async handleJoinAllExistingConversations(client: Socket, userId: string) {
+    const existingConversations =
+      await this.appService.findAllConversationsForUser(userId);
+
+    const existingConvoIds = existingConversations.map((convo) =>
+      convo.id.toString()
+    );
+
+    client.join(existingConvoIds);
+    client.emit(
+      `Joined conversations with the following ids: ${existingConvoIds}`
+    );
+  }
+
   @SubscribeMessage('joinConversation')
   handleJoinConversation(
     client: Socket,
@@ -73,6 +87,6 @@ export class MessagesAppChatGateway
     const conversationIdString = conversationId.toString();
 
     client.join(conversationIdString);
-    client.emit(`Joined conversationId ${conversationId}`);
+    client.emit(`Joined conversation with id: ${conversationId}`);
   }
 }
