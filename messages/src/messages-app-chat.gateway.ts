@@ -53,7 +53,7 @@ export class MessagesAppChatGateway
   @SubscribeMessage('createConversation')
   async handleCreateConversation(
     client: Socket,
-    createConvoDto: CreateConvoDto
+    @MessageBody() createConvoDto: CreateConvoDto
   ) {
     const createdConvo = await this.appService.createConversation(
       createConvoDto
@@ -61,13 +61,16 @@ export class MessagesAppChatGateway
 
     this.logger.log('Created conversation: ', createdConvo);
 
-    this.handleJoinConversation(client, createdConvo._id);
+    this.handleJoinConversation(client, { conversationId: createdConvo._id });
   }
 
   @SubscribeMessage('joinAllExistingConversations')
-  async handleJoinAllExistingConversations(client: Socket, userId: string) {
+  async handleJoinAllExistingConversations(
+    client: Socket,
+    @MessageBody() message: { userId: string }
+  ) {
     const existingConversations =
-      await this.appService.findAllConversationsForUser(userId);
+      await this.appService.findAllConversationsForUser(message.userId);
 
     const existingConvoIds = existingConversations.map((convo) =>
       convo.id.toString()
@@ -82,11 +85,11 @@ export class MessagesAppChatGateway
   @SubscribeMessage('joinConversation')
   handleJoinConversation(
     client: Socket,
-    conversationId: string | Types.ObjectId
+    @MessageBody() message: { conversationId: string | Types.ObjectId }
   ) {
-    const conversationIdString = conversationId.toString();
+    const conversationIdString = message.conversationId.toString();
 
     client.join(conversationIdString);
-    client.emit(`Joined conversation with id: ${conversationId}`);
+    client.emit(`Joined conversation with id: ${message.conversationId}`);
   }
 }
