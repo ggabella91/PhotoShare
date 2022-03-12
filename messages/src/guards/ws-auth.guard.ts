@@ -9,6 +9,8 @@ export class WsAuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
 
+    console.log('Request: ', request);
+
     if (!request.currentUser) {
       throw new WsException('Not authenticated');
     }
