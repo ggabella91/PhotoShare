@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
@@ -13,12 +13,14 @@ const MessagesPage: React.FC = () => {
 
   const currentUser = useSelector(selectCurrentUser);
 
-  console.log('window location origin: ', window.location.origin);
-
-  const socket = io(`wss://${window.location.host}`, {
-    path: '/api/messages/chat',
-    port: 80,
-  });
+  const socket = useMemo(
+    () =>
+      io(`wss://${window.location.host}`, {
+        path: '/api/messages/chat',
+        // port: 80,
+      }),
+    []
+  );
 
   useEffect(() => {
     socket.on('connect', () => {
