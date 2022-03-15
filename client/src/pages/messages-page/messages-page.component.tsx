@@ -17,7 +17,6 @@ const MessagesPage: React.FC = () => {
     () =>
       io(`wss://${window.location.host}`, {
         path: '/api/messages/chat',
-        // port: 80,
       }),
     []
   );
@@ -25,6 +24,10 @@ const MessagesPage: React.FC = () => {
   useEffect(() => {
     socket.on('connect', () => {
       console.log('Socket connection established with messages server');
+
+      socket.emit('joinAllExistingConversations', {
+        userId: currentUser?.id,
+      });
 
       socket.emit('createConversation', {
         name: 'Test Convo',
