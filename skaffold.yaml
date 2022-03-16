@@ -49,7 +49,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: ggabella91/client-dev
+    - image: ggabella91/client
       context: client
       docker:
         dockerfile: Dockerfile
