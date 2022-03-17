@@ -76,6 +76,8 @@ export class MessagesAppChatGateway
       convo.id.toString()
     );
 
+    this.logger.log('Conversations found for user: ', existingConvoIds);
+
     client.join(existingConvoIds);
     client.emit(
       `Joined conversations with the following ids: ${existingConvoIds}`

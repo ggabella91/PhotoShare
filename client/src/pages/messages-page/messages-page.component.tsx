@@ -36,7 +36,12 @@ const MessagesPage: React.FC = () => {
     });
   }, [socket]);
 
-  return <div className='messages-page'></div>;
+  return (
+    <div className='messages-page'>
+      <h2>Messages</h2>
+      <div className='messages-container'></div>
+    </div>
+  );
 };
 
 export default MessagesPage;
