@@ -4,7 +4,6 @@ import { MessagesAppController } from './messages-app.controller';
 import { MessagesAppService } from './messages-app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MessagesAppChatGateway } from './messages-app-chat.gateway';
-import { requireAuth } from '@ggabella-photo-share/common';
 import { NatsWrapper } from './nats-wrapper';
 import {
   Conversation,
@@ -12,6 +11,7 @@ import {
 } from './database/schemas/conversation.schema';
 import { Message, MessageSchema } from './database/schemas/message.schema';
 import { User, UserSchema } from './database/schemas/user.schema';
+import { MessagesAppLoggerMiddleware } from './middleware/messages-app-logger.middleware';
 
 @Module({
   imports: [
@@ -28,6 +28,6 @@ import { User, UserSchema } from './database/schemas/user.schema';
 })
 export class MessagesAppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(requireAuth).forRoutes(MessagesAppChatGateway);
+    consumer.apply(MessagesAppLoggerMiddleware).forRoutes('*');
   }
 }
