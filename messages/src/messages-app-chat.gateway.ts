@@ -53,21 +53,25 @@ export class MessagesAppChatGateway
   @SubscribeMessage('createConversation')
   async handleCreateConversation(
     client: Socket,
-    @MessageBody() createConvoDto: CreateConvoDto
+    createConvoDto: CreateConvoDto
   ) {
+    this.logger.log('Socket client: ', client);
+    this.logger.log('CreateConvoDto message body: ', createConvoDto);
+
     const createdConvo = await this.appService.createConversation(
       createConvoDto
     );
 
     this.logger.log('Created conversation: ', createdConvo);
 
-    this.handleJoinConversation(client, { conversationId: createdConvo._id });
+    client.join(createdConvo._id);
+    client.emit('Joined conversation: ', createdConvo._id);
   }
 
   @SubscribeMessage('joinAllExistingConversations')
   async handleJoinAllExistingConversations(
     client: Socket,
-    @MessageBody() message: { userId: string }
+    message: { userId: string }
   ) {
     const existingConversations =
       await this.appService.findAllConversationsForUser(message.userId);
