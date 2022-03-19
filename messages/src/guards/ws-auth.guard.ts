@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
@@ -14,15 +15,13 @@ export class WsAuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest();
+    this.logger.log('Context: ', context);
 
-    this.logger.log('Request: ', request.toString());
+    // if (!context) {
+    //   throw new WsException('Not authenticated');
+    //   this.logger.log('No currentUser property found in request');
+    // }
 
-    if (!request.currentUser) {
-      // throw new WsException('Not authenticated');
-      this.logger.log('No currentUser property found in request');
-    }
-
-    return request.currentUser;
+    return true;
   }
 }

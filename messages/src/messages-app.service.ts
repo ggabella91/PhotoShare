@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, LeanDocument } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Conversation,
@@ -25,11 +25,11 @@ export class MessagesAppService {
     return 'Hello World!';
   }
 
-  async createConversation(
-    createConvoDto: CreateConvoDto
-  ): Promise<Conversation> {
+  async createConversation(createConvoDto: CreateConvoDto) {
     const createdConvo = new this.conversationModel(createConvoDto);
-    return await createdConvo.save();
+    const savedConvo = (await createdConvo.save()).toObject();
+
+    return savedConvo;
   }
 
   async findOrCreateUser(createUserDto: CreateUserDto) {
@@ -38,10 +38,14 @@ export class MessagesAppService {
       .exec();
 
     if (existingUser) {
-      return existingUser;
+      const existingUserObj = existingUser.toObject();
+
+      return existingUserObj;
     } else {
       const createdUser = new this.userModel(createUserDto);
-      return await createdUser.save();
+      const savedUser = (await createdUser.save()).toObject();
+
+      return savedUser;
     }
   }
 
@@ -52,12 +56,18 @@ export class MessagesAppService {
       })
       .exec();
 
-    return conversationsForUser;
+    const conversationsForUserObjects = conversationsForUser.map((convo) =>
+      convo.toObject()
+    );
+
+    return conversationsForUserObjects;
   }
 
   async createMessage(createMessageDto: CreateMessageDto): Promise<Message> {
     const createdMessage = new this.messageModel(createMessageDto);
-    return await createdMessage.save();
+    const savedMessage = (await createdMessage.save()).toObject();
+
+    return savedMessage;
   }
 
   async findMessagesFromConvo({
@@ -76,6 +86,10 @@ export class MessagesAppService {
       .limit(limit)
       .skip((offset - 1) * limit);
 
-    return messagesFromConvo;
+    const messagesFromConvoObjects = messagesFromConvo.map((message) =>
+      message.toObject()
+    );
+
+    return messagesFromConvoObjects;
   }
 }
