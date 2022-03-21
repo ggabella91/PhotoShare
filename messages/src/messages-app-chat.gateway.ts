@@ -55,7 +55,6 @@ export class MessagesAppChatGateway
     client: Socket,
     createConvoDto: CreateConvoDto
   ) {
-    this.logger.log('Socket client: ', client);
     this.logger.log('CreateConvoDto message body: ', createConvoDto);
 
     const createdConvo = await this.appService.createConversation(
@@ -91,7 +90,7 @@ export class MessagesAppChatGateway
   @SubscribeMessage('joinConversation')
   handleJoinConversation(
     client: Socket,
-    @MessageBody() message: { conversationId: string | Types.ObjectId }
+    message: { conversationId: string | Types.ObjectId }
   ) {
     const conversationIdString = message.conversationId.toString();
 
