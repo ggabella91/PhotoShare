@@ -38,7 +38,13 @@ export class MessagesAppService {
       .exec();
 
     if (existingUser) {
-      const existingUserObj = existingUser.toObject();
+      const existingUserRefreshedSession = await existingUser
+        .update({
+          sessionCookie: createUserDto.sessionCookie,
+        })
+        .exec();
+
+      const existingUserObj = existingUserRefreshedSession.toObject();
 
       return existingUserObj;
     } else {

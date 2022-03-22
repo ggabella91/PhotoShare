@@ -18,6 +18,9 @@ export class User {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Conversation' }],
   })
   joinedConversations: Conversation[];
+
+  @Prop()
+  sessionCookie: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

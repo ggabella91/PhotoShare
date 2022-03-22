@@ -12,10 +12,9 @@ export class MessagesAppController {
 
   @Post('/users')
   findOrCreateUser(@Request() req) {
-    // TODO: Update createUser dto, service method to store session for tracking session status in ws auth guard
-    const { session, body } = req;
+    const { session: sessionCookie, body } = req;
     const { userId, name } = body;
 
-    return this.appService.findOrCreateUser({ userId, name });
+    return this.appService.findOrCreateUser({ userId, name, sessionCookie });
   }
 }
