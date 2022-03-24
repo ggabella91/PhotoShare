@@ -18,10 +18,10 @@ export class WsAuthGuard implements CanActivate {
     const wsContext = context.switchToWs();
     this.logger.log('Ws Context: ', wsContext);
 
-    // if (!context) {
-    //   throw new WsException('Not authenticated');
-    //   this.logger.log('No currentUser property found in request');
-    // }
+    if (!context) {
+      // throw new WsException('Not authenticated');
+      this.logger.log('No context found?');
+    }
 
     return true;
   }
