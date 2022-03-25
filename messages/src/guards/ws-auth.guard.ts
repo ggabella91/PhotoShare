@@ -16,6 +16,7 @@ export class WsAuthGuard implements CanActivate {
     context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
     const wsContext = context.switchToWs();
+    this.logger.log('Ws Context: ', wsContext);
     this.logger.log('Ws Context data: ', wsContext.getData());
 
     if (!context) {
