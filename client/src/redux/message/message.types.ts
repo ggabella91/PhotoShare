@@ -8,7 +8,7 @@ export interface MessageState {
   isAuthenticated: boolean;
   userChatNickname: string;
   conversations: string[];
-  messages: string[];
+  messages: ConvoMessages[];
 }
 
 export interface ConvoMessages {
