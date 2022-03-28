@@ -6,4 +6,18 @@ export enum MessageActions {
 
 export interface MessageState {
   isAuthenticated: boolean;
+  userChatNickname: string;
+  conversations: string[];
+  messages: string[];
+}
+
+export interface ConvoMessages {
+  converationId: string;
+  messages: Message[];
+}
+
+export interface Message {
+  userId: string;
+  text: string;
+  conversationId: string;
 }
