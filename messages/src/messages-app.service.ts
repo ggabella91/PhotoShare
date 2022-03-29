@@ -11,6 +11,7 @@ import { CreateConvoDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { CreateUserDto } from './database/dto/create-user.dto';
 import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
+import { UpdateAuthStatusDto } from './database/dto/update-auth-status.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -53,6 +54,16 @@ export class MessagesAppService {
 
       return savedUser;
     }
+  }
+
+  async updateUserAuthStatus(updateAuthStatusDto: UpdateAuthStatusDto) {
+    const { userId, isAuthenticated } = updateAuthStatusDto;
+
+    const user = await this.userModel.findById(userId).exec();
+
+    const updatedAuthStatusUser = await user.update({ isAuthenticated }).exec();
+
+    return updatedAuthStatusUser;
   }
 
   async findAllConversationsForUser(userId: string) {

@@ -21,6 +21,9 @@ export class User {
 
   @Prop()
   sessionCookie: string;
+
+  @Prop()
+  isAuthenticated: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
