@@ -21,3 +21,8 @@ export interface Message {
   text: string;
   conversationId: string;
 }
+
+export interface UpdateUserAuthStatusReq {
+  userId: string;
+  isAuthenticated: boolean;
+}
