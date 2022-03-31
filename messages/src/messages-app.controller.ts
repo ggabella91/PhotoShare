@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Put, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Request,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { MessagesAppService } from './messages-app.service';
 
 @Controller('/api/messages')
@@ -23,5 +31,18 @@ export class MessagesAppController {
     const { userId, isAuthenticated } = req;
 
     return this.appService.updateUserAuthStatus({ userId, isAuthenticated });
+  }
+
+  @Get('/conversation/:conversationId')
+  findMessagesFromConvo(
+    @Param('conversationId') conversationId: string,
+    @Query('limit') limit: number,
+    @Query('offset') offset: number
+  ) {
+    return this.appService.findMessagesFromConvo({
+      conversationId,
+      limit,
+      offset,
+    });
   }
 }
