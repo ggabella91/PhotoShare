@@ -22,7 +22,27 @@ export interface Message {
   conversationId: string;
 }
 
+export interface MessageError {
+  statusCode: number;
+  message: string;
+}
+
 export interface UpdateUserAuthStatusReq {
   userId: string;
   isAuthenticated: boolean;
+}
+
+export interface UpdateUserAuthStatusStart {
+  type: typeof MessageActions.UPDATE_USER_AUTH_STATUS_START;
+  payload: UpdateUserAuthStatusReq;
+}
+
+export interface UpdateUserAuthStatusSuccess {
+  type: typeof MessageActions.UPDATE_USER_AUTH_STATUS_SUCCESS;
+  payload: string;
+}
+
+export interface UpdateUserAuthStatusFailure {
+  type: typeof MessageActions.UPDATE_USER_AUTH_STATUS_FAILURE;
+  payload: MessageError;
 }
