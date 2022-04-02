@@ -46,3 +46,8 @@ export interface UpdateUserAuthStatusFailure {
   type: typeof MessageActions.UPDATE_USER_AUTH_STATUS_FAILURE;
   payload: MessageError;
 }
+
+export type MessageActionTypes =
+  | UpdateUserAuthStatusStart
+  | UpdateUserAuthStatusSuccess
+  | UpdateUserAuthStatusFailure;
