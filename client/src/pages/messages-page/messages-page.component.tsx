@@ -18,6 +18,7 @@ const MessagesPage: React.FC = () => {
       io(`wss://${window.location.host}`, {
         path: '/api/messages/chat',
         port: 443,
+        query: { userId: currentUser?.id || '' },
       }),
     []
   );
