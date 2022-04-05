@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document, ObjectId } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Conversation } from './conversation.schema';
 
 export type UserDocument = User & Document;
@@ -19,8 +19,8 @@ export class User {
   })
   joinedConversations: Conversation[];
 
-  @Prop()
-  sessionCookie: string;
+  @Prop({ type: mongoose.Schema.Types.Mixed })
+  sessionCookie: Record<string, any>;
 
   @Prop()
   isAuthenticated: boolean;
