@@ -6,8 +6,6 @@ export type ConversationDocument = Conversation & Document;
 
 @Schema()
 export class Conversation {
-  _id: Types.ObjectId;
-
   @Prop({ required: true })
   name: string;
 
