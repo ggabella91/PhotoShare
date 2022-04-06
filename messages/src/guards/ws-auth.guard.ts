@@ -35,6 +35,10 @@ export class WsAuthGuard implements CanActivate {
 
       const userPayload = jwt.verify(sessionCookie.jwt, process.env.JWT_KEY);
       this.logger.log('User payload: ', userPayload);
+
+      if (userPayload) {
+        return true;
+      }
     }
 
     return true;

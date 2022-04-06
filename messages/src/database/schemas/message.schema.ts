@@ -7,8 +7,6 @@ export type MessageDocument = Message & Document;
 
 @Schema()
 export class Message {
-  // _id: ObjectId;
-
   @Prop({ required: true })
   text: string;
 
