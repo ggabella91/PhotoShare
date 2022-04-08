@@ -8,9 +8,7 @@ export enum MessageActions {
 }
 
 export interface MessageState {
-  isAuthenticated: boolean;
-  userChatNickname: string;
-  conversations: string[];
+  user: User;
   messages: ConvoMessages[];
 }
 
@@ -30,6 +28,21 @@ export interface MessageError {
   message: string;
 }
 
+export interface User {
+  id: string;
+  userId: string;
+  name: string;
+  joinedConversations: string[];
+  sessionCookie: Record<string, any>;
+  isAuthenticated: boolean;
+}
+
+export interface Conversation {
+  name: string;
+  messages: Message[];
+  connectedUser: User[];
+}
+
 export interface UpdateUserAuthStatusReq {
   userId: string;
   isAuthenticated: boolean;
@@ -47,7 +60,7 @@ export interface FindOrCreateUserStart {
 
 export interface FindOrCreateUserSuccess {
   type: typeof MessageActions.FIND_OR_CREATE_USER_SUCCESS;
-  payload: string;
+  payload: User;
 }
 
 export interface FindOrCreateUserFailure {
@@ -71,6 +84,9 @@ export interface UpdateUserAuthStatusFailure {
 }
 
 export type MessageActionTypes =
+  | FindOrCreateUserStart
+  | FindOrCreateUserSuccess
+  | FindOrCreateUserFailure
   | UpdateUserAuthStatusStart
   | UpdateUserAuthStatusSuccess
   | UpdateUserAuthStatusFailure;
