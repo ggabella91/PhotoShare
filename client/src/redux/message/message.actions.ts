@@ -26,3 +26,24 @@ export const findOrCreateUserFailure = (
   type: MessageActions.FIND_OR_CREATE_USER_FAILURE,
   payload: error,
 });
+
+export const updateUserAuthStatusStart = (
+  authStatusReq: UpdateUserAuthStatusReq
+): MessageActionTypes => ({
+  type: MessageActions.UPDATE_USER_AUTH_STATUS_START,
+  payload: authStatusReq,
+});
+
+export const updateUserAuthStatusSuccess = (
+  message: string
+): MessageActionTypes => ({
+  type: MessageActions.UPDATE_USER_AUTH_STATUS_SUCCESS,
+  payload: message,
+});
+
+export const updateUserAuthStatusFailure = (
+  error: MessageError
+): MessageActionTypes => ({
+  type: MessageActions.UPDATE_USER_AUTH_STATUS_FAILURE,
+  payload: error,
+});

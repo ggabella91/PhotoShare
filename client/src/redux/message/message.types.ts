@@ -8,8 +8,11 @@ export enum MessageActions {
 }
 
 export interface MessageState {
-  user: User;
+  user: User | null;
   messages: ConvoMessages[];
+  findOrCreateUserError: MessageError | null;
+  updateUserAuthStatusConfirm: string | null;
+  updateUserAuthStatusError: MessageError | null;
 }
 
 export interface ConvoMessages {
@@ -50,7 +53,7 @@ export interface UpdateUserAuthStatusReq {
 
 export interface FindOrCreateUserReq {
   userId: string;
-  nickname: string;
+  name: string;
 }
 
 export interface FindOrCreateUserStart {

@@ -17,11 +17,14 @@ import {
   MessageActionTypes,
   FindOrCreateUserReq,
   User,
+  UpdateUserAuthStatusReq,
 } from './message.types';
 
 import {
   findOrCreateUserSuccess,
   findOrCreateUserFailure,
+  updateUserAuthStatusSuccess,
+  updateUserAuthStatusFailure,
 } from './message.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -43,13 +46,30 @@ export function* findOrCreateUser({
 }) {
   try {
     const { data: user }: { data: User } = yield axios.post(
-      '/api/messages/user',
+      '/api/messages/users',
       findOrCreateUserReq
     );
 
     yield put(findOrCreateUserSuccess(user));
   } catch (err) {
     yield put(findOrCreateUserFailure(err as MessageError));
+  }
+}
+
+export function* updateUserAuthStatus({
+  payload: authStatusReq,
+}: {
+  payload: UpdateUserAuthStatusReq;
+}) {
+  try {
+    const { data: message }: { data: string } = yield axios.put(
+      '/api/messages/users',
+      authStatusReq
+    );
+
+    yield put(updateUserAuthStatusSuccess(message));
+  } catch (err) {
+    yield put(updateUserAuthStatusFailure(err as MessageError));
   }
 }
 
@@ -60,6 +80,13 @@ export function* onFindOrCreateUserStart(): SagaIterator {
   );
 }
 
+export function* onUpdateUserAuthStatusStart(): SagaIterator {
+  yield takeEvery<ActionPattern, MessageSaga>(
+    MessageActions.UPDATE_USER_AUTH_STATUS_START,
+    updateUserAuthStatus
+  );
+}
+
 export function* messageSagas(): SagaIterator {
-  yield all([call(onFindOrCreateUserStart)]);
+  yield all([call(onFindOrCreateUserStart), call(onUpdateUserAuthStatusStart)]);
 }
