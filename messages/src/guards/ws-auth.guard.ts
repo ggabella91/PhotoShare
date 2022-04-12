@@ -27,22 +27,21 @@ export class WsAuthGuard implements CanActivate {
     this.logger.log('Ws Context data: ', wsContext.getData());
 
     if (!userId) {
-      // throw new WsException('No userId found in handshake query');
-      this.logger.log('No userId found in handshake query');
+      throw new WsException('No userId found in handshake query');
     } else {
       const user = (await this.userModel.findOne({ userId })).toObject();
       const sessionCookie = user.sessionCookie;
+      const sessionJwt = sessionCookie.jwt;
 
-      const userPayload = jwt.verify(sessionCookie.jwt, process.env.JWT_KEY);
-
-      this.logger.log('User payload: ', userPayload);
+      const userPayload = jwt.verify(sessionJwt, process.env.JWT_KEY);
 
       if (userPayload) {
-        this.logger.log('User is authenticated');
+        this.logger.log('User is authenticated: ', userPayload);
+
         return true;
+      } else {
+        throw new WsException('User is not authenticated');
       }
     }
-
-    return true;
   }
 }

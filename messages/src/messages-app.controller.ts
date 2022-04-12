@@ -1,5 +1,6 @@
 import {
   Controller,
+  Logger,
   Get,
   Post,
   Put,
@@ -11,6 +12,8 @@ import { MessagesAppService } from './messages-app.service';
 
 @Controller('/api/messages')
 export class MessagesAppController {
+  private logger: Logger = new Logger('Messages App Controller');
+
   constructor(private readonly appService: MessagesAppService) {}
 
   @Get('/hello')
@@ -20,8 +23,16 @@ export class MessagesAppController {
 
   @Post('/users')
   findOrCreateUser(@Request() req) {
-    const { session: sessionCookie, body } = req;
+    const { headers, body } = req;
     const { userId, name } = body;
+    const { cookie } = headers;
+
+    const sessionCookie = JSON.parse(
+      Buffer.from(
+        cookie.substr(cookie.indexOf('express:sess=') + 13),
+        'base64'
+      ).toString()
+    );
 
     return this.appService.findOrCreateUser({ userId, name, sessionCookie });
   }

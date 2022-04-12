@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import {
@@ -15,6 +15,8 @@ import { UpdateAuthStatusDto } from './database/dto/update-auth-status.dto';
 
 @Injectable()
 export class MessagesAppService {
+  private logger: Logger = new Logger('Messages App Service');
+
   constructor(
     @InjectModel(Conversation.name)
     private conversationModel: Model<ConversationDocument>,

@@ -1,5 +1,5 @@
 export class CreateUserDto {
   userId: string;
   name: string;
-  sessionCookie: string;
+  sessionCookie: Record<string, any>;
 }
