@@ -48,7 +48,7 @@ export class MessagesAppService {
         })
         .exec();
 
-      const existingUserObj = existingUserRefreshedSession.toObject();
+      const existingUserObj = existingUserRefreshedSession;
 
       return existingUserObj;
     } else {

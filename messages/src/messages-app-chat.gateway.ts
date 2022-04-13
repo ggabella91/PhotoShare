@@ -36,6 +36,13 @@ export class MessagesAppChatGateway
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
+    client.emit('clientId', client.id);
+  }
+
+  @SubscribeMessage('forceDisconnectClient')
+  async handleForceDisconnectClient(client: Socket) {
+    client.disconnect();
+    this.logger.log(`Client force-disconnected: ${client.id}`);
   }
 
   @SubscribeMessage('chatToServer')
@@ -64,7 +71,7 @@ export class MessagesAppChatGateway
     this.logger.log('Created conversation: ', createdConvo);
 
     client.join(createdConvo._id);
-    client.emit('Joined conversation: ', createdConvo._id);
+    client.emit('joinedConversation', createdConvo._id);
   }
 
   @SubscribeMessage('joinAllExistingConversations')
@@ -82,9 +89,7 @@ export class MessagesAppChatGateway
     this.logger.log('Conversations found for user: ', existingConvoIds);
 
     client.join(existingConvoIds);
-    client.emit(
-      `Joined conversations with the following ids: ${existingConvoIds}`
-    );
+    client.emit('joinedConversations', existingConvoIds);
   }
 
   @SubscribeMessage('joinConversation')
@@ -95,6 +100,6 @@ export class MessagesAppChatGateway
     const conversationIdString = message.conversationId.toString();
 
     client.join(conversationIdString);
-    client.emit(`Joined conversation with id: ${message.conversationId}`);
+    client.emit('joinedConversation', message.conversationId);
   }
 }

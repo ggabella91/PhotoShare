@@ -9,3 +9,8 @@ export const selectMessageUser = createSelector(
   [selectMessageState],
   (messageState: MessageState) => messageState.user
 );
+
+export const selectRemoveUserSessionCookieConfirm = createSelector(
+  [selectMessageState],
+  (messageState: MessageState) => messageState.removeUserSessionCookieConfirm
+);
