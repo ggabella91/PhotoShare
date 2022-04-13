@@ -11,8 +11,8 @@ export interface MessageState {
   user: User | null;
   messages: ConvoMessages[];
   findOrCreateUserError: MessageError | null;
-  updateUserAuthStatusConfirm: string | null;
-  updateUserAuthStatusError: MessageError | null;
+  removeUserSessionCookieConfirm: string | null;
+  removeUserSessionCookieError: MessageError | null;
 }
 
 export interface ConvoMessages {

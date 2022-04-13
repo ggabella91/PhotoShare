@@ -8,8 +8,8 @@ const INITIAL_STATE: MessageState = {
   user: null,
   messages: [],
   findOrCreateUserError: null,
-  updateUserAuthStatusConfirm: null,
-  updateUserAuthStatusError: null,
+  removeUserSessionCookieConfirm: null,
+  removeUserSessionCookieError: null,
 };
 
 const messageReducer = (
@@ -23,20 +23,22 @@ const messageReducer = (
         user: action.payload,
         findOrCreateUserError: null,
       };
-    case MessageActions.UPDATE_USER_AUTH_STATUS_SUCCESS:
+    case MessageActions.REMOVE_USER_SESSION_COOKIE_SUCCESS:
       return {
         ...state,
-        updateUserAuthStatusConfirm: action.payload,
+        removeUserSessionCookieConfirm: action.payload,
+        removeUserSessionCookieError: null,
       };
     case MessageActions.FIND_OR_CREATE_USER_FAILURE:
       return {
         ...state,
         findOrCreateUserError: action.payload,
       };
-    case MessageActions.UPDATE_USER_AUTH_STATUS_FAILURE:
+    case MessageActions.REMOVE_USER_SESSION_COOKIE_FAILURE:
       return {
         ...state,
-        updateUserAuthStatusError: action.payload,
+        removeUserSessionCookieError: action.payload,
+        removeUserSessionCookieConfirm: null,
       };
     default:
       return state;
