@@ -11,7 +11,6 @@ import { CreateConvoDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { CreateUserDto } from './database/dto/create-user.dto';
 import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
-import { UpdateAuthStatusDto } from './database/dto/update-auth-status.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -37,10 +36,12 @@ export class MessagesAppService {
 
   async findOrCreateUser(createUserDto: CreateUserDto) {
     const existingUser = await this.userModel
-      .findById(createUserDto.userId)
+      .findOne({ userId: createUserDto.userId })
       .exec();
 
     if (existingUser) {
+      this.logger.log('Found existing messages user: ', existingUser);
+
       const existingUserRefreshedSession = await existingUser
         .update({
           sessionCookie: createUserDto.sessionCookie,
@@ -54,16 +55,18 @@ export class MessagesAppService {
       const createdUser = new this.userModel(createUserDto);
       const savedUser = (await createdUser.save()).toObject();
 
+      this.logger.log('Created new messages user: ', savedUser);
+
       return savedUser;
     }
   }
 
-  async updateUserAuthStatus(updateAuthStatusDto: UpdateAuthStatusDto) {
-    const { userId, isAuthenticated } = updateAuthStatusDto;
+  async removeUserSessionCookie(userId: string) {
+    const user = await this.userModel.findOne({ userId }).exec();
 
-    const user = await this.userModel.findById(userId).exec();
-
-    const updatedAuthStatusUser = await user.update({ isAuthenticated }).exec();
+    const updatedAuthStatusUser = await user
+      .update({ sessionCookie: {} })
+      .exec();
 
     return updatedAuthStatusUser;
   }

@@ -39,9 +39,9 @@ export class MessagesAppController {
 
   @Put('/users')
   updateUserAuthStatus(@Request() req) {
-    const { userId, isAuthenticated } = req;
+    const { userId } = req;
 
-    return this.appService.updateUserAuthStatus({ userId, isAuthenticated });
+    return this.appService.removeUserSessionCookie(userId);
   }
 
   @Get('/conversation/:conversationId')

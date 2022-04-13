@@ -4,7 +4,6 @@ import {
   FindOrCreateUserReq,
   MessageActions,
   MessageActionTypes,
-  UpdateUserAuthStatusReq,
   User,
 } from './message.types';
 
@@ -27,23 +26,23 @@ export const findOrCreateUserFailure = (
   payload: error,
 });
 
-export const updateUserAuthStatusStart = (
-  authStatusReq: UpdateUserAuthStatusReq
+export const removeUserSessionCookieStart = (
+  userId: string
 ): MessageActionTypes => ({
-  type: MessageActions.UPDATE_USER_AUTH_STATUS_START,
-  payload: authStatusReq,
+  type: MessageActions.REMOVE_USER_SESSION_COOKIE_START,
+  payload: userId,
 });
 
-export const updateUserAuthStatusSuccess = (
+export const removeUserSessionCookieSuccess = (
   message: string
 ): MessageActionTypes => ({
-  type: MessageActions.UPDATE_USER_AUTH_STATUS_SUCCESS,
+  type: MessageActions.REMOVE_USER_SESSION_COOKIE_SUCCESS,
   payload: message,
 });
 
-export const updateUserAuthStatusFailure = (
+export const removeUserSessionCookieFailure = (
   error: MessageError
 ): MessageActionTypes => ({
-  type: MessageActions.UPDATE_USER_AUTH_STATUS_FAILURE,
+  type: MessageActions.REMOVE_USER_SESSION_COOKIE_FAILURE,
   payload: error,
 });

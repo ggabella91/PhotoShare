@@ -2,9 +2,9 @@ export enum MessageActions {
   FIND_OR_CREATE_USER_START = 'FIND_OR_CREATE_USER_START',
   FIND_OR_CREATE_USER_SUCCESS = 'FIND_OR_CREATE_USER_SUCCESS',
   FIND_OR_CREATE_USER_FAILURE = 'FIND_OR_CREATE_USER_FAILURE',
-  UPDATE_USER_AUTH_STATUS_START = 'UPDATE_USER_AUTH_STATUS_START',
-  UPDATE_USER_AUTH_STATUS_SUCCESS = 'UPDATE_USER_AUTH_STATUS_SUCCESS',
-  UPDATE_USER_AUTH_STATUS_FAILURE = 'UPDATE_USER_AUTH_STATUS_FAILURE',
+  REMOVE_USER_SESSION_COOKIE_START = 'REMOVE_USER_SESSION_COOKIE_START',
+  REMOVE_USER_SESSION_COOKIE_SUCCESS = 'REMOVE_USER_SESSION_COOKIE_SUCCESS',
+  REMOVE_USER_SESSION_COOKIE_FAILURE = 'REMOVE_USER_SESSION_COOKIE_FAILURE',
 }
 
 export interface MessageState {
@@ -46,11 +46,6 @@ export interface Conversation {
   connectedUser: User[];
 }
 
-export interface UpdateUserAuthStatusReq {
-  userId: string;
-  isAuthenticated: boolean;
-}
-
 export interface FindOrCreateUserReq {
   userId: string;
   name: string;
@@ -71,18 +66,18 @@ export interface FindOrCreateUserFailure {
   payload: MessageError;
 }
 
-export interface UpdateUserAuthStatusStart {
-  type: typeof MessageActions.UPDATE_USER_AUTH_STATUS_START;
-  payload: UpdateUserAuthStatusReq;
-}
-
-export interface UpdateUserAuthStatusSuccess {
-  type: typeof MessageActions.UPDATE_USER_AUTH_STATUS_SUCCESS;
+export interface RemoveUserSessionCookieStart {
+  type: typeof MessageActions.REMOVE_USER_SESSION_COOKIE_START;
   payload: string;
 }
 
-export interface UpdateUserAuthStatusFailure {
-  type: typeof MessageActions.UPDATE_USER_AUTH_STATUS_FAILURE;
+export interface RemoveUserSessionCookieSuccess {
+  type: typeof MessageActions.REMOVE_USER_SESSION_COOKIE_SUCCESS;
+  payload: string;
+}
+
+export interface RemoveUserSessionCookieFailure {
+  type: typeof MessageActions.REMOVE_USER_SESSION_COOKIE_FAILURE;
   payload: MessageError;
 }
 
@@ -90,6 +85,6 @@ export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
   | FindOrCreateUserFailure
-  | UpdateUserAuthStatusStart
-  | UpdateUserAuthStatusSuccess
-  | UpdateUserAuthStatusFailure;
+  | RemoveUserSessionCookieStart
+  | RemoveUserSessionCookieSuccess
+  | RemoveUserSessionCookieFailure;
