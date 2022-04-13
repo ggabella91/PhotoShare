@@ -8,7 +8,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { selectMessageUser } from '../../redux/message/message.selectors';
 import {
   findOrCreateUserStart,
-  updateUserAuthStatusStart,
+  removeUserSessionCookieStart,
 } from '../../redux/message/message.actions';
 
 import './messages-page.styles.scss';

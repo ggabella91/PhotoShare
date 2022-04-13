@@ -17,14 +17,13 @@ import {
   MessageActionTypes,
   FindOrCreateUserReq,
   User,
-  UpdateUserAuthStatusReq,
 } from './message.types';
 
 import {
   findOrCreateUserSuccess,
   findOrCreateUserFailure,
-  updateUserAuthStatusSuccess,
-  updateUserAuthStatusFailure,
+  removeUserSessionCookieSuccess,
+  removeUserSessionCookieFailure,
 } from './message.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -56,20 +55,20 @@ export function* findOrCreateUser({
   }
 }
 
-export function* updateUserAuthStatus({
-  payload: authStatusReq,
+export function* removeUserSessionCookie({
+  payload: userId,
 }: {
-  payload: UpdateUserAuthStatusReq;
+  payload: string;
 }) {
   try {
     const { data: message }: { data: string } = yield axios.put(
       '/api/messages/users',
-      authStatusReq
+      userId
     );
 
-    yield put(updateUserAuthStatusSuccess(message));
+    yield put(removeUserSessionCookieSuccess(message));
   } catch (err) {
-    yield put(updateUserAuthStatusFailure(err as MessageError));
+    yield put(removeUserSessionCookieFailure(err as MessageError));
   }
 }
 
@@ -80,13 +79,16 @@ export function* onFindOrCreateUserStart(): SagaIterator {
   );
 }
 
-export function* onUpdateUserAuthStatusStart(): SagaIterator {
+export function* onRemoveUserSessionCookieStart(): SagaIterator {
   yield takeEvery<ActionPattern, MessageSaga>(
-    MessageActions.UPDATE_USER_AUTH_STATUS_START,
-    updateUserAuthStatus
+    MessageActions.REMOVE_USER_SESSION_COOKIE_START,
+    removeUserSessionCookie
   );
 }
 
 export function* messageSagas(): SagaIterator {
-  yield all([call(onFindOrCreateUserStart), call(onUpdateUserAuthStatusStart)]);
+  yield all([
+    call(onFindOrCreateUserStart),
+    call(onRemoveUserSessionCookieStart),
+  ]);
 }
