@@ -83,7 +83,7 @@ export class MessagesAppChatGateway
       await this.appService.findAllConversationsForUser(message.userId);
 
     const existingConvoIds = existingConversations.length
-      ? existingConversations.map((convo) => convo.id.toString())
+      ? existingConversations.map((convo) => convo._id.toString())
       : null;
 
     this.logger.log('Conversations found for user: ', existingConvoIds);

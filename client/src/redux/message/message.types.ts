@@ -5,6 +5,7 @@ export enum MessageActions {
   REMOVE_USER_SESSION_COOKIE_START = 'REMOVE_USER_SESSION_COOKIE_START',
   REMOVE_USER_SESSION_COOKIE_SUCCESS = 'REMOVE_USER_SESSION_COOKIE_SUCCESS',
   REMOVE_USER_SESSION_COOKIE_FAILURE = 'REMOVE_USER_SESSION_COOKIE_FAILURE',
+  ADD_TO_CONVERSATIONS_ARRAY = 'ADD_TO_CONVERSATIONS_ARRAY',
 }
 
 export interface MessageState {
@@ -81,10 +82,16 @@ export interface RemoveUserSessionCookieFailure {
   payload: MessageError;
 }
 
+export interface AddToConversationsArray {
+  type: typeof MessageActions.ADD_TO_CONVERSATIONS_ARRAY;
+  payload: string | string[];
+}
+
 export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
   | FindOrCreateUserFailure
   | RemoveUserSessionCookieStart
   | RemoveUserSessionCookieSuccess
-  | RemoveUserSessionCookieFailure;
+  | RemoveUserSessionCookieFailure
+  | AddToConversationsArray;

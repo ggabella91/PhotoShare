@@ -5,13 +5,11 @@ import io from 'socket.io-client';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
-import {
-  selectMessageUser,
-  selectRemoveUserSessionCookieConfirm,
-} from '../../redux/message/message.selectors';
+import { selectMessageUser } from '../../redux/message/message.selectors';
 import {
   findOrCreateUserStart,
   removeUserSessionCookieStart,
+  addToConversationsArray,
 } from '../../redux/message/message.actions';
 
 import './messages-page.styles.scss';
@@ -20,15 +18,13 @@ const MessagesPage: React.FC = () => {
   const [message, setMessage] = useState();
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
     useState(false);
-  const [clientId, setClientId] = useState();
+  const [joinedExistingConversations, setJoinedExistingConversations] =
+    useState(false);
 
   const location = useLocation();
 
   const currentUser = useSelector(selectCurrentUser);
   const messageUser = useSelector(selectMessageUser);
-  const removeUserSessionCookieConfirm = useSelector(
-    selectRemoveUserSessionCookieConfirm
-  );
 
   const dispatch = useDispatch();
 
@@ -73,6 +69,10 @@ const MessagesPage: React.FC = () => {
 
       setIsSocketConnectionActive(false);
     });
+
+    socket.on('joinedConversation', (conversation) => {
+      dispatch(addToConversationsArray(conversation));
+    });
   }, [socket]);
 
   useEffect(() => {
@@ -84,17 +84,29 @@ const MessagesPage: React.FC = () => {
   }, [currentUser, messageUser, isSocketConnectionActive]);
 
   useEffect(() => {
-    if (isSocketConnectionActive && messageUser) {
+    if (
+      isSocketConnectionActive &&
+      messageUser &&
+      !joinedExistingConversations
+    ) {
       socket.emit('joinAllExistingConversations', {
         userId: currentUser?.id,
       });
+
+      setJoinedExistingConversations(true);
 
       socket.emit('createConversation', {
         name: 'Test Convo',
         connectedUsers: [currentUser?.id],
       });
     }
-  }, [messageUser, isSocketConnectionActive]);
+  }, [
+    socket,
+    currentUser?.id,
+    messageUser,
+    isSocketConnectionActive,
+    joinedExistingConversations,
+  ]);
 
   return (
     <div className='messages-page'>
