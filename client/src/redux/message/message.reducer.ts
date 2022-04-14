@@ -4,6 +4,8 @@ import {
   MessageActionTypes,
 } from './message.types';
 
+import { updateJoinedConversationsArray } from './message.utils';
+
 const INITIAL_STATE: MessageState = {
   user: null,
   messages: [],
@@ -28,6 +30,19 @@ const messageReducer = (
         ...state,
         removeUserSessionCookieConfirm: action.payload,
         removeUserSessionCookieError: null,
+      };
+    case MessageActions.ADD_TO_CONVERSATIONS_ARRAY:
+      return {
+        ...state,
+        user: state.user
+          ? {
+              ...state.user,
+              joinedConversations: updateJoinedConversationsArray(
+                state.user?.joinedConversations,
+                action.payload
+              ),
+            }
+          : null,
       };
     case MessageActions.FIND_OR_CREATE_USER_FAILURE:
       return {

@@ -35,17 +35,21 @@ export class MessagesAppService {
   }
 
   async findOrCreateUser(createUserDto: CreateUserDto) {
-    const existingUser = await this.userModel
-      .findOne({ userId: createUserDto.userId })
-      .exec();
+    const { userId } = createUserDto;
+
+    const existingUser = await this.userModel.findOne({ userId }).exec();
 
     if (existingUser) {
       this.logger.log('Found existing messages user: ', existingUser);
 
-      const existingUserRefreshedSession = await existingUser
-        .update({
-          sessionCookie: createUserDto.sessionCookie,
-        })
+      const existingUserRefreshedSession = await this.userModel
+        .findOneAndUpdate(
+          { userId },
+          {
+            sessionCookie: createUserDto.sessionCookie,
+          },
+          { new: true }
+        )
         .exec();
 
       const existingUserObj = existingUserRefreshedSession;

@@ -46,3 +46,10 @@ export const removeUserSessionCookieFailure = (
   type: MessageActions.REMOVE_USER_SESSION_COOKIE_FAILURE,
   payload: error,
 });
+
+export const addToConversationsArray = (
+  conversations: string | string[]
+): MessageActionTypes => ({
+  type: MessageActions.ADD_TO_CONVERSATIONS_ARRAY,
+  payload: conversations,
+});
