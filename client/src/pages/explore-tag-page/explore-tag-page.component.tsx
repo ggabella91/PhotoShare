@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
@@ -35,10 +35,6 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 import { AppState } from '../../redux/root-reducer';
 
 import './explore-tag-page.styles.scss';
-
-interface ExploreTagPageParams {
-  hashtag: string;
-}
 
 const ExploreTagPage: React.FC = () => {
   const [postDataList, setPostDataList] = useState<List<Post>>(List());
@@ -95,8 +91,8 @@ const ExploreTagPage: React.FC = () => {
   const { intersectionCounter, lastElementRef } =
     useLazyLoading(isLoadingPostData);
 
-  let history = useHistory();
-  const { hashtag } = useParams<ExploreTagPageParams>();
+  let navigate = useNavigate();
+  const { hashtag } = useParams();
 
   let postsBucket: string, profileBucket: string;
 
@@ -108,21 +104,20 @@ const ExploreTagPage: React.FC = () => {
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
-  useEffect(
+  useEffect(() => {
+    hashtag &&
+      dispatch(getPostsWithHashtagStart({ hashtag, pageToShow: 1, limit: 9 }));
+
+    setPostModalShow(false);
+    setPostOptionsModalShow(false);
+    setShowPostLikingUsersModal(false);
+
     // Clear post state and follow state when cleaning
     // up before component leaves the screen
-    () => {
-      dispatch(getPostsWithHashtagStart({ hashtag, pageToShow: 1, limit: 9 }));
-      setPostModalShow(false);
-      setPostOptionsModalShow(false);
-      setShowPostLikingUsersModal(false);
-
-      return () => {
-        dispatch(clearPostState());
-      };
-    },
-    [hashtag]
-  );
+    return () => {
+      dispatch(clearPostState());
+    };
+  }, [hashtag]);
 
   useEffect(() => {
     if (postData && postData.length) {
@@ -141,11 +136,12 @@ const ExploreTagPage: React.FC = () => {
       postData &&
       postData.length === postFiles.length
     ) {
-      getPostsWithHashtagStart({
-        hashtag,
-        pageToShow: pageToFetch + 1,
-        limit: 9,
-      });
+      hashtag &&
+        getPostsWithHashtagStart({
+          hashtag,
+          pageToShow: pageToFetch + 1,
+          limit: 9,
+        });
 
       setPageToFetch(pageToFetch + 1);
     }
@@ -317,7 +313,7 @@ const ExploreTagPage: React.FC = () => {
   };
 
   const handleGoToPostClick = () => {
-    history.push(`/p/${postModalProps.get('id')}`);
+    navigate(`/p/${postModalProps.get('id')}`);
   };
 
   return (

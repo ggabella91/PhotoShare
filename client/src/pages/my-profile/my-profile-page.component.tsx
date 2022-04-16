@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -231,7 +231,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const { intersectionCounter, lastElementRef } =
     useLazyLoading(isLoadingPostData);
 
-  let history = useHistory();
+  let navigate = useNavigate();
 
   let postsBucket: string, profileBucket: string;
 
@@ -534,7 +534,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   };
 
   const handleGoToPostClick = () => {
-    history.push(`/p/${postModalProps.get('id')}`);
+    navigate(`/p/${postModalProps.get('id')}`);
   };
 
   return (

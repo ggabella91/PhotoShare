@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
@@ -39,11 +39,6 @@ import { AppState } from '../../redux/root-reducer';
 
 import './explore-location-page.styles.scss';
 
-interface ExploreLocationPageParams {
-  locationId: string;
-  location: string;
-}
-
 const ExploreLocationPage: React.FC = () => {
   const [postDataList, setPostDataList] = useState<List<Post>>(List());
 
@@ -77,7 +72,7 @@ const ExploreLocationPage: React.FC = () => {
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
-  const { locationId, location } = useParams<ExploreLocationPageParams>();
+  const { locationId, location } = useParams();
 
   const dispatch = useDispatch();
 
@@ -101,7 +96,7 @@ const ExploreLocationPage: React.FC = () => {
   const { intersectionCounter, lastElementRef } =
     useLazyLoading(isLoadingPostData);
 
-  let history = useHistory();
+  let navigate = useNavigate();
 
   let postsBucket: string, profileBucket: string;
 
@@ -113,23 +108,21 @@ const ExploreLocationPage: React.FC = () => {
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
-  useEffect(
-    // Clear post state and follow state when cleaning
-    // up before component leaves the screen
-    () => {
+  useEffect(() => {
+    locationId &&
       dispatch(
         getPostsWithLocationStart({ locationId, pageToShow: 1, limit: 9 })
       );
-      setPostModalShow(false);
-      setPostOptionsModalShow(false);
-      setShowPostLikingUsersModal(false);
+    setPostModalShow(false);
+    setPostOptionsModalShow(false);
+    setShowPostLikingUsersModal(false);
 
-      return () => {
-        dispatch(clearPostState());
-      };
-    },
-    [locationId]
-  );
+    // Clear post state and follow state when cleaning
+    // up before component leaves the screen
+    return () => {
+      dispatch(clearPostState());
+    };
+  }, [locationId]);
 
   useEffect(() => {
     if (postData && postData.length) {
@@ -155,11 +148,12 @@ const ExploreLocationPage: React.FC = () => {
       postData &&
       postData.length === postFiles.length
     ) {
-      getPostsWithLocationStart({
-        locationId,
-        pageToShow: pageToFetch + 1,
-        limit: 9,
-      });
+      locationId &&
+        getPostsWithLocationStart({
+          locationId,
+          pageToShow: pageToFetch + 1,
+          limit: 9,
+        });
 
       setPageToFetch(pageToFetch + 1);
     }
@@ -331,7 +325,7 @@ const ExploreLocationPage: React.FC = () => {
   };
 
   const handleGoToPostClick = () => {
-    history.push(`/p/${postModalProps.get('id')}`);
+    navigate(`/p/${postModalProps.get('id')}`);
   };
 
   return (

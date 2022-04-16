@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [photoFileString, setPhotoFileString] = useState<string>('');
   const [searchBarKey, setSearchBarKey] = useState(Math.random());
 
-  const path = useParams();
+  const params = useParams();
 
   let bucket: string;
 
@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
     bucket = 'photo-share-app-profile-photos-dev';
   }
 
-  useEffect(() => setSearchBarKey(Math.random()), [path]);
+  useEffect(() => setSearchBarKey(Math.random()), [params]);
 
   useEffect(() => {
     if (currentUser && profilePhotoKey) {

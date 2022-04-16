@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -260,7 +260,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
 
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const postState = useSelector((state: AppState) => state.post);
 
@@ -610,7 +610,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   };
 
   const handleGoToPostClick = () => {
-    history.push(`/p/${feedPagePostIdForNavigation}`);
+    navigate(`/p/${feedPagePostIdForNavigation}`);
   };
 
   const handleArchivePost = () =>
