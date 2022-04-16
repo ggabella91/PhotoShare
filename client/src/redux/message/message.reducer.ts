@@ -31,7 +31,7 @@ const messageReducer = (
         removeUserSessionCookieConfirm: action.payload,
         removeUserSessionCookieError: null,
       };
-    case MessageActions.ADD_TO_CONVERSATIONS_ARRAY:
+    case MessageActions.ADD_TO_JOINED_CONVERSATIONS_ARRAY:
       return {
         ...state,
         user: state.user

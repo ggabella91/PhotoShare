@@ -9,7 +9,8 @@ import { selectMessageUser } from '../../redux/message/message.selectors';
 import {
   findOrCreateUserStart,
   removeUserSessionCookieStart,
-  addToConversationsArray,
+  addToJoinedConversationsArray,
+  addMessageToConversation,
 } from '../../redux/message/message.actions';
 
 import './messages-page.styles.scss';
@@ -71,7 +72,15 @@ const MessagesPage: React.FC = () => {
     });
 
     socket.on('joinedConversation', (conversation) => {
-      dispatch(addToConversationsArray(conversation));
+      dispatch(addToJoinedConversationsArray(conversation));
+    });
+
+    socket.on('joinedConversations', (conversations) => {
+      dispatch(addToJoinedConversationsArray(conversations));
+    });
+
+    socket.on('chatToClient', (message) => {
+      dispatch(addMessageToConversation(message));
     });
   }, [socket]);
 

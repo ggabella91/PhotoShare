@@ -1,5 +1,6 @@
 import {
   Message,
+  ConvoMessages,
   MessageError,
   FindOrCreateUserReq,
   MessageActions,
@@ -47,9 +48,23 @@ export const removeUserSessionCookieFailure = (
   payload: error,
 });
 
-export const addToConversationsArray = (
+export const addToJoinedConversationsArray = (
   conversations: string | string[]
 ): MessageActionTypes => ({
-  type: MessageActions.ADD_TO_CONVERSATIONS_ARRAY,
+  type: MessageActions.ADD_TO_JOINED_CONVERSATIONS_ARRAY,
   payload: conversations,
+});
+
+export const addToConvoMessagesArray = (
+  convoMessages: ConvoMessages
+): MessageActionTypes => ({
+  type: MessageActions.ADD_TO_CONVO_MESSAGES_ARRAY,
+  payload: convoMessages,
+});
+
+export const addMessageToConversation = (
+  message: Message
+): MessageActionTypes => ({
+  type: MessageActions.ADD_MESSAGE_TO_CONVERSATION,
+  payload: message,
 });
