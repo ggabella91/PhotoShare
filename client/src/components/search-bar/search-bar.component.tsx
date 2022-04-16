@@ -82,7 +82,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [selectedSuggestion, setSelectedSuggestion] = useState<number | null>(
     null
   );
-  const [navigate, setNavigate] = useState(false);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
   const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
 
   let bucket: string;
@@ -226,7 +226,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               );
         }
       } else if (event.key === 'Enter') {
-        setNavigate(true);
+        setShouldNavigate(true);
       }
     }
   };
@@ -254,7 +254,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             userInfoList={userSuggestionsList}
             styleType={StyleType.suggestion}
             selectedSuggestion={selectedSuggestion}
-            navigate={navigate}
+            shouldNavigate={shouldNavigate}
           />
         )}
         {showUserSuggestions &&

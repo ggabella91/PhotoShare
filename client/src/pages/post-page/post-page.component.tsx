@@ -46,6 +46,7 @@ import UserInfo, {
   UserInfoAndOtherData,
 } from '../../components/user-info/user-info.component';
 
+import WithAuth from '../../withAuth';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 import Button from '../../components/button/button.component';
@@ -58,10 +59,6 @@ import {
 } from '../../pages/feed-page/feed-page.utils';
 
 import './post-page.styles.scss';
-
-interface Params {
-  postId: string;
-}
 
 export interface ImmutableMap<T> extends Map<string, any> {
   get<K extends keyof T>(name: K): T[K];
@@ -78,7 +75,7 @@ export const PostPage: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const { postId } = useParams<Params>();
+  const { postId } = useParams();
 
   const { currentUser, otherUser, postReactingUsers } = userState;
 
@@ -177,7 +174,7 @@ export const PostPage: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch(getSinglePostDataStart({ postId }));
+    postId && dispatch(getSinglePostDataStart({ postId }));
   }, [postId]);
 
   useEffect(() => {
@@ -315,7 +312,7 @@ export const PostPage: React.FC = () => {
   }, [postData, otherUser, otherUserProfilePhotoFile, editPostDetailsConfirm]);
 
   useEffect(() => {
-    if (!areReactionsReadyForRendering) {
+    if (!areReactionsReadyForRendering && postId) {
       dispatch(
         getPostReactionsStart({
           postId: postId,
@@ -630,7 +627,7 @@ export const PostPage: React.FC = () => {
   const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (currentUser && comment) {
+    if (postId && currentUser && comment) {
       dispatch(
         createPostReactionStart({
           reactingUserId: currentUser.id,
@@ -661,7 +658,7 @@ export const PostPage: React.FC = () => {
       : handleSubmitLike();
 
   const handleSubmitLike = () => {
-    if (currentUser) {
+    if (postId && currentUser) {
       dispatch(
         createPostReactionStart({
           reactingUserId: currentUser.id,
@@ -674,13 +671,14 @@ export const PostPage: React.FC = () => {
   };
 
   const handleSubmitRemoveLike = () => {
-    dispatch(
-      deleteReactionStart({
-        reactionId: alreadyLikedPostAndReactionId.reactionId,
-        isLikeRemoval: true,
-        postId: postId,
-      })
-    );
+    postId &&
+      dispatch(
+        deleteReactionStart({
+          reactionId: alreadyLikedPostAndReactionId.reactionId,
+          isLikeRemoval: true,
+          postId: postId,
+        })
+      );
   };
 
   const handleRenderEditPostDetails = () => {
@@ -690,7 +688,7 @@ export const PostPage: React.FC = () => {
           Edit post details
         </span>
       );
-    } else if (isCurrentUserPost && showPostEditForm) {
+    } else if (postId && isCurrentUserPost && showPostEditForm) {
       return (
         <EditPostForm
           postId={postId}
@@ -735,44 +733,18 @@ export const PostPage: React.FC = () => {
     dispatch(setShowCommentOptionsModal(false));
 
   return (
-    <div className='post-page' data-testid='post-page'>
-      <div className='post-container'>
-        <div className='post-media-container'>
-          {postFiles.length && !postData?.isVideo ? (
-            <img
-              className='post-image'
-              src={`data:image/jpeg;base64,${postFiles[0].fileString}`}
-              alt='post-pic'
-            />
-          ) : null}
-          {!postFiles.length && !postData?.isVideo && (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                paddingTop: '10px',
-                paddingBottom: '10px',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          )}
-          {postData?.isVideo && (
-            <video className='post-video' controls muted>
-              <source src={`/api/video?s3Key=${postData.s3Key}`} />
-            </video>
-          )}
-        </div>
-        <div className='post-page-details'>
-          <div className='post-page-user-and-location'>
-            {otherUserProfilePhotoFile ? (
+    <WithAuth>
+      <div className='post-page' data-testid='post-page'>
+        <div className='post-container'>
+          <div className='post-media-container'>
+            {postFiles.length && !postData?.isVideo ? (
               <img
-                className='user-photo'
-                src={`data:image/jpeg;base64,${otherUserProfilePhotoFile.fileString}`}
-                alt='user'
+                className='post-image'
+                src={`data:image/jpeg;base64,${postFiles[0].fileString}`}
+                alt='post-pic'
               />
             ) : null}
-            {!otherUserProfilePhotoFile && isLoadingPostData ? (
+            {!postFiles.length && !postData?.isVideo && (
               <Box
                 sx={{
                   display: 'flex',
@@ -783,125 +755,156 @@ export const PostPage: React.FC = () => {
               >
                 <CircularProgress />
               </Box>
-            ) : null}
-            {!otherUserProfilePhotoFile && !isLoadingPostData ? (
-              <div className='user-photo-placeholder'>
-                <p className='user-photo-placeholder-text'>No photo</p>
-              </div>
-            ) : null}
-            <div className='text-and-options'>
-              <div className='user-and-location'>
-                {otherUser ? (
-                  <span className='user-name'>{otherUser.username}</span>
-                ) : null}
-                <NavLink
-                  to={`/explore/locations/${
-                    postData?.postLocation?.id || ''
-                  }/${slugifiedLocationLabel}`}
-                  className='post-page-location'
-                >
-                  {editPostDetails?.editLocation || null}
-                </NavLink>
-              </div>
-              <button
-                className='post-page-options'
-                onClick={handleSetShowPostOptionsModal}
-              >
-                <MoreHorizIcon className='ellipsis' />
-              </button>
-            </div>
-          </div>
-          <div className='post-page-caption-and-comments-container'>
-            {captionInfoList.size && !showPostEditForm ? (
-              <UserInfo
-                styleType={StyleType.postPage}
-                userInfoList={captionInfoList}
-                isCaption
-                isCaptionOwner={isCurrentUserPost ? true : false}
-              />
-            ) : (
-              handleRenderEditPostDetails()
             )}
-            {!areReactionsReadyForRendering && reactionsList.size ? (
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  paddingTop: '10px',
-                  paddingBottom: '10px',
-                }}
-              >
-                <CircularProgress />
-              </Box>
-            ) : null}
-            {commentingUserList.size ? (
-              <UserInfo
-                styleType={StyleType.postPage}
-                userInfoList={commentingUserList}
-              />
-            ) : null}
+            {postData?.isVideo && (
+              <video className='post-video' controls muted>
+                <source src={`/api/video?s3Key=${postData.s3Key}`} />
+              </video>
+            )}
           </div>
-          {handleRenderLikeOrLikedButton()}
-          {likingUsersList.size ? (
-            <Button className='likes' onClick={handleShowPostLikingUsersModal}>
-              <span>{`${likingUsersList.size} likes`}</span>
-            </Button>
-          ) : null}
-          {postData ? (
-            <span className='post-page-post-date'>
-              {new Date(postData.createdAt).toDateString()}
-            </span>
-          ) : null}
-          <form
-            className='post-page-comment-form'
-            onSubmit={handleSubmitComment}
-          >
-            <ExpandableFormInput
-              tall={true}
-              onChange={handleChange}
-              name='comment'
-              type='textarea'
-              value={comment}
-              label='Add a comment...'
-            />
-            <Button
-              className={`${
-                !comment ? 'greyed-out ' : ''
-              }post-page-submit-comment-button`}
-              disabled={comment ? false : true}
-              onClick={handleSubmitComment}
+          <div className='post-page-details'>
+            <div className='post-page-user-and-location'>
+              {otherUserProfilePhotoFile ? (
+                <img
+                  className='user-photo'
+                  src={`data:image/jpeg;base64,${otherUserProfilePhotoFile.fileString}`}
+                  alt='user'
+                />
+              ) : null}
+              {!otherUserProfilePhotoFile && isLoadingPostData ? (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    paddingTop: '10px',
+                    paddingBottom: '10px',
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              ) : null}
+              {!otherUserProfilePhotoFile && !isLoadingPostData ? (
+                <div className='user-photo-placeholder'>
+                  <p className='user-photo-placeholder-text'>No photo</p>
+                </div>
+              ) : null}
+              <div className='text-and-options'>
+                <div className='user-and-location'>
+                  {otherUser ? (
+                    <span className='user-name'>{otherUser.username}</span>
+                  ) : null}
+                  <NavLink
+                    to={`/explore/locations/${
+                      postData?.postLocation?.id || ''
+                    }/${slugifiedLocationLabel}`}
+                    className='post-page-location'
+                  >
+                    {editPostDetails?.editLocation || null}
+                  </NavLink>
+                </div>
+                <button
+                  className='post-page-options'
+                  onClick={handleSetShowPostOptionsModal}
+                >
+                  <MoreHorizIcon className='ellipsis' />
+                </button>
+              </div>
+            </div>
+            <div className='post-page-caption-and-comments-container'>
+              {captionInfoList.size && !showPostEditForm ? (
+                <UserInfo
+                  styleType={StyleType.postPage}
+                  userInfoList={captionInfoList}
+                  isCaption
+                  isCaptionOwner={isCurrentUserPost ? true : false}
+                />
+              ) : (
+                handleRenderEditPostDetails()
+              )}
+              {!areReactionsReadyForRendering && reactionsList.size ? (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    paddingTop: '10px',
+                    paddingBottom: '10px',
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              ) : null}
+              {commentingUserList.size ? (
+                <UserInfo
+                  styleType={StyleType.postPage}
+                  userInfoList={commentingUserList}
+                />
+              ) : null}
+            </div>
+            {handleRenderLikeOrLikedButton()}
+            {likingUsersList.size ? (
+              <Button
+                className='likes'
+                onClick={handleShowPostLikingUsersModal}
+              >
+                <span>{`${likingUsersList.size} likes`}</span>
+              </Button>
+            ) : null}
+            {postData ? (
+              <span className='post-page-post-date'>
+                {new Date(postData.createdAt).toDateString()}
+              </span>
+            ) : null}
+            <form
+              className='post-page-comment-form'
+              onSubmit={handleSubmitComment}
             >
-              <span>Post</span>
-            </Button>
-          </form>
+              <ExpandableFormInput
+                tall={true}
+                onChange={handleChange}
+                name='comment'
+                type='textarea'
+                value={comment}
+                label='Add a comment...'
+              />
+              <Button
+                className={`${
+                  !comment ? 'greyed-out ' : ''
+                }post-page-submit-comment-button`}
+                disabled={comment ? false : true}
+                onClick={handleSubmitComment}
+              >
+                <span>Post</span>
+              </Button>
+            </form>
+          </div>
         </div>
-      </div>
-      {likingUsersList.size ? (
-        <FollowersOrFollowingOrLikesModal
-          users={null}
-          show={showPostLikingUsersModal}
-          onHide={handleHidePostLikingUsersModal}
-          isFollowersModal={false}
-          isPostLikingUsersModal={true}
-          postLikingUsersList={likingUsersList}
+        {likingUsersList.size ? (
+          <FollowersOrFollowingOrLikesModal
+            users={null}
+            show={showPostLikingUsersModal}
+            onHide={handleHidePostLikingUsersModal}
+            isFollowersModal={false}
+            isPostLikingUsersModal={true}
+            postLikingUsersList={likingUsersList}
+          />
+        ) : null}
+        <PostOrCommentOptionsModal
+          show={showPostOptionsModal}
+          onHide={handleHidePostOptionsModal}
+          isCurrentUserPostOrComment={isCurrentUserPost}
+          postOptionsModal={true}
+          isInPostPage={true}
+          archive={handleArchivePost}
         />
-      ) : null}
-      <PostOrCommentOptionsModal
-        show={showPostOptionsModal}
-        onHide={handleHidePostOptionsModal}
-        isCurrentUserPostOrComment={isCurrentUserPost}
-        postOptionsModal={true}
-        isInPostPage={true}
-        archive={handleArchivePost}
-      />
-      <PostOrCommentOptionsModal
-        show={showCommentOptionsModal}
-        onHide={handleHideCommentOptionsModal}
-        archive={handleArchiveComment}
-        isCurrentUserPostOrComment={isCurrentUserComment}
-        postOptionsModal={false}
-      />
-    </div>
+        <PostOrCommentOptionsModal
+          show={showCommentOptionsModal}
+          onHide={handleHideCommentOptionsModal}
+          archive={handleArchiveComment}
+          isCurrentUserPostOrComment={isCurrentUserComment}
+          postOptionsModal={false}
+        />
+      </div>
+    </WithAuth>
   );
 };
 

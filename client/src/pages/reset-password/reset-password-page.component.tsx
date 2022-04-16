@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -37,9 +37,9 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
   });
   const [showAlert, setShowAlert] = useState(true);
   const [status, setStatus] = useState({ success: false, error: false });
-  const { token } = useParams<{ token: string }>();
+  const { token } = useParams();
 
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const { password, passwordConfirm } = userPassword;
 
@@ -52,8 +52,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-
-    resetPasswordStart({ password, passwordConfirm, token });
+    token && resetPasswordStart({ password, passwordConfirm, token });
   };
 
   useEffect(() => {
@@ -70,7 +69,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
         setUserPassword({ password: '', passwordConfirm: '' });
         setStatus({ success: false, error: false });
         if (type === 'success') {
-          history.push('/');
+          navigate('/');
         }
       }, 3000);
       return (

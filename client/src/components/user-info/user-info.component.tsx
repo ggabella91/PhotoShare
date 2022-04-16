@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -51,7 +51,7 @@ interface UserInfoProps {
   setShowPostEditForm: typeof setShowPostEditForm;
   setFeedPagePostOptionsModalShow: typeof setFeedPagePostOptionsModalShow;
   selectedSuggestion?: number | null;
-  navigate?: boolean;
+  shouldNavigate?: boolean;
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({
@@ -64,12 +64,12 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   setShowPostEditForm,
   setFeedPagePostOptionsModalShow,
   selectedSuggestion,
-  navigate,
+  shouldNavigate,
 }) => {
   const [showCommentOptionsButtonForIdx, setShowCommentOptionsButtonForIdx] =
     useState({ show: false, idx: -1 });
 
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -78,7 +78,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     const username = divElement.dataset.username;
 
     if (styleType === StyleType.suggestion) {
-      history.push(`/${username}`);
+      navigate(`/${username}`);
     }
   };
 
@@ -174,7 +174,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     if (
       styleType === StyleType.suggestion &&
       typeof selectedSuggestion === 'number' &&
-      navigate
+      shouldNavigate
     ) {
       const userProfile = userInfoList.find(
         (user, idx) => idx === selectedSuggestion
@@ -182,10 +182,10 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
       if (userProfile) {
         const username = userProfile.username;
-        history.push(`/${username}`);
+        navigate(`/${username}`);
       }
     }
-  }, [selectedSuggestion, navigate]);
+  }, [selectedSuggestion, shouldNavigate]);
 
   const userInfo = userInfoList.map((el: UserInfoAndOtherData, idx: number) => (
     <div
