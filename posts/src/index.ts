@@ -74,7 +74,7 @@ const start = async () => {
     socket: { host: process.env.REDIS_HOST },
   });
 
-  redisClient.connect();
+  await redisClient.connect();
 
   AWS.config.update({
     credentials: {

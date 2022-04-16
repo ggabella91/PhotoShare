@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
@@ -39,15 +39,12 @@ import { AppState } from '../../redux/root-reducer';
 
 import './explore-location-page.styles.scss';
 
-interface ExploreLocationPageProps {
+interface ExploreLocationPageParams {
   locationId: string;
   location: string;
 }
 
-const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
-  locationId,
-  location,
-}) => {
+const ExploreLocationPage: React.FC = () => {
   const [postDataList, setPostDataList] = useState<List<Post>>(List());
 
   const [postModalShow, setPostModalShow] = useState(false);
@@ -79,6 +76,8 @@ const ExploreLocationPage: React.FC<ExploreLocationPageProps> = ({
   >(List());
 
   const [pageToFetch, setPageToFetch] = useState(1);
+
+  const { locationId, location } = useParams<ExploreLocationPageParams>();
 
   const dispatch = useDispatch();
 

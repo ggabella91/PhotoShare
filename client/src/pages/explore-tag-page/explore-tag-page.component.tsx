@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
@@ -36,11 +36,11 @@ import { AppState } from '../../redux/root-reducer';
 
 import './explore-tag-page.styles.scss';
 
-interface ExploreTagPageProps {
+interface ExploreTagPageParams {
   hashtag: string;
 }
 
-const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
+const ExploreTagPage: React.FC = () => {
   const [postDataList, setPostDataList] = useState<List<Post>>(List());
 
   const [postModalShow, setPostModalShow] = useState(false);
@@ -96,6 +96,7 @@ const ExploreTagPage: React.FC<ExploreTagPageProps> = ({ hashtag }) => {
     useLazyLoading(isLoadingPostData);
 
   let history = useHistory();
+  const { hashtag } = useParams<ExploreTagPageParams>();
 
   let postsBucket: string, profileBucket: string;
 
