@@ -69,62 +69,24 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           />
           <Route path='/' element={<RootPathRoutes />} />
           <Route
-            path='/direct/inbox'
             element={
               <WithAuth>
-                <MessagesPage />
+                <Outlet />
               </WithAuth>
             }
-          />
-          <Route
-            path='/post'
-            element={
-              <WithAuth>
-                <CreatePostPage />
-              </WithAuth>
-            }
-          />
-          <Route
-            path='/video-post'
-            element={
-              <WithAuth>
-                <CreateVideoPostPage />
-              </WithAuth>
-            }
-          />
-          <Route
-            path='/settings'
-            element={
-              <WithAuth>
-                <SettingsPage />
-              </WithAuth>
-            }
-          />
-          <Route path='/p/:postId' element={<PostPage />} />
-          <Route
-            path='/explore/locations/:locationId/:location'
-            element={
-              <WithAuth>
-                <ExploreLocationPage />
-              </WithAuth>
-            }
-          />
-          <Route
-            path='/explore/tags/:hashtag'
-            element={
-              <WithAuth>
-                <ExploreTagPage />
-              </WithAuth>
-            }
-          />
-          <Route
-            path='/:username'
-            element={
-              <WithAuth>
-                <ProfilePageRoutes />
-              </WithAuth>
-            }
-          />
+          >
+            <Route path='/direct/inbox' element={<MessagesPage />} />
+            <Route path='/post' element={<CreatePostPage />} />
+            <Route path='/video-post' element={<CreateVideoPostPage />} />
+            <Route path='/settings' element={<SettingsPage />} />
+            <Route path='/p/:postId' element={<PostPage />} />
+            <Route
+              path='/explore/locations/:locationId/:location'
+              element={<ExploreLocationPage />}
+            />
+            <Route path='/explore/tags/:hashtag' element={<ExploreTagPage />} />
+            <Route path='/:username' element={<ProfilePageRoutes />} />
+          </Route>
         </Route>
       </Routes>
     </div>
