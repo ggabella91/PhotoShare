@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
+import { Grid } from '@mui/material';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
@@ -118,10 +119,12 @@ const MessagesPage: React.FC = () => {
   ]);
 
   return (
-    <div className='messages-page'>
-      <h2>Messages</h2>
-      <div className='messages-container'></div>
-    </div>
+    <Grid className='messages-page'>
+      <Grid container className='messages-container'>
+        <Grid item xs={4} className='conversations-list'></Grid>
+        <Grid item xs={8} className='displayed-conversation'></Grid>
+      </Grid>
+    </Grid>
   );
 };
 
