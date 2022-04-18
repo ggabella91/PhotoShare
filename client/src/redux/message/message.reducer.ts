@@ -4,7 +4,11 @@ import {
   MessageActionTypes,
 } from './message.types';
 
-import { updateJoinedConversationsArray } from './message.utils';
+import {
+  updateJoinedConversationsArray,
+  addConvoMessages,
+  addMessage,
+} from './message.utils';
 
 const INITIAL_STATE: MessageState = {
   user: null,
@@ -43,6 +47,16 @@ const messageReducer = (
               ),
             }
           : null,
+      };
+    case MessageActions.ADD_TO_CONVO_MESSAGES_ARRAY:
+      return {
+        ...state,
+        messages: addConvoMessages(state.messages, action.payload),
+      };
+    case MessageActions.ADD_MESSAGE_TO_CONVERSATION:
+      return {
+        ...state,
+        messages: addMessage(state.messages, action.payload),
       };
     case MessageActions.FIND_OR_CREATE_USER_FAILURE:
       return {
