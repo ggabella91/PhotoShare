@@ -5,7 +5,9 @@ import NotFoundPage from '../not-found/not-found-page.component';
 
 describe('not-found page component tests', () => {
   const setup = () => {
-    render(<NotFoundPage />, { route: '/non-existent-profile' });
+    render(<NotFoundPage />, {
+      wrapperProps: { route: '/:username', location: '/non-existent-profile' },
+    });
   };
 
   it('renders a not-found page component', () => {

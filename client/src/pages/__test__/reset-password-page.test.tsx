@@ -10,7 +10,13 @@ describe('reset password page component tests', () => {
         resetPasswordStart={resetPasswordStart}
         resetConfirm={null}
         resetError={null}
-      />
+      />,
+      {
+        wrapperProps: {
+          route: '/reset-password/:token',
+          location: '/reset-password/dasijgfsdhnag',
+        },
+      }
     );
 
     return { resetPasswordStart };
