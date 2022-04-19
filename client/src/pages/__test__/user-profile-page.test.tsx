@@ -104,7 +104,6 @@ describe('user-profile-page component tests', () => {
   it('renders a user-profile-page component', () => {
     const {
       getOtherUserStart,
-      getPostDataStart,
       getPostFileStart,
       getFollowersStart,
       getUsersFollowingStart,

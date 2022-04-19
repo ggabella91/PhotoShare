@@ -1,28 +1,40 @@
 import { FC, ReactElement } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { render, RenderOptions } from '@testing-library/react';
 import { store } from '../redux/store';
 
-const WithReduxProvider: FC = ({ children }) => {
+interface WrapperProps {
+  wrapperProps?: { route: string; location: string };
+}
+
+type CustomRenderOptions = RenderOptions & WrapperProps;
+
+const WithReduxProvider: FC<WrapperProps> = ({ children, wrapperProps }) => {
   return (
     <Provider store={store}>
-      <BrowserRouter>{children}</BrowserRouter>
+      <MemoryRouter
+        initialEntries={['Test page', wrapperProps?.location || '/']}
+      >
+        <Routes>
+          <Route path={wrapperProps?.route || '/'} element={children} />
+        </Routes>
+      </MemoryRouter>
     </Provider>
   );
 };
 
 const renderWithReduxAndRouter = (
   ui: ReactElement,
-  { route = '/' } = {},
-  options?: Omit<RenderOptions, 'wrapper'>
+  options?: Omit<CustomRenderOptions, 'wrapper'>
 ) => {
-  window.history.pushState({}, 'Test page', route);
   const customContainer = document.createElement('div');
   customContainer.id = 'root';
 
   return render(ui, {
-    wrapper: WithReduxProvider,
+    wrapper: (props) => (
+      <WithReduxProvider {...props} wrapperProps={options?.wrapperProps} />
+    ),
     container: document.body.appendChild(customContainer),
     ...options,
   });
