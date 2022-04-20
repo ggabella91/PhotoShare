@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
@@ -18,6 +18,8 @@ import './messages-page.styles.scss';
 
 const MessagesPage: React.FC = () => {
   const [message, setMessage] = useState();
+  const [isViewingConversation, setIsViewingConversation] = useState(false);
+
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
     useState(false);
   const [joinedExistingConversations, setJoinedExistingConversations] =
@@ -118,11 +120,24 @@ const MessagesPage: React.FC = () => {
     joinedExistingConversations,
   ]);
 
+  const renderNoActiveConvosScreen = () => {
+    return (
+      <Grid>
+        <Typography sx={{ fontSize: 20 }}>Your Messages</Typography>
+        <Typography sx={{ fontSize: 14 }}>
+          Send private messages to a friend or group
+        </Typography>
+      </Grid>
+    );
+  };
+
   return (
     <Grid className='messages-page'>
       <Grid container className='messages-container'>
         <Grid item xs={4} className='conversations-list'></Grid>
-        <Grid item xs={8} className='displayed-conversation'></Grid>
+        <Grid item xs={8} className='displayed-conversation'>
+          {isViewingConversation ? <Grid></Grid> : renderNoActiveConvosScreen()}
+        </Grid>
       </Grid>
     </Grid>
   );
