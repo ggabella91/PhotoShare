@@ -6,7 +6,10 @@ import { Grid, Typography } from '@mui/material';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
-import { selectMessageUser } from '../../redux/message/message.selectors';
+import {
+  selectMessageUser,
+  selectJoinedCoversations,
+} from '../../redux/message/message.selectors';
 import {
   findOrCreateUserStart,
   removeUserSessionCookieStart,
@@ -29,6 +32,7 @@ const MessagesPage: React.FC = () => {
 
   const currentUser = useSelector(selectCurrentUser);
   const messageUser = useSelector(selectMessageUser);
+  const joinedCoversations = useSelector(selectJoinedCoversations);
 
   const dispatch = useDispatch();
 

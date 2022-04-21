@@ -14,3 +14,8 @@ export const selectRemoveUserSessionCookieConfirm = createSelector(
   [selectMessageState],
   (messageState: MessageState) => messageState.removeUserSessionCookieConfirm
 );
+
+export const selectJoinedCoversations = createSelector(
+  [selectMessageUser],
+  (user) => user?.joinedConversations || null
+);
