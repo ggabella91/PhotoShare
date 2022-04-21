@@ -6,7 +6,9 @@ export enum MessageActions {
   REMOVE_USER_SESSION_COOKIE_SUCCESS = 'REMOVE_USER_SESSION_COOKIE_SUCCESS',
   REMOVE_USER_SESSION_COOKIE_FAILURE = 'REMOVE_USER_SESSION_COOKIE_FAILURE',
   ADD_TO_JOINED_CONVERSATIONS_ARRAY = 'ADD_TO_JOINED_CONVERSATIONS_ARRAY',
-  ADD_TO_CONVO_MESSAGES_ARRAY = 'ADD_TO_CONVO_MESSAGES_ARRAY',
+  GET_CONVO_MESSAGES_START = 'GET_CONVO_MESSAGES_START',
+  GET_CONVO_MESSAGES_SUCCESS = 'GET_CONVO_MESSAGES_SUCCESS',
+  GET_CONVO_MESSAGES_FAILURE = 'GET_CONVO_MESSAGES_FAILURE',
   ADD_MESSAGE_TO_CONVERSATION = 'ADD_MESSAGE_TO_CONVERSATION',
 }
 
@@ -89,9 +91,19 @@ export interface AddToJoinedConversationsArray {
   payload: string | string[];
 }
 
-export interface AddToConvoMessagesArray {
-  type: typeof MessageActions.ADD_TO_CONVO_MESSAGES_ARRAY;
+export interface GetConvoMessagesStart {
+  type: typeof MessageActions.GET_CONVO_MESSAGES_START;
+  payload: null;
+}
+
+export interface GetConvoMessagesSuccess {
+  type: typeof MessageActions.GET_CONVO_MESSAGES_SUCCESS;
   payload: ConvoMessages;
+}
+
+export interface GetConvoMessagesFailure {
+  type: typeof MessageActions.GET_CONVO_MESSAGES_FAILURE;
+  payload: MessageError;
 }
 
 export interface AddMessageToConversation {
@@ -107,5 +119,7 @@ export type MessageActionTypes =
   | RemoveUserSessionCookieSuccess
   | RemoveUserSessionCookieFailure
   | AddToJoinedConversationsArray
-  | AddToConvoMessagesArray
+  | GetConvoMessagesStart
+  | GetConvoMessagesSuccess
+  | GetConvoMessagesFailure
   | AddMessageToConversation;

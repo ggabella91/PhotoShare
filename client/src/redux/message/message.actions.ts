@@ -55,10 +55,10 @@ export const addToJoinedConversationsArray = (
   payload: conversations,
 });
 
-export const addToConvoMessagesArray = (
+export const getConvoMessagesSuccess = (
   convoMessages: ConvoMessages
 ): MessageActionTypes => ({
-  type: MessageActions.ADD_TO_CONVO_MESSAGES_ARRAY,
+  type: MessageActions.GET_CONVO_MESSAGES_SUCCESS,
   payload: convoMessages,
 });
 

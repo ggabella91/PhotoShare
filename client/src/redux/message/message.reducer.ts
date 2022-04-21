@@ -48,7 +48,7 @@ const messageReducer = (
             }
           : null,
       };
-    case MessageActions.ADD_TO_CONVO_MESSAGES_ARRAY:
+    case MessageActions.GET_CONVO_MESSAGES_SUCCESS:
       return {
         ...state,
         messages: addConvoMessages(state.messages, action.payload),
