@@ -1,5 +1,6 @@
 import {
   Message,
+  GetConvoMessagesReq,
   ConvoMessages,
   MessageError,
   FindOrCreateUserReq,
@@ -55,11 +56,25 @@ export const addToJoinedConversationsArray = (
   payload: conversations,
 });
 
+export const getConvoMessagesStart = (
+  getConvoMessagesReq: GetConvoMessagesReq
+): MessageActionTypes => ({
+  type: MessageActions.GET_CONVO_MESSAGES_START,
+  payload: getConvoMessagesReq,
+});
+
 export const getConvoMessagesSuccess = (
   convoMessages: ConvoMessages
 ): MessageActionTypes => ({
   type: MessageActions.GET_CONVO_MESSAGES_SUCCESS,
   payload: convoMessages,
+});
+
+export const getConvoMessagesFailure = (
+  error: MessageError
+): MessageActionTypes => ({
+  type: MessageActions.GET_CONVO_MESSAGES_FAILURE,
+  payload: error,
 });
 
 export const addMessageToConversation = (

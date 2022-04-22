@@ -17,8 +17,6 @@ import {
   addMessageToConversation,
 } from '../../redux/message/message.actions';
 
-import './messages-page.styles.scss';
-
 const MessagesPage: React.FC = () => {
   const [message, setMessage] = useState();
   const [isViewingConversation, setIsViewingConversation] = useState(false);
@@ -136,10 +134,22 @@ const MessagesPage: React.FC = () => {
   };
 
   return (
-    <Grid className='messages-page'>
-      <Grid container className='messages-container'>
-        <Grid item xs={4} className='conversations-list'></Grid>
-        <Grid item xs={8} className='displayed-conversation'>
+    <Grid sx={{ display: 'flex', position: 'relative', minHeight: '800px' }}>
+      <Grid container>
+        <Grid
+          item
+          xs={4}
+          sx={{ borderRight: '1px solid rgb(219,219,219)' }}
+        ></Grid>
+        <Grid
+          item
+          xs={8}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
           {isViewingConversation ? <Grid></Grid> : renderNoActiveConvosScreen()}
         </Grid>
       </Grid>

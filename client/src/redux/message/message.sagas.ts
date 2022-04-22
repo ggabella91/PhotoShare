@@ -12,6 +12,8 @@ import { ActionPattern } from '@redux-saga/types';
 
 import {
   Message,
+  GetConvoMessagesReq,
+  ConvoMessages,
   MessageError,
   MessageActions,
   MessageActionTypes,
@@ -24,6 +26,8 @@ import {
   findOrCreateUserFailure,
   removeUserSessionCookieSuccess,
   removeUserSessionCookieFailure,
+  getConvoMessagesSuccess,
+  getConvoMessagesFailure,
 } from './message.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -72,6 +76,22 @@ export function* removeUserSessionCookie({
   }
 }
 
+export function* getConvoMessages({
+  payload: { conversationId, limit, offset },
+}: {
+  payload: GetConvoMessagesReq;
+}) {
+  try {
+    const { data: messages }: { data: Message[] } = yield axios.get(
+      `/api/messages/conversation/${conversationId}?limit=${limit}&offset=${offset}`
+    );
+
+    yield put(getConvoMessagesSuccess({ conversationId, messages }));
+  } catch (err) {
+    yield put(getConvoMessagesFailure(err as MessageError));
+  }
+}
+
 export function* onFindOrCreateUserStart(): SagaIterator {
   yield takeEvery<ActionPattern, MessageSaga>(
     MessageActions.FIND_OR_CREATE_USER_START,
@@ -86,9 +106,17 @@ export function* onRemoveUserSessionCookieStart(): SagaIterator {
   );
 }
 
+export function* onGetConvoMessagesStart(): SagaIterator {
+  yield takeEvery<ActionPattern, MessageSaga>(
+    MessageActions.GET_CONVO_MESSAGES_START,
+    getConvoMessages
+  );
+}
+
 export function* messageSagas(): SagaIterator {
   yield all([
     call(onFindOrCreateUserStart),
     call(onRemoveUserSessionCookieStart),
+    call(onGetConvoMessagesStart),
   ]);
 }
