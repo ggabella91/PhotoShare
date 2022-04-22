@@ -20,12 +20,19 @@ export interface MessageState {
   removeUserSessionCookieError: MessageError | null;
 }
 
+export interface GetConvoMessagesReq {
+  conversationId: string;
+  limit: number;
+  offset: number;
+}
+
 export interface ConvoMessages {
-  converationId: string;
+  conversationId: string;
   messages: Message[];
 }
 
 export interface Message {
+  id: string;
   userId: string;
   text: string;
   conversationId: string;
@@ -93,7 +100,7 @@ export interface AddToJoinedConversationsArray {
 
 export interface GetConvoMessagesStart {
   type: typeof MessageActions.GET_CONVO_MESSAGES_START;
-  payload: null;
+  payload: GetConvoMessagesReq;
 }
 
 export interface GetConvoMessagesSuccess {
