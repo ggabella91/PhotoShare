@@ -17,7 +17,7 @@ export const addConvoMessages = (
 ) => {
   const areConvoMessagesInArray = currentConvoMessagesArray.find(
     (convoMessages) =>
-      convoMessages.converationId === convoMessagesToAdd.converationId
+      convoMessages.conversationId === convoMessagesToAdd.conversationId
   );
 
   if (!areConvoMessagesInArray) {
@@ -32,9 +32,9 @@ export const addMessage = (
   message: Message
 ) => {
   return convoMessagesArray.map((convoMessages) => {
-    if (convoMessages.converationId === message.conversationId) {
+    if (convoMessages.conversationId === message.conversationId) {
       return {
-        converationId: convoMessages.converationId,
+        conversationId: convoMessages.conversationId,
         messages: [...convoMessages.messages, message],
       };
     } else {

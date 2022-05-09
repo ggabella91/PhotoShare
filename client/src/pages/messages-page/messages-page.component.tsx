@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, Button, Dialog, DialogTitle } from '@mui/material';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
@@ -19,6 +19,7 @@ import {
 
 const MessagesPage: React.FC = () => {
   const [message, setMessage] = useState();
+  const [showNewMessageDialog, setShowNewMessageDialog] = useState(false);
   const [isViewingConversation, setIsViewingConversation] = useState(false);
 
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
@@ -122,6 +123,14 @@ const MessagesPage: React.FC = () => {
     joinedExistingConversations,
   ]);
 
+  const handleSendMessage = () => {
+    setShowNewMessageDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setShowNewMessageDialog(false);
+  };
+
   const renderNoActiveConvosScreen = () => {
     return (
       <Grid>
@@ -129,6 +138,9 @@ const MessagesPage: React.FC = () => {
         <Typography sx={{ fontSize: 14 }}>
           Send private messages to a friend or group
         </Typography>
+        <Button variant='contained' onClick={handleSendMessage}>
+          Send Message
+        </Button>
       </Grid>
     );
   };
@@ -153,6 +165,9 @@ const MessagesPage: React.FC = () => {
           {isViewingConversation ? <Grid></Grid> : renderNoActiveConvosScreen()}
         </Grid>
       </Grid>
+      <Dialog onClose={handleCloseDialog} open={showNewMessageDialog}>
+        <DialogTitle>New Message</DialogTitle>
+      </Dialog>
     </Grid>
   );
 };
