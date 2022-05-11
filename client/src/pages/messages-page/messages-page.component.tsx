@@ -11,6 +11,7 @@ import {
   Autocomplete,
   TextField,
 } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
@@ -142,11 +143,46 @@ const MessagesPage: React.FC = () => {
   const renderNoActiveConvosScreen = () => {
     return (
       <Grid>
-        <Typography sx={{ fontSize: 20 }}>Your Messages</Typography>
-        <Typography sx={{ fontSize: 14 }}>
+        <Grid
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '25px',
+          }}
+        >
+          <Grid
+            sx={{
+              display: 'flex',
+              border: '2px solid black',
+              borderRadius: '50%',
+              width: '6em',
+              height: '6em',
+              justifyContent: 'center',
+            }}
+          >
+            <SendIcon
+              fontSize='large'
+              sx={{
+                alignSelf: 'center',
+                margin: '0 0 12px 12px',
+                width: '2em',
+                height: '2em',
+                transform: 'rotate(336deg)',
+              }}
+            />
+          </Grid>
+        </Grid>
+        <Typography sx={{ fontSize: 20, marginBottom: '10px' }}>
+          Your Messages
+        </Typography>
+        <Typography sx={{ fontSize: 14, marginBottom: '15px' }}>
           Send private messages to a friend or group
         </Typography>
-        <Button variant='contained' onClick={handleSendMessage}>
+        <Button
+          variant='contained'
+          onClick={handleSendMessage}
+          sx={{ textTransform: 'capitalize' }}
+        >
           Send Message
         </Button>
       </Grid>
@@ -154,42 +190,64 @@ const MessagesPage: React.FC = () => {
   };
 
   return (
-    <Grid sx={{ display: 'flex', position: 'relative', minHeight: '800px' }}>
-      <Grid container>
-        <Grid
-          item
-          xs={4}
-          sx={{ borderRight: '1px solid rgb(219,219,219)' }}
-        ></Grid>
-        <Grid
-          item
-          xs={8}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          {isViewingConversation ? <Grid></Grid> : renderNoActiveConvosScreen()}
+    <Grid
+      sx={{ display: 'flex', position: 'relative', justifyContent: 'center' }}
+    >
+      <Grid
+        sx={{
+          display: 'flex',
+          position: 'relative',
+          minHeight: '800px',
+          width: '85vw',
+          maxWidth: '935px',
+          border: '1px solid rgb(219,219,219)',
+        }}
+      >
+        <Grid container>
+          <Grid
+            item
+            xs={4}
+            sx={{ borderRight: '1px solid rgb(219,219,219)', width: '350px' }}
+          ></Grid>
+          <Grid
+            item
+            xs={8}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            {isViewingConversation ? (
+              <Grid></Grid>
+            ) : (
+              renderNoActiveConvosScreen()
+            )}
+          </Grid>
         </Grid>
+        <Dialog
+          onClose={handleCloseDialog}
+          open={showNewMessageDialog}
+          sx={{ width: 400, height: 470 }}
+        >
+          <DialogTitle>New Message</DialogTitle>
+          <Autocomplete
+            sx={{ padding: 5 }}
+            multiple
+            options={[]}
+            getOptionLabel={(option: string) => option}
+            defaultValue={['']}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant='standard'
+                label='Search'
+                placeholder=''
+              />
+            )}
+          />
+        </Dialog>
       </Grid>
-      <Dialog onClose={handleCloseDialog} open={showNewMessageDialog}>
-        <DialogTitle>New Message</DialogTitle>
-        <Autocomplete
-          multiple
-          options={[]}
-          getOptionLabel={(option: string) => option}
-          defaultValue={['']}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant='standard'
-              label='Search'
-              placeholder=''
-            />
-          )}
-        />
-      </Dialog>
     </Grid>
   );
 };

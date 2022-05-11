@@ -46,7 +46,6 @@ import UserInfo, {
   UserInfoAndOtherData,
 } from '../../components/user-info/user-info.component';
 
-import WithAuth from '../../withAuth';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 import Button from '../../components/button/button.component';
