@@ -2,7 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import { Grid, Typography, Button, Dialog, DialogTitle } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  Autocomplete,
+  TextField,
+} from '@mui/material';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
@@ -167,6 +175,20 @@ const MessagesPage: React.FC = () => {
       </Grid>
       <Dialog onClose={handleCloseDialog} open={showNewMessageDialog}>
         <DialogTitle>New Message</DialogTitle>
+        <Autocomplete
+          multiple
+          options={[]}
+          getOptionLabel={(option: string) => option}
+          defaultValue={['']}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant='standard'
+              label='Search'
+              placeholder=''
+            />
+          )}
+        />
       </Dialog>
     </Grid>
   );
