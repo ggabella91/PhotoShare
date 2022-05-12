@@ -228,15 +228,18 @@ const MessagesPage: React.FC = () => {
         <Dialog
           onClose={handleCloseDialog}
           open={showNewMessageDialog}
-          sx={{ width: 400, height: 470 }}
+          PaperProps={{
+            sx: { width: 400, height: 470 },
+          }}
         >
-          <DialogTitle>New Message</DialogTitle>
+          <DialogTitle sx={{ justifyContent: 'center' }}>
+            New Message
+          </DialogTitle>
           <Autocomplete
-            sx={{ padding: 5 }}
+            sx={{ padding: '5px 15px' }}
             multiple
             options={[]}
             getOptionLabel={(option: string) => option}
-            defaultValue={['']}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -246,6 +249,7 @@ const MessagesPage: React.FC = () => {
               />
             )}
           />
+          <Grid sx={{ height: 'auto' }}></Grid>
         </Dialog>
       </Grid>
     </Grid>
