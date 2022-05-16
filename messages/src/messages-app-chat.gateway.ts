@@ -86,10 +86,10 @@ export class MessagesAppChatGateway
       ? existingConversations.map((convo) => convo._id.toString())
       : null;
 
-    this.logger.log('Conversations found for user: ', existingConvoIds);
+    this.logger.log('Conversations found for user: ', existingConversations);
 
     client.join(existingConvoIds);
-    client.emit('joinedConversations', existingConvoIds);
+    client.emit('joinedConversations', existingConversations);
   }
 
   @SubscribeMessage('joinConversation')

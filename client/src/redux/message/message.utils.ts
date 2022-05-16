@@ -1,8 +1,8 @@
-import { ConvoMessages, Message } from './message.types';
+import { ConvoMessages, Message, Conversation } from './message.types';
 
 export const updateJoinedConversationsArray = (
-  currentConvosArray: string[],
-  conversationsToAdd: string | string[]
+  currentConvosArray: Conversation[],
+  conversationsToAdd: Conversation | Conversation[]
 ) => {
   if (Array.isArray(conversationsToAdd)) {
     return [...currentConvosArray, ...conversationsToAdd];

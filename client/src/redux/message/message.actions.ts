@@ -1,5 +1,6 @@
 import {
   Message,
+  Conversation,
   GetConvoMessagesReq,
   ConvoMessages,
   MessageError,
@@ -50,7 +51,7 @@ export const removeUserSessionCookieFailure = (
 });
 
 export const addToJoinedConversationsArray = (
-  conversations: string | string[]
+  conversations: Conversation | Conversation[]
 ): MessageActionTypes => ({
   type: MessageActions.ADD_TO_JOINED_CONVERSATIONS_ARRAY,
   payload: conversations,
