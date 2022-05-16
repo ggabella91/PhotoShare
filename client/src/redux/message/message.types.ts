@@ -47,15 +47,16 @@ export interface User {
   id: string;
   userId: string;
   name: string;
-  joinedConversations: string[];
+  joinedConversations: Conversation[];
   sessionCookie: Record<string, any>;
   isAuthenticated: boolean;
 }
 
 export interface Conversation {
+  id: string;
   name: string;
-  messages: Message[];
-  connectedUser: User[];
+  // messages: Message[];
+  connectedUsers: User[];
 }
 
 export interface FindOrCreateUserReq {
@@ -95,7 +96,7 @@ export interface RemoveUserSessionCookieFailure {
 
 export interface AddToJoinedConversationsArray {
   type: typeof MessageActions.ADD_TO_JOINED_CONVERSATIONS_ARRAY;
-  payload: string | string[];
+  payload: Conversation | Conversation[];
 }
 
 export interface GetConvoMessagesStart {

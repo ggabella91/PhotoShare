@@ -9,8 +9,8 @@ export class Conversation {
   @Prop({ required: true })
   name: string;
 
-  @Prop([String])
-  messages: string[];
+  // @Prop([String])
+  // messages: string[];
 
   @Prop({
     required: true,

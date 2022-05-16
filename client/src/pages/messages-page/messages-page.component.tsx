@@ -213,9 +213,14 @@ const MessagesPage: React.FC = () => {
               overflowY: 'scroll',
             }}
           >
-            {joinedCoversations?.length && (
-              <Grid sx={{ width: '100%', height: '80px' }}></Grid>
-            )}
+            {joinedCoversations?.length &&
+              joinedCoversations.map((convo) => {
+                return (
+                  <Grid sx={{ width: '100%', height: '80px' }}>
+                    {convo.name}
+                  </Grid>
+                );
+              })}
           </Grid>
           <Grid
             item
