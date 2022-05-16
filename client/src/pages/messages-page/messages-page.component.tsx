@@ -207,8 +207,16 @@ const MessagesPage: React.FC = () => {
           <Grid
             item
             xs={4}
-            sx={{ borderRight: '1px solid rgb(219,219,219)', width: '350px' }}
-          ></Grid>
+            sx={{
+              borderRight: '1px solid rgb(219,219,219)',
+              width: '350px',
+              overflowY: 'scroll',
+            }}
+          >
+            {joinedCoversations?.length && (
+              <Grid sx={{ width: '100%', height: '80px' }}></Grid>
+            )}
+          </Grid>
           <Grid
             item
             xs={8}
