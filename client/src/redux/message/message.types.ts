@@ -23,7 +23,7 @@ export interface MessageState {
 export interface GetConvoMessagesReq {
   conversationId: string;
   limit: number;
-  offset: number;
+  pageToShow: number;
 }
 
 export interface ConvoMessages {
