@@ -24,6 +24,7 @@ import {
   removeUserSessionCookieStart,
   addToJoinedConversationsArray,
   addMessageToConversation,
+  getConvoMessagesStart,
 } from '../../redux/message/message.actions';
 
 const MessagesPage: React.FC = () => {
@@ -98,6 +99,20 @@ const MessagesPage: React.FC = () => {
       dispatch(addMessageToConversation(message));
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (joinedCoversations?.length) {
+      joinedCoversations.forEach((convo) =>
+        dispatch(
+          getConvoMessagesStart({
+            conversationId: convo.id,
+            limit: 10,
+            pageToShow: 1,
+          })
+        )
+      );
+    }
+  }, [joinedCoversations]);
 
   useEffect(() => {
     if (!currentUser && messageUser && isSocketConnectionActive) {
