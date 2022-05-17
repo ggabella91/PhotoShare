@@ -77,13 +77,13 @@ export function* removeUserSessionCookie({
 }
 
 export function* getConvoMessages({
-  payload: { conversationId, limit, offset },
+  payload: { conversationId, limit, pageToShow },
 }: {
   payload: GetConvoMessagesReq;
 }) {
   try {
     const { data: messages }: { data: Message[] } = yield axios.get(
-      `/api/messages/conversation/${conversationId}?limit=${limit}&offset=${offset}`
+      `/api/messages/conversation/${conversationId}?limit=${limit}&offset=${pageToShow}`
     );
 
     yield put(getConvoMessagesSuccess({ conversationId, messages }));
