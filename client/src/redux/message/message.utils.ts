@@ -5,9 +5,9 @@ export const updateJoinedConversationsArray = (
   conversationsToAdd: Conversation | Conversation[]
 ) => {
   if (Array.isArray(conversationsToAdd)) {
-    return [...currentConvosArray, ...conversationsToAdd];
+    return [...conversationsToAdd, ...currentConvosArray];
   } else {
-    return [...currentConvosArray, conversationsToAdd];
+    return [conversationsToAdd, ...currentConvosArray];
   }
 };
 
