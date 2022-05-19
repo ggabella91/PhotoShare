@@ -96,6 +96,19 @@ export class MessagesAppService {
     return savedMessage;
   }
 
+  async updateLastMessageTimeForConvo(conversationId: string) {
+    const updatedConversation = await this.conversationModel.findByIdAndUpdate(
+      conversationId,
+      { lastMessageTime: Date.now() },
+      { new: true }
+    );
+
+    console.log(
+      `Updated conversation with id ${conversationId}: `,
+      updatedConversation
+    );
+  }
+
   async findMessagesFromConvo({
     conversationId,
     limit,
