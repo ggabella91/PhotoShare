@@ -77,9 +77,13 @@ export class MessagesAppService {
 
   async findAllConversationsForUser(userId: string) {
     const conversationsForUser = await this.conversationModel
-      .find({
-        connectedUsers: userId,
-      })
+      .find(
+        {
+          connectedUsers: userId,
+        },
+        null,
+        { sort: { lastMessageTime: -1 } }
+      )
       .exec();
 
     const conversationsForUserObjects = conversationsForUser.map((convo) =>
