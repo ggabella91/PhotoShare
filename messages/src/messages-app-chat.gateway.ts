@@ -54,6 +54,8 @@ export class MessagesAppChatGateway
 
     await this.appService.createMessage({ conversationId, ...restOfMessage });
 
+    await this.appService.updateLastMessageTimeForConvo(conversationId);
+
     this.wss.to(conversationId).emit('chatToClient', restOfMessage);
   }
 
