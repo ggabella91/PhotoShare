@@ -12,8 +12,10 @@ import {
   TextField,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { useDebounce } from '../hooks';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { getUserSuggestionsStart } from '../../redux/user/user.actions';
 
 import {
   selectMessageUser,
@@ -36,6 +38,7 @@ const MessagesPage: React.FC = () => {
     useState(false);
   const [joinedExistingConversations, setJoinedExistingConversations] =
     useState(false);
+  const [userSearchString, setUserSearchString] = useState('');
 
   const location = useLocation();
 
@@ -64,6 +67,14 @@ const MessagesPage: React.FC = () => {
       }
     };
   }, [socket, isSocketConnectionActive]);
+
+  const debouncedUserSearchString = useDebounce(userSearchString, 1000);
+
+  useEffect(() => {
+    if (debouncedUserSearchString.length >= 3) {
+      dispatch(getUserSuggestionsStart(debouncedUserSearchString));
+    }
+  }, [debouncedUserSearchString]);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -153,6 +164,12 @@ const MessagesPage: React.FC = () => {
 
   const handleCloseDialog = () => {
     setShowNewMessageDialog(false);
+  };
+
+  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setUserSearchString(value);
   };
 
   const renderNoActiveConvosScreen = () => {
@@ -274,6 +291,7 @@ const MessagesPage: React.FC = () => {
                 variant='standard'
                 label='Search'
                 placeholder=''
+                onChange={handleTextChange}
               />
             )}
           />
