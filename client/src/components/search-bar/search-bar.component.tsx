@@ -66,9 +66,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   currentUser,
   userSuggestions,
   userSuggestionsConfirm,
-  userSuggestionsError,
   userSuggestionProfilePhotoFiles,
-  userSuggestionProfilePhotoConfirm,
   clearUserSuggestions,
   clearSuggestionPhotoFileArray,
 }) => {

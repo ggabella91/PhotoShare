@@ -12,10 +12,35 @@ import {
   TextField,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { List } from 'immutable';
 import { useDebounce } from '../hooks';
+import { UserInfoData } from '../../components/search-bar/search-bar.component';
+import UserInfo, {
+  StyleType,
+} from '../../components/user-info/user-info.component';
 
-import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { getUserSuggestionsStart } from '../../redux/user/user.actions';
+import { User } from '../../redux/user/user.types';
+import {
+  selectCurrentUser,
+  selectUserSuggestions,
+} from '../../redux/user/user.selectors';
+import {
+  getUserSuggestionsStart,
+  clearUserSuggestions,
+} from '../../redux/user/user.actions';
+
+import {
+  FileRequestType,
+  PostFile,
+  PostFileReq,
+  UserType,
+  Location,
+} from '../../redux/post/post.types';
+import { selectSuggestionPhotoFileArray } from '../../redux/post/post.selectors';
+import {
+  getPostFileStart,
+  clearSuggestionPhotoFileArray,
+} from '../../redux/post/post.actions';
 
 import {
   selectMessageUser,
@@ -39,12 +64,27 @@ const MessagesPage: React.FC = () => {
   const [joinedExistingConversations, setJoinedExistingConversations] =
     useState(false);
   const [userSearchString, setUserSearchString] = useState('');
-
+  const [userSuggestionsList, setUserSuggestionsList] = useState<
+    List<UserInfoData>
+  >(List());
+  const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
   const location = useLocation();
 
   const currentUser = useSelector(selectCurrentUser);
   const messageUser = useSelector(selectMessageUser);
   const joinedCoversations = useSelector(selectJoinedCoversations);
+  const userSuggestions = useSelector(selectUserSuggestions);
+  const userSuggestionProfilePhotoFiles = useSelector(
+    selectSuggestionPhotoFileArray
+  );
+
+  let bucket: string;
+
+  if (process.env.NODE_ENV === 'production') {
+    bucket = 'photo-share-app-profile-photos';
+  } else {
+    bucket = 'photo-share-app-profile-photos-dev';
+  }
 
   const dispatch = useDispatch();
 
@@ -57,6 +97,12 @@ const MessagesPage: React.FC = () => {
       }),
     []
   );
+
+  useEffect(() => {
+    clearUserSuggestions();
+    setUserSuggestionsList(List());
+    clearSuggestionPhotoFileArray();
+  }, []);
 
   useEffect(() => {
     // When component unmounts, such as when the user
@@ -75,6 +121,76 @@ const MessagesPage: React.FC = () => {
       dispatch(getUserSuggestionsStart(debouncedUserSearchString));
     }
   }, [debouncedUserSearchString]);
+
+  useEffect(() => {
+    if (userSuggestions && userSuggestions.length) {
+      let count = 0;
+
+      for (let user of userSuggestions) {
+        if (user.photo) {
+          count++;
+          getPostFileStart({
+            user: UserType.suggestionArray,
+            bucket,
+            s3Key: user.photo,
+            fileRequestType: FileRequestType.singlePost,
+          });
+        }
+      }
+
+      if (count === 0) {
+        setNoProfilePhotosToFetch(true);
+      }
+    }
+  }, [userSuggestions]);
+
+  useEffect(() => {
+    if (userSuggestions && userSuggestionProfilePhotoFiles?.length) {
+      const userSuggestionsAsList = List(userSuggestions);
+
+      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
+        (el: User) => {
+          let photoFileString: string;
+
+          userSuggestionProfilePhotoFiles.forEach((file) => {
+            if (el.photo === file.s3Key) {
+              photoFileString = file.fileString;
+            }
+          });
+
+          return {
+            name: el.name,
+            username: el.username,
+            photo: el.photo || '',
+            profilePhotoFileString: photoFileString!,
+            location: {} as Location,
+            comment: '',
+          };
+        }
+      );
+
+      setUserSuggestionsList(suggestedUser);
+    } else if (userSuggestions && noProfilePhotosToFetch) {
+      const userSuggestionsAsList = List(userSuggestions);
+
+      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
+        (el: User) => ({
+          name: el.name,
+          username: el.username,
+          photo: el.photo || '',
+          profilePhotoFileString: '',
+          location: {} as Location,
+          comment: '',
+        })
+      );
+
+      setUserSuggestionsList(suggestedUser);
+    }
+  }, [
+    userSuggestions,
+    userSuggestionProfilePhotoFiles,
+    noProfilePhotosToFetch,
+  ]);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -295,7 +411,12 @@ const MessagesPage: React.FC = () => {
               />
             )}
           />
-          <Grid sx={{ height: 'auto' }}></Grid>
+          <Grid sx={{ height: 'auto' }}>
+            <UserInfo
+              userInfoList={userSuggestionsList}
+              styleType={StyleType.suggestion}
+            />
+          </Grid>
         </Dialog>
       </Grid>
     </Grid>
