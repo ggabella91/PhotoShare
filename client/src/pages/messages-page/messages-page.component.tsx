@@ -15,9 +15,6 @@ import SendIcon from '@mui/icons-material/Send';
 import { List } from 'immutable';
 import { useDebounce } from '../hooks';
 import { UserInfoData } from '../../components/search-bar/search-bar.component';
-import UserInfo, {
-  StyleType,
-} from '../../components/user-info/user-info.component';
 
 import { User } from '../../redux/user/user.types';
 import {
@@ -399,8 +396,7 @@ const MessagesPage: React.FC = () => {
           <Autocomplete
             sx={{ padding: '5px 15px' }}
             multiple
-            options={[]}
-            getOptionLabel={(option: string) => option}
+            options={userSuggestionsList.toArray()}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -410,13 +406,18 @@ const MessagesPage: React.FC = () => {
                 onChange={handleTextChange}
               />
             )}
+            renderOption={(props, option: UserInfoData) => (
+              <Grid>
+                <Typography sx={{ fontSize: 14, fontWeight: 400 }}>
+                  {option.username}
+                </Typography>
+                <Typography sx={{ fontSize: 14, fontWeight: 320 }}>
+                  {option.name}
+                </Typography>
+              </Grid>
+            )}
           />
-          <Grid sx={{ height: 'auto' }}>
-            <UserInfo
-              userInfoList={userSuggestionsList}
-              styleType={StyleType.suggestion}
-            />
-          </Grid>
+          <Grid sx={{ height: 'auto' }}></Grid>
         </Dialog>
       </Grid>
     </Grid>
