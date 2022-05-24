@@ -8,13 +8,15 @@ import {
   Button,
   Dialog,
   DialogTitle,
-  Autocomplete,
   TextField,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { List } from 'immutable';
 import { useDebounce } from '../hooks';
 import { UserInfoData } from '../../components/search-bar/search-bar.component';
+import UserInfo, {
+  StyleType,
+} from '../../components/user-info/user-info.component';
 
 import { User } from '../../redux/user/user.types';
 import {
@@ -393,31 +395,19 @@ const MessagesPage: React.FC = () => {
           <DialogTitle sx={{ justifyContent: 'center' }}>
             New Message
           </DialogTitle>
-          <Autocomplete
+          <TextField
             sx={{ padding: '5px 15px' }}
-            multiple
-            options={userSuggestionsList.toArray()}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant='standard'
-                label='Search'
-                placeholder=''
-                onChange={handleTextChange}
-              />
-            )}
-            renderOption={(props, option: UserInfoData) => (
-              <Grid>
-                <Typography sx={{ fontSize: 14, fontWeight: 400 }}>
-                  {option.username}
-                </Typography>
-                <Typography sx={{ fontSize: 14, fontWeight: 320 }}>
-                  {option.name}
-                </Typography>
-              </Grid>
-            )}
+            variant='standard'
+            label='Search'
+            placeholder=''
+            onChange={handleTextChange}
           />
-          <Grid sx={{ height: 'auto' }}></Grid>
+          <Grid sx={{ height: 'auto' }}>
+            <UserInfo
+              styleType={StyleType.chatSuggestion}
+              userInfoList={userSuggestionsList}
+            />
+          </Grid>
         </Dialog>
       </Grid>
     </Grid>
