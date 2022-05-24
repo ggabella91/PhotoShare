@@ -26,6 +26,7 @@ export enum StyleType {
   feed = 'feed',
   comment = 'comment',
   postPage = 'post-page',
+  chatSuggestion = 'chat-suggestion',
 }
 
 export interface UserInfoAndOtherData {
