@@ -14,9 +14,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { List } from 'immutable';
 import { useDebounce } from '../hooks';
 import { UserInfoData } from '../../components/search-bar/search-bar.component';
-import UserInfo, {
-  StyleType,
-} from '../../components/user-info/user-info.component';
+import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
 
 import { User } from '../../redux/user/user.types';
 import {
@@ -338,7 +336,12 @@ const MessagesPage: React.FC = () => {
 
   return (
     <Grid
-      sx={{ display: 'flex', position: 'relative', justifyContent: 'center' }}
+      sx={{
+        display: 'flex',
+        position: 'relative',
+        justifyContent: 'center',
+        fontFamily: 'fontFamily',
+      }}
     >
       <Grid
         sx={{
@@ -360,14 +363,15 @@ const MessagesPage: React.FC = () => {
               overflowY: 'scroll',
             }}
           >
-            {joinedCoversations?.length &&
-              joinedCoversations.map((convo) => {
-                return (
-                  <Grid sx={{ width: '100%', height: '80px' }}>
-                    {convo.name}
-                  </Grid>
-                );
-              })}
+            {joinedCoversations?.length
+              ? joinedCoversations.map((convo) => {
+                  return (
+                    <Grid sx={{ width: '100%', height: '80px' }}>
+                      {convo.name}
+                    </Grid>
+                  );
+                })
+              : null}
           </Grid>
           <Grid
             item
@@ -392,7 +396,12 @@ const MessagesPage: React.FC = () => {
             sx: { width: 400, height: 470 },
           }}
         >
-          <DialogTitle sx={{ justifyContent: 'center' }}>
+          <DialogTitle
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
             New Message
           </DialogTitle>
           <TextField
@@ -401,12 +410,10 @@ const MessagesPage: React.FC = () => {
             label='Search'
             placeholder=''
             onChange={handleTextChange}
+            InputLabelProps={{ sx: { paddingLeft: '15px' } }}
           />
           <Grid sx={{ height: 'auto' }}>
-            <UserInfo
-              styleType={StyleType.chatSuggestion}
-              userInfoList={userSuggestionsList}
-            />
+            <UserDetailsContainer userDataList={userSuggestionsList} />
           </Grid>
         </Dialog>
       </Grid>
