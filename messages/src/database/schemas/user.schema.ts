@@ -12,6 +12,9 @@ export class User {
   @Prop({ required: true, minlength: 5, maxlength: 20 })
   name: string;
 
+  @Prop({ required: true })
+  username: string;
+
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Conversation' }],
   })

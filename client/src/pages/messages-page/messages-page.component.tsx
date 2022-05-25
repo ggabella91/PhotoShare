@@ -172,6 +172,7 @@ const MessagesPage: React.FC = () => {
 
       const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
         (el: User) => ({
+          id: el.id,
           name: el.name,
           username: el.username,
           photo: el.photo || '',
@@ -200,6 +201,7 @@ const MessagesPage: React.FC = () => {
           findOrCreateUserStart({
             userId: currentUser.id,
             name: currentUser.name,
+            username: currentUser.username,
           })
         );
       }

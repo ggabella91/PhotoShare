@@ -52,6 +52,7 @@ export interface SearchBarProps {
 }
 
 export interface UserInfoData {
+  id?: string;
   profilePhotoFileString: string;
   username: string;
   name: string;
