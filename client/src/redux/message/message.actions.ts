@@ -7,7 +7,7 @@ import {
   FindOrCreateUserReq,
   MessageActions,
   MessageActionTypes,
-  User,
+  MessageUser,
 } from './message.types';
 
 export const findOrCreateUserStart = (
@@ -17,7 +17,7 @@ export const findOrCreateUserStart = (
   payload: findOrCreateUserReq,
 });
 
-export const findOrCreateUserSuccess = (user: User): MessageActionTypes => ({
+export const findOrCreateUserSuccess = (user: MessageUser): MessageActionTypes => ({
   type: MessageActions.FIND_OR_CREATE_USER_SUCCESS,
   payload: user,
 });

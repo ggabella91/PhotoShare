@@ -13,7 +13,7 @@ export enum MessageActions {
 }
 
 export interface MessageState {
-  user: User | null;
+  user: MessageUser | null;
   messages: ConvoMessages[];
   findOrCreateUserError: MessageError | null;
   removeUserSessionCookieConfirm: string | null;
@@ -43,10 +43,11 @@ export interface MessageError {
   message: string;
 }
 
-export interface User {
+export interface MessageUser {
   id: string;
   userId: string;
   name: string;
+  username: string;
   joinedConversations: Conversation[];
   sessionCookie: Record<string, any>;
   isAuthenticated: boolean;
@@ -56,12 +57,13 @@ export interface Conversation {
   id: string;
   name: string;
   // messages: Message[];
-  connectedUsers: User[];
+  connectedUsers: MessageUser[];
 }
 
 export interface FindOrCreateUserReq {
   userId: string;
   name: string;
+  username: string;
 }
 
 export interface FindOrCreateUserStart {
@@ -71,7 +73,7 @@ export interface FindOrCreateUserStart {
 
 export interface FindOrCreateUserSuccess {
   type: typeof MessageActions.FIND_OR_CREATE_USER_SUCCESS;
-  payload: User;
+  payload: MessageUser;
 }
 
 export interface FindOrCreateUserFailure {

@@ -18,7 +18,7 @@ import {
   MessageActions,
   MessageActionTypes,
   FindOrCreateUserReq,
-  User,
+  MessageUser,
 } from './message.types';
 
 import {
@@ -48,7 +48,7 @@ export function* findOrCreateUser({
   payload: FindOrCreateUserReq;
 }) {
   try {
-    const { data: user }: { data: User } = yield axios.post(
+    const { data: user }: { data: MessageUser } = yield axios.post(
       '/api/messages/users',
       findOrCreateUserReq
     );

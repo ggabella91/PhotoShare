@@ -24,7 +24,7 @@ export class MessagesAppController {
   @Post('/users')
   findOrCreateUser(@Request() req) {
     const { headers, body } = req;
-    const { userId, name } = body;
+    const { userId, name, username } = body;
     const { cookie } = headers;
 
     const sessionCookie = JSON.parse(
@@ -34,7 +34,12 @@ export class MessagesAppController {
       ).toString()
     );
 
-    return this.appService.findOrCreateUser({ userId, name, sessionCookie });
+    return this.appService.findOrCreateUser({
+      userId,
+      name,
+      username,
+      sessionCookie,
+    });
   }
 
   @Put('/users')
