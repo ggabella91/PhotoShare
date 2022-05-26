@@ -10,6 +10,8 @@ export enum MessageActions {
   GET_CONVO_MESSAGES_SUCCESS = 'GET_CONVO_MESSAGES_SUCCESS',
   GET_CONVO_MESSAGES_FAILURE = 'GET_CONVO_MESSAGES_FAILURE',
   ADD_MESSAGE_TO_CONVERSATION = 'ADD_MESSAGE_TO_CONVERSATION',
+  ADD_USER_TO_CONVO_USERS_ARRAY = 'ADD_USER_TO_CONVO_USERS_ARRAY',
+  REMOVE_USER_FROM_CONVO_USERS_ARRAY = 'REMOVE_USER_FROM_CONVO_USERS_ARRAY',
 }
 
 export interface MessageState {
@@ -18,6 +20,7 @@ export interface MessageState {
   findOrCreateUserError: MessageError | null;
   removeUserSessionCookieConfirm: string | null;
   removeUserSessionCookieError: MessageError | null;
+  usersArrayForNewConvoReq: Partial<MessageUser>[];
 }
 
 export interface GetConvoMessagesReq {
@@ -121,6 +124,16 @@ export interface AddMessageToConversation {
   payload: Message;
 }
 
+export interface AddUserToConvoUsersArray {
+  type: typeof MessageActions.ADD_USER_TO_CONVO_USERS_ARRAY;
+  payload: Partial<MessageUser>;
+}
+
+export interface RemoveUserFromConvoUsersArray {
+  type: typeof MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY;
+  payload: Partial<MessageUser>;
+}
+
 export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
@@ -132,4 +145,6 @@ export type MessageActionTypes =
   | GetConvoMessagesStart
   | GetConvoMessagesSuccess
   | GetConvoMessagesFailure
-  | AddMessageToConversation;
+  | AddMessageToConversation
+  | AddUserToConvoUsersArray
+  | RemoveUserFromConvoUsersArray;

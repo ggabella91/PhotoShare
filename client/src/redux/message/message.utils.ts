@@ -1,4 +1,9 @@
-import { ConvoMessages, Message, Conversation } from './message.types';
+import {
+  ConvoMessages,
+  Message,
+  Conversation,
+  MessageUser,
+} from './message.types';
 
 export const updateJoinedConversationsArray = (
   currentConvosArray: Conversation[],
@@ -41,4 +46,11 @@ export const addMessage = (
       return convoMessages;
     }
   });
+};
+
+export const removeUserFromArray = (
+  usersArray: Partial<MessageUser>[],
+  userToRemove: Partial<MessageUser>
+) => {
+  return usersArray.filter((user) => user.id !== userToRemove.id);
 };
