@@ -156,6 +156,7 @@ const MessagesPage: React.FC = () => {
           });
 
           return {
+            id: el.id,
             name: el.name,
             username: el.username,
             photo: el.photo || '',

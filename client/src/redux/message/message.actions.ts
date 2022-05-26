@@ -17,7 +17,9 @@ export const findOrCreateUserStart = (
   payload: findOrCreateUserReq,
 });
 
-export const findOrCreateUserSuccess = (user: MessageUser): MessageActionTypes => ({
+export const findOrCreateUserSuccess = (
+  user: MessageUser
+): MessageActionTypes => ({
   type: MessageActions.FIND_OR_CREATE_USER_SUCCESS,
   payload: user,
 });
@@ -83,4 +85,18 @@ export const addMessageToConversation = (
 ): MessageActionTypes => ({
   type: MessageActions.ADD_MESSAGE_TO_CONVERSATION,
   payload: message,
+});
+
+export const addUserToConvoUsersArray = (
+  user: Partial<MessageUser>
+): MessageActionTypes => ({
+  type: MessageActions.ADD_USER_TO_CONVO_USERS_ARRAY,
+  payload: user,
+});
+
+export const removeUserFromConvoUsersArray = (
+  user: Partial<MessageUser>
+): MessageActionTypes => ({
+  type: MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY,
+  payload: user,
 });

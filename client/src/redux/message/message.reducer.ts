@@ -8,6 +8,7 @@ import {
   updateJoinedConversationsArray,
   addConvoMessages,
   addMessage,
+  removeUserFromArray,
 } from './message.utils';
 
 const INITIAL_STATE: MessageState = {
@@ -16,6 +17,7 @@ const INITIAL_STATE: MessageState = {
   findOrCreateUserError: null,
   removeUserSessionCookieConfirm: null,
   removeUserSessionCookieError: null,
+  usersArrayForNewConvoReq: [],
 };
 
 const messageReducer = (
@@ -57,6 +59,22 @@ const messageReducer = (
       return {
         ...state,
         messages: addMessage(state.messages, action.payload),
+      };
+    case MessageActions.ADD_USER_TO_CONVO_USERS_ARRAY:
+      return {
+        ...state,
+        usersArrayForNewConvoReq: [
+          ...state.usersArrayForNewConvoReq,
+          action.payload,
+        ],
+      };
+    case MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY:
+      return {
+        ...state,
+        usersArrayForNewConvoReq: removeUserFromArray(
+          state.usersArrayForNewConvoReq,
+          action.payload
+        ),
       };
     case MessageActions.FIND_OR_CREATE_USER_FAILURE:
       return {

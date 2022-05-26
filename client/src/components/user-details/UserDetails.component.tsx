@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Avatar, Grid, Typography } from '@mui/material';
 import { RadioButtonUnchecked, CheckCircle } from '@mui/icons-material';
 
 import { UserInfoData } from '../search-bar/search-bar.component';
 
+import { MessageUser } from '../../redux/message/message.types';
+import {
+  addUserToConvoUsersArray,
+  removeUserFromConvoUsersArray,
+} from '../../redux/message/message.actions';
+
 interface UserDetailsProps {
+  key: string;
   userData: UserInfoData;
 }
 
 const UserDetails = ({ userData }: UserDetailsProps) => {
   const [isChecked, setIsChecked] = useState(false);
 
+  const dispatch = useDispatch();
+
   const handleClick = () => {
+    const user: Partial<MessageUser> = {
+      id: userData.id!,
+      name: userData.name,
+      username: userData.username,
+    };
+
+    isChecked
+      ? dispatch(removeUserFromConvoUsersArray(user))
+      : dispatch(addUserToConvoUsersArray(user));
+
     setIsChecked(!isChecked);
   };
 
@@ -27,6 +47,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
       onClick={handleClick}
     >
       <Grid
+        item
         xs={2}
         sx={{
           display: 'flex',
@@ -44,6 +65,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
         />
       </Grid>
       <Grid
+        item
         xs={8}
         sx={{
           display: 'flex',
@@ -61,6 +83,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
         </Typography>
       </Grid>
       <Grid
+        item
         xs={2}
         fontSize='large'
         sx={{

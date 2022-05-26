@@ -19,3 +19,8 @@ export const selectJoinedCoversations = createSelector(
   [selectMessageUser],
   (user) => user?.joinedConversations || null
 );
+
+export const selectUsersArrayForNewConvoReq = createSelector(
+  [selectMessageState],
+  (messageState: MessageState) => messageState.usersArrayForNewConvoReq
+);
