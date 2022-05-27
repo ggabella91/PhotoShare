@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import {
+  Chip,
   Grid,
   Typography,
   Button,
@@ -42,6 +43,7 @@ import {
 import {
   selectMessageUser,
   selectJoinedCoversations,
+  selectUsersArrayForNewConvoReq,
 } from '../../redux/message/message.selectors';
 import {
   findOrCreateUserStart,
@@ -74,6 +76,7 @@ const MessagesPage: React.FC = () => {
   const userSuggestionProfilePhotoFiles = useSelector(
     selectSuggestionPhotoFileArray
   );
+  const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
 
   let bucket: string;
 
@@ -413,6 +416,17 @@ const MessagesPage: React.FC = () => {
             label='Search'
             placeholder=''
             onChange={handleTextChange}
+            InputProps={{
+              startAdornment: usersArrayForNewConvoReq.map((user) => (
+                <Chip
+                  sx={{
+                    color: 'rgb(0, 149, 246)',
+                    backgroundColor: 'rgb(224,241,255)',
+                  }}
+                  label={user.name}
+                />
+              )),
+            }}
             InputLabelProps={{ sx: { paddingLeft: '15px' } }}
           />
           <Grid sx={{ height: 'auto' }}>
