@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, Grid, Typography } from '@mui/material';
 import { RadioButtonUnchecked, CheckCircle } from '@mui/icons-material';
 
 import { UserInfoData } from '../search-bar/search-bar.component';
 
 import { MessageUser } from '../../redux/message/message.types';
+import { selectUsersArrayForNewConvoReq } from '../../redux/message/message.selectors';
 import {
   addUserToConvoUsersArray,
   removeUserFromConvoUsersArray,
@@ -19,7 +20,19 @@ interface UserDetailsProps {
 const UserDetails = ({ userData }: UserDetailsProps) => {
   const [isChecked, setIsChecked] = useState(false);
 
+  const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const userChipFound = usersArrayForNewConvoReq.find(
+      (user) => user.id === userData.id
+    );
+
+    if (userChipFound && isChecked) {
+      setIsChecked(false);
+    }
+  }, [usersArrayForNewConvoReq]);
 
   const handleClick = () => {
     const user: Partial<MessageUser> = {
