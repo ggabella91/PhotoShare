@@ -50,7 +50,7 @@ export const addMessage = (
 
 export const removeUserFromArray = (
   usersArray: Partial<MessageUser>[],
-  userToRemove: Partial<MessageUser>
+  userToRemoveId: string
 ) => {
-  return usersArray.filter((user) => user.id !== userToRemove.id);
+  return usersArray.filter((user) => user.id !== userToRemoveId);
 };

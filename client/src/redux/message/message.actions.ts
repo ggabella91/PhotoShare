@@ -95,8 +95,8 @@ export const addUserToConvoUsersArray = (
 });
 
 export const removeUserFromConvoUsersArray = (
-  user: Partial<MessageUser>
+  userId: string
 ): MessageActionTypes => ({
   type: MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY,
-  payload: user,
+  payload: userId,
 });

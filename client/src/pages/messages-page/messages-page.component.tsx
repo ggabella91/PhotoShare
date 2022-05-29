@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
@@ -40,6 +40,7 @@ import {
   clearSuggestionPhotoFileArray,
 } from '../../redux/post/post.actions';
 
+import { MessageUser } from '../../redux/message/message.types';
 import {
   selectMessageUser,
   selectJoinedCoversations,
@@ -51,6 +52,7 @@ import {
   addToJoinedConversationsArray,
   addMessageToConversation,
   getConvoMessagesStart,
+  removeUserFromConvoUsersArray,
 } from '../../redux/message/message.actions';
 
 const MessagesPage: React.FC = () => {
@@ -77,6 +79,7 @@ const MessagesPage: React.FC = () => {
     selectSuggestionPhotoFileArray
   );
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
+  const usersArrayLength = useRef<number>(0);
 
   let bucket: string;
 
@@ -277,6 +280,13 @@ const MessagesPage: React.FC = () => {
     joinedExistingConversations,
   ]);
 
+  useEffect(() => {
+    if (usersArrayForNewConvoReq.length >= usersArrayLength.current) {
+      setUserSearchString('');
+    }
+    usersArrayLength.current = usersArrayForNewConvoReq.length;
+  }, [usersArrayForNewConvoReq]);
+
   const handleSendMessage = () => {
     setShowNewMessageDialog(true);
   };
@@ -289,6 +299,13 @@ const MessagesPage: React.FC = () => {
     const { value } = event.target;
 
     setUserSearchString(value);
+  };
+
+  const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
+    const elementParent = event.currentTarget.parentElement;
+    const userId = elementParent!.dataset.userid;
+
+    dispatch(removeUserFromConvoUsersArray(userId!));
   };
 
   const renderNoActiveConvosScreen = () => {
@@ -417,15 +434,24 @@ const MessagesPage: React.FC = () => {
             placeholder=''
             onChange={handleTextChange}
             InputProps={{
-              startAdornment: usersArrayForNewConvoReq.map((user) => (
-                <Chip
-                  sx={{
-                    color: 'rgb(0, 149, 246)',
-                    backgroundColor: 'rgb(224,241,255)',
-                  }}
-                  label={user.name}
-                />
-              )),
+              sx: { height: '2.5rem', display: 'flex', alignItems: 'center' },
+              startAdornment: !!usersArrayForNewConvoReq.length && (
+                <Grid sx={{ marginRight: '10px', display: 'flex' }}>
+                  {usersArrayForNewConvoReq.map((user) => (
+                    <Chip
+                      sx={{
+                        color: 'rgb(0, 149, 246)',
+                        backgroundColor: 'rgb(224,241,255)',
+                        marginRight: '5px',
+                      }}
+                      label={user.username}
+                      data-userid={user.id}
+                      onDelete={handleDelete}
+                    />
+                  ))}
+                </Grid>
+              ),
+              value: userSearchString,
             }}
             InputLabelProps={{ sx: { paddingLeft: '15px' } }}
           />
