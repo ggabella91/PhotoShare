@@ -131,7 +131,7 @@ export interface AddUserToConvoUsersArray {
 
 export interface RemoveUserFromConvoUsersArray {
   type: typeof MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY;
-  payload: Partial<MessageUser>;
+  payload: string;
 }
 
 export type MessageActionTypes =
