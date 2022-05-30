@@ -29,7 +29,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
       (user) => user.id === userData.id
     );
 
-    if (userChipFound && isChecked) {
+    if (!userChipFound && isChecked) {
       setIsChecked(false);
     }
   }, [usersArrayForNewConvoReq]);
