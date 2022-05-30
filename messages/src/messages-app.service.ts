@@ -107,7 +107,7 @@ export class MessagesAppService {
       { new: true }
     );
 
-    console.log(
+    this.logger.log(
       `Updated conversation with id ${conversationId}: `,
       updatedConversation
     );
@@ -131,6 +131,11 @@ export class MessagesAppService {
 
     const messagesFromConvoObjects = messagesFromConvo.map((message) =>
       message.toObject()
+    );
+
+    this.logger.log(
+      `Found the following messages from converation with id ${conversationId}: `,
+      messagesFromConvoObjects
     );
 
     return messagesFromConvoObjects;
