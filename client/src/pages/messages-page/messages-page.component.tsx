@@ -12,6 +12,7 @@ import {
   TextField,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import ClearIcon from '@mui/icons-material/Clear';
 import { List } from 'immutable';
 import { useDebounce } from '../hooks';
 import { UserInfoData } from '../../components/search-bar/search-bar.component';
@@ -389,7 +390,7 @@ const MessagesPage: React.FC = () => {
             {joinedCoversations?.length
               ? joinedCoversations.map((convo) => {
                   return (
-                    <Grid sx={{ width: '100%', height: '80px' }}>
+                    <Grid sx={{ width: '100%', height: '80px' }} key={convo.id}>
                       {convo.name}
                     </Grid>
                   );
@@ -445,8 +446,16 @@ const MessagesPage: React.FC = () => {
                         marginRight: '5px',
                       }}
                       label={user.username}
+                      key={user.id}
                       data-userid={user.id}
                       onDelete={handleDelete}
+                      deleteIcon={
+                        <ClearIcon
+                          style={{
+                            color: 'rgb(0, 149, 246)',
+                          }}
+                        />
+                      }
                     />
                   ))}
                 </Grid>
