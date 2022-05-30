@@ -93,7 +93,7 @@ export class MessagesAppService {
     return conversationsForUserObjects;
   }
 
-  async createMessage(createMessageDto: CreateMessageDto): Promise<Message> {
+  async createMessage(createMessageDto: CreateMessageDto) {
     const createdMessage = new this.messageModel(createMessageDto);
     const savedMessage = (await createdMessage.save()).toObject();
 
