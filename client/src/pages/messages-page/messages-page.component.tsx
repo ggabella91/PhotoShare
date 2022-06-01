@@ -17,6 +17,10 @@ import { List } from 'immutable';
 import { useDebounce } from '../hooks';
 import { UserInfoData } from '../../components/search-bar/search-bar.component';
 import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
+import {
+  generateDefaultConvoName,
+  generateFinalConvoUsersArray,
+} from './messages-page.utils';
 
 import { User } from '../../redux/user/user.types';
 import {
@@ -267,11 +271,6 @@ const MessagesPage: React.FC = () => {
       });
 
       setJoinedExistingConversations(true);
-
-      socket.emit('createConversation', {
-        name: 'Test Convo',
-        connectedUsers: [currentUser?.id],
-      });
     }
   }, [
     socket,
@@ -307,6 +306,24 @@ const MessagesPage: React.FC = () => {
     const userId = elementParent!.dataset.userid;
 
     dispatch(removeUserFromConvoUsersArray(userId!));
+  };
+
+  const handleClickNext = () => {
+    if (
+      isSocketConnectionActive &&
+      usersArrayForNewConvoReq.length &&
+      currentUser
+    ) {
+      const convoName = generateDefaultConvoName(usersArrayForNewConvoReq);
+
+      socket.emit('createConversation', {
+        name: convoName,
+        connectedUsers: generateFinalConvoUsersArray(
+          usersArrayForNewConvoReq,
+          currentUser
+        ),
+      });
+    }
   };
 
   const renderNoActiveConvosScreen = () => {
@@ -426,7 +443,29 @@ const MessagesPage: React.FC = () => {
               justifyContent: 'center',
             }}
           >
-            New Message
+            <Typography>New Message</Typography>
+            <Button
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: 8,
+                paddingTop: '8px',
+                '&:hover': { backgroundColor: 'unset' },
+              }}
+              onClick={handleClickNext}
+              disabled={!usersArrayForNewConvoReq.length}
+            >
+              <Typography
+                sx={{
+                  color: usersArrayForNewConvoReq.length
+                    ? 'rgb(0, 149, 246)'
+                    : 'rgba(0,149,246,0.4)',
+                  textTransform: 'capitalize',
+                }}
+              >
+                Next
+              </Typography>
+            </Button>
           </DialogTitle>
           <TextField
             sx={{ padding: '5px 15px' }}

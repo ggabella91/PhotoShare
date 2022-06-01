@@ -7,7 +7,10 @@ import {
 } from './database/schemas/conversation.schema';
 import { User, UserDocument } from './database/schemas/user.schema';
 import { Message, MessageDocument } from './database/schemas/message.schema';
-import { CreateConvoDto } from './database/dto/create-convo.dto';
+import {
+  CreateConvoDto,
+  CreateConvoPreDto,
+} from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { CreateUserDto } from './database/dto/create-user.dto';
 import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
@@ -27,8 +30,17 @@ export class MessagesAppService {
     return 'Hello World!';
   }
 
-  async createConversation(createConvoDto: CreateConvoDto) {
-    const createdConvo = new this.conversationModel(createConvoDto);
+  async createConversation(createConvoDto: CreateConvoPreDto) {
+    // TODO: call findOrCreateUser for each user in connectedUsers array besides currentUser
+
+    const userIdArray = createConvoDto.connectedUsers.map(
+      (user) => user.userId
+    );
+
+    const createdConvo = new this.conversationModel({
+      ...createConvoDto,
+      connectedUsers: userIdArray,
+    });
     const savedConvo = (await createdConvo.save()).toObject();
 
     return savedConvo;
