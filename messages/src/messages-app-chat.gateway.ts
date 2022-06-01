@@ -12,7 +12,7 @@ import { Server, Socket } from 'socket.io';
 import { WsAuthGuard } from './guards/ws-auth.guard';
 import { MessagesAppService } from './messages-app.service';
 import { Types } from 'mongoose';
-import { CreateConvoDto } from './database/dto/create-convo.dto';
+import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 
 @UseGuards(WsAuthGuard)
@@ -62,7 +62,7 @@ export class MessagesAppChatGateway
   @SubscribeMessage('createConversation')
   async handleCreateConversation(
     client: Socket,
-    createConvoDto: CreateConvoDto
+    createConvoDto: CreateConvoPreDto
   ) {
     this.logger.log('CreateConvoDto message body: ', createConvoDto);
 

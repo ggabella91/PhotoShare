@@ -9,9 +9,6 @@ export class Conversation {
   @Prop({ required: true })
   name: string;
 
-  // @Prop([String])
-  // messages: string[];
-
   @Prop({
     required: true,
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
