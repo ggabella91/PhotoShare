@@ -30,15 +30,24 @@ export class MessagesAppService {
     return 'Hello World!';
   }
 
-  async createConversation(createConvoDto: CreateConvoPreDto) {
-    // TODO: call findOrCreateUser for each user in connectedUsers array besides currentUser
+  async createConversation(createConvoPreDto: CreateConvoPreDto) {
+    // Call findOrCreateUser for each user in connectedUsers array
+    await Promise.all(
+      createConvoPreDto.connectedUsers.map((user) =>
+        this.findOrCreateUser({
+          userId: user.userId,
+          name: user.name,
+          username: user.username,
+        })
+      )
+    );
 
-    const userIdArray = createConvoDto.connectedUsers.map(
+    const userIdArray = createConvoPreDto.connectedUsers.map(
       (user) => user.userId
     );
 
     const createdConvo = new this.conversationModel({
-      ...createConvoDto,
+      ...createConvoPreDto,
       connectedUsers: userIdArray,
     });
     const savedConvo = (await createdConvo.save()).toObject();
