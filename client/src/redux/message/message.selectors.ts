@@ -24,3 +24,8 @@ export const selectUsersArrayForNewConvoReq = createSelector(
   [selectMessageState],
   (messageState: MessageState) => messageState.usersArrayForNewConvoReq
 );
+
+export const selectConversationMessages = createSelector(
+  [selectMessageState],
+  (messageState: MessageState) => messageState.messages
+);
