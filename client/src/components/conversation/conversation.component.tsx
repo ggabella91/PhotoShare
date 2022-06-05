@@ -13,8 +13,15 @@ const Conversation: React.FC<ConversationProps> = ({ conversationId }) => {
   const currentConversationMessages = conversationMessages.filter(
     (convoMessage) => convoMessage.conversationId === conversationId
   );
+  const messagesArray = currentConversationMessages[0].messages;
 
-  return <Grid></Grid>;
+  return (
+    <Grid>
+      {messagesArray.map((message) => (
+        <Grid>{message.text}</Grid>
+      ))}
+    </Grid>
+  );
 };
 
 export default Conversation;
