@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 import { selectConversationMessages } from '../../redux/message/message.selectors';
 
@@ -18,7 +18,9 @@ const Conversation: React.FC<ConversationProps> = ({ conversationId }) => {
   return (
     <Grid>
       {messagesArray.map((message) => (
-        <Grid>{message.text}</Grid>
+        <Grid>
+          <Typography>{message.text}</Typography>
+        </Grid>
       ))}
     </Grid>
   );
