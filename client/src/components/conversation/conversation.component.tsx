@@ -1,8 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Grid, Typography } from '@mui/material';
 
 import { selectConversationMessages } from '../../redux/message/message.selectors';
+
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { getOtherUserStart } from '../../redux/user/user.actions';
 
 interface ConversationProps {
   conversationId: string;
@@ -14,6 +17,8 @@ const Conversation: React.FC<ConversationProps> = ({ conversationId }) => {
     (convoMessage) => convoMessage.conversationId === conversationId
   );
   const messagesArray = currentConversationMessages[0].messages;
+
+  const dispatch = useDispatch();
 
   return (
     <Grid>
