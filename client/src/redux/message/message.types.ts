@@ -59,7 +59,6 @@ export interface MessageUser {
 export interface Conversation {
   id: string;
   name: string;
-  // messages: Message[];
   connectedUsers: MessageUser[];
 }
 
