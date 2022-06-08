@@ -1,41 +1,22 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import {
-  Chip,
-  Grid,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  TextField,
-} from '@mui/material';
+import { Grid, Typography, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import ClearIcon from '@mui/icons-material/Clear';
 import { List } from 'immutable';
-import { useDebounce } from '../hooks';
 import { UserInfoData } from '../../components/search-bar/search-bar.component';
-import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
-import {
-  generateDefaultConvoName,
-  generateFinalConvoUsersArray,
-} from './messages-page.utils';
+import NewConvoDialog from './new-convo-dialog.component';
 
 import { User } from '../../redux/user/user.types';
 import {
   selectCurrentUser,
   selectUserSuggestions,
 } from '../../redux/user/user.selectors';
-import {
-  getUserSuggestionsStart,
-  clearUserSuggestions,
-} from '../../redux/user/user.actions';
+import { clearUserSuggestions } from '../../redux/user/user.actions';
 
 import {
   FileRequestType,
-  PostFile,
-  PostFileReq,
   UserType,
   Location,
 } from '../../redux/post/post.types';
@@ -45,20 +26,24 @@ import {
   clearSuggestionPhotoFileArray,
 } from '../../redux/post/post.actions';
 
-import { MessageUser } from '../../redux/message/message.types';
 import {
   selectMessageUser,
   selectJoinedCoversations,
   selectUsersArrayForNewConvoReq,
 } from '../../redux/message/message.selectors';
+
 import {
   findOrCreateUserStart,
   removeUserSessionCookieStart,
   addToJoinedConversationsArray,
   addMessageToConversation,
   getConvoMessagesStart,
-  removeUserFromConvoUsersArray,
 } from '../../redux/message/message.actions';
+
+import {
+  generateDefaultConvoName,
+  generateFinalConvoUsersArray,
+} from './messages-page.utils';
 
 const MessagesPage: React.FC = () => {
   const [message, setMessage] = useState();
@@ -69,7 +54,6 @@ const MessagesPage: React.FC = () => {
     useState(false);
   const [joinedExistingConversations, setJoinedExistingConversations] =
     useState(false);
-  const [userSearchString, setUserSearchString] = useState('');
   const [userSuggestionsList, setUserSuggestionsList] = useState<
     List<UserInfoData>
   >(List());
@@ -84,7 +68,6 @@ const MessagesPage: React.FC = () => {
     selectSuggestionPhotoFileArray
   );
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
-  const usersArrayLength = useRef<number>(0);
 
   let bucket: string;
 
@@ -121,14 +104,6 @@ const MessagesPage: React.FC = () => {
       }
     };
   }, [socket, isSocketConnectionActive]);
-
-  const debouncedUserSearchString = useDebounce(userSearchString, 1000);
-
-  useEffect(() => {
-    if (debouncedUserSearchString.length >= 3) {
-      dispatch(getUserSuggestionsStart(debouncedUserSearchString));
-    }
-  }, [debouncedUserSearchString]);
 
   useEffect(() => {
     if (userSuggestions && userSuggestions.length) {
@@ -238,6 +213,24 @@ const MessagesPage: React.FC = () => {
     });
   }, [socket]);
 
+  const handleClickNext = () => {
+    if (
+      isSocketConnectionActive &&
+      usersArrayForNewConvoReq.length &&
+      currentUser
+    ) {
+      const convoName = generateDefaultConvoName(usersArrayForNewConvoReq);
+
+      socket.emit('createConversation', {
+        name: convoName,
+        connectedUsers: generateFinalConvoUsersArray(
+          usersArrayForNewConvoReq,
+          currentUser
+        ),
+      });
+    }
+  };
+
   useEffect(() => {
     if (joinedCoversations?.length) {
       joinedCoversations.forEach((convo) =>
@@ -280,50 +273,8 @@ const MessagesPage: React.FC = () => {
     joinedExistingConversations,
   ]);
 
-  useEffect(() => {
-    if (usersArrayForNewConvoReq.length >= usersArrayLength.current) {
-      setUserSearchString('');
-    }
-    usersArrayLength.current = usersArrayForNewConvoReq.length;
-  }, [usersArrayForNewConvoReq]);
-
   const handleSendMessage = () => {
     setShowNewMessageDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setShowNewMessageDialog(false);
-  };
-
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-
-    setUserSearchString(value);
-  };
-
-  const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
-    const elementParent = event.currentTarget.parentElement;
-    const userId = elementParent!.dataset.userid;
-
-    dispatch(removeUserFromConvoUsersArray(userId!));
-  };
-
-  const handleClickNext = () => {
-    if (
-      isSocketConnectionActive &&
-      usersArrayForNewConvoReq.length &&
-      currentUser
-    ) {
-      const convoName = generateDefaultConvoName(usersArrayForNewConvoReq);
-
-      socket.emit('createConversation', {
-        name: convoName,
-        connectedUsers: generateFinalConvoUsersArray(
-          usersArrayForNewConvoReq,
-          currentUser
-        ),
-      });
-    }
   };
 
   const renderNoActiveConvosScreen = () => {
@@ -430,83 +381,13 @@ const MessagesPage: React.FC = () => {
             )}
           </Grid>
         </Grid>
-        <Dialog
-          onClose={handleCloseDialog}
-          open={showNewMessageDialog}
-          PaperProps={{
-            sx: { width: 400, height: 470 },
-          }}
-        >
-          <DialogTitle
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Typography>New Message</Typography>
-            <Button
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                paddingTop: '8px',
-                '&:hover': { backgroundColor: 'unset' },
-              }}
-              onClick={handleClickNext}
-              disabled={!usersArrayForNewConvoReq.length}
-            >
-              <Typography
-                sx={{
-                  color: usersArrayForNewConvoReq.length
-                    ? 'rgb(0, 149, 246)'
-                    : 'rgba(0,149,246,0.4)',
-                  textTransform: 'capitalize',
-                }}
-              >
-                Next
-              </Typography>
-            </Button>
-          </DialogTitle>
-          <TextField
-            sx={{ padding: '5px 15px' }}
-            variant='standard'
-            label='Search'
-            placeholder=''
-            onChange={handleTextChange}
-            InputProps={{
-              sx: { height: '2.5rem', display: 'flex', alignItems: 'center' },
-              startAdornment: !!usersArrayForNewConvoReq.length && (
-                <Grid sx={{ marginRight: '10px', display: 'flex' }}>
-                  {usersArrayForNewConvoReq.map((user) => (
-                    <Chip
-                      sx={{
-                        color: 'rgb(0, 149, 246)',
-                        backgroundColor: 'rgb(224,241,255)',
-                        marginRight: '5px',
-                      }}
-                      label={user.username}
-                      key={user.id}
-                      data-userid={user.id}
-                      onDelete={handleDelete}
-                      deleteIcon={
-                        <ClearIcon
-                          style={{
-                            color: 'rgb(0, 149, 246)',
-                          }}
-                        />
-                      }
-                    />
-                  ))}
-                </Grid>
-              ),
-              value: userSearchString,
-            }}
-            InputLabelProps={{ sx: { paddingLeft: '15px' } }}
-          />
-          <Grid sx={{ height: 'auto' }}>
-            <UserDetailsContainer userDataList={userSuggestionsList} />
-          </Grid>
-        </Dialog>
+        <NewConvoDialog
+          showNewMessageDialog={showNewMessageDialog}
+          setShowNewMessageDialog={setShowNewMessageDialog}
+          usersArrayForNewConvoReq={usersArrayForNewConvoReq}
+          handleClickNext={handleClickNext}
+          userSuggestionsList={userSuggestionsList}
+        />
       </Grid>
     </Grid>
   );
