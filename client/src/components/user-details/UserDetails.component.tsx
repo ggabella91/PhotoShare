@@ -26,7 +26,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
 
   useEffect(() => {
     const userChipFound = usersArrayForNewConvoReq.find(
-      (user) => user.id === userData.id
+      (user) => user.userId === userData.id
     );
 
     if (!userChipFound && isChecked) {
@@ -36,7 +36,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
 
   const handleClick = () => {
     const user: Partial<MessageUser> = {
-      id: userData.id!,
+      userId: userData.id!,
       name: userData.name,
       username: userData.username,
     };
