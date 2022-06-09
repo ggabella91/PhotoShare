@@ -41,6 +41,7 @@ import {
   getUserSuggestionsSuccess,
   getUserSuggestionsFailure,
   getFeedPostReactorsSuccess,
+  getConversationUserSuccess,
 } from './user.actions';
 
 import { clearPostState } from '../post/post.actions';
@@ -143,6 +144,12 @@ export function* getOtherUser({
       );
 
       yield put(getOtherUserSuccess(data));
+    } else if (type === OtherUserType.CONVERSATION_USER) {
+      const { data }: { data: User } = yield axios.get(
+        `/api/users/id/${usernameOrId}`
+      );
+
+      yield put(getConversationUserSuccess(data));
     }
   } catch (err) {
     yield put(getOtherUserFailure(err as Error));

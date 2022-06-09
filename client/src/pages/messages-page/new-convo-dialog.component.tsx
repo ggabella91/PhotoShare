@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Chip,
   Grid,
@@ -10,10 +10,11 @@ import {
   TextField,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useDebounce } from '../hooks';
+import { useDebounce, useUserInfoData } from '../hooks';
 
 import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
 
+import { selectUserSuggestions } from '../../redux/user/user.selectors';
 import { getUserSuggestionsStart } from '../../redux/user/user.actions';
 
 import { MessageUser } from '../../redux/message/message.types';
@@ -26,7 +27,6 @@ interface NewConvoDialogProps {
   setShowNewMessageDialog: React.Dispatch<React.SetStateAction<boolean>>;
   usersArrayForNewConvoReq: Partial<MessageUser>[];
   handleClickNext: () => void;
-  userSuggestionsList: List<UserInfoData>;
 }
 
 const NewConvoDialog: React.FC<NewConvoDialogProps> = ({
@@ -34,9 +34,11 @@ const NewConvoDialog: React.FC<NewConvoDialogProps> = ({
   setShowNewMessageDialog,
   usersArrayForNewConvoReq,
   handleClickNext,
-  userSuggestionsList,
 }) => {
   const [userSearchString, setUserSearchString] = useState('');
+
+  const userSuggestions = useSelector(selectUserSuggestions);
+  const userSuggestionsList = useUserInfoData(userSuggestions);
 
   const usersArrayLength = useRef<number>(0);
 

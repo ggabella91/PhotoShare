@@ -24,6 +24,7 @@ const INITIAL_STATE: UserState = {
   resetError: null,
   deleteAccountError: null,
   feedPostReactingUsers: null,
+  conversationUsers: null,
 };
 
 const userReducer = (
@@ -77,6 +78,15 @@ const userReducer = (
         ...state,
         feedPostReactingUsers: addUserToUsersArray(
           state.feedPostReactingUsers,
+          action.payload
+        ),
+        otherUserError: null,
+      };
+    case UserActions.GET_CONVERSATION_USER_SUCCESS:
+      return {
+        ...state,
+        conversationUsers: addUserToUsersArray(
+          state.conversationUsers,
           action.payload
         ),
         otherUserError: null,

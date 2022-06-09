@@ -241,3 +241,8 @@ export const getFeedPostReactorsSuccess = (user: User): UserActionTypes => ({
   type: UserActions.GET_FEED_POST_REACTOR_SUCCESS,
   payload: user,
 });
+
+export const getConversationUserSuccess = (user: User): UserActionTypes => ({
+  type: UserActions.GET_CONVERSATION_USER_SUCCESS,
+  payload: user,
+});
