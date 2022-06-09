@@ -26,7 +26,7 @@ export const generateFinalConvoUsersArray = (
   currentUser: User
 ) => {
   const currentUserFound = usersArray.find(
-    (user) => user.id === currentUser.id
+    (user) => user.userId === currentUser.id
   );
 
   if (currentUserFound) {
