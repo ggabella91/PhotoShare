@@ -109,3 +109,8 @@ export const selectFeedPostReactingUsers = createSelector(
   [selectUser],
   (user: UserState) => user.feedPostReactingUsers
 );
+
+export const selectConversationUsers = createSelector(
+  [selectUser],
+  (user: UserState) => user.conversationUsers
+);

@@ -1,34 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import { Grid, Typography, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { List } from 'immutable';
-import { UserInfoData } from '../../components/search-bar/search-bar.component';
 import NewConvoDialog from './new-convo-dialog.component';
 
-import { User } from '../../redux/user/user.types';
-import {
-  selectCurrentUser,
-  selectUserSuggestions,
-} from '../../redux/user/user.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { clearUserSuggestions } from '../../redux/user/user.actions';
 
-import {
-  FileRequestType,
-  UserType,
-  Location,
-} from '../../redux/post/post.types';
-import { selectSuggestionPhotoFileArray } from '../../redux/post/post.selectors';
-import {
-  getPostFileStart,
-  clearSuggestionPhotoFileArray,
-} from '../../redux/post/post.actions';
+import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
 
 import {
   selectMessageUser,
-  selectJoinedCoversations,
+  selectJoinedConversations,
   selectUsersArrayForNewConvoReq,
 } from '../../redux/message/message.selectors';
 
@@ -46,7 +30,6 @@ import {
 } from './messages-page.utils';
 
 const MessagesPage: React.FC = () => {
-  const [message, setMessage] = useState();
   const [showNewMessageDialog, setShowNewMessageDialog] = useState(false);
   const [isViewingConversation, setIsViewingConversation] = useState(false);
 
@@ -54,28 +37,11 @@ const MessagesPage: React.FC = () => {
     useState(false);
   const [joinedExistingConversations, setJoinedExistingConversations] =
     useState(false);
-  const [userSuggestionsList, setUserSuggestionsList] = useState<
-    List<UserInfoData>
-  >(List());
-  const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
-  const location = useLocation();
 
   const currentUser = useSelector(selectCurrentUser);
   const messageUser = useSelector(selectMessageUser);
-  const joinedCoversations = useSelector(selectJoinedCoversations);
-  const userSuggestions = useSelector(selectUserSuggestions);
-  const userSuggestionProfilePhotoFiles = useSelector(
-    selectSuggestionPhotoFileArray
-  );
+  const joinedCoversations = useSelector(selectJoinedConversations);
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
-
-  let bucket: string;
-
-  if (process.env.NODE_ENV === 'production') {
-    bucket = 'photo-share-app-profile-photos';
-  } else {
-    bucket = 'photo-share-app-profile-photos-dev';
-  }
 
   const dispatch = useDispatch();
 
@@ -90,9 +56,8 @@ const MessagesPage: React.FC = () => {
   );
 
   useEffect(() => {
-    clearUserSuggestions();
-    setUserSuggestionsList(List());
-    clearSuggestionPhotoFileArray();
+    dispatch(clearUserSuggestions());
+    dispatch(clearSuggestionPhotoFileArray());
   }, []);
 
   useEffect(() => {
@@ -104,78 +69,6 @@ const MessagesPage: React.FC = () => {
       }
     };
   }, [socket, isSocketConnectionActive]);
-
-  useEffect(() => {
-    if (userSuggestions && userSuggestions.length) {
-      let count = 0;
-
-      for (let user of userSuggestions) {
-        if (user.photo) {
-          count++;
-          getPostFileStart({
-            user: UserType.suggestionArray,
-            bucket,
-            s3Key: user.photo,
-            fileRequestType: FileRequestType.singlePost,
-          });
-        }
-      }
-
-      if (count === 0) {
-        setNoProfilePhotosToFetch(true);
-      }
-    }
-  }, [userSuggestions]);
-
-  useEffect(() => {
-    if (userSuggestions && userSuggestionProfilePhotoFiles?.length) {
-      const userSuggestionsAsList = List(userSuggestions);
-
-      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
-        (el: User) => {
-          let photoFileString: string;
-
-          userSuggestionProfilePhotoFiles.forEach((file) => {
-            if (el.photo === file.s3Key) {
-              photoFileString = file.fileString;
-            }
-          });
-
-          return {
-            id: el.id,
-            name: el.name,
-            username: el.username,
-            photo: el.photo || '',
-            profilePhotoFileString: photoFileString!,
-            location: {} as Location,
-            comment: '',
-          };
-        }
-      );
-
-      setUserSuggestionsList(suggestedUser);
-    } else if (userSuggestions && noProfilePhotosToFetch) {
-      const userSuggestionsAsList = List(userSuggestions);
-
-      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
-        (el: User) => ({
-          id: el.id,
-          name: el.name,
-          username: el.username,
-          photo: el.photo || '',
-          profilePhotoFileString: '',
-          location: {} as Location,
-          comment: '',
-        })
-      );
-
-      setUserSuggestionsList(suggestedUser);
-    }
-  }, [
-    userSuggestions,
-    userSuggestionProfilePhotoFiles,
-    noProfilePhotosToFetch,
-  ]);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -386,7 +279,6 @@ const MessagesPage: React.FC = () => {
           setShowNewMessageDialog={setShowNewMessageDialog}
           usersArrayForNewConvoReq={usersArrayForNewConvoReq}
           handleClickNext={handleClickNext}
-          userSuggestionsList={userSuggestionsList}
         />
       </Grid>
     </Grid>
