@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid, Typography } from '@mui/material';
+import MessageComponent from './message.component';
 import { useUserInfoData } from '../../pages/hooks';
 
 import {
@@ -19,12 +20,18 @@ import {
 } from '../../redux/user/user.actions';
 
 import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
+import { UserInfoData } from '../search-bar/search-bar.component';
+import { access } from 'fs';
 
 interface ConversationProps {
   conversationId: string;
 }
 
+type UserInfoMap = Record<string, UserInfoData>;
+
 const Conversation: React.FC<ConversationProps> = ({ conversationId }) => {
+  const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
+
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -61,12 +68,28 @@ const Conversation: React.FC<ConversationProps> = ({ conversationId }) => {
     }
   }, [conversationMessageUsers]);
 
+  useEffect(() => {
+    if (usersInfoList?.size) {
+      const userInfoMap = usersInfoList.reduce<UserInfoMap>((acc, cur) => {
+        acc[cur.id!] = cur;
+        return acc;
+      }, {});
+
+      setUserInfoMap(userInfoMap);
+    }
+  }, [usersInfoList]);
+
   return (
     <Grid>
       {messagesArray.map((message) => (
-        <Grid>
-          <Typography>{message.text}</Typography>
-        </Grid>
+        <MessageComponent
+          userInfo={userInfoMap[message.userId]}
+          message={message}
+          isCurrentUser={message.userId === currentUser?.id}
+          isGroupConversation={
+            !!(conversationUsers && conversationUsers.length > 2)
+          }
+        />
       ))}
     </Grid>
   );
