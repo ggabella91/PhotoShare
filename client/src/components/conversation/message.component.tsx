@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Avatar } from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
 
@@ -21,8 +21,26 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
       sx={{
         display: 'flex',
         justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
+        width: '100%',
+        height: 'auto',
+        minHeight: '44px',
       }}
     >
+      {!isCurrentUser && (
+        <Grid
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <Avatar
+            src={`data:image/jpeg;base64,${userInfo.profilePhotoFileString}`}
+            alt={userInfo.name}
+            sx={{ height: '24px', width: '24px' }}
+          />
+        </Grid>
+      )}
       <Grid sx={{ display: 'flex', borderRadius: '50%' }}></Grid>
     </Grid>
   );
