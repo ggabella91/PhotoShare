@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Avatar } from '@mui/material';
+import { Grid, Avatar, Typography } from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
 
@@ -41,7 +41,9 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
           />
         </Grid>
       )}
-      <Grid sx={{ display: 'flex', borderRadius: '50%' }}></Grid>
+      <Grid sx={{ display: 'flex', borderRadius: '50%' }}>
+        <Typography sx={{ fontSize: 14 }}>{message.text}</Typography>
+      </Grid>
     </Grid>
   );
 };
