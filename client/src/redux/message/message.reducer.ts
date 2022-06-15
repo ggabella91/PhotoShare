@@ -76,6 +76,11 @@ const messageReducer = (
           action.payload
         ),
       };
+    case MessageActions.RESET_CONVO_USERS_ARRAY:
+      return {
+        ...state,
+        usersArrayForNewConvoReq: [],
+      };
     case MessageActions.FIND_OR_CREATE_USER_FAILURE:
       return {
         ...state,

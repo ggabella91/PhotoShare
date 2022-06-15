@@ -12,6 +12,7 @@ export enum MessageActions {
   ADD_MESSAGE_TO_CONVERSATION = 'ADD_MESSAGE_TO_CONVERSATION',
   ADD_USER_TO_CONVO_USERS_ARRAY = 'ADD_USER_TO_CONVO_USERS_ARRAY',
   REMOVE_USER_FROM_CONVO_USERS_ARRAY = 'REMOVE_USER_FROM_CONVO_USERS_ARRAY',
+  RESET_CONVO_USERS_ARRAY = 'RESET_CONVO_USERS_ARRAY',
 }
 
 export interface MessageState {
@@ -133,6 +134,10 @@ export interface RemoveUserFromConvoUsersArray {
   payload: string;
 }
 
+export interface ResetConvoUsersArray {
+  type: typeof MessageActions.RESET_CONVO_USERS_ARRAY;
+}
+
 export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
@@ -146,4 +151,5 @@ export type MessageActionTypes =
   | GetConvoMessagesFailure
   | AddMessageToConversation
   | AddUserToConvoUsersArray
-  | RemoveUserFromConvoUsersArray;
+  | RemoveUserFromConvoUsersArray
+  | ResetConvoUsersArray;

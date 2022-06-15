@@ -100,3 +100,7 @@ export const removeUserFromConvoUsersArray = (
   type: MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY,
   payload: userId,
 });
+
+export const resetConvoUsersArray = (): MessageActionTypes => ({
+  type: MessageActions.RESET_CONVO_USERS_ARRAY,
+});
