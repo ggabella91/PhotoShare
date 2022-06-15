@@ -73,7 +73,7 @@ export class MessagesAppChatGateway
     this.logger.log('Created conversation: ', createdConvo);
 
     client.join(createdConvo._id);
-    client.emit('joinedConversation', createdConvo._id);
+    client.emit('joinedConversation', createdConvo);
   }
 
   @SubscribeMessage('joinAllExistingConversations')

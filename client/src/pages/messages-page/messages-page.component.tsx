@@ -22,6 +22,7 @@ import {
   addToJoinedConversationsArray,
   addMessageToConversation,
   getConvoMessagesStart,
+  resetConvoUsersArray,
 } from '../../redux/message/message.actions';
 
 import {
@@ -95,6 +96,8 @@ const MessagesPage: React.FC = () => {
 
     socket.on('joinedConversation', (conversation) => {
       dispatch(addToJoinedConversationsArray(conversation));
+      setShowNewMessageDialog(false);
+      dispatch(resetConvoUsersArray());
     });
 
     socket.on('joinedConversations', (conversations) => {
@@ -250,6 +253,7 @@ const MessagesPage: React.FC = () => {
           >
             {joinedCoversations?.length
               ? joinedCoversations.map((convo) => {
+                  // TODO: Add styling and avatar to conversation preview, should be made into separate component
                   return (
                     <Grid sx={{ width: '100%', height: '80px' }} key={convo.id}>
                       {convo.name}
