@@ -19,8 +19,6 @@ import { getUserSuggestionsStart } from '../../redux/user/user.actions';
 
 import { MessageUser } from '../../redux/message/message.types';
 import { removeUserFromConvoUsersArray } from '../../redux/message/message.actions';
-import { List } from 'immutable';
-import { UserInfoData } from '../../components/search-bar/search-bar.component';
 
 interface NewConvoDialogProps {
   showNewMessageDialog: boolean;
