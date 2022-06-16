@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { Grid, Typography, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import NewConvoDialog from './new-convo-dialog.component';
+import ConversationPreview from '../../components/conversation/conversation-preview.component';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { clearUserSuggestions } from '../../redux/user/user.actions';
@@ -253,11 +254,12 @@ const MessagesPage: React.FC = () => {
           >
             {joinedCoversations?.length
               ? joinedCoversations.map((convo) => {
-                  // TODO: Add styling and avatar to conversation preview, should be made into separate component
+                  // TODO: Add styling and avatar to conversation preview
                   return (
-                    <Grid sx={{ width: '100%', height: '80px' }} key={convo.id}>
-                      {convo.name}
-                    </Grid>
+                    <ConversationPreview
+                      key={convo.id}
+                      conversationName={convo.name}
+                    />
                   );
                 })
               : null}
