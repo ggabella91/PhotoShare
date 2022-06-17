@@ -84,6 +84,7 @@ interface FeedPostContainerProps {
   caption?: string;
   date: string;
   custRef: CustomRef | null;
+  id: string;
   currentUser: User | null;
   feedPostReactionsArray: Reaction[][];
   feedPostReactingUsers: User[] | null;
@@ -151,6 +152,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   caption,
   date,
   custRef,
+  id,
   currentUser,
   feedPostReactionsArray,
   feedPostReactingUsers,
@@ -561,6 +563,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     <div
       className='feed-post-container'
       ref={custRef}
+      id={id}
       data-testid='feed-post-container'
     >
       <div className='profile-and-options'>

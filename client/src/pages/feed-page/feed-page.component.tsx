@@ -648,6 +648,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
               caption={el.caption}
               date={el.dateString}
               key={el.postId}
+              id={el.postId}
               custRef={
                 idx === userInfoAndPostFileList.size - 1 ? lastElementRef : null
               }

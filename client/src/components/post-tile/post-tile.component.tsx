@@ -10,6 +10,7 @@ interface PostTileProps {
   fileString: string;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   custRef: CustomRef | null;
+  id: string;
   dataS3Key: string;
   postLikesCount: number;
   postCommentsCount: number;
@@ -18,13 +19,14 @@ interface PostTileProps {
 const PostTile: React.FC<PostTileProps> = ({
   fileString,
   custRef,
+  id,
   dataS3Key,
   postLikesCount,
   postCommentsCount,
   onClick,
 }) => {
   return (
-    <div className='post-tile' ref={custRef}>
+    <div className='post-tile' id={id} ref={custRef}>
       <img
         className='post-tile-image'
         src={`data:image/jpeg;base64,${fileString}`}
