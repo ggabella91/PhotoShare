@@ -13,6 +13,9 @@ import { getPostFileStart } from '../redux/post/post.actions';
 
 export const useLazyLoading = (isLoadingPostData: boolean) => {
   const [intersectionCounter, setIntersectionCounter] = useState(1);
+  const [intersectionMap, setIntersectionMap] = useState<
+    Record<string, IntersectionObserverEntry>
+  >({});
 
   const observer = useRef<IntersectionObserver>();
 
@@ -24,13 +27,23 @@ export const useLazyLoading = (isLoadingPostData: boolean) => {
         observer.current.disconnect();
       }
 
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          setIntersectionCounter(
-            (intersectionCounter) => intersectionCounter + 1
-          );
-        }
-      });
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          const foundElement = !!intersectionMap[entries[0].target.id];
+
+          if (entries[0].isIntersecting && !foundElement) {
+            setIntersectionMap({
+              ...intersectionMap,
+              [entries[0].target.id]: entries[0],
+            });
+
+            setIntersectionCounter(
+              (intersectionCounter) => intersectionCounter + 1
+            );
+          }
+        },
+        { threshold: 0.2 }
+      );
 
       if (node) {
         observer.current.observe(node);

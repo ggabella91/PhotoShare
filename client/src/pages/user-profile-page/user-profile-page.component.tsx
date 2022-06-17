@@ -714,6 +714,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
               <PostTile
                 fileString={file.fileString}
                 key={idx}
+                id={file.s3Key}
                 dataS3Key={file.s3Key}
                 onClick={handleRenderPostModal}
                 custRef={idx === postFileList!.size - 1 ? lastElementRef : null}

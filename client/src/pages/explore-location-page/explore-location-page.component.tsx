@@ -352,6 +352,7 @@ const ExploreLocationPage: React.FC = () => {
             ? postFileList.map((file, idx) => (
                 <PostTile
                   fileString={file.fileString}
+                  id={file.s3Key}
                   key={idx}
                   dataS3Key={file.s3Key}
                   onClick={handleRenderPostModal}
