@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Avatar, Grid, Typography } from '@mui/material';
 import React from 'react';
 
 interface ConversationPreviewProps {
@@ -11,7 +11,23 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   avatarPhotoFileString,
 }) => {
   return (
-    <Grid sx={{ width: '100%', height: '80px' }}>
+    <Grid
+      sx={{
+        display: 'flex',
+        justifyContent: 'flex-start',
+        width: '100%',
+        height: '72px',
+      }}
+    >
+      <Avatar
+        src={
+          !!avatarPhotoFileString
+            ? `data:image/jpeg;base64,${avatarPhotoFileString}`
+            : ''
+        }
+        alt={conversationName}
+        sx={{ height: '56px', width: '56px' }}
+      />
       <Typography>{conversationName}</Typography>
     </Grid>
   );
