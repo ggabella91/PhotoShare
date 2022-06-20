@@ -139,7 +139,7 @@ const MessagesPage: React.FC = () => {
       joinedCoversations.forEach((convo) =>
         dispatch(
           getConvoMessagesStart({
-            conversationId: convo.id,
+            conversationId: convo._id,
             limit: 10,
             pageToShow: 1,
           })
@@ -263,7 +263,7 @@ const MessagesPage: React.FC = () => {
                   // TODO: Add styling and avatar to conversation preview
                   return (
                     <ConversationPreview
-                      key={convo.id}
+                      key={convo._id}
                       conversationName={convo.name}
                       avatarS3Key={convo.avatarS3Key}
                     />

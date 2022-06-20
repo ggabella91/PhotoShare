@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Condition } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Conversation,
@@ -49,7 +49,7 @@ export class MessagesAppService {
 
     const existingConvoMatch = await this.conversationModel
       .findOne({
-        connectedUsers: userIdArray,
+        connectedUsers: userIdArray as Condition<User[]>,
       })
       .exec();
 
@@ -174,7 +174,7 @@ export class MessagesAppService {
     );
 
     this.logger.log(
-      `Found the following messages from converation with id ${conversationId}: `,
+      `Found the following messages from conversation with id ${conversationId}: `,
       messagesFromConvoObjects
     );
 
