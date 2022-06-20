@@ -39,7 +39,7 @@ const Conversation: React.FC<ConversationProps> = ({ conversationId }) => {
   const usersInfoList = useUserInfoData(conversationUsers);
 
   const currentConveration = joinedConversations?.find(
-    (conversation) => conversation.id === conversationId
+    (conversation) => conversation._id === conversationId
   );
   const conversationMessageUsers = currentConveration?.connectedUsers;
   const currentConversationMessages = conversationMessages.filter(

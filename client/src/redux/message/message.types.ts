@@ -59,7 +59,7 @@ export interface MessageUser {
 }
 
 export interface Conversation {
-  id: string;
+  _id: string;
   name: string;
   connectedUsers: MessageUser[];
   avatarS3Key?: string;

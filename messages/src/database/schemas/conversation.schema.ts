@@ -11,7 +11,8 @@ export class Conversation {
 
   @Prop({
     required: true,
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   })
   connectedUsers: User[];
 

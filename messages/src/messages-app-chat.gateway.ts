@@ -70,8 +70,6 @@ export class MessagesAppChatGateway
       createConvoDto
     );
 
-    this.logger.log('Created conversation: ', createdConvo);
-
     client.join(createdConvo._id);
     client.emit('joinedConversation', createdConvo);
   }
