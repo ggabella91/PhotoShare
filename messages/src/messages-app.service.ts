@@ -117,7 +117,7 @@ export class MessagesAppService {
     const conversationsForUser = await this.conversationModel
       .find(
         {
-          connectedUsers: userId,
+          connectedUsers: userId as Condition<User[]>,
         },
         null,
         { sort: { id: -1, lastMessageTime: -1 } }
