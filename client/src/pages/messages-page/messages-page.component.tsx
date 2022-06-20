@@ -28,7 +28,7 @@ import {
 
 import {
   generateDefaultConvoName,
-  generateFinalConvoUsersArray,
+  generateFinalConvoUsersArrayAndGetAvatarS3Key,
 } from './messages-page.utils';
 
 const MessagesPage: React.FC = () => {
@@ -84,6 +84,7 @@ const MessagesPage: React.FC = () => {
             userId: currentUser.id,
             name: currentUser.name,
             username: currentUser.username,
+            photoS3Key: currentUser.photo,
           })
         );
       }
@@ -117,14 +118,19 @@ const MessagesPage: React.FC = () => {
       currentUser
     ) {
       const convoName = generateDefaultConvoName(usersArrayForNewConvoReq);
+      const { usersArray, avatarS3Key } =
+        generateFinalConvoUsersArrayAndGetAvatarS3Key(
+          usersArrayForNewConvoReq,
+          currentUser
+        );
 
       socket.emit('createConversation', {
         name: convoName,
-        connectedUsers: generateFinalConvoUsersArray(
-          usersArrayForNewConvoReq,
-          currentUser
-        ),
+        connectedUsers: usersArray,
+        avatarS3Key,
       });
+
+      dispatch(clearUserSuggestions());
     }
   };
 
@@ -259,6 +265,7 @@ const MessagesPage: React.FC = () => {
                     <ConversationPreview
                       key={convo.id}
                       conversationName={convo.name}
+                      avatarS3Key={convo.avatarS3Key}
                     />
                   );
                 })

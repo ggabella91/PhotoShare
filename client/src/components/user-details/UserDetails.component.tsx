@@ -39,6 +39,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
       userId: userData.id!,
       name: userData.name,
       username: userData.username,
+      photoS3Key: userData.photo || '',
     };
 
     isChecked

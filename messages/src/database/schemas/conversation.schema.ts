@@ -17,6 +17,9 @@ export class Conversation {
 
   @Prop()
   lastMessageTime: number;
+
+  @Prop()
+  avatarS3Key: string;
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

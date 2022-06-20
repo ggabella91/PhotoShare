@@ -3,4 +3,5 @@ export class CreateUserDto {
   name: string;
   username: string;
   sessionCookie?: Record<string, any>;
+  photoS3Key?: string;
 }

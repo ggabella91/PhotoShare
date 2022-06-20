@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import MessageComponent from './message.component';
 import { useUserInfoData } from '../../pages/hooks';
 
@@ -21,7 +21,6 @@ import {
 
 import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
 import { UserInfoData } from '../search-bar/search-bar.component';
-import { access } from 'fs';
 
 interface ConversationProps {
   conversationId: string;

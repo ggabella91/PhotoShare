@@ -99,6 +99,9 @@ export enum PostActions {
   UPLOAD_VIDEO_POST_FILE_CHUNK_START = 'UPLOAD_VIDEO_POST_FILE_CHUNK_START',
   UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS = 'UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS',
   UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE = 'UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE',
+
+  // Actions specific to getting conversation avatars
+  GET_CONVERSATION_AVATAR_PHOTO_SUCCESS = 'GET_CONVERSATION_AVATAR_PHOTO_SUCCESS',
 }
 
 export interface PostError {
@@ -162,6 +165,7 @@ export enum UserType {
   suggestionArray = 'suggestionArray',
   postReactorsArray = 'postReactorsArray',
   feedPostReactorsArray = 'feedPostReactorsArray',
+  conversationAvatar = 'conversationAvatar',
 }
 
 export enum DataRequestType {
@@ -390,6 +394,9 @@ export interface PostState {
 
   // Used for multipart video file chunk uploads
   videoPostFileChunkMetaData: UploadVideoPostFileChunkResponse | null;
+
+  // Used for conversation avatars
+  convoAvatarMap: Map<string, PostFile>;
 }
 
 export interface CreatePostStart {
@@ -770,6 +777,8 @@ export interface SetLocationCoordinates {
   payload: LocationCoordinates;
 }
 
+// Interfaces specific to actions involving video posts
+
 export interface UploadVideoPostFileChunkStart {
   type: typeof PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_START;
   payload: UploadVideoPostFileChunkReq;
@@ -783,6 +792,13 @@ export interface UploadVideoPostFileChunkSuccess {
 export interface UploadVideoPostFileChunkFailure {
   type: typeof PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE;
   payload: PostError;
+}
+
+// Interfaces specific to actions involving conversation avatars
+
+export interface GetConversationAvatarPhotoSuccess {
+  type: typeof PostActions.GET_CONVERSATION_AVATAR_PHOTO_SUCCESS;
+  payload: PostFile;
 }
 
 export type PostActionTypes =
@@ -862,4 +878,5 @@ export type PostActionTypes =
   | SetLocationCoordinates
   | UploadVideoPostFileChunkStart
   | UploadVideoPostFileChunkSuccess
-  | UploadVideoPostFileChunkFailure;
+  | UploadVideoPostFileChunkFailure
+  | GetConversationAvatarPhotoSuccess;

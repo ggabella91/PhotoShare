@@ -24,12 +24,12 @@ export class MessagesAppController {
   @Post('/users')
   findOrCreateUser(@Request() req) {
     const { headers, body } = req;
-    const { userId, name, username } = body;
+    const { userId, name, username, photoS3Key } = body;
     const { cookie } = headers;
 
     const sessionCookie = JSON.parse(
       Buffer.from(
-        cookie.substr(cookie.indexOf('express:sess=') + 13),
+        cookie.substring(cookie.indexOf('express:sess=') + 13),
         'base64'
       ).toString()
     );
@@ -39,6 +39,7 @@ export class MessagesAppController {
       name,
       username,
       sessionCookie,
+      photoS3Key,
     });
   }
 

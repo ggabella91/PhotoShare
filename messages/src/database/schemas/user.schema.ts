@@ -25,6 +25,9 @@ export class User {
 
   @Prop()
   isAuthenticated: boolean;
+
+  @Prop()
+  photoS3Key?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -11,11 +11,15 @@ import {
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useDebounce, useUserInfoData } from '../hooks';
+import { List } from 'immutable';
 
 import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
 
 import { selectUserSuggestions } from '../../redux/user/user.selectors';
-import { getUserSuggestionsStart } from '../../redux/user/user.actions';
+import {
+  getUserSuggestionsStart,
+  clearUserSuggestions,
+} from '../../redux/user/user.actions';
 
 import { MessageUser } from '../../redux/message/message.types';
 import { removeUserFromConvoUsersArray } from '../../redux/message/message.actions';
@@ -34,9 +38,8 @@ const NewConvoDialog: React.FC<NewConvoDialogProps> = ({
   handleClickNext,
 }) => {
   const [userSearchString, setUserSearchString] = useState('');
-
   const userSuggestions = useSelector(selectUserSuggestions);
-  const userSuggestionsList = useUserInfoData(userSuggestions);
+  let userSuggestionsList = useUserInfoData(userSuggestions);
 
   const usersArrayLength = useRef<number>(0);
 
@@ -65,6 +68,8 @@ const NewConvoDialog: React.FC<NewConvoDialogProps> = ({
 
   const handleCloseDialog = () => {
     setShowNewMessageDialog(false);
+    dispatch(clearUserSuggestions());
+    setUserSearchString('');
   };
 
   const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
