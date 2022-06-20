@@ -108,6 +108,8 @@ export const useUserInfoData = (usersList: User[] | null) => {
       if (count === 0) {
         setNoProfilePhotosToFetch(true);
       }
+    } else {
+      setUserSuggestionsList(List());
     }
   }, [usersList]);
 

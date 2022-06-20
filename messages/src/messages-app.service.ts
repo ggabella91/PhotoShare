@@ -38,6 +38,7 @@ export class MessagesAppService {
           userId: user.userId,
           name: user.name,
           username: user.username,
+          photoS3Key: user.photoS3Key,
         })
       )
     );
@@ -46,13 +47,29 @@ export class MessagesAppService {
       (user) => user.userId
     );
 
-    const createdConvo = new this.conversationModel({
-      ...createConvoPreDto,
-      connectedUsers: userIdArray,
-    });
-    const savedConvo = (await createdConvo.save()).toObject();
+    const existingConvoMatch = await this.conversationModel
+      .findOne({
+        connectedUsers: userIdArray,
+      })
+      .exec();
 
-    return savedConvo;
+    if (existingConvoMatch) {
+      this.logger.log('Found existing conversation with the same users...');
+
+      const updatedExistingConvoMatch = await (
+        await this.updateLastMessageTimeForConvo(existingConvoMatch._id)
+      ).toObject();
+
+      return updatedExistingConvoMatch;
+    } else {
+      const createdConvo = new this.conversationModel({
+        ...createConvoPreDto,
+        connectedUsers: userIdArray,
+      });
+      const savedConvo = (await createdConvo.save()).toObject();
+
+      return savedConvo;
+    }
   }
 
   async findOrCreateUser(createUserDto: CreateUserDto) {
@@ -103,7 +120,7 @@ export class MessagesAppService {
           connectedUsers: userId,
         },
         null,
-        { sort: { lastMessageTime: -1 } }
+        { sort: { id: -1, lastMessageTime: -1 } }
       )
       .exec();
 
@@ -132,6 +149,8 @@ export class MessagesAppService {
       `Updated conversation with id ${conversationId}: `,
       updatedConversation
     );
+
+    return updatedConversation;
   }
 
   async findMessagesFromConvo({

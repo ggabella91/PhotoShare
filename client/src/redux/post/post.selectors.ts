@@ -291,3 +291,8 @@ export const selectVideoPostFileChunkMetaData = createSelector(
   [selectPostState],
   (postState: PostState) => postState.videoPostFileChunkMetaData
 );
+
+export const selectConvoAvatarMap = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.convoAvatarMap
+);

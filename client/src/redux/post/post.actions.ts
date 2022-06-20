@@ -514,3 +514,10 @@ export const uploadVideoPostFileChunkFailure = (
   type: PostActions.UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE,
   payload: error,
 });
+
+export const getConversationAvatarPhotoSuccess = (
+  avatarInfo: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_CONVERSATION_AVATAR_PHOTO_SUCCESS,
+  payload: avatarInfo,
+});

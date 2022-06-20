@@ -75,6 +75,7 @@ import {
   getMapBoxAccessTokenFailure,
   uploadVideoPostFileChunkSuccess,
   uploadVideoPostFileChunkFailure,
+  getConversationAvatarPhotoSuccess,
 } from './post.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -293,6 +294,10 @@ export function* getPostFile({
       ) {
         yield put(
           getUserPhotoForFeedReactorArraySuccess({ s3Key, fileString: data })
+        );
+      } else if (user === UserType.conversationAvatar) {
+        yield put(
+          getConversationAvatarPhotoSuccess({ s3Key, fileString: data })
         );
       }
     }

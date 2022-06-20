@@ -55,18 +55,21 @@ export interface MessageUser {
   joinedConversations: Conversation[];
   sessionCookie: Record<string, any>;
   isAuthenticated: boolean;
+  photoS3Key?: string;
 }
 
 export interface Conversation {
   id: string;
   name: string;
   connectedUsers: MessageUser[];
+  avatarS3Key?: string;
 }
 
 export interface FindOrCreateUserReq {
   userId: string;
   name: string;
   username: string;
+  photoS3Key?: string;
 }
 
 export interface FindOrCreateUserStart {

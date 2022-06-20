@@ -5,6 +5,7 @@ import {
   PostActionTypes,
   PostState,
   PostModalCacheObj,
+  PostFile,
 } from './post.types';
 import {
   addToPostDataArray,
@@ -91,6 +92,9 @@ const INITIAL_STATE: PostState = {
 
   // Used for multipart video file chunk uploads
   videoPostFileChunkMetaData: null,
+
+  // Used for conversation avatars
+  convoAvatarMap: Map<string, PostFile>(),
 };
 
 const postReducer = (
@@ -284,6 +288,14 @@ const postReducer = (
         ...state,
         videoPostFileChunkMetaData: action.payload,
         postError: null,
+      };
+    case PostActions.GET_CONVERSATION_AVATAR_PHOTO_SUCCESS:
+      return {
+        ...state,
+        convoAvatarMap: state.convoAvatarMap.set(
+          action.payload.s3Key,
+          action.payload
+        ),
       };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
