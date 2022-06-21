@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 
 import { validateRequest, BadRequestError } from '@ggabella-photo-share/common';
 import { User } from '../models/user';
-import { generateDefaultUsername } from '../utils/generateDefaultUsername';
 import { NewUserCreatedPublisher } from '../events/publishers/new-user-created-publisher';
 import { natsWrapper } from '../nats-wrapper';
 

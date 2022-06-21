@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Grid, Typography, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -31,8 +32,14 @@ import {
   generateFinalConvoUsersArrayAndGetAvatarS3Key,
 } from './messages-page.utils';
 
-const MessagesPage: React.FC = () => {
-  const [showNewMessageDialog, setShowNewMessageDialog] = useState(false);
+interface MessagesPageProps {
+  openNewConvoModal?: boolean;
+}
+
+const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
+  const [showNewMessageDialog, setShowNewMessageDialog] = useState(
+    !!openNewConvoModal
+  );
   const [isViewingConversation, setIsViewingConversation] = useState(false);
 
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
@@ -44,6 +51,7 @@ const MessagesPage: React.FC = () => {
   const messageUser = useSelector(selectMessageUser);
   const joinedCoversations = useSelector(selectJoinedConversations);
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
+  const { conversationId } = useParams();
 
   const dispatch = useDispatch();
 
@@ -264,6 +272,7 @@ const MessagesPage: React.FC = () => {
                   return (
                     <ConversationPreview
                       key={convo._id}
+                      conversationId={convo._id}
                       conversationName={convo.name}
                       avatarS3Key={convo.avatarS3Key}
                     />
