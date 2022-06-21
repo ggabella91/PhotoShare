@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes, Outlet } from 'react-router-dom';
+import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -80,7 +80,12 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
               </WithAuth>
             }
           >
-            <Route path='/direct/inbox' element={<MessagesPage />} />
+            <Route path='/direct' element={<Outlet />}>
+              <Route index element={<Navigate to='/direct/inbox' replace />} />
+              <Route path='inbox' element={<MessagesPage />} />
+              <Route path='t/:conversationId' element={<MessagesPage />} />
+              <Route path='new' element={<MessagesPage openNewConvoModal />} />
+            </Route>
             <Route path='/post' element={<CreatePostPage />} />
             <Route path='/video-post' element={<CreateVideoPostPage />} />
             <Route path='/settings' element={<SettingsPage />} />

@@ -8,11 +8,13 @@ import { getPostFileStart } from '../../redux/post/post.actions';
 
 interface ConversationPreviewProps {
   conversationName: string;
+  conversationId: string;
   avatarS3Key?: string;
 }
 
 const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   conversationName,
+  conversationId,
   avatarS3Key,
 }) => {
   const convoAvatarMap = useSelector(selectConvoAvatarMap);
@@ -41,6 +43,8 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
     }
   }, [avatarS3Key]);
 
+  const handleClick = () => {};
+
   return (
     <Grid
       sx={{
@@ -53,6 +57,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
           cursor: 'pointer',
         },
       }}
+      onClick={handleClick}
     >
       <Avatar
         src={
