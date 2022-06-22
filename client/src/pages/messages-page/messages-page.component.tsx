@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Grid, Typography, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import NewConvoDialog from './new-convo-dialog.component';
 import ConversationPreview from '../../components/conversation/conversation-preview.component';
+import ConversationComponent from '../../components/conversation/conversation.component';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { clearUserSuggestions } from '../../redux/user/user.actions';
@@ -40,7 +41,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const [showNewMessageDialog, setShowNewMessageDialog] = useState(
     !!openNewConvoModal
   );
-  const [isViewingConversation, setIsViewingConversation] = useState(false);
 
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
     useState(false);
@@ -51,6 +51,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const messageUser = useSelector(selectMessageUser);
   const joinedCoversations = useSelector(selectJoinedConversations);
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
+  const navigate = useNavigate();
   const { conversationId } = useParams();
 
   const dispatch = useDispatch();
@@ -108,6 +109,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       dispatch(addToJoinedConversationsArray(conversation));
       setShowNewMessageDialog(false);
       dispatch(resetConvoUsersArray());
+      navigate(`direct/t/${conversation._id}`);
     });
 
     socket.on('joinedConversations', (conversations) => {
@@ -289,8 +291,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
               justifyContent: 'center',
             }}
           >
-            {isViewingConversation ? (
-              <Grid></Grid>
+            {!!conversationId ? (
+              <ConversationComponent conversationId={conversationId} />
             ) : (
               renderNoActiveConvosScreen()
             )}
