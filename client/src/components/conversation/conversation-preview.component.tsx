@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Avatar, Grid, Typography } from '@mui/material';
 
 import { FileRequestType, UserType } from '../../redux/post/post.types';
@@ -21,6 +22,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   const convoAvatarFileString =
     avatarS3Key && convoAvatarMap.get(avatarS3Key)?.fileString;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   let bucket: string;
 
@@ -43,7 +45,9 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
     }
   }, [avatarS3Key]);
 
-  const handleClick = () => {};
+  const handleClick = () => {
+    navigate(`/direct/t/${conversationId}`);
+  };
 
   return (
     <Grid
