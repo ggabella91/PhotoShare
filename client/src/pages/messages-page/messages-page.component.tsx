@@ -109,7 +109,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       dispatch(addToJoinedConversationsArray(conversation));
       setShowNewMessageDialog(false);
       dispatch(resetConvoUsersArray());
-      navigate(`direct/t/${conversation._id}`);
+      navigate(`/direct/t/${conversation._id}`, { replace: true });
     });
 
     socket.on('joinedConversations', (conversations) => {
@@ -187,6 +187,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   ]);
 
   const handleSendMessage = () => {
+    navigate('/direct/new', { replace: true });
     setShowNewMessageDialog(true);
   };
 
