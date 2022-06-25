@@ -83,8 +83,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
   useEffect(() => {
     socket.on('connect', () => {
-      console.log('Socket connection established with messages server');
-
       setIsSocketConnectionActive(true);
 
       if (currentUser) {
