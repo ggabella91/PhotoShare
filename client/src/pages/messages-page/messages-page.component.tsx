@@ -53,6 +53,9 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
   const navigate = useNavigate();
   const { conversationId } = useParams();
+  const avatarS3Key =
+    joinedCoversations?.find((convo) => convo._id === conversationId)
+      ?.avatarS3Key || '';
 
   const dispatch = useDispatch();
 
@@ -245,6 +248,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         position: 'relative',
         justifyContent: 'center',
         fontFamily: 'fontFamily',
+        padding: '20px',
       }}
     >
       <Grid
@@ -264,22 +268,33 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
             sx={{
               borderRight: '1px solid rgb(219,219,219)',
               width: '350px',
-              overflowY: 'scroll',
             }}
           >
-            {joinedCoversations?.length
-              ? joinedCoversations.map((convo) => {
-                  // TODO: Add styling and avatar to conversation preview
-                  return (
-                    <ConversationPreview
-                      key={convo._id}
-                      conversationId={convo._id}
-                      conversationName={convo.name}
-                      avatarS3Key={convo.avatarS3Key}
-                    />
-                  );
-                })
-              : null}
+            <Grid
+              sx={{
+                display: 'flex',
+                height: '60px',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderBottom: '1px solid rgb(219,219,219)',
+              }}
+            >
+              <Typography>{currentUser?.username || ''}</Typography>
+            </Grid>
+            <Grid sx={{ width: '100%', overflowY: 'scroll' }}>
+              {joinedCoversations?.length
+                ? joinedCoversations.map((convo) => {
+                    return (
+                      <ConversationPreview
+                        key={convo._id}
+                        conversationId={convo._id}
+                        conversationName={convo.name}
+                        avatarS3Key={convo.avatarS3Key}
+                      />
+                    );
+                  })
+                : null}
+            </Grid>
           </Grid>
           <Grid
             item
@@ -291,7 +306,11 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
             }}
           >
             {!!conversationId ? (
-              <ConversationComponent conversationId={conversationId} />
+              <ConversationComponent
+                conversationId={conversationId}
+                avatarS3Key={avatarS3Key}
+                socket={socket}
+              />
             ) : (
               renderNoActiveConvosScreen()
             )}
