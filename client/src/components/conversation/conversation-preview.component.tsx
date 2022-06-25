@@ -56,7 +56,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
         justifyContent: 'flex-start',
         width: '100%',
         height: '72px',
-        padding: '8px',
+        padding: '8px 20px',
         '&:hover': {
           cursor: 'pointer',
         },
