@@ -83,7 +83,9 @@ export function* getConvoMessages({
 }) {
   try {
     const { data: messages }: { data: Message[] } = yield axios.get(
-      `/api/messages/conversation/${conversationId}?limit=${limit}&offset=${pageToShow}`
+      `/api/messages/conversation/${conversationId}${
+        limit ? `?limit=${limit}&offset=${pageToShow}` : ''
+      }`
     );
 
     yield put(getConvoMessagesSuccess({ conversationId, messages }));

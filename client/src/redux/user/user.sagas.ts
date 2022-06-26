@@ -145,11 +145,11 @@ export function* getOtherUser({
 
       yield put(getOtherUserSuccess(data));
     } else if (type === OtherUserType.CONVERSATION_USER) {
-      const { data }: { data: User } = yield axios.get(
+      const { data: convoUser }: { data: User } = yield axios.get(
         `/api/users/id/${usernameOrId}`
       );
 
-      yield put(getConversationUserSuccess(data));
+      yield put(getConversationUserSuccess(convoUser));
     }
   } catch (err) {
     yield put(getOtherUserFailure(err as Error));

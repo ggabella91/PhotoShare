@@ -2,10 +2,9 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { UserInfoData } from '../components/search-bar/search-bar.component';
 
 import { List } from 'immutable';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { User } from '../redux/user/user.types';
-import { selectUserSuggestions } from '../redux/user/user.selectors';
 
 import { FileRequestType, UserType, Location } from '../redux/post/post.types';
 import { selectSuggestionPhotoFileArray } from '../redux/post/post.selectors';
@@ -76,6 +75,7 @@ export const useUserInfoData = (usersList: User[] | null) => {
   const [userSuggestionsList, setUserSuggestionsList] = useState<
     List<UserInfoData>
   >(List());
+  const dispatch = useDispatch();
 
   const userSuggestionProfilePhotoFiles = useSelector(
     selectSuggestionPhotoFileArray
@@ -96,12 +96,14 @@ export const useUserInfoData = (usersList: User[] | null) => {
       for (let user of usersList) {
         if (user.photo) {
           count++;
-          getPostFileStart({
-            user: UserType.suggestionArray,
-            bucket,
-            s3Key: user.photo,
-            fileRequestType: FileRequestType.singlePost,
-          });
+          dispatch(
+            getPostFileStart({
+              user: UserType.suggestionArray,
+              bucket,
+              s3Key: user.photo,
+              fileRequestType: FileRequestType.singlePost,
+            })
+          );
         }
       }
 

@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useDebounce, useUserInfoData } from '../hooks';
-import { List } from 'immutable';
 
 import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
 

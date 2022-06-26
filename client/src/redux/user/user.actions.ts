@@ -1,3 +1,4 @@
+import { MessageUser } from '../message/message.types';
 import {
   UserActions,
   UserActionTypes,
@@ -245,4 +246,8 @@ export const getFeedPostReactorsSuccess = (user: User): UserActionTypes => ({
 export const getConversationUserSuccess = (user: User): UserActionTypes => ({
   type: UserActions.GET_CONVERSATION_USER_SUCCESS,
   payload: user,
+});
+
+export const clearConversationUsers = (): UserActionTypes => ({
+  type: UserActions.CLEAR_CONVERSATION_USERS,
 });

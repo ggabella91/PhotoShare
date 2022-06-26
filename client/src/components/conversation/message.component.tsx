@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Grid, Avatar, Typography } from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
@@ -32,16 +32,28 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-end',
+            marginLeft: '10px',
           }}
         >
           <Avatar
-            src={`data:image/jpeg;base64,${userInfo.profilePhotoFileString}`}
-            alt={userInfo.name}
+            src={
+              userInfo?.profilePhotoFileString
+                ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
+                : ''
+            }
+            alt={userInfo?.name || ''}
             sx={{ height: '24px', width: '24px' }}
           />
         </Grid>
       )}
-      <Grid sx={{ display: 'flex', borderRadius: '50%' }}>
+      <Grid
+        sx={{
+          display: 'flex',
+          borderRadius: '50%',
+          padding: '10px',
+          alignItems: 'center',
+        }}
+      >
         <Typography sx={{ fontSize: 14 }}>{message.text}</Typography>
       </Grid>
     </Grid>

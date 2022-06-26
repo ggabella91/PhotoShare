@@ -57,7 +57,7 @@ export class MessagesAppService {
       this.logger.log('Found existing conversation with the same users...');
 
       const updatedExistingConvoMatch = await (
-        await this.updateLastMessageTimeForConvo(existingConvoMatch._id)
+        await this.updateLastMessageTimeForConvo(existingConvoMatch.id)
       ).toObject();
 
       return updatedExistingConvoMatch;
@@ -132,6 +132,8 @@ export class MessagesAppService {
   }
 
   async createMessage(createMessageDto: CreateMessageDto) {
+    createMessageDto.text = createMessageDto.text.replace(/[\n]/gim, '');
+
     const createdMessage = new this.messageModel(createMessageDto);
     const savedMessage = (await createdMessage.save()).toObject();
 
@@ -158,16 +160,19 @@ export class MessagesAppService {
     limit,
     offset,
   }: FindMessagesFromConvo) {
-    const messagesFromConvo = await this.messageModel
-      .find(
-        {
+    let messagesFromConvo;
+    if (limit) {
+      messagesFromConvo = await this.messageModel
+        .find({
           conversation: conversationId,
-        },
-        null,
-        { sort: { created: -1 } }
-      )
-      .limit(limit)
-      .skip((offset - 1) * limit);
+        })
+        .limit(limit)
+        .skip((offset - 1) * limit);
+    } else {
+      messagesFromConvo = await this.messageModel.find({
+        conversation: conversationId,
+      });
+    }
 
     const messagesFromConvoObjects = messagesFromConvo.map((message) =>
       message.toObject()

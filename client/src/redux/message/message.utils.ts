@@ -12,7 +12,7 @@ export const updateJoinedConversationsArray = (
   if (Array.isArray(conversationsToAdd)) {
     return [...conversationsToAdd, ...currentConvosArray];
   } else {
-    if (!currentConvosArray.some((el) => el._id === conversationsToAdd._id)) {
+    if (!currentConvosArray.some((el) => el.id === conversationsToAdd.id)) {
       return [conversationsToAdd, ...currentConvosArray];
     } else {
       return currentConvosArray;

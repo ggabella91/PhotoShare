@@ -26,8 +26,8 @@ export interface MessageState {
 
 export interface GetConvoMessagesReq {
   conversationId: string;
-  limit: number;
-  pageToShow: number;
+  limit?: number;
+  pageToShow?: number;
 }
 
 export interface ConvoMessages {
@@ -37,7 +37,7 @@ export interface ConvoMessages {
 
 export interface Message {
   id: string;
-  userId: string;
+  ownerId: string;
   text: string;
   conversationId: string;
 }
@@ -59,9 +59,9 @@ export interface MessageUser {
 }
 
 export interface Conversation {
-  _id: string;
+  id: string;
   name: string;
-  connectedUsers: MessageUser[];
+  connectedUsers: string[];
   avatarS3Key?: string;
 }
 

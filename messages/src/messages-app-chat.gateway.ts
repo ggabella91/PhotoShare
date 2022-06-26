@@ -50,13 +50,13 @@ export class MessagesAppChatGateway
     @MessageBody()
     message: CreateMessageDto
   ) {
-    const { conversationId, ...restOfMessage } = message;
+    const { conversationId } = message;
 
-    await this.appService.createMessage({ conversationId, ...restOfMessage });
+    const createdMessage = await this.appService.createMessage(message);
 
     await this.appService.updateLastMessageTimeForConvo(conversationId);
 
-    this.wss.to(conversationId).emit('chatToClient', restOfMessage);
+    this.wss.to(conversationId).emit('chatToClient', createdMessage);
   }
 
   @SubscribeMessage('createConversation')
@@ -70,7 +70,7 @@ export class MessagesAppChatGateway
       createConvoDto
     );
 
-    client.join(createdConvo._id.toString());
+    client.join(createdConvo.id.toString());
     client.emit('joinedConversation', createdConvo);
   }
 
@@ -83,7 +83,7 @@ export class MessagesAppChatGateway
       await this.appService.findAllConversationsForUser(message.userId);
 
     const existingConvoIds = existingConversations.length
-      ? existingConversations.map((convo) => convo._id.toString())
+      ? existingConversations.map((convo) => convo.id.toString())
       : null;
 
     this.logger.log('Conversations found for user: ', existingConversations);

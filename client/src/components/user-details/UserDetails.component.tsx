@@ -43,7 +43,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
     };
 
     isChecked
-      ? dispatch(removeUserFromConvoUsersArray(user.id!))
+      ? dispatch(removeUserFromConvoUsersArray(user.userId!))
       : dispatch(addUserToConvoUsersArray(user));
 
     setIsChecked(!isChecked);
