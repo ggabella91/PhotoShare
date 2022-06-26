@@ -37,7 +37,7 @@ export interface ConvoMessages {
 
 export interface Message {
   id: string;
-  userId: string;
+  ownerId: string;
   text: string;
   conversationId: string;
 }

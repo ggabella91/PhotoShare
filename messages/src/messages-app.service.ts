@@ -132,10 +132,17 @@ export class MessagesAppService {
   }
 
   async createMessage(createMessageDto: CreateMessageDto) {
-    const createdMessage = new this.messageModel(createMessageDto);
-    const savedMessage = (await createdMessage.save()).toObject();
+    createMessageDto.text = createMessageDto.text.replace(
+      /[^a-z0-9áéíóúñü \.,_-]/gim,
+      ''
+    );
 
-    return savedMessage;
+    console.log('createMessageDto: ', createMessageDto);
+
+    const createdMessage = new this.messageModel(createMessageDto);
+    const savedMessage = (await createdMessage.save()).toObject({});
+
+    return { ...savedMessage };
   }
 
   async updateLastMessageTimeForConvo(conversationId: string) {
@@ -163,8 +170,8 @@ export class MessagesAppService {
         {
           conversation: conversationId,
         },
-        null,
-        { sort: { created: -1 } }
+        // null,
+        // { sort: { created: -1 } }
       )
       .limit(limit)
       .skip((offset - 1) * limit);

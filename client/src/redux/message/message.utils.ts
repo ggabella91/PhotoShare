@@ -30,6 +30,7 @@ export const addConvoMessages = (
   );
 
   if (!areConvoMessagesInArray) {
+    convoMessagesToAdd.messages = convoMessagesToAdd.messages.reverse();
     return [...currentConvoMessagesArray, convoMessagesToAdd];
   } else {
     return [...currentConvoMessagesArray];
@@ -44,7 +45,7 @@ export const addMessage = (
     if (convoMessages.conversationId === message.conversationId) {
       return {
         conversationId: convoMessages.conversationId,
-        messages: [...convoMessages.messages, message],
+        messages: [message, ...convoMessages.messages],
       };
     } else {
       return convoMessages;

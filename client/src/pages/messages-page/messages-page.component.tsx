@@ -122,29 +122,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
     });
   }, [socket]);
 
-  const handleClickNext = () => {
-    if (
-      isSocketConnectionActive &&
-      usersArrayForNewConvoReq.length &&
-      currentUser
-    ) {
-      const convoName = generateDefaultConvoName(usersArrayForNewConvoReq);
-      const { usersArray, avatarS3Key } =
-        generateFinalConvoUsersArrayAndGetAvatarS3Key(
-          usersArrayForNewConvoReq,
-          currentUser
-        );
-
-      socket.emit('createConversation', {
-        name: convoName,
-        connectedUsers: usersArray,
-        avatarS3Key,
-      });
-
-      dispatch(clearUserSuggestions());
-    }
-  };
-
   useEffect(() => {
     if (joinedCoversations?.length) {
       joinedCoversations.forEach((convo) =>
@@ -190,6 +167,29 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const handleSendMessage = () => {
     navigate('/direct/new', { replace: true });
     setShowNewMessageDialog(true);
+  };
+
+  const handleClickNext = () => {
+    if (
+      isSocketConnectionActive &&
+      usersArrayForNewConvoReq.length &&
+      currentUser
+    ) {
+      const convoName = generateDefaultConvoName(usersArrayForNewConvoReq);
+      const { usersArray, avatarS3Key } =
+        generateFinalConvoUsersArrayAndGetAvatarS3Key(
+          usersArrayForNewConvoReq,
+          currentUser
+        );
+
+      socket.emit('createConversation', {
+        name: convoName,
+        connectedUsers: usersArray,
+        avatarS3Key,
+      });
+
+      dispatch(clearUserSuggestions());
+    }
   };
 
   const renderNoActiveConvosScreen = () => {
@@ -281,7 +281,14 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
             >
               <Typography>{currentUser?.username || ''}</Typography>
             </Grid>
-            <Grid sx={{ width: '100%', overflowY: 'scroll' }}>
+            <Grid
+              sx={{
+                width: '100%',
+                overflow: 'hidden auto',
+                height: 'calc(100% - 60px)',
+                paddingTop: '8px',
+              }}
+            >
               {joinedCoversations?.length
                 ? joinedCoversations.map((convo) => {
                     return (

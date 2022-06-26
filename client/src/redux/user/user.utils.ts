@@ -8,7 +8,7 @@ export const addUserToUsersArray = (usersArray: User[] | null, user: User) => {
       }
     }
 
-    return [user, ...usersArray];
+    return [...usersArray, user];
   } else {
     if (user) {
       return [user];

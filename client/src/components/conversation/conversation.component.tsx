@@ -57,10 +57,10 @@ const Conversation: React.FC<ConversationProps> = ({
     avatarS3Key && convoAvatarMap.get(avatarS3Key)?.fileString;
   const usersInfoList = useUserInfoData(conversationUsers);
 
-  const currentConveration = joinedConversations?.find(
+  const currentConversation = joinedConversations?.find(
     (conversation) => conversation._id === conversationId
   );
-  const conversationMessageUsers = currentConveration?.connectedUsers;
+  const conversationMessageUsers = currentConversation?.connectedUsers;
   const currentConversationMessages = conversationMessages.filter(
     (convoMessage) => convoMessage.conversationId === conversationId
   );
@@ -75,13 +75,15 @@ const Conversation: React.FC<ConversationProps> = ({
 
   useEffect(() => {
     if (conversationMessageUsers?.length) {
-      conversationMessageUsers.forEach((user) =>
-        dispatch(
-          getOtherUserStart({
-            type: OtherUserType.CONVERSATION_USER,
-            usernameOrId: user.userId,
-          })
-        )
+      conversationMessageUsers.forEach(
+        (user) =>
+          !!user.id &&
+          dispatch(
+            getOtherUserStart({
+              type: OtherUserType.CONVERSATION_USER,
+              usernameOrId: user.userId,
+            })
+          )
       );
     }
   }, [conversationMessageUsers]);
@@ -99,6 +101,7 @@ const Conversation: React.FC<ConversationProps> = ({
 
   const handleMessageChange = (e: ChangeEvent) => {
     const { value } = e.target as HTMLInputElement;
+
     setMessage(value);
   };
 
@@ -109,7 +112,15 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleSendMessage = () => {
-    console.log('Should send message here', message);
+    if (currentUser) {
+      socket.emit('chatToServer', {
+        text: message,
+        created: new Date(),
+        ownerId: currentUser.id,
+        conversationId,
+      });
+    }
+    setMessage('');
   };
 
   return (
@@ -145,13 +156,13 @@ const Conversation: React.FC<ConversationProps> = ({
               width: '24px',
             }}
           />
-          <Typography>{currentConveration?.name || ''}</Typography>
+          <Typography>{currentConversation?.name || ''}</Typography>
         </Grid>
         {messagesArray?.map((message) => (
           <MessageComponent
-            userInfo={userInfoMap[message.userId]}
+            userInfo={userInfoMap[message.ownerId]}
             message={message}
-            isCurrentUser={message.userId === currentUser?.id}
+            isCurrentUser={message.ownerId === currentUser?.id}
             isGroupConversation={
               !!(conversationUsers && conversationUsers.length > 2)
             }

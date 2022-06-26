@@ -35,8 +35,12 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
           }}
         >
           <Avatar
-            src={`data:image/jpeg;base64,${userInfo.profilePhotoFileString}`}
-            alt={userInfo.name}
+            src={
+              userInfo
+                ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
+                : ''
+            }
+            alt={userInfo?.name || ''}
             sx={{ height: '24px', width: '24px' }}
           />
         </Grid>

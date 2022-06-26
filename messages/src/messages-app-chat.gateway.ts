@@ -50,13 +50,13 @@ export class MessagesAppChatGateway
     @MessageBody()
     message: CreateMessageDto
   ) {
-    const { conversationId, ...restOfMessage } = message;
+    const { conversationId } = message;
 
-    await this.appService.createMessage({ conversationId, ...restOfMessage });
+    await this.appService.createMessage(message);
 
     await this.appService.updateLastMessageTimeForConvo(conversationId);
 
-    this.wss.to(conversationId).emit('chatToClient', restOfMessage);
+    this.wss.to(conversationId).emit('chatToClient', message);
   }
 
   @SubscribeMessage('createConversation')
