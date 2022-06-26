@@ -24,7 +24,7 @@ import {
 import { OtherUserType } from '../../redux/user/user.types';
 import {
   getOtherUserStart,
-  clearUserSuggestions,
+  clearConversationUsers,
 } from '../../redux/user/user.actions';
 
 import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
@@ -58,7 +58,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const usersInfoList = useUserInfoData(conversationUsers);
 
   const currentConversation = joinedConversations?.find(
-    (conversation) => conversation._id === conversationId
+    (conversation) => conversation.id === conversationId
   );
   const conversationMessageUsers = currentConversation?.connectedUsers;
   const currentConversationMessages = conversationMessages.filter(
@@ -69,21 +69,19 @@ const Conversation: React.FC<ConversationProps> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(clearUserSuggestions());
+    dispatch(clearConversationUsers());
     dispatch(clearSuggestionPhotoFileArray());
   }, []);
 
   useEffect(() => {
     if (conversationMessageUsers?.length) {
-      conversationMessageUsers.forEach(
-        (user) =>
-          !!user.id &&
-          dispatch(
-            getOtherUserStart({
-              type: OtherUserType.CONVERSATION_USER,
-              usernameOrId: user.userId,
-            })
-          )
+      conversationMessageUsers.forEach((userId) =>
+        dispatch(
+          getOtherUserStart({
+            type: OtherUserType.CONVERSATION_USER,
+            usernameOrId: userId,
+          })
+        )
       );
     }
   }, [conversationMessageUsers]);
@@ -128,38 +126,41 @@ const Conversation: React.FC<ConversationProps> = ({
       <Grid
         sx={{
           display: 'flex',
-          flexDirection: 'column',
-          height: 'auto',
-          minHeight: '85%',
+          height: '60px',
+          minHeight: '60px',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          padding: '0px 20px',
+          borderBottom: '1px solid rgb(219,219,219)',
         }}
       >
-        <Grid
+        <Avatar
+          src={
+            !!convoAvatarFileString
+              ? `data:image/jpeg;base64,${convoAvatarFileString}`
+              : ''
+          }
           sx={{
-            display: 'flex',
-            height: '60px',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            padding: '0px 20px',
-            borderBottom: '1px solid rgb(219,219,219)',
+            marginLeft: '15px',
+            marginRight: '15px',
+            height: '24px',
+            width: '24px',
           }}
-        >
-          <Avatar
-            src={
-              !!convoAvatarFileString
-                ? `data:image/jpeg;base64,${convoAvatarFileString}`
-                : ''
-            }
-            sx={{
-              marginLeft: '15px',
-              marginRight: '15px',
-              height: '24px',
-              width: '24px',
-            }}
-          />
-          <Typography>{currentConversation?.name || ''}</Typography>
-        </Grid>
+        />
+        <Typography>{currentConversation?.name || ''}</Typography>
+      </Grid>
+      <Grid
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: 'auto',
+          minHeight: '80%',
+          overflowY: 'auto',
+        }}
+      >
         {messagesArray?.map((message) => (
           <MessageComponent
+            key={message.id}
             userInfo={userInfoMap[message.ownerId]}
             message={message}
             isCurrentUser={message.ownerId === currentUser?.id}
@@ -169,7 +170,7 @@ const Conversation: React.FC<ConversationProps> = ({
           />
         ))}
       </Grid>
-      <Grid xs={12} sx={{ display: 'flex' }}>
+      <Grid item xs={12} sx={{ display: 'flex' }}>
         <Box component='form' sx={{ width: '100%' }}>
           <TextField
             multiline

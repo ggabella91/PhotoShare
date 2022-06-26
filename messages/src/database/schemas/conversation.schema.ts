@@ -4,7 +4,16 @@ import { User } from './user.schema';
 
 export type ConversationDocument = Conversation & Document;
 
-@Schema()
+@Schema({
+  toObject: {
+    transform: function (doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret._v;
+      return ret;
+    },
+  },
+})
 export class Conversation {
   @Prop({ required: true })
   name: string;

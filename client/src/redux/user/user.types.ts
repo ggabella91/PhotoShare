@@ -41,6 +41,7 @@ export enum UserActions {
   SET_IS_CURRENT_USER_PROFILE_PAGE = 'SET_IS_CURRENT_USER_PROFILE_PAGE',
   GET_FEED_POST_REACTOR_SUCCESS = 'GET_FEED_POST_REACTOR_SUCCESS',
   GET_CONVERSATION_USER_SUCCESS = 'GET_CONVERSATION_USER_SUCCESS',
+  CLEAR_CONVERSATION_USERS = 'CLEAR_CONVERSATION_USERS',
 }
 
 export interface UserSignUp {
@@ -351,6 +352,10 @@ export interface GetConversationUserSuccess {
   payload: User;
 }
 
+export interface ClearConversationUsers {
+  type: typeof UserActions.CLEAR_CONVERSATION_USERS;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -394,4 +399,5 @@ export type UserActionTypes =
   | ClearFollowersOrFollowing
   | SetIsCurrentUserProfilePage
   | GetFeedPostReactorsSuccess
-  | GetConversationUserSuccess;
+  | GetConversationUserSuccess
+  | ClearConversationUsers;

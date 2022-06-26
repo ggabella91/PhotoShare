@@ -12,7 +12,7 @@ export const updateJoinedConversationsArray = (
   if (Array.isArray(conversationsToAdd)) {
     return [...conversationsToAdd, ...currentConvosArray];
   } else {
-    if (!currentConvosArray.some((el) => el._id === conversationsToAdd._id)) {
+    if (!currentConvosArray.some((el) => el.id === conversationsToAdd.id)) {
       return [conversationsToAdd, ...currentConvosArray];
     } else {
       return currentConvosArray;
@@ -30,7 +30,6 @@ export const addConvoMessages = (
   );
 
   if (!areConvoMessagesInArray) {
-    convoMessagesToAdd.messages = convoMessagesToAdd.messages.reverse();
     return [...currentConvoMessagesArray, convoMessagesToAdd];
   } else {
     return [...currentConvoMessagesArray];
@@ -45,7 +44,7 @@ export const addMessage = (
     if (convoMessages.conversationId === message.conversationId) {
       return {
         conversationId: convoMessages.conversationId,
-        messages: [message, ...convoMessages.messages],
+        messages: [...convoMessages.messages, message],
       };
     } else {
       return convoMessages;

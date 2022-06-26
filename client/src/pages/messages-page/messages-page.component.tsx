@@ -54,7 +54,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const navigate = useNavigate();
   const { conversationId } = useParams();
   const avatarS3Key =
-    joinedCoversations?.find((convo) => convo._id === conversationId)
+    joinedCoversations?.find((convo) => convo.id === conversationId)
       ?.avatarS3Key || '';
 
   const dispatch = useDispatch();
@@ -110,7 +110,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       dispatch(addToJoinedConversationsArray(conversation));
       setShowNewMessageDialog(false);
       dispatch(resetConvoUsersArray());
-      navigate(`/direct/t/${conversation._id}`, { replace: true });
+      navigate(`/direct/t/${conversation.id}`, { replace: true });
     });
 
     socket.on('joinedConversations', (conversations) => {
@@ -127,9 +127,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       joinedCoversations.forEach((convo) =>
         dispatch(
           getConvoMessagesStart({
-            conversationId: convo._id,
-            limit: 10,
-            pageToShow: 1,
+            conversationId: convo.id,
           })
         )
       );
@@ -293,8 +291,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
                 ? joinedCoversations.map((convo) => {
                     return (
                       <ConversationPreview
-                        key={convo._id}
-                        conversationId={convo._id}
+                        key={convo.id}
+                        conversationId={convo.id}
                         conversationName={convo.name}
                         avatarS3Key={convo.avatarS3Key}
                       />

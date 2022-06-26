@@ -5,7 +5,16 @@ import { User } from './user.schema';
 
 export type MessageDocument = Message & Document;
 
-@Schema()
+@Schema({
+  toObject: {
+    transform: function (doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret._v;
+      return ret;
+    },
+  },
+})
 export class Message {
   @Prop({ required: true })
   text: string;

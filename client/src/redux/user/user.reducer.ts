@@ -209,6 +209,11 @@ const userReducer = (
         userSuggestionsConfirm: null,
         userSuggestionsError: null,
       };
+    case UserActions.CLEAR_CONVERSATION_USERS:
+      return {
+        ...state,
+        conversationUsers: null,
+      };
     case UserActions.CLEAR_FOLLOWERS_AND_FOLLOWING:
       return {
         ...state,
