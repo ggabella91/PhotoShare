@@ -12,7 +12,6 @@ spec:
       labels:
         app: auth
     spec:
-      dnsPolicy: Default
       containers:
         - name: auth
           image: ggabella91/auth
