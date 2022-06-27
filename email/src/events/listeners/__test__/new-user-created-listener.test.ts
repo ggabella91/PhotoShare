@@ -11,7 +11,7 @@ const setup = () => {
 
   // Create fake user created event
   const data: NewUserCreatedEvent['data'] = {
-    id: mongoose.Types.ObjectId().toHexString(),
+    id: new mongoose.Types.ObjectId().toHexString(),
     name: 'Test Dude',
     email: 'testdude@testemail.com',
     username: 'testdude365',

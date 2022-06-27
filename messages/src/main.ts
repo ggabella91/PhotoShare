@@ -16,6 +16,14 @@ async function bootstrap() {
     throw new Error('MONGO_URI must be defined');
   }
 
+  if (!process.env.MONGO_CLUSTER_HOST) {
+    throw new Error('MONGO_CLUSTER_HOST must be defined');
+  }
+
+  if (!process.env.MONGO_PASSWORD) {
+    throw new Error('MONGO_PASSWORD must be defined');
+  }
+
   if (!process.env.NATS_CLIENT_ID) {
     throw new Error('NATS_CLIENT_ID must be defined');
   }

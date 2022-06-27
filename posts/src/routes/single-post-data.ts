@@ -29,7 +29,7 @@ router.get(
     });
     console.log('Single Post Data: ', singlePostWithoutLocationObj);
 
-    let singlePost: PostResponseObj | null = null;
+    let singlePost: Partial<PostResponseObj> | null = null;
 
     let savedPostLocationObj: LocationDoc | null = null;
     if (

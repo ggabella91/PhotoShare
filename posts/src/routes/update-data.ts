@@ -66,7 +66,7 @@ router.patch(
     if (updatedPost) {
       const updatedPostObj = updatedPost.toObject();
 
-      const updatedPostResponseObj: PostResponseObj = {
+      const updatedPostResponseObj: Partial<PostResponseObj> = {
         ...updatedPostObj,
         postLocation: savedPostLocation?.toObject() || undefined,
       };

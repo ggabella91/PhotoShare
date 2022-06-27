@@ -221,7 +221,7 @@ router.post(
 
               const postObj = post.toObject();
 
-              const postResponseObj: PostResponseObj = {
+              const postResponseObj: Partial<PostResponseObj> = {
                 ...postObj,
                 postLocation: savedPostLocation?.toObject() || undefined,
               };

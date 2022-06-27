@@ -22,7 +22,7 @@ const setup = async () => {
   // Create fake user created event
   const data: ProfilePhotoUpdatedEvent['data'] = {
     userId: user.id,
-    s3Key: `user-${mongoose.Types.ObjectId().toHexString()}-1609473101903.jpeg`,
+    s3Key: `user-${new mongoose.Types.ObjectId().toHexString()}-1609473101903.jpeg`,
   };
 
   //@ts-ignore

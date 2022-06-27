@@ -54,7 +54,7 @@ router.get(
         postsWithLocationId
       );
 
-      let postsWithLocation: PostResponseObj[] = [];
+      let postsWithLocation: Partial<PostResponseObj>[] = [];
       let savedPostLocationObjPromises: Promise<LocationDoc | null>[] = [];
 
       postsWithLocationId.forEach(async (post) => {
@@ -74,7 +74,7 @@ router.get(
       postsWithLocationId.forEach((post, idx) => {
         const postObj = post.toObject();
 
-        const postResponseObj: PostResponseObj = {
+        const postResponseObj: Partial<PostResponseObj> = {
           ...postObj,
           postLocation: savedPostLocationObjs[idx]?.toObject() || undefined,
         };
@@ -105,7 +105,7 @@ router.get(
         postsWithLocationId
       );
 
-      let postsWithLocation: PostResponseObj[] = [];
+      let postsWithLocation: Partial<PostResponseObj>[] = [];
       let savedPostLocationObjPromises: Promise<LocationDoc | null>[] = [];
 
       postsWithLocationId.forEach(async (post) => {
@@ -125,7 +125,7 @@ router.get(
       postsWithLocationId.forEach((post, idx) => {
         const postObj = post.toObject();
 
-        const postResponseObj: PostResponseObj = {
+        const postResponseObj: Partial<PostResponseObj> = {
           ...postObj,
           postLocation: savedPostLocationObjs[idx]?.toObject() || undefined,
         };
