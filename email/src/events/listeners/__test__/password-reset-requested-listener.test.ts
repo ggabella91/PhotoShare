@@ -13,7 +13,7 @@ const setup = () => {
   const data: PasswordResetRequestedEvent['data'] = {
     name: 'Test Dude',
     email: 'testdude@testemail.com',
-    resetToken: mongoose.Types.ObjectId().toHexString(),
+    resetToken: new mongoose.Types.ObjectId().toHexString(),
   };
 
   //@ts-ignore

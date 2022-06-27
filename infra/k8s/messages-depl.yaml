@@ -28,7 +28,17 @@ spec:
             - name: NATS_CLUSTER_ID
               value: photo-share
             - name: MONGO_URI
-              value: 'mongodb://messages-mongo-srv:27017/messages'
+              value: 'mongodb+srv://admin:<PASSWORD>@<MONGO_CLUSTER_HOST>/messages?retryWrites=true&w=majority'
+            - name: MONGO_CLUSTER_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: photoshare-mongo-cluster-host
+                  key: MONGO_CLUSTER_HOST
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: photoshare-mongo-password
+                  key: MONGO_PASSWORD
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:

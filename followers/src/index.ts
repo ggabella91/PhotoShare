@@ -13,6 +13,14 @@ const start = async () => {
     throw new Error('MONGO_URI must be defined');
   }
 
+  if (!process.env.MONGO_CLUSTER_HOST) {
+    throw new Error('MONGO_CLUSTER_HOST must be defined');
+  }
+
+  if (!process.env.MONGO_PASSWORD) {
+    throw new Error('MONGO_PASSWORD must be defined');
+  }
+
   if (!process.env.NATS_CLIENT_ID) {
     throw new Error('NATS_CLIENT_ID must be defined');
   }
@@ -35,11 +43,12 @@ const start = async () => {
   process.on('SIGINT', () => natsWrapper.client.close());
   process.on('SIGTERM', () => natsWrapper.client.close());
 
-  await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  });
+  let mongoURI = process.env.MONGO_URI.replace(
+    '<PASSWORD>',
+    process.env.MONGO_PASSWORD
+  ).replace('<MONGO_CLUSTER_HOST>', process.env.MONGO_CLUSTER_HOST);
+
+  await mongoose.connect(mongoURI);
   console.log('Connected to MongoDB');
 
   app.listen(3000, () => {
