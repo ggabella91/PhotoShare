@@ -12,6 +12,7 @@ spec:
       labels:
         app: followers
     spec:
+      dnsPolicy: Default
       containers:
         - name: followers
           image: ggabella91/followers
