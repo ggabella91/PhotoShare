@@ -12,7 +12,6 @@ spec:
       labels:
         app: posts
     spec:
-      dnsPolicy: Default
       containers:
         - name: posts
           image: ggabella91/posts

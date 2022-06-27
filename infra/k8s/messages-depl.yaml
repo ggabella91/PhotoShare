@@ -12,7 +12,6 @@ spec:
       labels:
         app: messages
     spec:
-      dnsPolicy: Default
       containers:
         - name: messages
           image: ggabella91/messages
