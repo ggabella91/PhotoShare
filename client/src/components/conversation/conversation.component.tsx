@@ -61,10 +61,10 @@ const Conversation: React.FC<ConversationProps> = ({
     (conversation) => conversation.id === conversationId
   );
   const conversationMessageUsers = currentConversation?.connectedUsers;
-  const currentConversationMessages = conversationMessages.filter(
+  const currentConversationMessages = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
   );
-  const messagesArray = currentConversationMessages[0]?.messages;
+  const messagesArray = currentConversationMessages?.messages;
 
   const dispatch = useDispatch();
 
