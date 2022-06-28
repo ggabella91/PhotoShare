@@ -17,8 +17,6 @@ import {
   clearLocationsSuggestions,
 } from '../../redux/post/post.actions';
 
-import { UsersFollowingRequest } from '../../redux/follower/follower.types';
-import { getUsersFollowingStart } from '../../redux/follower/follower.actions';
 import { useDebounce } from '../hooks';
 
 import {
@@ -43,7 +41,6 @@ interface CreatePostPageProps {
   postConfirm: Post | null;
   postError: PostError | null;
   clearPostStatuses: typeof clearPostStatuses;
-  getUsersFollowingStart: typeof getUsersFollowingStart;
 }
 
 interface ImgPreview {
@@ -56,7 +53,6 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   postConfirm,
   postError,
   clearPostStatuses,
-  getUsersFollowingStart,
 }) => {
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
@@ -271,8 +267,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostStart: (post: FormData) => dispatch(createPostStart(post)),
   clearPostStatuses: () => dispatch(clearPostStatuses()),
-  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
-    dispatch(getUsersFollowingStart(usersFollowingObj)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreatePostPage);

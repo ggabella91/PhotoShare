@@ -5,6 +5,10 @@ import { natsWrapper } from './nats-wrapper';
 const start = async () => {
   console.log('Starting up followers service....');
 
+  if (!process.env.NODE_ENV) {
+    throw new Error('NODE_ENV must be defined');
+  }
+
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
   }
@@ -47,6 +51,10 @@ const start = async () => {
     '<PASSWORD>',
     process.env.MONGO_PASSWORD
   ).replace('<MONGO_CLUSTER_HOST>', process.env.MONGO_CLUSTER_HOST);
+
+  if (process.env.NODE_ENV === 'development') {
+    mongoURI = mongoURI.replace('followers', 'followers-dev');
+  }
 
   await mongoose.connect(mongoURI);
   console.log('Connected to MongoDB');

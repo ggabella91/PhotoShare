@@ -26,7 +26,7 @@ export class PasswordResetRequestedListener extends Listener<PasswordResetReques
     if (process.env.NODE_ENV === 'development') {
       url = `https://photo-share.dev/reset-password/${resetPassUser.resetToken}`;
     } else {
-      url = `www.photo-share.us/${resetPassUser.resetToken}`;
+      url = `www.photo-share.us/reset-password/${resetPassUser.resetToken}`;
     }
 
     await new Email(resetPassUser, url).sendPasswordReset();

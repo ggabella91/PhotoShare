@@ -16,10 +16,12 @@ import { MessagesAppLoggerMiddleware } from './middleware/messages-app-logger.mi
 @Module({
   imports: [
     MongooseModule.forRoot(
-      process.env.MONGO_URI.replace(
-        '<PASSWORD>',
-        process.env.MONGO_PASSWORD
-      ).replace('<MONGO_CLUSTER_HOST>', process.env.MONGO_CLUSTER_HOST)
+      process.env.MONGO_URI.replace('<PASSWORD>', process.env.MONGO_PASSWORD)
+        .replace('<MONGO_CLUSTER_HOST>', process.env.MONGO_CLUSTER_HOST)
+        .replace(
+          'messages',
+          process.env.NODE_ENV === 'development' ? 'messages-dev' : 'messages'
+        )
     ),
     MongooseModule.forFeature([
       { name: Conversation.name, schema: ConversationSchema },
