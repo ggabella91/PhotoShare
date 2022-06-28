@@ -7,6 +7,8 @@ import { FileRequestType, UserType } from '../../redux/post/post.types';
 import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
 import { getPostFileStart } from '../../redux/post/post.actions';
 
+import { selectConversationMessages } from '../../redux/message/message.selectors';
+
 interface ConversationPreviewProps {
   conversationName: string;
   conversationId: string;
@@ -21,6 +23,11 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   const convoAvatarMap = useSelector(selectConvoAvatarMap);
   const convoAvatarFileString =
     avatarS3Key && convoAvatarMap.get(avatarS3Key)?.fileString;
+  const conversationMessages = useSelector(selectConversationMessages);
+  const lastMessage = conversationMessages
+    .find((convoMessage) => convoMessage.conversationId === conversationId)
+    ?.messages.at(-1);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -49,6 +56,8 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
     navigate(`/direct/t/${conversationId}`);
   };
 
+  // TODO: Write util function to dynamically calculate elapsed time since last message below
+
   return (
     <Grid
       sx={{
@@ -72,8 +81,21 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
         alt={conversationName}
         sx={{ height: '56px', width: '56px' }}
       />
-      <Grid sx={{ display: 'flex', alignItems: 'center', marginLeft: '15px' }}>
+      <Grid
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          marginLeft: '15px',
+        }}
+      >
         <Typography>{conversationName}</Typography>
+        {!!lastMessage && (
+          <Typography>
+            {lastMessage.text} ·{' '}
+            {lastMessage.created.toString().split(' ').slice(1, 3).join(' ')}
+          </Typography>
+        )}
       </Grid>
     </Grid>
   );
