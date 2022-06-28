@@ -55,7 +55,7 @@ router.post(
       postLocation = createLocationObject(postLocation as LocationReq);
     }
 
-    const key = generateKey(req.file!.originalname);
+    const key = generateKey(req.file!.originalname, false);
 
     const s3 = new AWS.S3();
 

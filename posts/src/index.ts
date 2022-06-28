@@ -9,6 +9,10 @@ let redisClient: RedisClientType<any, any>;
 const start = async () => {
   console.log('Starting up posts service....');
 
+  if (!process.env.NODE_ENV) {
+    throw new Error('NODE_ENV must be defined');
+  }
+
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
   }
@@ -75,6 +79,10 @@ const start = async () => {
     '<PASSWORD>',
     process.env.MONGO_PASSWORD
   ).replace('<MONGO_CLUSTER_HOST>', process.env.MONGO_CLUSTER_HOST);
+
+  if (process.env.NODE_ENV === 'development') {
+    mongoURI = mongoURI.replace('posts', 'posts-dev');
+  }
 
   await mongoose.connect(mongoURI);
   console.log('Connected to MongoDB');

@@ -1,12 +1,19 @@
 import { v4 } from 'uuid';
 import slugify from 'slugify';
 
-const generateKey = (fileName: string): string => {
+const generateKey = (
+  fileName: string,
+  dropExtension: boolean = true
+): string => {
   const id = v4();
 
-  const fileNameWithoutExt = fileName.substring(0, fileName.indexOf('.'));
+  let newFileName = fileName;
 
-  const slugName = slugify(fileNameWithoutExt, { lower: true, strict: true });
+  if (dropExtension) {
+    newFileName = fileName.substring(0, fileName.indexOf('.'));
+  }
+
+  const slugName = slugify(newFileName, { lower: true, strict: true });
 
   const key = `${id}-${slugName}`;
 
