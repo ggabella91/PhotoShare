@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Grid, Typography } from '@mui/material';
+import { calculateElapsedTime } from './conversation.utils';
 
 import { FileRequestType, UserType } from '../../redux/post/post.types';
 import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
@@ -92,8 +93,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
         <Typography>{conversationName}</Typography>
         {!!lastMessage && (
           <Typography>
-            {lastMessage.text} ·{' '}
-            {lastMessage.created.toString().split(' ').slice(1, 3).join(' ')}
+            {lastMessage.text} · {calculateElapsedTime(lastMessage.created)}
           </Typography>
         )}
       </Grid>
