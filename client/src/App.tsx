@@ -49,11 +49,6 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
     }
   }, [currentUser]);
 
-  // TODO: Import MessagesPage component, add route for chat feature
-  // (path = '/direct/inbox')
-  // TODO: Consider adding alternate route '/direct/t/:conversationId'
-  // for routing to MessagesPage component with a specific convo open
-
   return (
     <div className='App' data-testid='main-app-component'>
       <Routes>

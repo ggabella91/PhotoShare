@@ -1,4 +1,10 @@
-import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  ChangeEvent,
+  KeyboardEvent,
+} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Avatar,
@@ -48,6 +54,7 @@ const Conversation: React.FC<ConversationProps> = ({
 }) => {
   const [message, setMessage] = useState('');
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
+  const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(100);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -65,6 +72,7 @@ const Conversation: React.FC<ConversationProps> = ({
     (convoMessage) => convoMessage.conversationId === conversationId
   );
   const messagesArray = currentConversationMessages?.messages;
+  const textAreaHeight = useRef(0);
 
   const dispatch = useDispatch();
 
@@ -121,8 +129,31 @@ const Conversation: React.FC<ConversationProps> = ({
     setMessage('');
   };
 
+  const textAreaParentDivRef = (node: HTMLElement | null) => {
+    if (node) {
+      const elementHeight = node.clientHeight;
+      console.log('elementHeight: ', elementHeight);
+      setTextAreaParentDivHeight(elementHeight);
+    }
+  };
+
+  // TODO: Implement use of ResizeObserver to adjust messages area
+  // height with better responsiveness
+  const textAreaRef = (node: HTMLElement | null) => {
+    if (node) {
+      const height = node.clientHeight;
+      textAreaHeight.current = height;
+    }
+  };
+
   return (
-    <Grid sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Grid
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
       <Grid
         sx={{
           display: 'flex',
@@ -153,8 +184,10 @@ const Conversation: React.FC<ConversationProps> = ({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          height: 'auto',
-          minHeight: '80%',
+          justifyContent: 'flex-end',
+          padding: '0px 20px',
+          height: `calc(100% - ${textAreaParentDivHeight + 60}px)`,
+          minHeight: '600px',
           overflowY: 'auto',
         }}
       >
@@ -170,11 +203,23 @@ const Conversation: React.FC<ConversationProps> = ({
           />
         ))}
       </Grid>
-      <Grid item xs={12} sx={{ display: 'flex' }}>
+      <Grid
+        item
+        xs={12}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          maxHeight: `${textAreaHeight.current + 40}px`,
+          padding: '20px 0px',
+        }}
+        ref={textAreaParentDivRef}
+      >
         <Box component='form' sx={{ width: '100%' }}>
           <TextField
             multiline
             maxRows={4}
+            minRows={1}
             sx={{
               width: 'calc(100% - 40px)',
               margin: '15px 20px',
@@ -185,11 +230,20 @@ const Conversation: React.FC<ConversationProps> = ({
             value={message}
             onChange={handleMessageChange}
             onKeyDown={handleKeyDown}
+            ref={textAreaRef}
             InputProps={{
               endAdornment: !!message.length && (
-                <InputAdornment position='end'>
+                <InputAdornment
+                  position='end'
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    width: '45px',
+                  }}
+                >
                   <Button
                     variant='text'
+                    size='small'
                     onClick={handleSendMessage}
                     sx={{
                       '&:hover': {
@@ -207,6 +261,8 @@ const Conversation: React.FC<ConversationProps> = ({
               ),
               style: {
                 fontSize: '14px',
+                padding: '10px 14px',
+                borderRadius: '20px',
               },
             }}
           />

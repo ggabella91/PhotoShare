@@ -57,8 +57,6 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
     navigate(`/direct/t/${conversationId}`);
   };
 
-  // TODO: Write util function to dynamically calculate elapsed time since last message below
-
   return (
     <Grid
       sx={{
