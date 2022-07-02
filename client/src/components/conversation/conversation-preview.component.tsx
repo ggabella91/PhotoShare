@@ -88,11 +88,12 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
           flexDirection: 'column',
           justifyContent: 'center',
           marginLeft: '15px',
+          textAlign: 'initial',
         }}
       >
         <Typography>{conversationName}</Typography>
         {!!lastMessage && (
-          <Typography>
+          <Typography sx={{ fontSize: '14px' }}>
             {lastMessage.text} · {calculateElapsedTime(lastMessage.created)}
           </Typography>
         )}
