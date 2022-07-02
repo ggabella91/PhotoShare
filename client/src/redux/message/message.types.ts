@@ -40,7 +40,7 @@ export interface Message {
   ownerId: string;
   text: string;
   conversationId: string;
-  created: Date;
+  created: string;
 }
 
 export interface MessageError {
