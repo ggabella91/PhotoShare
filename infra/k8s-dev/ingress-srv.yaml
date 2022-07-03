@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-service
@@ -17,27 +17,45 @@ spec:
     - host: photo-share.dev
       http:
         paths:
-          - path: /api/followers/?(.*)
+          - pathType: Prefix
+            path: /api/followers/?(.*)
             backend:
-              serviceName: followers-srv
-              servicePort: 3000
-          - path: /api/posts/?(.*)
+              service:
+                name: followers-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/posts/?(.*)
             backend:
-              serviceName: posts-srv
-              servicePort: 3000
-          - path: /api/messages/?(.*)
+              service:
+                name: posts-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/messages/?(.*)
             backend:
-              serviceName: messages-srv
-              servicePort: 3000
-          - path: /api/reactions/?(.*)
+              service:
+                name: messages-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/reactions/?(.*)
             backend:
-              serviceName: posts-srv
-              servicePort: 3000
-          - path: /api/users/?(.*)
+              service:
+                name: posts-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/users/?(.*)
             backend:
-              serviceName: auth-srv
-              servicePort: 3000
-          - path: /?(.*)
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /?(.*)
             backend:
-              serviceName: client-srv
-              servicePort: 3000
+              service:
+                name: client-srv
+                port:
+                  number: 3000
