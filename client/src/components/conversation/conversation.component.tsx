@@ -54,7 +54,7 @@ const Conversation: React.FC<ConversationProps> = ({
 }) => {
   const [message, setMessage] = useState('');
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
-  const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(100);
+  const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(80);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -72,7 +72,8 @@ const Conversation: React.FC<ConversationProps> = ({
     (convoMessage) => convoMessage.conversationId === conversationId
   );
   const messagesArray = currentConversationMessages?.messages;
-  const textAreaHeight = useRef(0);
+  const resizeObserver = useRef<ResizeObserver | null>(null);
+  const messageJustSent = useRef(false);
 
   const dispatch = useDispatch();
 
@@ -106,21 +107,34 @@ const Conversation: React.FC<ConversationProps> = ({
   }, [usersInfoList]);
 
   const handleMessageChange = (e: ChangeEvent) => {
+    if (messageJustSent.current === true) {
+      messageJustSent.current = false;
+      return;
+    }
+
     const { value } = e.target as HTMLInputElement;
 
     setMessage(value);
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      messageJustSent.current = true;
       handleSendMessage();
     }
   };
 
   const handleSendMessage = () => {
+    const trimmedMessage = message.trim();
+
+    if (trimmedMessage === '') {
+      setMessage('');
+      return;
+    }
+
     if (currentUser) {
       socket.emit('chatToServer', {
-        text: message,
+        text: trimmedMessage,
         created: new Date(),
         ownerId: currentUser.id,
         conversationId,
@@ -129,20 +143,13 @@ const Conversation: React.FC<ConversationProps> = ({
     setMessage('');
   };
 
-  const textAreaParentDivRef = (node: HTMLElement | null) => {
-    if (node) {
-      const elementHeight = node.clientHeight;
-      console.log('elementHeight: ', elementHeight);
-      setTextAreaParentDivHeight(elementHeight);
-    }
-  };
-
-  // TODO: Implement use of ResizeObserver to adjust messages area
-  // height with better responsiveness
   const textAreaRef = (node: HTMLElement | null) => {
     if (node) {
-      const height = node.clientHeight;
-      textAreaHeight.current = height;
+      resizeObserver.current = new ResizeObserver((entries) => {
+        setTextAreaParentDivHeight(entries[0].contentRect.height + 40);
+      });
+
+      resizeObserver.current.observe(node);
     }
   };
 
@@ -184,10 +191,11 @@ const Conversation: React.FC<ConversationProps> = ({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'flex-end',
-          padding: '0px 20px',
+          justifyContent: 'flex-start',
+          padding: '20px',
           height: `calc(100% - ${textAreaParentDivHeight + 60}px)`,
           minHeight: '600px',
+          maxHeight: '660px',
           overflowY: 'auto',
         }}
       >
@@ -210,10 +218,9 @@ const Conversation: React.FC<ConversationProps> = ({
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          maxHeight: `${textAreaHeight.current + 40}px`,
+          maxHeight: `${textAreaParentDivHeight}px`,
           padding: '20px 0px',
         }}
-        ref={textAreaParentDivRef}
       >
         <Box component='form' sx={{ width: '100%' }}>
           <TextField
