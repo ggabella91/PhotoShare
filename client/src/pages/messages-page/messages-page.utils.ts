@@ -1,24 +1,39 @@
-import { MessageUser } from '../../redux/message/message.types';
+import { Conversation, MessageUser } from '../../redux/message/message.types';
 import { User } from '../../redux/user/user.types';
 
 export const generateDefaultConvoName = (
-  usersArray: Partial<MessageUser>[]
+  userNamesArray: string[],
+  currentUser: User
 ) => {
-  if (usersArray.length === 1) {
-    return usersArray[0].name;
+  userNamesArray = userNamesArray.filter(
+    (userName) => userName !== currentUser.name
+  );
+
+  if (userNamesArray.length === 1) {
+    return userNamesArray[0];
   } else {
-    return usersArray.reduce((acc, cur, idx) => {
+    return userNamesArray.reduce((acc, cur, idx) => {
       if (idx === 0) {
-        acc += `${cur.name}`;
-      } else if (idx === usersArray.length - 1) {
-        acc += ` and ${cur.name}`;
+        acc += `${cur}`;
+      } else if (idx === userNamesArray.length - 1) {
+        acc += ` and ${cur}`;
       } else {
-        acc += `, ${cur.name}`;
+        acc += `, ${cur}`;
       }
 
       return acc;
     }, '');
   }
+};
+
+export const getConvoName = (convo: Conversation, currentUser: User | null) => {
+  if (currentUser) {
+    return convo.name === 'default'
+      ? generateDefaultConvoName(convo.connectedUserNames, currentUser)
+      : convo.name;
+  }
+
+  return '';
 };
 
 export const generateFinalConvoUsersArrayAndGetAvatarS3Key = (
@@ -28,32 +43,33 @@ export const generateFinalConvoUsersArrayAndGetAvatarS3Key = (
   const currentUserFound = usersArray.find(
     (user) => user.userId === currentUser.id
   );
-  let avatarS3Key: string;
+  let avatarS3Keys: string[];
   let sortedUsersArray: Partial<MessageUser>[];
+  let convoUserNames: string[] = [];
 
   if (currentUserFound) {
-    avatarS3Key =
-      usersArray.find(
-        (user) => user.userId !== currentUser.id && !!user.photoS3Key
-      )?.photoS3Key || '';
+    avatarS3Keys = usersArray.map((user) => {
+      convoUserNames.push(user.name!);
+      return user.photoS3Key || '';
+    });
 
     sortedUsersArray = usersArray.sort((a, b) => compare(a, b));
 
-    return { usersArray: sortedUsersArray, avatarS3Key };
+    return { usersArray: sortedUsersArray, avatarS3Keys, convoUserNames };
   } else {
-    avatarS3Key =
-      usersArray.find((user) => !!user.photoS3Key)?.photoS3Key || '';
-    console.log('avatarS3Key: ', avatarS3Key);
-
     usersArray.push({
       userId: currentUser.id,
       name: currentUser.name,
       username: currentUser.username,
     });
 
+    avatarS3Keys = usersArray.map((user) => {
+      convoUserNames.push(user.name!);
+      return user.photoS3Key || '';
+    });
     sortedUsersArray = usersArray.sort((a, b) => compare(a, b));
 
-    return { usersArray: sortedUsersArray, avatarS3Key };
+    return { usersArray: sortedUsersArray, avatarS3Keys, convoUserNames };
   }
 };
 
