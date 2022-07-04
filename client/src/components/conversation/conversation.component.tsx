@@ -187,7 +187,9 @@ const Conversation: React.FC<ConversationProps> = ({
           }}
         />
         <Typography>
-          {getConvoName(currentConversation, currentUser)}
+          {currentConversation
+            ? getConvoName(currentConversation, currentUser)
+            : ''}
         </Typography>
       </Grid>
       <Grid
