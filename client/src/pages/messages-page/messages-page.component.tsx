@@ -29,9 +29,10 @@ import {
 } from '../../redux/message/message.actions';
 
 import {
-  generateDefaultConvoName,
   generateFinalConvoUsersArrayAndGetAvatarS3Key,
+  getConvoName,
 } from './messages-page.utils';
+import { Conversation } from '../../redux/message/message.types';
 
 interface MessagesPageProps {
   openNewConvoModal?: boolean;
@@ -53,9 +54,9 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
   const navigate = useNavigate();
   const { conversationId } = useParams();
-  const avatarS3Key =
-    joinedCoversations?.find((convo) => convo.id === conversationId)
-      ?.avatarS3Key || '';
+  const avatarS3Keys = joinedCoversations?.find(
+    (convo) => convo.id === conversationId
+  )?.avatarS3Keys || [''];
 
   const dispatch = useDispatch();
 
@@ -173,17 +174,17 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       usersArrayForNewConvoReq.length &&
       currentUser
     ) {
-      const convoName = generateDefaultConvoName(usersArrayForNewConvoReq);
-      const { usersArray, avatarS3Key } =
+      const { usersArray, avatarS3Keys, convoUserNames } =
         generateFinalConvoUsersArrayAndGetAvatarS3Key(
           usersArrayForNewConvoReq,
           currentUser
         );
 
       socket.emit('createConversation', {
-        name: convoName,
+        name: 'default',
         connectedUsers: usersArray,
-        avatarS3Key,
+        avatarS3Keys,
+        connectedUserNames: convoUserNames,
       });
 
       dispatch(clearUserSuggestions());
@@ -293,8 +294,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
                       <ConversationPreview
                         key={convo.id}
                         conversationId={convo.id}
-                        conversationName={convo.name}
-                        avatarS3Key={convo.avatarS3Key}
+                        conversationName={getConvoName(convo, currentUser)}
+                        avatarS3Keys={convo.avatarS3Keys}
                       />
                     );
                   })
@@ -313,7 +314,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
             {!!conversationId ? (
               <ConversationComponent
                 conversationId={conversationId}
-                avatarS3Key={avatarS3Key}
+                avatarS3Keys={avatarS3Keys}
                 socket={socket}
               />
             ) : (

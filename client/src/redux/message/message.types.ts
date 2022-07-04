@@ -63,7 +63,8 @@ export interface Conversation {
   id: string;
   name: string;
   connectedUsers: string[];
-  avatarS3Key?: string;
+  avatarS3Keys: string[];
+  connectedUserNames: string[];
 }
 
 export interface FindOrCreateUserReq {

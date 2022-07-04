@@ -38,10 +38,11 @@ import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
 import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
+import { getConvoName } from '../../pages/messages-page/messages-page.utils';
 
 interface ConversationProps {
   conversationId: string;
-  avatarS3Key: string;
+  avatarS3Keys: string[];
   socket: Socket;
 }
 
@@ -49,7 +50,7 @@ type UserInfoMap = Record<string, UserInfoData>;
 
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
-  avatarS3Key,
+  avatarS3Keys,
   socket,
 }) => {
   const [message, setMessage] = useState('');
@@ -61,7 +62,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const conversationUsers = useSelector(selectConversationUsers);
   const convoAvatarMap = useSelector(selectConvoAvatarMap);
   const convoAvatarFileString =
-    avatarS3Key && convoAvatarMap.get(avatarS3Key)?.fileString;
+    avatarS3Keys.length && convoAvatarMap.get(avatarS3Keys[0])?.fileString;
   const usersInfoList = useUserInfoData(conversationUsers);
 
   const currentConversation = joinedConversations?.find(
@@ -185,7 +186,9 @@ const Conversation: React.FC<ConversationProps> = ({
             width: '24px',
           }}
         />
-        <Typography>{currentConversation?.name || ''}</Typography>
+        <Typography>
+          {getConvoName(currentConversation, currentUser)}
+        </Typography>
       </Grid>
       <Grid
         sx={{

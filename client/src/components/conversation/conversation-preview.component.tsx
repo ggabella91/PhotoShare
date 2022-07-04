@@ -13,17 +13,17 @@ import { selectConversationMessages } from '../../redux/message/message.selector
 interface ConversationPreviewProps {
   conversationName: string;
   conversationId: string;
-  avatarS3Key?: string;
+  avatarS3Keys?: string[];
 }
 
 const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   conversationName,
   conversationId,
-  avatarS3Key,
+  avatarS3Keys,
 }) => {
   const convoAvatarMap = useSelector(selectConvoAvatarMap);
   const convoAvatarFileString =
-    avatarS3Key && convoAvatarMap.get(avatarS3Key)?.fileString;
+    avatarS3Keys?.length && convoAvatarMap.get(avatarS3Keys[0])?.fileString;
   const conversationMessages = useSelector(selectConversationMessages);
   const lastMessage = conversationMessages
     .find((convoMessage) => convoMessage.conversationId === conversationId)
@@ -41,17 +41,17 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   }
 
   useEffect(() => {
-    if (avatarS3Key) {
+    if (avatarS3Keys) {
       dispatch(
         getPostFileStart({
-          s3Key: avatarS3Key,
+          s3Key: avatarS3Keys[0],
           bucket,
           fileRequestType: FileRequestType.singlePost,
           user: UserType.conversationAvatar,
         })
       );
     }
-  }, [avatarS3Key]);
+  }, [avatarS3Keys]);
 
   const handleClick = () => {
     navigate(`/direct/t/${conversationId}`);
