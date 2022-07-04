@@ -158,7 +158,7 @@ const Conversation: React.FC<ConversationProps> = ({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
+        height: '800px',
       }}
     >
       <Grid
