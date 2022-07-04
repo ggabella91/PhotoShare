@@ -132,8 +132,6 @@ export class MessagesAppService {
   }
 
   async createMessage(createMessageDto: CreateMessageDto) {
-    createMessageDto.text = createMessageDto.text.replace(/[\n]/gim, '');
-
     const createdMessage = new this.messageModel(createMessageDto);
     const savedMessage = (await createdMessage.save()).toObject();
 
