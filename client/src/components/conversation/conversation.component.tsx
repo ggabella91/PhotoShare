@@ -8,6 +8,7 @@ import React, {
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Avatar,
+  AvatarGroup,
   Box,
   Button,
   Grid,
@@ -38,7 +39,10 @@ import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
 import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
-import { getConvoName } from '../../pages/messages-page/messages-page.utils';
+import {
+  getConvoName,
+  getConvoAvatars,
+} from '../../pages/messages-page/messages-page.utils';
 
 interface ConversationProps {
   conversationId: string;
@@ -61,8 +65,11 @@ const Conversation: React.FC<ConversationProps> = ({
   const conversationMessages = useSelector(selectConversationMessages);
   const conversationUsers = useSelector(selectConversationUsers);
   const convoAvatarMap = useSelector(selectConvoAvatarMap);
-  const convoAvatarFileString =
-    avatarS3Keys.length && convoAvatarMap.get(avatarS3Keys[0])?.fileString;
+  const convoAvatarFileStrings = avatarS3Keys?.length
+    ? getConvoAvatars(avatarS3Keys, currentUser)?.map(
+        (s3Key) => convoAvatarMap.get(s3Key)?.fileString || ''
+      )
+    : [''];
   const usersInfoList = useUserInfoData(conversationUsers);
 
   const currentConversation = joinedConversations?.find(
@@ -154,6 +161,9 @@ const Conversation: React.FC<ConversationProps> = ({
     }
   };
 
+  // TODO: Create custom avatar group component to use here and in
+  // conversation-preview component (with styling options prop)
+
   return (
     <Grid
       sx={{
@@ -173,19 +183,24 @@ const Conversation: React.FC<ConversationProps> = ({
           borderBottom: '1px solid rgb(219,219,219)',
         }}
       >
-        <Avatar
-          src={
-            !!convoAvatarFileString
-              ? `data:image/jpeg;base64,${convoAvatarFileString}`
-              : ''
-          }
-          sx={{
-            marginLeft: '15px',
-            marginRight: '15px',
-            height: '24px',
-            width: '24px',
-          }}
-        />
+        <AvatarGroup max={3} spacing='small'>
+          {convoAvatarFileStrings.map((avatarFileString) => (
+            <Avatar
+              src={
+                !!avatarFileString
+                  ? `data:image/jpeg;base64,${avatarFileString}`
+                  : ''
+              }
+              alt={currentConversation?.name}
+              sx={{
+                marginLeft: '15px',
+                marginRight: '15px',
+                height: '24px',
+                width: '24px',
+              }}
+            />
+          ))}
+        </AvatarGroup>
         <Typography>
           {currentConversation
             ? getConvoName(currentConversation, currentUser)

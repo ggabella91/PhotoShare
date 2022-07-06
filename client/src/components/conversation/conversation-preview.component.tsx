@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Grid, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Grid, Typography } from '@mui/material';
 import { calculateElapsedTime } from './conversation.utils';
+import { getConvoAvatars } from '../../pages/messages-page/messages-page.utils';
+
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 import { FileRequestType, UserType } from '../../redux/post/post.types';
 import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
@@ -21,9 +24,13 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   conversationId,
   avatarS3Keys,
 }) => {
+  const currentUser = useSelector(selectCurrentUser);
   const convoAvatarMap = useSelector(selectConvoAvatarMap);
-  const convoAvatarFileString =
-    avatarS3Keys?.length && convoAvatarMap.get(avatarS3Keys[0])?.fileString;
+  const convoAvatarFileStrings = avatarS3Keys?.length
+    ? getConvoAvatars(avatarS3Keys, currentUser)?.map(
+        (s3Key) => convoAvatarMap.get(s3Key)?.fileString || ''
+      )
+    : [''];
   const conversationMessages = useSelector(selectConversationMessages);
   const lastMessage = conversationMessages
     .find((convoMessage) => convoMessage.conversationId === conversationId)
@@ -41,17 +48,19 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   }
 
   useEffect(() => {
-    if (avatarS3Keys) {
-      dispatch(
-        getPostFileStart({
-          s3Key: avatarS3Keys[0],
-          bucket,
-          fileRequestType: FileRequestType.singlePost,
-          user: UserType.conversationAvatar,
-        })
-      );
+    if (avatarS3Keys?.length) {
+      avatarS3Keys.forEach((s3Key) => {
+        dispatch(
+          getPostFileStart({
+            s3Key,
+            bucket,
+            fileRequestType: FileRequestType.singlePost,
+            user: UserType.conversationAvatar,
+          })
+        );
+      });
     }
-  }, [avatarS3Keys]);
+  }, [dispatch, bucket, avatarS3Keys]);
 
   const handleClick = () => {
     navigate(`/direct/t/${conversationId}`);
@@ -71,15 +80,19 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
       }}
       onClick={handleClick}
     >
-      <Avatar
-        src={
-          !!convoAvatarFileString
-            ? `data:image/jpeg;base64,${convoAvatarFileString}`
-            : ''
-        }
-        alt={conversationName}
-        sx={{ height: '56px', width: '56px' }}
-      />
+      <AvatarGroup max={3} spacing='small'>
+        {convoAvatarFileStrings.map((avatarFileString) => (
+          <Avatar
+            src={
+              !!avatarFileString
+                ? `data:image/jpeg;base64,${avatarFileString}`
+                : ''
+            }
+            alt={conversationName}
+            sx={{ height: '56px', width: '56px' }}
+          />
+        ))}
+      </AvatarGroup>
       <Grid
         sx={{
           display: 'flex',

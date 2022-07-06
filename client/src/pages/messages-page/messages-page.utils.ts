@@ -36,7 +36,22 @@ export const getConvoName = (convo: Conversation, currentUser: User | null) => {
   return '';
 };
 
-export const generateFinalConvoUsersArrayAndGetAvatarS3Key = (
+export const getConvoAvatars = (
+  avatarS3Keys: string[],
+  currentUser: User | null
+) => {
+  if (currentUser) {
+    if (avatarS3Keys.length === 1) {
+      return avatarS3Keys;
+    } else {
+      return avatarS3Keys.filter((s3Key) => s3Key !== currentUser.photo);
+    }
+  }
+
+  return [''];
+};
+
+export const generateFinalConvoUsersAndS3KeysArrays = (
   usersArray: Partial<MessageUser>[],
   currentUser: User
 ) => {
@@ -61,6 +76,7 @@ export const generateFinalConvoUsersArrayAndGetAvatarS3Key = (
       userId: currentUser.id,
       name: currentUser.name,
       username: currentUser.username,
+      photoS3Key: currentUser.photo,
     });
 
     avatarS3Keys = usersArray.map((user) => {
