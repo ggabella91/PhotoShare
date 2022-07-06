@@ -29,7 +29,7 @@ import {
 } from '../../redux/message/message.actions';
 
 import {
-  generateFinalConvoUsersArrayAndGetAvatarS3Key,
+  generateFinalConvoUsersAndS3KeysArrays,
   getConvoName,
 } from './messages-page.utils';
 import { Conversation } from '../../redux/message/message.types';
@@ -175,7 +175,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       currentUser
     ) {
       const { usersArray, avatarS3Keys, convoUserNames } =
-        generateFinalConvoUsersArrayAndGetAvatarS3Key(
+        generateFinalConvoUsersAndS3KeysArrays(
           usersArrayForNewConvoReq,
           currentUser
         );
