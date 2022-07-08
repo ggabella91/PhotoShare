@@ -7,9 +7,10 @@ import {
   Request,
   Param,
   Query,
-  Patch,
+  Body,
 } from '@nestjs/common';
 import { MessagesAppService } from './messages-app.service';
+import { UpdateConvoDto } from './database/dto/update-convo-dto';
 
 @Controller('/api/messages')
 export class MessagesAppController {
@@ -64,7 +65,8 @@ export class MessagesAppController {
     });
   }
 
-  // TODO: Finish this route handler
-  // @Patch('/conversation/:conversationId')
-  // updateConversation() {}
+  @Put('/conversation')
+  updateConversation(@Body() updateConvoDto: UpdateConvoDto) {
+    return this.appService.updateConversation(updateConvoDto);
+  }
 }
