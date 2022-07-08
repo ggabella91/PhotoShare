@@ -59,3 +59,48 @@ spec:
                 name: client-srv
                 port:
                   number: 3000
+    - host: www.photo-share.dev
+      http:
+        paths:
+          - pathType: Prefix
+            path: /api/followers/?(.*)
+            backend:
+              service:
+                name: followers-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/posts/?(.*)
+            backend:
+              service:
+                name: posts-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/messages/?(.*)
+            backend:
+              service:
+                name: messages-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/reactions/?(.*)
+            backend:
+              service:
+                name: posts-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/users/?(.*)
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /?(.*)
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 3000
