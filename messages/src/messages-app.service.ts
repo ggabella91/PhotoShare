@@ -7,13 +7,11 @@ import {
 } from './database/schemas/conversation.schema';
 import { User, UserDocument } from './database/schemas/user.schema';
 import { Message, MessageDocument } from './database/schemas/message.schema';
-import {
-  CreateConvoDto,
-  CreateConvoPreDto,
-} from './database/dto/create-convo.dto';
+import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { CreateUserDto } from './database/dto/create-user.dto';
 import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
+import { UpdateConvoDto } from './database/dto/update-convo-dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -80,17 +78,28 @@ export class MessagesAppService {
     if (existingUser) {
       this.logger.log('Found existing messages user: ', existingUser);
 
-      const existingUserRefreshedSession = await this.userModel
+      let s3Key: string;
+      if (
+        !existingUser.photoS3Key ||
+        (existingUser.photoS3Key && createUserDto.photoS3Key)
+      ) {
+        s3Key = createUserDto.photoS3Key || '';
+      } else {
+        s3Key = existingUser.photoS3Key;
+      }
+
+      const existingUserRefreshedSessionAndUpdatedAvatar = await this.userModel
         .findOneAndUpdate(
           { userId },
           {
             sessionCookie: createUserDto.sessionCookie,
+            photoS3Key: s3Key,
           },
           { new: true }
         )
         .exec();
 
-      const existingUserObj = existingUserRefreshedSession;
+      const existingUserObj = existingUserRefreshedSessionAndUpdatedAvatar;
 
       return existingUserObj;
     } else {
@@ -182,5 +191,22 @@ export class MessagesAppService {
     );
 
     return messagesFromConvoObjects;
+  }
+
+  async updateConversation(updateConvoDto: UpdateConvoDto) {
+    const { id, ...updateProps } = updateConvoDto;
+
+    const updatedConversation = await this.conversationModel.findByIdAndUpdate(
+      id,
+      {
+        ...updateProps,
+      },
+      { new: true }
+    );
+
+    this.logger.log(
+      `Updated conversation with id ${id}: `,
+      updatedConversation
+    );
   }
 }

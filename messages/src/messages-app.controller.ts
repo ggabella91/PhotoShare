@@ -7,6 +7,7 @@ import {
   Request,
   Param,
   Query,
+  Patch,
 } from '@nestjs/common';
 import { MessagesAppService } from './messages-app.service';
 
@@ -62,4 +63,8 @@ export class MessagesAppController {
       offset,
     });
   }
+
+  // TODO: Finish this route handler
+  // @Patch('/conversation/:conversationId')
+  // updateConversation() {}
 }
