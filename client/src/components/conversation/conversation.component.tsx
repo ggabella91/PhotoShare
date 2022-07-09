@@ -7,13 +7,17 @@ import React, {
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  Avatar,
   Box,
   Button,
   Grid,
+  Input,
   InputAdornment,
   TextField,
   Typography,
 } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import InfoIcon from '@mui/icons-material/Info';
 import MessageComponent from './message.component';
 import CustomAvatarGroup, {
   StyleVariation,
@@ -56,6 +60,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const [message, setMessage] = useState('');
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
   const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(80);
+  const [isInfoClicked, setIsInfoClicked] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -65,6 +70,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
   );
+  const [convoName, setConvoName] = useState(currentConversation?.name);
   const conversationMessageUsers = currentConversation?.connectedUsers;
   const currentConversationMessages = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
@@ -103,6 +109,11 @@ const Conversation: React.FC<ConversationProps> = ({
       setUserInfoMap(userInfoMap);
     }
   }, [usersInfoList]);
+
+  useEffect(() => {
+    if (currentConversation)
+      setConvoName(getConvoName(currentConversation, currentUser));
+  }, [currentConversation]);
 
   const handleMessageChange = (e: ChangeEvent) => {
     if (messageJustSent.current === true) {
@@ -151,6 +162,13 @@ const Conversation: React.FC<ConversationProps> = ({
     }
   };
 
+  const handleChangeConvoName = (e: ChangeEvent) => {
+    const { value } = e.target as HTMLInputElement;
+    setConvoName(value);
+  };
+
+  const handleClickInfoIcon = () => setIsInfoClicked(!isInfoClicked);
+
   return (
     <Grid
       sx={{
@@ -164,111 +182,205 @@ const Conversation: React.FC<ConversationProps> = ({
           display: 'flex',
           height: '60px',
           minHeight: '60px',
-          justifyContent: 'flex-start',
+          justifyContent: 'space-between',
           alignItems: 'center',
           padding: '0px 20px',
           borderBottom: '1px solid rgb(219,219,219)',
         }}
       >
-        <CustomAvatarGroup
-          conversationName={currentConversation?.name || ''}
-          avatarS3Keys={avatarS3Keys}
-          styleVariation={StyleVariation.conversationHeader}
-        />
-        <Typography>
-          {currentConversation
-            ? getConvoName(currentConversation, currentUser)
-            : ''}
-        </Typography>
-      </Grid>
-      <Grid
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          padding: '20px',
-          height: `calc(100% - ${textAreaParentDivHeight + 60}px)`,
-          minHeight: '600px',
-          maxHeight: '660px',
-          overflowY: 'auto',
-        }}
-      >
-        {messagesArray?.map((message) => (
-          <MessageComponent
-            key={message.id}
-            userInfo={userInfoMap[message.ownerId]}
-            message={message}
-            isCurrentUser={message.ownerId === currentUser?.id}
-            isGroupConversation={
-              !!(conversationUsers && conversationUsers.length > 2)
-            }
-          />
-        ))}
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          maxHeight: `${textAreaParentDivHeight}px`,
-          padding: '20px 0px',
-        }}
-      >
-        <Box component='form' sx={{ width: '100%' }}>
-          <TextField
-            multiline
-            maxRows={4}
-            minRows={1}
+        {!isInfoClicked ? (
+          <Grid
             sx={{
-              width: 'calc(100% - 40px)',
-              margin: '15px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
             }}
-            label=''
-            placeholder='Message...'
-            fullWidth
-            value={message}
-            onChange={handleMessageChange}
-            onKeyDown={handleKeyDown}
-            ref={textAreaRef}
-            InputProps={{
-              endAdornment: !!message.length && (
-                <InputAdornment
-                  position='end'
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    width: '45px',
-                  }}
-                >
-                  <Button
-                    variant='text'
-                    size='small'
-                    onClick={handleSendMessage}
-                    sx={{
-                      '&:hover': {
-                        backgroundColor: 'unset',
-                      },
-                    }}
-                  >
-                    <Typography
-                      sx={{ color: '#0095F6', textTransform: 'capitalize' }}
-                    >
-                      Send
-                    </Typography>
-                  </Button>
-                </InputAdornment>
-              ),
-              style: {
-                fontSize: '14px',
-                padding: '10px 14px',
-                borderRadius: '20px',
-              },
+          >
+            <CustomAvatarGroup
+              conversationName={currentConversation?.name || ''}
+              avatarS3Keys={avatarS3Keys}
+              styleVariation={StyleVariation.conversationHeader}
+            />
+            <Typography>
+              {currentConversation
+                ? getConvoName(currentConversation, currentUser)
+                : ''}
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              paddingLeft: '20px',
             }}
-          />
-        </Box>
+          >
+            <Typography>Details</Typography>
+          </Grid>
+        )}
+        <Grid
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          {!isInfoClicked ? (
+            <InfoOutlinedIcon
+              sx={{ cursor: 'pointer' }}
+              onClick={handleClickInfoIcon}
+            />
+          ) : (
+            <InfoIcon
+              sx={{ cursor: 'pointer' }}
+              onClick={handleClickInfoIcon}
+            />
+          )}
+        </Grid>
       </Grid>
+      {!isInfoClicked ? (
+        <>
+          <Grid
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              padding: '20px',
+              height: `calc(100% - ${textAreaParentDivHeight + 60}px)`,
+              minHeight: '600px',
+              maxHeight: '660px',
+              overflowY: 'auto',
+            }}
+          >
+            {messagesArray?.map((message) => (
+              <MessageComponent
+                key={message.id}
+                userInfo={userInfoMap[message.ownerId]}
+                message={message}
+                isCurrentUser={message.ownerId === currentUser?.id}
+                isGroupConversation={
+                  !!(conversationUsers && conversationUsers.length > 2)
+                }
+              />
+            ))}
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              maxHeight: `${textAreaParentDivHeight}px`,
+              padding: '20px 0px',
+            }}
+          >
+            <Box component='form' sx={{ width: '100%' }}>
+              <TextField
+                multiline
+                maxRows={4}
+                minRows={1}
+                sx={{
+                  width: 'calc(100% - 40px)',
+                  margin: '15px 20px',
+                }}
+                label=''
+                placeholder='Message...'
+                fullWidth
+                value={message}
+                onChange={handleMessageChange}
+                onKeyDown={handleKeyDown}
+                ref={textAreaRef}
+                InputProps={{
+                  endAdornment: !!message.length && (
+                    <InputAdornment
+                      position='end'
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: '45px',
+                      }}
+                    >
+                      <Button
+                        variant='text'
+                        size='small'
+                        onClick={handleSendMessage}
+                        sx={{
+                          '&:hover': {
+                            backgroundColor: 'unset',
+                          },
+                        }}
+                      >
+                        <Typography
+                          sx={{ color: '#0095F6', textTransform: 'capitalize' }}
+                        >
+                          Send
+                        </Typography>
+                      </Button>
+                    </InputAdornment>
+                  ),
+                  style: {
+                    fontSize: '14px',
+                    padding: '10px 14px',
+                    borderRadius: '20px',
+                  },
+                }}
+              />
+            </Box>
+          </Grid>
+        </>
+      ) : (
+        <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Grid sx={{ display: 'flex', padding: '10px' }}>
+            <Typography sx={{ marginRight: '10px' }}>
+              Conversation Name:{' '}
+            </Typography>
+            <Input
+              sx={{ transform: 'translateY(-4px)' }}
+              value={convoName}
+              onChange={handleChangeConvoName}
+            />
+          </Grid>
+          <Grid
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              borderTop: '1px solid rgb(219,219,219)',
+              borderBottom: '1px solid rgb(219,219,219)',
+            }}
+          >
+            <Typography>Members</Typography>
+            {conversationMessageUsers?.map((user) => {
+              const userInfo = userInfoMap[user];
+
+              return (
+                <Grid
+                  sx={{ display: 'flex', height: '72px' }}
+                  key={userInfo.id}
+                >
+                  <Avatar
+                    src={
+                      userInfo?.profilePhotoFileString
+                        ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
+                        : ''
+                    }
+                    alt={userInfo?.name || ''}
+                    sx={{ height: '56px', width: '56px' }}
+                  />
+                  <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography sx={{ fontWeight: 600 }}>
+                      {userInfo.username}
+                    </Typography>
+                    <Typography>{userInfo.name}</Typography>
+                  </Grid>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </Grid>
+      )}
     </Grid>
   );
 };
