@@ -42,7 +42,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
   return (
     <>
       <AvatarGroup max={3} spacing='small'>
-        {convoAvatarFileStrings.map((avatarFileString) => (
+        {convoAvatarFileStrings.map((avatarFileString, idx) => (
           <Avatar
             src={
               !!avatarFileString
@@ -50,6 +50,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
                 : ''
             }
             alt={conversationName}
+            key={idx}
             sx={
               styleVariation === StyleVariation.preview
                 ? previewStyleObj

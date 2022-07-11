@@ -351,13 +351,22 @@ const Conversation: React.FC<ConversationProps> = ({
               borderBottom: '1px solid rgb(219,219,219)',
             }}
           >
-            <Typography>Members</Typography>
+            <Grid
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                margin: '8px 0px',
+                padding: '0px 16px',
+              }}
+            >
+              <Typography sx={{ fontWeight: 600 }}>Members</Typography>
+            </Grid>
             {conversationMessageUsers?.map((user) => {
               const userInfo = userInfoMap[user];
 
               return (
                 <Grid
-                  sx={{ display: 'flex', height: '72px' }}
+                  sx={{ display: 'flex', height: '72px', padding: '8px 16px' }}
                   key={userInfo.id}
                 >
                   <Avatar
@@ -369,7 +378,14 @@ const Conversation: React.FC<ConversationProps> = ({
                     alt={userInfo?.name || ''}
                     sx={{ height: '56px', width: '56px' }}
                   />
-                  <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <Grid
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      marginLeft: '12px',
+                      textAlign: 'left',
+                    }}
+                  >
                     <Typography sx={{ fontWeight: 600 }}>
                       {userInfo.username}
                     </Typography>

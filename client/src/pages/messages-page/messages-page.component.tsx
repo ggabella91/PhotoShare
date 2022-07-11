@@ -26,13 +26,13 @@ import {
   addMessageToConversation,
   getConvoMessagesStart,
   resetConvoUsersArray,
+  clearJoinedConvosArray,
 } from '../../redux/message/message.actions';
 
 import {
   generateFinalConvoUsersAndS3KeysArrays,
   getConvoName,
 } from './messages-page.utils';
-import { Conversation } from '../../redux/message/message.types';
 
 interface MessagesPageProps {
   openNewConvoModal?: boolean;
@@ -120,6 +120,10 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
     socket.on('chatToClient', (message) => {
       dispatch(addMessageToConversation(message));
+
+      socket.emit('joinAllExistingConversations', {
+        userId: currentUser?.id,
+      });
     });
   }, [socket]);
 

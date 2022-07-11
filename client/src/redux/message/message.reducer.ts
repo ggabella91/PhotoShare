@@ -81,6 +81,11 @@ const messageReducer = (
         ...state,
         usersArrayForNewConvoReq: [],
       };
+    case MessageActions.CLEAR_JOINED_CONVOS_ARRAY:
+      return {
+        ...state,
+        user: state.user ? { ...state.user, joinedConversations: [] } : null,
+      };
     case MessageActions.FIND_OR_CREATE_USER_FAILURE:
       return {
         ...state,
