@@ -171,13 +171,13 @@ export class MessagesAppService {
     if (limit) {
       messagesFromConvo = await this.messageModel
         .find({
-          conversation: conversationId,
+          conversationId,
         })
         .limit(limit)
         .skip((offset - 1) * limit);
     } else {
       messagesFromConvo = await this.messageModel.find({
-        conversation: conversationId,
+        conversationId,
       });
     }
 

@@ -104,3 +104,7 @@ export const removeUserFromConvoUsersArray = (
 export const resetConvoUsersArray = (): MessageActionTypes => ({
   type: MessageActions.RESET_CONVO_USERS_ARRAY,
 });
+
+export const clearJoinedConvosArray = (): MessageActionTypes => ({
+  type: MessageActions.CLEAR_JOINED_CONVOS_ARRAY,
+});

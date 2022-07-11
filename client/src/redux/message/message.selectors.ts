@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 import { AppState } from '../root-reducer';
-import { MessageState } from './message.types';
+import { MessageState, ConvoMessages } from './message.types';
 
 const selectMessageState = (state: AppState): MessageState => state.message;
 
@@ -27,5 +27,5 @@ export const selectUsersArrayForNewConvoReq = createSelector(
 
 export const selectConversationMessages = createSelector(
   [selectMessageState],
-  (messageState: MessageState) => messageState.messages
+  (messageState: MessageState) => messageState.messages as ConvoMessages[]
 );

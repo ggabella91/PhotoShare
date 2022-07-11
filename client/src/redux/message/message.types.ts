@@ -13,6 +13,7 @@ export enum MessageActions {
   ADD_USER_TO_CONVO_USERS_ARRAY = 'ADD_USER_TO_CONVO_USERS_ARRAY',
   REMOVE_USER_FROM_CONVO_USERS_ARRAY = 'REMOVE_USER_FROM_CONVO_USERS_ARRAY',
   RESET_CONVO_USERS_ARRAY = 'RESET_CONVO_USERS_ARRAY',
+  CLEAR_JOINED_CONVOS_ARRAY = 'CLEAR_JOINED_CONVOS_ARRAY',
 }
 
 export interface MessageState {
@@ -65,6 +66,7 @@ export interface Conversation {
   connectedUsers: string[];
   avatarS3Keys: string[];
   connectedUserNames: string[];
+  lastMessageTime: number;
 }
 
 export interface FindOrCreateUserReq {
@@ -143,6 +145,10 @@ export interface ResetConvoUsersArray {
   type: typeof MessageActions.RESET_CONVO_USERS_ARRAY;
 }
 
+export interface ClearJoinedConvosArray {
+  type: typeof MessageActions.CLEAR_JOINED_CONVOS_ARRAY;
+}
+
 export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
@@ -157,4 +163,5 @@ export type MessageActionTypes =
   | AddMessageToConversation
   | AddUserToConvoUsersArray
   | RemoveUserFromConvoUsersArray
-  | ResetConvoUsersArray;
+  | ResetConvoUsersArray
+  | ClearJoinedConvosArray;
