@@ -11,7 +11,6 @@ import {
   Box,
   Button,
   Grid,
-  Input,
   InputAdornment,
   TextField,
   Typography,
@@ -70,7 +69,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
   );
-  const [convoName, setConvoName] = useState(currentConversation?.name);
+  const [convoName, setConvoName] = useState('');
   const conversationMessageUsers = currentConversation?.connectedUsers;
   const currentConversationMessages = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
@@ -111,8 +110,8 @@ const Conversation: React.FC<ConversationProps> = ({
   }, [usersInfoList]);
 
   useEffect(() => {
-    if (currentConversation)
-      setConvoName(getConvoName(currentConversation, currentUser));
+    if (currentConversation && currentConversation.name !== 'default')
+      setConvoName(currentConversation.name);
   }, [currentConversation]);
 
   const handleMessageChange = (e: ChangeEvent) => {
@@ -165,6 +164,11 @@ const Conversation: React.FC<ConversationProps> = ({
   const handleChangeConvoName = (e: ChangeEvent) => {
     const { value } = e.target as HTMLInputElement;
     setConvoName(value);
+  };
+
+  const handleSubmitNewConvoName = () => {
+    // TODO: Write redux logic to make request to
+    // messages service to change conversation name
   };
 
   const handleClickInfoIcon = () => setIsInfoClicked(!isInfoClicked);
@@ -337,10 +341,58 @@ const Conversation: React.FC<ConversationProps> = ({
             <Typography sx={{ marginRight: '10px' }}>
               Conversation Name:{' '}
             </Typography>
-            <Input
-              sx={{ transform: 'translateY(-4px)' }}
+            <TextField
+              sx={{
+                input: {
+                  border: 'none',
+                  padding: '2px 0px',
+                },
+                width: '60%',
+              }}
+              label=''
+              placeholder='Add a name'
+              fullWidth
               value={convoName}
               onChange={handleChangeConvoName}
+              InputProps={{
+                endAdornment: !!(
+                  convoName?.length && convoName !== currentConversation?.name
+                ) && (
+                  <InputAdornment
+                    position='end'
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      width: '45px',
+                    }}
+                  >
+                    <Button
+                      variant='text'
+                      size='small'
+                      onClick={handleSubmitNewConvoName}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: 'unset',
+                        },
+                      }}
+                    >
+                      <Typography
+                        sx={{ color: '#0095F6', textTransform: 'capitalize' }}
+                      >
+                        Done
+                      </Typography>
+                    </Button>
+                  </InputAdornment>
+                ),
+                style: {
+                  fontSize: '14px',
+                  padding: '0px 14px',
+                  borderRadius: '20px',
+                },
+                sx: {
+                  '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                },
+              }}
             />
           </Grid>
           <Grid
