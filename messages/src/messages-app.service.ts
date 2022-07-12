@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Model, Condition } from 'mongoose';
+import { Model, Condition, LeanDocument } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Conversation,
@@ -167,7 +167,7 @@ export class MessagesAppService {
     limit,
     offset,
   }: FindMessagesFromConvo) {
-    let messagesFromConvo;
+    let messagesFromConvo: MessageDocument[];
     if (limit) {
       messagesFromConvo = await this.messageModel
         .find({
@@ -181,9 +181,8 @@ export class MessagesAppService {
       });
     }
 
-    const messagesFromConvoObjects = messagesFromConvo.map((message) =>
-      message.toObject()
-    );
+    const messagesFromConvoObjects: LeanDocument<MessageDocument>[] =
+      messagesFromConvo.map((message) => message.toObject());
 
     this.logger.log(
       `Found the following messages from conversation with id ${conversationId}: `,
