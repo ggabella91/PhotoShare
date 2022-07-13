@@ -14,6 +14,7 @@ import { MessagesAppService } from './messages-app.service';
 import { Types } from 'mongoose';
 import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
+import { UpdateConvoDto } from './database/dto/update-convo-dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -64,7 +65,7 @@ export class MessagesAppChatGateway
     client: Socket,
     createConvoDto: CreateConvoPreDto
   ) {
-    this.logger.log('CreateConvoDto message body: ', createConvoDto);
+    this.logger.log('createConversation message body: ', createConvoDto);
 
     const createdConvo = await this.appService.createConversation(
       createConvoDto
@@ -72,6 +73,20 @@ export class MessagesAppChatGateway
 
     client.join(createdConvo.id.toString());
     client.emit('joinedConversation', createdConvo);
+  }
+
+  @SubscribeMessage('updateConversation')
+  async handleUpdateConversation(
+    client: Socket,
+    updateConvoDto: UpdateConvoDto
+  ) {
+    this.logger.log('updateConversation message body: ', updateConvoDto);
+
+    const updatedConvo = await this.appService.updateConversation(
+      updateConvoDto
+    );
+
+    client.emit('conversationUpdated', updatedConvo);
   }
 
   @SubscribeMessage('joinAllExistingConversations')
