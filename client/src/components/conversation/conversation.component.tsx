@@ -167,8 +167,10 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleSubmitNewConvoName = () => {
-    // TODO: Write redux logic to make request to
-    // messages service to change conversation name
+    socket.emit('updateConversation', {
+      id: conversationId,
+      name: convoName,
+    });
   };
 
   const handleClickInfoIcon = () => setIsInfoClicked(!isInfoClicked);
@@ -354,6 +356,7 @@ const Conversation: React.FC<ConversationProps> = ({
               fullWidth
               value={convoName}
               onChange={handleChangeConvoName}
+              onSubmit={handleSubmitNewConvoName}
               InputProps={{
                 endAdornment: !!(
                   convoName?.length && convoName !== currentConversation?.name

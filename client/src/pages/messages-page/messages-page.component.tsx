@@ -26,7 +26,6 @@ import {
   addMessageToConversation,
   getConvoMessagesStart,
   resetConvoUsersArray,
-  clearJoinedConvosArray,
 } from '../../redux/message/message.actions';
 
 import {
@@ -259,18 +258,17 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
           display: 'flex',
           position: 'relative',
           minHeight: '800px',
-          width: '85vw',
+          width: '95vw',
           maxWidth: '935px',
-          border: '1px solid rgb(219,219,219)',
         }}
       >
         <Grid container>
           <Grid
             item
-            xs={4}
             sx={{
-              borderRight: '1px solid rgb(219,219,219)',
-              width: '350px',
+              border: '1px solid rgb(219,219,219)',
+              minWidth: '350px',
+              maxWidth: '350px',
             }}
           >
             <Grid
@@ -308,11 +306,17 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
           </Grid>
           <Grid
             item
-            xs={8}
             sx={{
               display: 'flex',
+              position: 'absolute',
+              left: '350px',
+              height: '100%',
+              maxWidth: '585px',
+              width: '50vw',
               flexDirection: 'column',
               justifyContent: 'center',
+              border: '1px solid rgb(219,219,219)',
+              borderLeft: 'none',
             }}
           >
             {!!conversationId ? (
