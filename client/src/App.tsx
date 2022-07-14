@@ -75,7 +75,7 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
               </WithAuth>
             }
           >
-            <Route path='/direct' element={<Outlet />}>
+            <Route path='/direct'>
               <Route index element={<Navigate to='/direct/inbox' replace />} />
               <Route path='inbox' element={<MessagesPage />} />
               <Route path='t/:conversationId' element={<MessagesPage />} />

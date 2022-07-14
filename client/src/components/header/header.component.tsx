@@ -118,6 +118,13 @@ export const Header: React.FC<HeaderProps> = ({
             </NavLink>
             <NavLink
               className='link'
+              to='/direct/inbox'
+              data-testid='messages-link'
+            >
+              Messages
+            </NavLink>
+            <NavLink
+              className='link'
               to='/settings'
               data-testid='settings-link'
             >
