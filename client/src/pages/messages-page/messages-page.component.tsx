@@ -124,6 +124,12 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         userId: currentUser?.id,
       });
     });
+
+    socket.on('conversationUpdated', () => {
+      socket.emit('joinAllExistingConversations', {
+        userId: currentUser?.id,
+      });
+    });
   }, [socket]);
 
   useEffect(() => {

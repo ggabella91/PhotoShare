@@ -60,6 +60,8 @@ const Conversation: React.FC<ConversationProps> = ({
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
   const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(80);
   const [isInfoClicked, setIsInfoClicked] = useState(false);
+  const [convoName, setConvoName] = useState('');
+  const [showConvoNameDone, setShowConvoNameDone] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -69,7 +71,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
   );
-  const [convoName, setConvoName] = useState('');
   const conversationMessageUsers = currentConversation?.connectedUsers;
   const currentConversationMessages = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
@@ -113,6 +114,14 @@ const Conversation: React.FC<ConversationProps> = ({
     if (currentConversation && currentConversation.name !== 'default')
       setConvoName(currentConversation.name);
   }, [currentConversation]);
+
+  useEffect(() => {
+    if (currentConversation && convoName) {
+      setShowConvoNameDone(
+        !!(convoName?.length && convoName !== currentConversation?.name)
+      );
+    }
+  }, [currentConversation, convoName]);
 
   const handleMessageChange = (e: ChangeEvent) => {
     if (messageJustSent.current === true) {
@@ -171,6 +180,13 @@ const Conversation: React.FC<ConversationProps> = ({
       id: conversationId,
       name: convoName,
     });
+    setShowConvoNameDone(false);
+  };
+
+  const handleSubmitNewConvoNameEnterKey = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmitNewConvoName();
+    }
   };
 
   const handleClickInfoIcon = () => setIsInfoClicked(!isInfoClicked);
@@ -356,11 +372,9 @@ const Conversation: React.FC<ConversationProps> = ({
               fullWidth
               value={convoName}
               onChange={handleChangeConvoName}
-              onSubmit={handleSubmitNewConvoName}
+              onKeyDown={handleSubmitNewConvoNameEnterKey}
               InputProps={{
-                endAdornment: !!(
-                  convoName?.length && convoName !== currentConversation?.name
-                ) && (
+                endAdornment: showConvoNameDone && (
                   <InputAdornment
                     position='end'
                     sx={{
