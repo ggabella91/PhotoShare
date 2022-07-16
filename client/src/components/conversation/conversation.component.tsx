@@ -191,6 +191,10 @@ const Conversation: React.FC<ConversationProps> = ({
 
   const handleClickInfoIcon = () => setIsInfoClicked(!isInfoClicked);
 
+  const handleShowAddPeopleModal = () => {
+    // TODO: Implement modal and logic for adding people to a conversation
+  };
+
   return (
     <Grid
       sx={{
@@ -428,7 +432,25 @@ const Conversation: React.FC<ConversationProps> = ({
                 padding: '0px 16px',
               }}
             >
-              <Typography sx={{ fontWeight: 600 }}>Members</Typography>
+              <Grid sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontWeight: 600 }}>Members</Typography>
+                <Button
+                  variant='text'
+                  size='small'
+                  onClick={handleShowAddPeopleModal}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'unset',
+                    },
+                  }}
+                >
+                  <Typography
+                    sx={{ color: '#0095F6', textTransform: 'capitalize' }}
+                  >
+                    Add People
+                  </Typography>
+                </Button>
+              </Grid>
             </Grid>
             {conversationMessageUsers?.map((user) => {
               const userInfo = userInfoMap[user];
