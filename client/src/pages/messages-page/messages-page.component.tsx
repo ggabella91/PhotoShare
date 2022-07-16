@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Grid, Typography, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import NewConvoDialog from './new-convo-dialog.component';
+import CreateOrUpdateConvoDialog from './create-or-update-convo-dialog.component';
 import ConversationPreview from '../../components/conversation/conversation-preview.component';
 import ConversationComponent from '../../components/conversation/conversation.component';
 
@@ -38,9 +38,8 @@ interface MessagesPageProps {
 }
 
 const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
-  const [showNewMessageDialog, setShowNewMessageDialog] = useState(
-    !!openNewConvoModal
-  );
+  const [showConvoDialog, setShowConvoDialog] = useState(!!openNewConvoModal);
+  const [isExistingConvo, setIsExistingConvo] = useState(false);
 
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
     useState(false);
@@ -108,7 +107,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
     socket.on('joinedConversation', (conversation) => {
       dispatch(addToJoinedConversationsArray(conversation));
-      setShowNewMessageDialog(false);
+      setShowConvoDialog(false);
       dispatch(resetConvoUsersArray());
       navigate(`/direct/t/${conversation.id}`, { replace: true });
     });
@@ -174,7 +173,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
   const handleSendMessage = () => {
     navigate('/direct/new', { replace: true });
-    setShowNewMessageDialog(true);
+    setShowConvoDialog(true);
   };
 
   const handleClickNext = () => {
@@ -330,17 +329,20 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
                 conversationId={conversationId}
                 avatarS3Keys={avatarS3Keys}
                 socket={socket}
+                setShowConvoDialog={setShowConvoDialog}
+                setIsExistingConvo={setIsExistingConvo}
               />
             ) : (
               renderNoActiveConvosScreen()
             )}
           </Grid>
         </Grid>
-        <NewConvoDialog
-          showNewMessageDialog={showNewMessageDialog}
-          setShowNewMessageDialog={setShowNewMessageDialog}
+        <CreateOrUpdateConvoDialog
+          showNewMessageDialog={showConvoDialog}
+          setShowConvoDialog={setShowConvoDialog}
           usersArrayForNewConvoReq={usersArrayForNewConvoReq}
           handleClickNext={handleClickNext}
+          isExistingConvo={isExistingConvo}
         />
       </Grid>
     </Grid>

@@ -47,6 +47,8 @@ interface ConversationProps {
   conversationId: string;
   avatarS3Keys: string[];
   socket: Socket;
+  setShowConvoDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsExistingConvo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type UserInfoMap = Record<string, UserInfoData>;
@@ -55,6 +57,8 @@ const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
   socket,
+  setShowConvoDialog,
+  setIsExistingConvo,
 }) => {
   const [message, setMessage] = useState('');
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
@@ -192,7 +196,8 @@ const Conversation: React.FC<ConversationProps> = ({
   const handleClickInfoIcon = () => setIsInfoClicked(!isInfoClicked);
 
   const handleShowAddPeopleModal = () => {
-    // TODO: Implement modal and logic for adding people to a conversation
+    setShowConvoDialog(true);
+    setIsExistingConvo(true);
   };
 
   return (
