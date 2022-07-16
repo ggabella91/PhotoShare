@@ -23,18 +23,23 @@ import {
 import { MessageUser } from '../../redux/message/message.types';
 import { removeUserFromConvoUsersArray } from '../../redux/message/message.actions';
 
-interface NewConvoDialogProps {
+interface CreateOrUpdateConvoDialogProps {
   showNewMessageDialog: boolean;
-  setShowNewMessageDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowConvoDialog: React.Dispatch<React.SetStateAction<boolean>>;
   usersArrayForNewConvoReq: Partial<MessageUser>[];
   handleClickNext: () => void;
+  isExistingConvo: boolean;
 }
 
-const NewConvoDialog: React.FC<NewConvoDialogProps> = ({
+// TODO: Add logic to determine whether to add people to an existing
+// convo or to create a new convo using isExistingConvo flag
+
+const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
   showNewMessageDialog,
-  setShowNewMessageDialog,
+  setShowConvoDialog,
   usersArrayForNewConvoReq,
   handleClickNext,
+  isExistingConvo,
 }) => {
   const [userSearchString, setUserSearchString] = useState('');
   const userSuggestions = useSelector(selectUserSuggestions);
@@ -66,7 +71,7 @@ const NewConvoDialog: React.FC<NewConvoDialogProps> = ({
   };
 
   const handleCloseDialog = () => {
-    setShowNewMessageDialog(false);
+    setShowConvoDialog(false);
     dispatch(clearUserSuggestions());
     setUserSearchString('');
   };
@@ -159,4 +164,4 @@ const NewConvoDialog: React.FC<NewConvoDialogProps> = ({
   );
 };
 
-export default NewConvoDialog;
+export default CreateOrUpdateConvoDialog;
