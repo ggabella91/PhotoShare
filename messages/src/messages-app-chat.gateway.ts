@@ -14,7 +14,7 @@ import { MessagesAppService } from './messages-app.service';
 import { Types } from 'mongoose';
 import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
-import { UpdateConvoDto } from './database/dto/update-convo-dto';
+import { UpdateConvoPreDto } from './database/dto/update-convo-dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -78,7 +78,7 @@ export class MessagesAppChatGateway
   @SubscribeMessage('updateConversation')
   async handleUpdateConversation(
     client: Socket,
-    updateConvoDto: UpdateConvoDto
+    updateConvoDto: UpdateConvoPreDto
   ) {
     this.logger.log('updateConversation message body: ', updateConvoDto);
 

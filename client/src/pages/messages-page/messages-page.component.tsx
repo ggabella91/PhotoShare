@@ -190,7 +190,13 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       let finalUsersArray: Partial<MessageUser>[] = usersArrayForNewConvoReq;
 
       if (isExistingConvo && conversationUsers) {
-        finalUsersArray.concat(...conversationUsers);
+        const currentConvoMessageUsers = conversationUsers.map((user) => ({
+          name: user.name,
+          photoS3Key: user.photo,
+          userId: user.id,
+          username: user.username,
+        }));
+        finalUsersArray = [...finalUsersArray, ...currentConvoMessageUsers];
       }
 
       const { usersArray, avatarS3Keys, convoUserNames } =
