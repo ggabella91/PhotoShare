@@ -17,12 +17,14 @@ interface ConversationPreviewProps {
   conversationName: string;
   conversationId: string;
   avatarS3Keys: string[];
+  setIsInfoClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   conversationName,
   conversationId,
   avatarS3Keys,
+  setIsInfoClicked,
 }) => {
   const conversationMessages = useSelector(selectConversationMessages);
   const lastMessage = conversationMessages
@@ -56,6 +58,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   }, [dispatch, bucket, avatarS3Keys]);
 
   const handleClick = () => {
+    setIsInfoClicked(false);
     navigate(`/direct/t/${conversationId}`);
   };
 
