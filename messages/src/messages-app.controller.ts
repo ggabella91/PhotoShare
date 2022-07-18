@@ -10,7 +10,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { MessagesAppService } from './messages-app.service';
-import { UpdateConvoDto } from './database/dto/update-convo-dto';
+import { UpdateConvoPreDto } from './database/dto/update-convo-dto';
 
 @Controller('/api/messages')
 export class MessagesAppController {
@@ -66,7 +66,7 @@ export class MessagesAppController {
   }
 
   @Put('/conversation')
-  updateConversation(@Body() updateConvoDto: UpdateConvoDto) {
-    return this.appService.updateConversation(updateConvoDto);
+  updateConversation(@Body() updateConvoPreDto: UpdateConvoPreDto) {
+    return this.appService.updateConversation(updateConvoPreDto);
   }
 }
