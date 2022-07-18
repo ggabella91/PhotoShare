@@ -47,6 +47,8 @@ interface ConversationProps {
   conversationId: string;
   avatarS3Keys: string[];
   socket: Socket;
+  isInfoClicked: boolean;
+  setIsInfoClicked: React.Dispatch<React.SetStateAction<boolean>>;
   setShowConvoDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setIsExistingConvo: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -57,13 +59,14 @@ const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
   socket,
+  isInfoClicked,
+  setIsInfoClicked,
   setShowConvoDialog,
   setIsExistingConvo,
 }) => {
   const [message, setMessage] = useState('');
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
   const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(80);
-  const [isInfoClicked, setIsInfoClicked] = useState(false);
   const [convoName, setConvoName] = useState('');
   const [showConvoNameDone, setShowConvoNameDone] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
@@ -82,7 +85,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const messagesArray = currentConversationMessages?.messages;
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const messageJustSent = useRef(false);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -126,6 +128,10 @@ const Conversation: React.FC<ConversationProps> = ({
       );
     }
   }, [currentConversation, convoName]);
+
+  useEffect(() => {
+    setIsInfoClicked(false);
+  }, [conversationId]);
 
   const handleMessageChange = (e: ChangeEvent) => {
     if (messageJustSent.current === true) {
@@ -432,30 +438,34 @@ const Conversation: React.FC<ConversationProps> = ({
             <Grid
               sx={{
                 display: 'flex',
-                justifyContent: 'flex-start',
+                justifyContent: 'space-between',
                 margin: '8px 0px',
                 padding: '0px 16px',
               }}
             >
-              <Grid sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography sx={{ fontWeight: 600 }}>Members</Typography>
-                <Button
-                  variant='text'
-                  size='small'
-                  onClick={handleShowAddPeopleModal}
+              <Typography sx={{ fontWeight: 600, lineHeight: 2 }}>
+                Members
+              </Typography>
+              <Button
+                variant='text'
+                size='small'
+                onClick={handleShowAddPeopleModal}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: 'unset',
+                  },
+                }}
+              >
+                <Typography
                   sx={{
-                    '&:hover': {
-                      backgroundColor: 'unset',
-                    },
+                    color: '#0095F6',
+                    textTransform: 'capitalize',
+                    fontWeight: 600,
                   }}
                 >
-                  <Typography
-                    sx={{ color: '#0095F6', textTransform: 'capitalize' }}
-                  >
-                    Add People
-                  </Typography>
-                </Button>
-              </Grid>
+                  Add People
+                </Typography>
+              </Button>
             </Grid>
             {conversationMessageUsers?.map((user) => {
               const userInfo = userInfoMap[user];

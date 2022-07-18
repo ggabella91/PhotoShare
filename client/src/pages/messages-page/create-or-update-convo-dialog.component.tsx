@@ -14,7 +14,11 @@ import { useDebounce, useUserInfoData } from '../hooks';
 
 import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
 
-import { selectUserSuggestions } from '../../redux/user/user.selectors';
+import { User } from '../../redux/user/user.types';
+import {
+  selectConversationUsers,
+  selectUserSuggestions,
+} from '../../redux/user/user.selectors';
 import {
   getUserSuggestionsStart,
   clearUserSuggestions,
@@ -42,8 +46,13 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
   isExistingConvo,
 }) => {
   const [userSearchString, setUserSearchString] = useState('');
+  const [filteredUserSuggestions, setFilteredUserSuggestions] = useState<
+    User[]
+  >([]);
   const userSuggestions = useSelector(selectUserSuggestions);
-  let userSuggestionsList = useUserInfoData(userSuggestions);
+  const conversationUsers = useSelector(selectConversationUsers);
+
+  let userSuggestionsList = useUserInfoData(filteredUserSuggestions);
 
   const usersArrayLength = useRef<number>(0);
 
@@ -63,6 +72,18 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
       dispatch(getUserSuggestionsStart(debouncedUserSearchString));
     }
   }, [debouncedUserSearchString]);
+
+  useEffect(() => {
+    let filteredSuggestions: User[];
+    if (userSuggestions && conversationUsers && isExistingConvo) {
+      filteredSuggestions = userSuggestions?.filter((userSuggestion) =>
+        conversationUsers?.includes(userSuggestion)
+      );
+      setFilteredUserSuggestions(filteredSuggestions);
+    } else if (userSuggestions && !isExistingConvo) {
+      setFilteredUserSuggestions(userSuggestions);
+    }
+  }, [userSuggestions, conversationUsers, isExistingConvo]);
 
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -97,7 +118,9 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
           justifyContent: 'center',
         }}
       >
-        <Typography>New Message</Typography>
+        <Typography>
+          {isExistingConvo ? 'Add People' : 'New Message'}
+        </Typography>
         <Button
           sx={{
             position: 'absolute',

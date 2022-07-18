@@ -8,7 +8,10 @@ import CreateOrUpdateConvoDialog from './create-or-update-convo-dialog.component
 import ConversationPreview from '../../components/conversation/conversation-preview.component';
 import ConversationComponent from '../../components/conversation/conversation.component';
 
-import { selectCurrentUser } from '../../redux/user/user.selectors';
+import {
+  selectCurrentUser,
+  selectConversationUsers,
+} from '../../redux/user/user.selectors';
 import { clearUserSuggestions } from '../../redux/user/user.actions';
 
 import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
@@ -32,6 +35,7 @@ import {
   generateFinalConvoUsersAndS3KeysArrays,
   getConvoName,
 } from './messages-page.utils';
+import { MessageUser } from '../../redux/message/message.types';
 
 interface MessagesPageProps {
   openNewConvoModal?: boolean;
@@ -40,16 +44,17 @@ interface MessagesPageProps {
 const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const [showConvoDialog, setShowConvoDialog] = useState(!!openNewConvoModal);
   const [isExistingConvo, setIsExistingConvo] = useState(false);
-
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
     useState(false);
   const [joinedExistingConversations, setJoinedExistingConversations] =
     useState(false);
+  const [isInfoClicked, setIsInfoClicked] = useState(false);
 
   const currentUser = useSelector(selectCurrentUser);
   const messageUser = useSelector(selectMessageUser);
   const joinedCoversations = useSelector(selectJoinedConversations);
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
+  const conversationUsers = useSelector(selectConversationUsers);
   const navigate = useNavigate();
   const { conversationId } = useParams();
   const avatarS3Keys = joinedCoversations?.find(
@@ -182,18 +187,29 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       usersArrayForNewConvoReq.length &&
       currentUser
     ) {
-      const { usersArray, avatarS3Keys, convoUserNames } =
-        generateFinalConvoUsersAndS3KeysArrays(
-          usersArrayForNewConvoReq,
-          currentUser
-        );
+      let finalUsersArray: Partial<MessageUser>[] = usersArrayForNewConvoReq;
 
-      socket.emit('createConversation', {
-        name: 'default',
-        connectedUsers: usersArray,
-        avatarS3Keys,
-        connectedUserNames: convoUserNames,
-      });
+      if (isExistingConvo && conversationUsers) {
+        finalUsersArray.concat(...conversationUsers);
+      }
+
+      const { usersArray, avatarS3Keys, convoUserNames } =
+        generateFinalConvoUsersAndS3KeysArrays(finalUsersArray, currentUser);
+
+      if (!isExistingConvo) {
+        socket.emit('createConversation', {
+          name: 'default',
+          connectedUsers: usersArray,
+          avatarS3Keys,
+          connectedUserNames: convoUserNames,
+        });
+      } else {
+        socket.emit('updateConversation', {
+          connectedUsers: usersArray,
+          avatarS3Keys,
+          connectedUserNames: convoUserNames,
+        });
+      }
 
       dispatch(clearUserSuggestions());
     }
@@ -303,6 +319,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
                         conversationId={convo.id}
                         conversationName={getConvoName(convo, currentUser)}
                         avatarS3Keys={convo.avatarS3Keys}
+                        setIsInfoClicked={setIsInfoClicked}
                       />
                     );
                   })
@@ -329,6 +346,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
                 conversationId={conversationId}
                 avatarS3Keys={avatarS3Keys}
                 socket={socket}
+                isInfoClicked={isInfoClicked}
+                setIsInfoClicked={setIsInfoClicked}
                 setShowConvoDialog={setShowConvoDialog}
                 setIsExistingConvo={setIsExistingConvo}
               />
