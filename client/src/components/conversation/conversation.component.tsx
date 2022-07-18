@@ -473,7 +473,7 @@ const Conversation: React.FC<ConversationProps> = ({
               return (
                 <Grid
                   sx={{ display: 'flex', height: '72px', padding: '8px 16px' }}
-                  key={userInfo.id}
+                  key={userInfo?.id}
                 >
                   <Avatar
                     src={
@@ -493,9 +493,9 @@ const Conversation: React.FC<ConversationProps> = ({
                     }}
                   >
                     <Typography sx={{ fontWeight: 600 }}>
-                      {userInfo.username}
+                      {userInfo?.username}
                     </Typography>
-                    <Typography>{userInfo.name}</Typography>
+                    <Typography>{userInfo?.name}</Typography>
                   </Grid>
                 </Grid>
               );

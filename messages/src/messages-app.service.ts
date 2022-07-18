@@ -218,7 +218,7 @@ export class MessagesAppService {
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
       id,
       {
-        ...updateProps,
+        ...updateConvoDto,
       },
       { new: true }
     );
@@ -227,5 +227,7 @@ export class MessagesAppService {
       `Updated conversation with id ${id}: `,
       updatedConversation
     );
+
+    return updatedConversation;
   }
 }
