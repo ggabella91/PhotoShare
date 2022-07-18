@@ -211,6 +211,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         });
       } else {
         socket.emit('updateConversation', {
+          id: conversationId,
           connectedUsers: usersArray,
           avatarS3Keys,
           connectedUserNames: convoUserNames,
