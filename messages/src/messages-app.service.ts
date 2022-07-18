@@ -11,7 +11,10 @@ import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { CreateUserDto } from './database/dto/create-user.dto';
 import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
-import { UpdateConvoDto } from './database/dto/update-convo-dto';
+import {
+  UpdateConvoPreDto,
+  UpdateConvoDto,
+} from './database/dto/update-convo-dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -192,8 +195,25 @@ export class MessagesAppService {
     return messagesFromConvoObjects;
   }
 
-  async updateConversation(updateConvoDto: UpdateConvoDto) {
-    const { id, ...updateProps } = updateConvoDto;
+  async updateConversation(updateConvoPreDto: UpdateConvoPreDto) {
+    const { id, connectedUsers, ...updateProps } = updateConvoPreDto;
+
+    let updateConvoDto: UpdateConvoDto = { ...updateProps };
+
+    if (connectedUsers) {
+      await Promise.all(
+        connectedUsers.map((user) =>
+          this.findOrCreateUser({
+            userId: user.userId,
+            name: user.name,
+            username: user.username,
+            photoS3Key: user.photoS3Key,
+          })
+        )
+      );
+
+      updateConvoDto.connectedUsers = connectedUsers.map((user) => user.userId);
+    }
 
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
       id,

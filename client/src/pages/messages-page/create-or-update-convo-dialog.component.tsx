@@ -76,8 +76,9 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
   useEffect(() => {
     let filteredSuggestions: User[];
     if (userSuggestions && conversationUsers && isExistingConvo) {
-      filteredSuggestions = userSuggestions?.filter((userSuggestion) =>
-        conversationUsers?.includes(userSuggestion)
+      filteredSuggestions = userSuggestions?.filter(
+        (userSuggestion) =>
+          !conversationUsers?.map((user) => user.id).includes(userSuggestion.id)
       );
       setFilteredUserSuggestions(filteredSuggestions);
     } else if (userSuggestions && !isExistingConvo) {
