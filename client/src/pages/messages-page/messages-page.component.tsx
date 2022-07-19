@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Grid, Typography, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import RateReviewIcon from '@mui/icons-material/RateReview';
 import CreateOrUpdateConvoDialog from './create-or-update-convo-dialog.component';
 import ConversationPreview from '../../components/conversation/conversation-preview.component';
 import ConversationComponent from '../../components/conversation/conversation.component';
@@ -306,9 +307,29 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderBottom: '1px solid rgb(219,219,219)',
+                padding: '0 20px',
               }}
             >
-              <Typography>{currentUser?.username || ''}</Typography>
+              <Grid
+                xs={2}
+                sx={{ marginRight: '8px', display: 'flex', flexBasis: '32px' }}
+              />
+              <Grid xs={8} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography sx={{ fontWeight: 600 }}>
+                  {currentUser?.username || ''}
+                </Typography>
+              </Grid>
+              <Grid xs={2} sx={{ display: 'flex' }}>
+                <Button
+                  sx={{
+                    marginTop: '5px',
+                    '&:hover': { backgroundColor: 'unset' },
+                  }}
+                  onClick={handleSendMessage}
+                >
+                  <RateReviewIcon fontSize='large' sx={{ color: 'black' }} />
+                </Button>
+              </Grid>
             </Grid>
             <Grid
               sx={{
