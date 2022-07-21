@@ -32,6 +32,11 @@ export class Conversation {
 
   @Prop()
   connectedUserNames: string[];
+
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  })
+  adminUsers: User[];
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

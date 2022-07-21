@@ -15,6 +15,7 @@ import {
   UpdateConvoPreDto,
   UpdateConvoDto,
 } from './database/dto/update-convo-dto';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class MessagesAppService {
@@ -44,6 +45,8 @@ export class MessagesAppService {
       )
     );
 
+    const { creator, ...restOfParams } = createConvoPreDto;
+
     const userIdArray = createConvoPreDto.connectedUsers.map(
       (user) => user.userId
     );
@@ -64,8 +67,9 @@ export class MessagesAppService {
       return updatedExistingConvoMatch;
     } else {
       const createdConvo = new this.conversationModel({
-        ...createConvoPreDto,
+        ...restOfParams,
         connectedUsers: userIdArray,
+        adminUsers: [creator.userId],
       });
       const savedConvo = (await createdConvo.save()).toObject();
 
@@ -196,7 +200,19 @@ export class MessagesAppService {
   }
 
   async updateConversation(updateConvoPreDto: UpdateConvoPreDto) {
-    const { id, connectedUsers, ...updateProps } = updateConvoPreDto;
+    const { id, connectedUsers, updatingUser, adminUsers, ...updateProps } =
+      updateConvoPreDto;
+
+    const conversation = await this.conversationModel.findById(id);
+    const convoAdminUserIds = conversation.adminUsers.map(
+      (user) => user.userId
+    );
+
+    if (!convoAdminUserIds.includes(updatingUser.userId)) {
+      throw new WsException(
+        'Requesting user is not an admin for this conversation'
+      );
+    }
 
     let updateConvoDto: UpdateConvoDto = { ...updateProps };
 
@@ -213,6 +229,10 @@ export class MessagesAppService {
       );
 
       updateConvoDto.connectedUsers = connectedUsers.map((user) => user.userId);
+    }
+
+    if (adminUsers) {
+      updateConvoDto.adminUsers = adminUsers.map((user) => user.userId);
     }
 
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
