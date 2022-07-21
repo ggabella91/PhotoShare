@@ -1,7 +1,7 @@
 import { User } from '../schemas/user.schema';
 
 export class CreateConvoPreDto {
-  creator: User;
+  creator: string;
   name: string;
   connectedUsers: User[];
   avatarS3Keys: string[];

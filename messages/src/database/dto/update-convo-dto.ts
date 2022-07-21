@@ -1,13 +1,13 @@
 import { User } from '../schemas/user.schema';
 
 export class UpdateConvoPreDto {
-  updatingUser: User;
+  updatingUser: string;
   id: string;
   name?: string;
   avatarS3Keys?: string[];
   connectedUsers?: User[];
   connectedUserNames?: string[];
-  adminUsers: User[];
+  adminUsers: string[];
 }
 
 export class UpdateConvoDto {

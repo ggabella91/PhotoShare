@@ -67,6 +67,7 @@ export interface Conversation {
   avatarS3Keys: string[];
   connectedUserNames: string[];
   lastMessageTime: number;
+  adminUsers: string[];
 }
 
 export interface FindOrCreateUserReq {
