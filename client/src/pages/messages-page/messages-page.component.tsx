@@ -205,6 +205,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
       if (!isExistingConvo) {
         socket.emit('createConversation', {
+          creator: currentUser.id,
           name: 'default',
           connectedUsers: usersArray,
           avatarS3Keys,

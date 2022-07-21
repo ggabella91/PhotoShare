@@ -79,6 +79,7 @@ const Conversation: React.FC<ConversationProps> = ({
     (conversation) => conversation.id === conversationId
   );
   const conversationMessageUsers = currentConversation?.connectedUsers;
+  const conversationAdminUsers = currentConversation?.adminUsers;
   const currentConversationMessages = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
   );
@@ -192,6 +193,9 @@ const Conversation: React.FC<ConversationProps> = ({
     });
     setShowConvoNameDone(false);
   };
+
+  // TODO: Implement logic for giving admin privileges to
+  // individual users in a convo
 
   const handleSubmitNewConvoNameEnterKey = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {

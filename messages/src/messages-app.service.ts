@@ -69,7 +69,7 @@ export class MessagesAppService {
       const createdConvo = new this.conversationModel({
         ...restOfParams,
         connectedUsers: userIdArray,
-        adminUsers: [creator.userId],
+        adminUsers: [creator],
       });
       const savedConvo = (await createdConvo.save()).toObject();
 
@@ -204,11 +204,9 @@ export class MessagesAppService {
       updateConvoPreDto;
 
     const conversation = await this.conversationModel.findById(id);
-    const convoAdminUserIds = conversation.adminUsers.map(
-      (user) => user.userId
-    );
+    const convoAdminUserIds = conversation.adminUsers;
 
-    if (!convoAdminUserIds.includes(updatingUser.userId)) {
+    if (!convoAdminUserIds.includes(updatingUser)) {
       throw new WsException(
         'Requesting user is not an admin for this conversation'
       );
@@ -232,7 +230,7 @@ export class MessagesAppService {
     }
 
     if (adminUsers) {
-      updateConvoDto.adminUsers = adminUsers.map((user) => user.userId);
+      updateConvoDto.adminUsers = adminUsers;
     }
 
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
