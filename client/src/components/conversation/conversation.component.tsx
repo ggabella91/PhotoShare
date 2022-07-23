@@ -22,6 +22,7 @@ import MessageComponent from './message.component';
 import CustomAvatarGroup, {
   StyleVariation,
 } from './custom-avatar-group.component';
+import ConversationUserOptionsDialog from './conversation-user-options-dialog.component';
 import { useUserInfoData } from '../../pages/hooks';
 
 import {
@@ -70,6 +71,11 @@ const Conversation: React.FC<ConversationProps> = ({
   const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(80);
   const [convoName, setConvoName] = useState('');
   const [showConvoNameDone, setShowConvoNameDone] = useState(false);
+  const [openOptionsDialog, setOpenOptionsDialog] = useState(false);
+  const [optionsDialogUser, setOptionsDialogUser] = useState({
+    userId: '',
+    isAdmin: false,
+  });
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -119,8 +125,11 @@ const Conversation: React.FC<ConversationProps> = ({
   }, [usersInfoList]);
 
   useEffect(() => {
-    if (currentConversation && currentConversation.name !== 'default')
+    if (currentConversation && currentConversation.name !== 'default') {
       setConvoName(currentConversation.name);
+    } else if (currentConversation) {
+      setConvoName('');
+    }
   }, [currentConversation]);
 
   useEffect(() => {
@@ -128,6 +137,8 @@ const Conversation: React.FC<ConversationProps> = ({
       setShowConvoNameDone(
         !!(convoName?.length && convoName !== currentConversation?.name)
       );
+    } else if (currentConversation) {
+      setShowConvoNameDone(false);
     }
   }, [currentConversation, convoName]);
 
@@ -198,11 +209,74 @@ const Conversation: React.FC<ConversationProps> = ({
     setShowConvoNameDone(false);
   };
 
-  const handleClickOptionsForUser = (userId: string) => {
-    // TODO: Implement logic showing convo user options modal,
-    // including option to give admin privileges to
-    // individual users in a convo
+  const handleClickOptionsForUser = (userId: string, isAdmin: boolean) => {
+    setOptionsDialogUser({ userId, isAdmin });
+    setOpenOptionsDialog(true);
   };
+
+  const handleRemoveFromGroup = () => {
+    const convoUser = conversationUsers?.find(
+      (user) => user.id === optionsDialogUser.userId
+    );
+    const { id, photo } = convoUser!;
+    const newConvoMessageUsers = conversationUsers!
+      .filter((user) => user.id !== id)
+      .map((user) => ({
+        name: user.name,
+        photoS3Key: user.photo,
+        userId: user.id,
+        username: user.username,
+      }));
+    const newConvoAvatarS3Keys = conversationUsers
+      ?.map((user) => user.photo)
+      .filter((s3Key) => s3Key !== photo);
+    const newConvoMessageUserNames = newConvoMessageUsers.map(
+      (user) => user.name
+    );
+    const newConvoAdminUsers = conversationAdminUsers!.filter(
+      (user) => user !== id
+    );
+
+    if (currentUser) {
+      socket.emit('updateConversation', {
+        updatingUser: currentUser.id,
+        id: conversationId,
+        connectedUsers: newConvoMessageUsers,
+        connectedUserNames: newConvoMessageUserNames,
+        avatarS3Keys: newConvoAvatarS3Keys,
+        adminUsers: newConvoAdminUsers,
+      });
+    }
+
+    setOpenOptionsDialog(false);
+  };
+
+  const handleAddOrRemoveAsAdmin = () => {
+    const isAdmin = optionsDialogUser.isAdmin;
+    const convoUser = conversationUsers?.find(
+      (user) => user.id === optionsDialogUser.userId
+    );
+    const { id } = convoUser!;
+    let newConvoAdminUsers = [...conversationAdminUsers!];
+    if (isAdmin) {
+      newConvoAdminUsers = newConvoAdminUsers!.filter((user) => user !== id);
+    } else {
+      newConvoAdminUsers!.push(id);
+      newConvoAdminUsers.sort();
+    }
+
+    if (currentUser) {
+      socket.emit('updateConversation', {
+        updatingUser: currentUser.id,
+        id: conversationId,
+        adminUsers: newConvoAdminUsers,
+      });
+    }
+
+    setOpenOptionsDialog(false);
+  };
+
+  const handleBlurOptionsDialog = () => setOpenOptionsDialog(false);
 
   const handleSubmitNewConvoNameEnterKey = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -483,6 +557,7 @@ const Conversation: React.FC<ConversationProps> = ({
               const isAdmin = !!conversationAdminUsers?.find(
                 (admin) => admin === user
               );
+              const isNotCurrentUser = userInfo?.id !== currentUser?.id;
 
               return (
                 <Grid
@@ -529,17 +604,21 @@ const Conversation: React.FC<ConversationProps> = ({
                       display: 'flex',
                     }}
                   >
-                    <Button
-                      sx={{
-                        display: 'flex',
-                        '&:hover': {
-                          backgroundColor: 'unset',
-                        },
-                      }}
-                      onClick={() => handleClickOptionsForUser(userInfo?.id!)}
-                    >
-                      <MoreHorizIcon sx={{ color: 'black' }} />
-                    </Button>
+                    {isNotCurrentUser && (
+                      <Button
+                        sx={{
+                          display: 'flex',
+                          '&:hover': {
+                            backgroundColor: 'unset',
+                          },
+                        }}
+                        onClick={() =>
+                          handleClickOptionsForUser(userInfo?.id!, isAdmin)
+                        }
+                      >
+                        <MoreHorizIcon sx={{ color: 'black' }} />
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               );
@@ -547,6 +626,15 @@ const Conversation: React.FC<ConversationProps> = ({
           </Grid>
         </Grid>
       )}
+      <ConversationUserOptionsDialog
+        open={openOptionsDialog}
+        setOpen={setOpenOptionsDialog}
+        userId={optionsDialogUser.userId}
+        isAdmin={optionsDialogUser.isAdmin}
+        handleRemoveFromGroup={handleRemoveFromGroup}
+        handleAddOrRemoveAsAdmin={handleAddOrRemoveAsAdmin}
+        onBlur={handleBlurOptionsDialog}
+      />
     </Grid>
   );
 };
