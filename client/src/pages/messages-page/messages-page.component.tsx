@@ -178,7 +178,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   ]);
 
   const handleSendMessage = () => {
-    navigate('/direct/new', { replace: true });
+    window.history.pushState({}, '', '/direct/new');
     setShowConvoDialog(true);
   };
 
@@ -212,12 +212,15 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
           connectedUserNames: convoUserNames,
         });
       } else {
-        socket.emit('updateConversation', {
-          id: conversationId,
-          connectedUsers: usersArray,
-          avatarS3Keys,
-          connectedUserNames: convoUserNames,
-        });
+        if (currentUser) {
+          socket.emit('updateConversation', {
+            updatingUser: currentUser.id,
+            id: conversationId,
+            connectedUsers: usersArray,
+            avatarS3Keys,
+            connectedUserNames: convoUserNames,
+          });
+        }
       }
 
       dispatch(clearUserSuggestions());
@@ -312,15 +315,20 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
               }}
             >
               <Grid
+                item
                 xs={2}
                 sx={{ marginRight: '8px', display: 'flex', flexBasis: '32px' }}
               />
-              <Grid xs={8} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Grid
+                item
+                xs={8}
+                sx={{ display: 'flex', justifyContent: 'center' }}
+              >
                 <Typography sx={{ fontWeight: 600 }}>
                   {currentUser?.username || ''}
                 </Typography>
               </Grid>
-              <Grid xs={2} sx={{ display: 'flex' }}>
+              <Grid item xs={2} sx={{ display: 'flex' }}>
                 <Button
                   sx={{
                     marginTop: '5px',
