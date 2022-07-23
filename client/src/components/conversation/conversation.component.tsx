@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InfoIcon from '@mui/icons-material/Info';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import MessageComponent from './message.component';
 import CustomAvatarGroup, {
   StyleVariation,
@@ -187,15 +188,21 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleSubmitNewConvoName = () => {
-    socket.emit('updateConversation', {
-      id: conversationId,
-      name: convoName,
-    });
+    if (currentUser) {
+      socket.emit('updateConversation', {
+        updatingUser: currentUser.id,
+        id: conversationId,
+        name: convoName,
+      });
+    }
     setShowConvoNameDone(false);
   };
 
-  // TODO: Implement logic for giving admin privileges to
-  // individual users in a convo
+  const handleClickOptionsForUser = (userId: string) => {
+    // TODO: Implement logic showing convo user options modal,
+    // including option to give admin privileges to
+    // individual users in a convo
+  };
 
   const handleSubmitNewConvoNameEnterKey = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -473,33 +480,66 @@ const Conversation: React.FC<ConversationProps> = ({
             </Grid>
             {conversationMessageUsers?.map((user) => {
               const userInfo = userInfoMap[user];
+              const isAdmin = !!conversationAdminUsers?.find(
+                (admin) => admin === user
+              );
 
               return (
                 <Grid
-                  sx={{ display: 'flex', height: '72px', padding: '8px 16px' }}
+                  container
+                  sx={{
+                    display: 'flex',
+                    height: '72px',
+                    padding: '8px 16px',
+                    justifyContent: 'space-between',
+                  }}
                   key={userInfo?.id}
                 >
-                  <Avatar
-                    src={
-                      userInfo?.profilePhotoFileString
-                        ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
-                        : ''
-                    }
-                    alt={userInfo?.name || ''}
-                    sx={{ height: '56px', width: '56px' }}
-                  />
+                  <Grid item sx={{ display: 'flex' }}>
+                    <Avatar
+                      src={
+                        userInfo?.profilePhotoFileString
+                          ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
+                          : ''
+                      }
+                      alt={userInfo?.name || ''}
+                      sx={{ height: '56px', width: '56px' }}
+                    />
+                    <Grid
+                      item
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        marginLeft: '12px',
+                        textAlign: 'left',
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: 600 }}>
+                        {userInfo?.username}
+                      </Typography>
+                      <Typography>
+                        {isAdmin && `Admin · `}
+                        {userInfo?.name}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                   <Grid
+                    item
                     sx={{
                       display: 'flex',
-                      flexDirection: 'column',
-                      marginLeft: '12px',
-                      textAlign: 'left',
                     }}
                   >
-                    <Typography sx={{ fontWeight: 600 }}>
-                      {userInfo?.username}
-                    </Typography>
-                    <Typography>{userInfo?.name}</Typography>
+                    <Button
+                      sx={{
+                        display: 'flex',
+                        '&:hover': {
+                          backgroundColor: 'unset',
+                        },
+                      }}
+                      onClick={() => handleClickOptionsForUser(userInfo?.id!)}
+                    >
+                      <MoreHorizIcon sx={{ color: 'black' }} />
+                    </Button>
                   </Grid>
                 </Grid>
               );
