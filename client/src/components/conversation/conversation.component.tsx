@@ -85,7 +85,9 @@ const Conversation: React.FC<ConversationProps> = ({
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
   );
-  const conversationMessageUsers = currentConversation?.connectedUsers;
+  const conversationHistoricalMessageUsers =
+    currentConversation?.historicalUsers;
+  const conversationActiveMessageUsers = currentConversation?.connectedUsers;
   const conversationAdminUsers = currentConversation?.adminUsers;
   const currentConversationMessages = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
@@ -93,6 +95,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const messagesArray = currentConversationMessages?.messages;
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const messageJustSent = useRef(false);
+  const messagesRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -101,8 +104,8 @@ const Conversation: React.FC<ConversationProps> = ({
   }, []);
 
   useEffect(() => {
-    if (conversationMessageUsers?.length) {
-      conversationMessageUsers.forEach((userId) =>
+    if (conversationHistoricalMessageUsers?.length) {
+      conversationHistoricalMessageUsers.forEach((userId) =>
         dispatch(
           getOtherUserStart({
             type: OtherUserType.CONVERSATION_USER,
@@ -111,7 +114,7 @@ const Conversation: React.FC<ConversationProps> = ({
         )
       );
     }
-  }, [conversationMessageUsers]);
+  }, [conversationHistoricalMessageUsers]);
 
   useEffect(() => {
     if (usersInfoList?.size) {
@@ -145,6 +148,16 @@ const Conversation: React.FC<ConversationProps> = ({
   useEffect(() => {
     setIsInfoClicked(false);
   }, [conversationId]);
+
+  const messagesEndRef = (node: HTMLDivElement) => {
+    messagesRef.current = node;
+
+    messagesRef.current?.scrollIntoView();
+  };
+
+  useEffect(() => {
+    messagesRef.current?.scrollIntoView();
+  }, [messagesArray]);
 
   const handleMessageChange = (e: ChangeEvent) => {
     if (messageJustSent.current === true) {
@@ -387,6 +400,7 @@ const Conversation: React.FC<ConversationProps> = ({
                 }
               />
             ))}
+            <Grid ref={messagesEndRef} />
           </Grid>
           <Grid
             item
@@ -552,7 +566,7 @@ const Conversation: React.FC<ConversationProps> = ({
                 </Typography>
               </Button>
             </Grid>
-            {conversationMessageUsers?.map((user) => {
+            {conversationActiveMessageUsers?.map((user) => {
               const userInfo = userInfoMap[user];
               const isAdmin = !!conversationAdminUsers?.find(
                 (admin) => admin === user
