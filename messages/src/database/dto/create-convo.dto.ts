@@ -14,4 +14,5 @@ export class CreateConvoDto {
   avatarS3Keys: string[];
   connectedUserNames: string[];
   adminUsers: string[];
+  historicalUsers: string[];
 }

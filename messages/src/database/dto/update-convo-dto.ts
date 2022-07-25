@@ -16,4 +16,5 @@ export class UpdateConvoDto {
   connectedUsers?: string[];
   connectedUserNames?: string[];
   adminUsers?: string[];
+  historicalUsers?: string[];
 }

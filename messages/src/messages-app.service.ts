@@ -69,6 +69,7 @@ export class MessagesAppService {
       const createdConvo = new this.conversationModel({
         ...restOfParams,
         connectedUsers: userIdArray,
+        historicalUsers: userIdArray,
         adminUsers: [creator],
       });
       const savedConvo = (await createdConvo.save()).toObject();
@@ -205,6 +206,18 @@ export class MessagesAppService {
 
     const conversation = await this.conversationModel.findById(id);
     const convoAdminUserIds = conversation.adminUsers;
+    const historicalUsers = conversation.historicalUsers;
+
+    let newHistoricalUsers: string[];
+    if (historicalUsers.length < connectedUsers.length) {
+      const newUsers = connectedUsers
+        .map((user) => user.userId)
+        .filter((userId) => !historicalUsers.includes(userId));
+
+      newHistoricalUsers = [...historicalUsers, ...newUsers];
+    } else {
+      newHistoricalUsers = [...historicalUsers];
+    }
 
     if (!convoAdminUserIds.includes(updatingUser)) {
       throw new WsException(
@@ -213,6 +226,7 @@ export class MessagesAppService {
     }
 
     let updateConvoDto: UpdateConvoDto = { ...updateProps };
+    updateConvoDto.historicalUsers = newHistoricalUsers;
 
     if (connectedUsers) {
       await Promise.all(

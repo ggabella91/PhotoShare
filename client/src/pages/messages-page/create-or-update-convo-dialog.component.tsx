@@ -33,10 +33,8 @@ interface CreateOrUpdateConvoDialogProps {
   usersArrayForNewConvoReq: Partial<MessageUser>[];
   handleClickNext: () => void;
   isExistingConvo: boolean;
+  conversationActiveMessageUsers: string[] | undefined;
 }
-
-// TODO: Add logic to determine whether to add people to an existing
-// convo or to create a new convo using isExistingConvo flag
 
 const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
   showNewMessageDialog,
@@ -44,13 +42,13 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
   usersArrayForNewConvoReq,
   handleClickNext,
   isExistingConvo,
+  conversationActiveMessageUsers,
 }) => {
   const [userSearchString, setUserSearchString] = useState('');
   const [filteredUserSuggestions, setFilteredUserSuggestions] = useState<
     User[]
   >([]);
   const userSuggestions = useSelector(selectUserSuggestions);
-  const conversationUsers = useSelector(selectConversationUsers);
 
   let userSuggestionsList = useUserInfoData(filteredUserSuggestions);
 
@@ -75,16 +73,16 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
 
   useEffect(() => {
     let filteredSuggestions: User[];
-    if (userSuggestions && conversationUsers && isExistingConvo) {
+    if (userSuggestions && conversationActiveMessageUsers && isExistingConvo) {
       filteredSuggestions = userSuggestions?.filter(
         (userSuggestion) =>
-          !conversationUsers?.map((user) => user.id).includes(userSuggestion.id)
+          !conversationActiveMessageUsers.includes(userSuggestion.id)
       );
       setFilteredUserSuggestions(filteredSuggestions);
     } else if (userSuggestions && !isExistingConvo) {
       setFilteredUserSuggestions(userSuggestions);
     }
-  }, [userSuggestions, conversationUsers, isExistingConvo]);
+  }, [userSuggestions, conversationActiveMessageUsers, isExistingConvo]);
 
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;

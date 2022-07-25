@@ -24,6 +24,11 @@ export class Conversation {
   })
   connectedUsers: User[];
 
+  @Prop({
+    required: true,
+  })
+  historicalUsers: string[];
+
   @Prop()
   lastMessageTime: number;
 

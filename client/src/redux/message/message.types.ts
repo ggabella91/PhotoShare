@@ -68,6 +68,7 @@ export interface Conversation {
   connectedUserNames: string[];
   lastMessageTime: number;
   adminUsers: string[];
+  historicalUsers: string[];
 }
 
 export interface FindOrCreateUserReq {
