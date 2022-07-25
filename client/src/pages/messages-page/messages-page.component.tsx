@@ -53,12 +53,16 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
   const currentUser = useSelector(selectCurrentUser);
   const messageUser = useSelector(selectMessageUser);
-  const joinedCoversations = useSelector(selectJoinedConversations);
+  const joinedConversations = useSelector(selectJoinedConversations);
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
   const conversationUsers = useSelector(selectConversationUsers);
   const navigate = useNavigate();
   const { conversationId } = useParams();
-  const avatarS3Keys = joinedCoversations?.find(
+  const currentConversation = joinedConversations?.find(
+    (conversation) => conversation.id === conversationId
+  );
+  const conversationActiveMessageUsers = currentConversation?.connectedUsers;
+  const avatarS3Keys = joinedConversations?.find(
     (convo) => convo.id === conversationId
   )?.avatarS3Keys || [''];
 
@@ -131,6 +135,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
     });
 
     socket.on('conversationUpdated', () => {
+      setShowConvoDialog(false);
       socket.emit('joinAllExistingConversations', {
         userId: currentUser?.id,
       });
@@ -138,8 +143,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   }, [socket]);
 
   useEffect(() => {
-    if (joinedCoversations?.length) {
-      joinedCoversations.forEach((convo) =>
+    if (joinedConversations?.length) {
+      joinedConversations.forEach((convo) =>
         dispatch(
           getConvoMessagesStart({
             conversationId: convo.id,
@@ -147,7 +152,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         )
       );
     }
-  }, [joinedCoversations]);
+  }, [joinedConversations]);
 
   useEffect(() => {
     if (!currentUser && messageUser && isSocketConnectionActive) {
@@ -190,13 +195,19 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
     ) {
       let finalUsersArray: Partial<MessageUser>[] = usersArrayForNewConvoReq;
 
-      if (isExistingConvo && conversationUsers) {
-        const currentConvoMessageUsers = conversationUsers.map((user) => ({
-          name: user.name,
-          photoS3Key: user.photo,
-          userId: user.id,
-          username: user.username,
-        }));
+      if (
+        isExistingConvo &&
+        conversationUsers &&
+        conversationActiveMessageUsers
+      ) {
+        const currentConvoMessageUsers = conversationUsers
+          .filter((user) => conversationActiveMessageUsers.includes(user.id))
+          .map((user) => ({
+            name: user.name,
+            photoS3Key: user.photo,
+            userId: user.id,
+            username: user.username,
+          }));
         finalUsersArray = [...finalUsersArray, ...currentConvoMessageUsers];
       }
 
@@ -348,8 +359,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
                 paddingTop: '8px',
               }}
             >
-              {joinedCoversations?.length
-                ? joinedCoversations.map((convo) => {
+              {joinedConversations?.length
+                ? joinedConversations.map((convo) => {
                     return (
                       <ConversationPreview
                         key={convo.id}
@@ -399,6 +410,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
           usersArrayForNewConvoReq={usersArrayForNewConvoReq}
           handleClickNext={handleClickNext}
           isExistingConvo={isExistingConvo}
+          conversationActiveMessageUsers={conversationActiveMessageUsers}
         />
       </Grid>
     </Grid>

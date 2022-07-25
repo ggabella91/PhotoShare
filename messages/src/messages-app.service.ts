@@ -208,19 +208,16 @@ export class MessagesAppService {
     const convoAdminUserIds = conversation.adminUsers;
     const historicalUsers = conversation.historicalUsers;
 
-    let newHistoricalUsers: User[];
+    let newHistoricalUsers: string[];
     if (historicalUsers.length < connectedUsers.length) {
-      const newUsers = connectedUsers.filter(
-        (newUser) =>
-          !historicalUsers.map((user) => user.userId).includes(newUser.userId)
-      );
+      const newUsers = connectedUsers
+        .map((user) => user.userId)
+        .filter((userId) => !historicalUsers.includes(userId));
 
       newHistoricalUsers = [...historicalUsers, ...newUsers];
     } else {
-      newHistoricalUsers = historicalUsers;
+      newHistoricalUsers = [...historicalUsers];
     }
-
-    const newhistoricalUserIds = newHistoricalUsers.map((user) => user.userId);
 
     if (!convoAdminUserIds.includes(updatingUser)) {
       throw new WsException(
@@ -229,7 +226,7 @@ export class MessagesAppService {
     }
 
     let updateConvoDto: UpdateConvoDto = { ...updateProps };
-    updateConvoDto.historicalUsers = newhistoricalUserIds;
+    updateConvoDto.historicalUsers = newHistoricalUsers;
 
     if (connectedUsers) {
       await Promise.all(

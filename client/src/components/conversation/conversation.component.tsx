@@ -618,7 +618,7 @@ const Conversation: React.FC<ConversationProps> = ({
                       display: 'flex',
                     }}
                   >
-                    {isNotCurrentUser && (
+                    {isAdmin && isNotCurrentUser && (
                       <Button
                         sx={{
                           display: 'flex',

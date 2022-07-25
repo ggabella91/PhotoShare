@@ -26,9 +26,8 @@ export class Conversation {
 
   @Prop({
     required: true,
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   })
-  historicalUsers: User[];
+  historicalUsers: string[];
 
   @Prop()
   lastMessageTime: number;
