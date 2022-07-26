@@ -389,7 +389,7 @@ const Conversation: React.FC<ConversationProps> = ({
               overflowY: 'auto',
             }}
           >
-            {messagesArray?.map((message) => (
+            {messagesArray?.map((message, idx) => (
               <MessageComponent
                 key={message.id}
                 userInfo={userInfoMap[message.ownerId]}
@@ -397,6 +397,12 @@ const Conversation: React.FC<ConversationProps> = ({
                 isCurrentUser={message.ownerId === currentUser?.id}
                 isGroupConversation={
                   !!(conversationUsers && conversationUsers.length > 2)
+                }
+                islastMessageFromDiffUser={
+                  idx === 0 ||
+                  (idx >= 1 &&
+                    messagesArray[idx - 1].ownerId !==
+                      userInfoMap[message.ownerId].id)
                 }
               />
             ))}
