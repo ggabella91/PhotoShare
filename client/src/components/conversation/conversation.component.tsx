@@ -304,6 +304,14 @@ const Conversation: React.FC<ConversationProps> = ({
     setIsExistingConvo(true);
   };
 
+  // TODO Add timestamps periodically above messages, e.g. when
+  // several minutes / an hour or more / a day or more have
+  // elapsed since the last message
+
+  // TODO Add logic for setting nicknames for users (once backend
+  // work to support this is completed), along with logic for
+  // setting a conversation photo
+
   return (
     <Grid
       sx={{
@@ -402,7 +410,7 @@ const Conversation: React.FC<ConversationProps> = ({
                   idx === 0 ||
                   (idx >= 1 &&
                     messagesArray[idx - 1].ownerId !==
-                      userInfoMap[message.ownerId].id)
+                      userInfoMap[message.ownerId]?.id)
                 }
               />
             ))}
