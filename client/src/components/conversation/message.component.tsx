@@ -28,7 +28,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
       }}
     >
       {isGroupConversation && !isCurrentUser && islastMessageFromDiffUser && (
-        <Grid sx={{ display: 'flex' }}>
+        <Grid sx={{ display: 'flex', margin: '25px 0px 2px 48px' }}>
           <Typography sx={{ fontSize: '10px' }}>{userInfo?.name}</Typography>
         </Grid>
       )}
@@ -69,6 +69,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
             alignItems: 'center',
             backgroundColor: 'rgb(239, 239, 239)',
             marginBottom: '8px',
+            marginTop:
+              isCurrentUser && islastMessageFromDiffUser ? '15px' : '0px',
           }}
         >
           <Typography sx={{ fontSize: 14 }}>{message.text}</Typography>
