@@ -120,6 +120,8 @@ export class MessagesAppService {
     }
   }
 
+  // TODO Implement set / update user nickname method
+
   async removeUserSessionCookie(userId: string) {
     const user = await this.userModel.findOne({ userId }).exec();
 
