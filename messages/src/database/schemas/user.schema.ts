@@ -26,6 +26,9 @@ export class User {
   @Prop({ required: true })
   username: string;
 
+  @Prop()
+  nickname: string;
+
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Conversation' }],
   })
