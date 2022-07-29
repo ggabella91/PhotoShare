@@ -4,8 +4,6 @@ import { Conversation } from './conversation.schema';
 
 export type UserDocument = User & Document;
 
-// TODO Add support for nicknames for message users
-
 @Schema({
   toObject: {
     transform: function (doc, ret) {

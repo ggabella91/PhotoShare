@@ -70,6 +70,9 @@ const Conversation: React.FC<ConversationProps> = ({
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
   const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(80);
   const [convoName, setConvoName] = useState('');
+  const [convoUserNicknames, setConvoUserNicknames] = useState<
+    Record<string, string>
+  >({});
   const [showConvoNameDone, setShowConvoNameDone] = useState(false);
   const [openOptionsDialog, setOpenOptionsDialog] = useState(false);
   const [optionsDialogUser, setOptionsDialogUser] = useState({
@@ -311,6 +314,15 @@ const Conversation: React.FC<ConversationProps> = ({
   // TODO Add logic for setting nicknames for users (once backend
   // work to support this is completed), along with logic for
   // setting a conversation photo
+  const handleUpdateNicknameForConvoUser = (userId: string) => {
+    const nickname = convoUserNicknames[userId];
+
+    socket.emit('updateUserNicknameForConversation', {
+      conversationId,
+      userId,
+      nickname,
+    });
+  };
 
   return (
     <Grid
