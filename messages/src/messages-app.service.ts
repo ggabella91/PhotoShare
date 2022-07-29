@@ -10,6 +10,7 @@ import { Message, MessageDocument } from './database/schemas/message.schema';
 import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { CreateUserDto } from './database/dto/create-user.dto';
+import { UpdateUserNicknameForConvoDto } from './database/dto/update-user-nickname-for-convo-dto';
 import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
 import {
   UpdateConvoPreDto,
@@ -120,7 +121,31 @@ export class MessagesAppService {
     }
   }
 
-  // TODO Implement set / update user nickname method
+  async updateUserNicknameForConvo({
+    conversationId,
+    userId,
+    nickname,
+  }: UpdateUserNicknameForConvoDto) {
+    const conversation = await this.conversationModel.findById(conversationId);
+
+    if (
+      !conversation ||
+      conversation?.connectedUsers.map((user) => user.userId).includes(userId)
+    ) {
+      return null;
+    }
+
+    const userNicknames = conversation.userNicknames;
+    userNicknames[userId] = nickname;
+
+    const updatedConversation = await this.conversationModel.findByIdAndUpdate(
+      conversationId,
+      { userNicknames },
+      { new: true }
+    );
+
+    return updatedConversation;
+  }
 
   async removeUserSessionCookie(userId: string) {
     const user = await this.userModel.findOne({ userId }).exec();

@@ -40,6 +40,9 @@ export class Conversation {
 
   @Prop()
   adminUsers: string[];
+
+  @Prop()
+  userNicknames: Record<string, string>;
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

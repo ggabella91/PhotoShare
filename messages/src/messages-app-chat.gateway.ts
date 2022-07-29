@@ -6,6 +6,7 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Logger, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
@@ -15,6 +16,7 @@ import { Types } from 'mongoose';
 import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { UpdateConvoPreDto } from './database/dto/update-convo-dto';
+import { UpdateUserNicknameForConvoDto } from './database/dto/update-user-nickname-for-convo-dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -87,6 +89,24 @@ export class MessagesAppChatGateway
     );
 
     client.emit('conversationUpdated', updatedConvo);
+  }
+
+  @SubscribeMessage('updateUserNicknameForConversation')
+  async handleUpdateConvoUserNickname(
+    client: Socket,
+    updateUserNicknameForConvoDto: UpdateUserNicknameForConvoDto
+  ) {
+    const updatedConvo = await this.appService.updateUserNicknameForConvo(
+      updateUserNicknameForConvoDto
+    );
+
+    if (!updatedConvo) {
+      throw new WsException(
+        'Conversation does not exist or user is not in conversation'
+      );
+    }
+
+    client.emit('convoUserNicknameUpdated', updatedConvo);
   }
 
   @SubscribeMessage('joinAllExistingConversations')
