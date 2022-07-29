@@ -4,6 +4,15 @@ import { User } from './user.schema';
 
 export type ConversationDocument = Conversation & Document;
 
+@Schema({ id: false })
+class UserNickname {
+  @Prop({ required: true })
+  userId: string;
+
+  @Prop({ required: true })
+  nickname: string;
+}
+
 @Schema({
   toObject: {
     transform: function (doc, ret) {
@@ -42,7 +51,7 @@ export class Conversation {
   adminUsers: string[];
 
   @Prop()
-  userNicknames: Record<string, string>;
+  userNicknames: UserNickname[];
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

@@ -135,8 +135,11 @@ export class MessagesAppService {
       return null;
     }
 
-    const userNicknames = conversation.userNicknames;
-    userNicknames[userId] = nickname;
+    let userNicknames = conversation.userNicknames;
+    const nicknameIdx = userNicknames.findIndex(
+      (nickname) => nickname.userId === userId
+    );
+    userNicknames.splice(nicknameIdx, 1, { userId, nickname });
 
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
       conversationId,
