@@ -7,8 +7,9 @@ interface ConversationUserOptionsDialogProps {
   onBlur: () => void;
   userId: string;
   isAdmin: boolean;
-  handleRemoveFromGroup: (userId: string) => void;
-  handleAddOrRemoveAsAdmin: (isAdmin: boolean, userId: string) => void;
+  handleRemoveFromGroup: () => void;
+  handleAddOrRemoveAsAdmin: () => void;
+  setShowNicknameChangeDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ConversationUserOptionsDialog: React.FC<
@@ -21,6 +22,7 @@ const ConversationUserOptionsDialog: React.FC<
   isAdmin,
   handleRemoveFromGroup,
   handleAddOrRemoveAsAdmin,
+  setShowNicknameChangeDialog,
 }) => {
   return (
     <Dialog
@@ -45,7 +47,7 @@ const ConversationUserOptionsDialog: React.FC<
               backgroundColor: 'unset',
             },
           }}
-          onClick={() => handleRemoveFromGroup(userId)}
+          onClick={handleRemoveFromGroup}
         >
           <Typography
             sx={{
@@ -68,10 +70,26 @@ const ConversationUserOptionsDialog: React.FC<
               backgroundColor: 'unset',
             },
           }}
-          onClick={() => handleAddOrRemoveAsAdmin(isAdmin, userId)}
+          onClick={handleAddOrRemoveAsAdmin}
         >
           <Typography sx={{ color: 'black', textTransform: 'none' }}>
             {isAdmin ? 'Remove as admin' : 'Make Admin'}
+          </Typography>
+        </Button>
+      </Grid>
+      <Grid>
+        <Button
+          sx={{
+            width: '100%',
+            height: '48px',
+            '&:hover': {
+              backgroundColor: 'unset',
+            },
+          }}
+          onClick={() => setShowNicknameChangeDialog(true)}
+        >
+          <Typography sx={{ color: 'black', textTransform: 'none' }}>
+            Set nickname
           </Typography>
         </Button>
       </Grid>
