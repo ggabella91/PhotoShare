@@ -78,7 +78,14 @@ const Conversation: React.FC<ConversationProps> = ({
   const [optionsDialogUser, setOptionsDialogUser] = useState({
     userId: '',
     isAdmin: false,
+    nickname: '',
   });
+
+  // TODO Create map of userId's to the corresponding users' nicknames
+  // for the given conversation
+
+  const [showNicknameChangeDialog, setShowNicknameChangeDialog] =
+    useState(false);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -226,7 +233,7 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleClickOptionsForUser = (userId: string, isAdmin: boolean) => {
-    setOptionsDialogUser({ userId, isAdmin });
+    setOptionsDialogUser({ ...optionsDialogUser, userId, isAdmin });
     setOpenOptionsDialog(true);
   };
 
@@ -314,7 +321,9 @@ const Conversation: React.FC<ConversationProps> = ({
   // TODO Add logic for setting nicknames for users (once backend
   // work to support this is completed), along with logic for
   // setting a conversation photo
-  const handleUpdateNicknameForConvoUser = (userId: string) => {
+
+  const handleUpdateNicknameForConvoUser = () => {
+    const userId = optionsDialogUser.userId;
     const nickname = convoUserNicknames[userId];
 
     socket.emit('updateUserNicknameForConversation', {
@@ -673,6 +682,7 @@ const Conversation: React.FC<ConversationProps> = ({
         isAdmin={optionsDialogUser.isAdmin}
         handleRemoveFromGroup={handleRemoveFromGroup}
         handleAddOrRemoveAsAdmin={handleAddOrRemoveAsAdmin}
+        setShowNicknameChangeDialog={setShowNicknameChangeDialog}
         onBlur={handleBlurOptionsDialog}
       />
     </Grid>
