@@ -23,6 +23,7 @@ import CustomAvatarGroup, {
   StyleVariation,
 } from './custom-avatar-group.component';
 import ConversationUserOptionsDialog from './conversation-user-options-dialog.component';
+import SetConvoUserNicknameDialog from './set-convo-user-nickname-dialog.component';
 import { useUserInfoData } from '../../pages/hooks';
 
 import {
@@ -57,6 +58,12 @@ interface ConversationProps {
 
 type UserInfoMap = Record<string, UserInfoData>;
 
+export interface OptionsDialogUser {
+  userId: string;
+  isAdmin: boolean;
+  nickname: string;
+}
+
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
@@ -70,20 +77,18 @@ const Conversation: React.FC<ConversationProps> = ({
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
   const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(80);
   const [convoName, setConvoName] = useState('');
-  const [convoUserNicknames, setConvoUserNicknames] = useState<
+  const [convoUserNicknameMap, setConvoUserNicknameMap] = useState<
     Record<string, string>
   >({});
   const [showConvoNameDone, setShowConvoNameDone] = useState(false);
   const [openOptionsDialog, setOpenOptionsDialog] = useState(false);
-  const [optionsDialogUser, setOptionsDialogUser] = useState({
-    userId: '',
-    isAdmin: false,
-    nickname: '',
-  });
-
-  // TODO Create map of userId's to the corresponding users' nicknames
-  // for the given conversation
-
+  const [optionsDialogUser, setOptionsDialogUser] = useState<OptionsDialogUser>(
+    {
+      userId: '',
+      isAdmin: false,
+      nickname: '',
+    }
+  );
   const [showNicknameChangeDialog, setShowNicknameChangeDialog] =
     useState(false);
   const currentUser = useSelector(selectCurrentUser);
@@ -99,6 +104,7 @@ const Conversation: React.FC<ConversationProps> = ({
     currentConversation?.historicalUsers;
   const conversationActiveMessageUsers = currentConversation?.connectedUsers;
   const conversationAdminUsers = currentConversation?.adminUsers;
+  const conversationUserNicknames = currentConversation?.userNicknames;
   const currentConversationMessages = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
   );
@@ -154,6 +160,30 @@ const Conversation: React.FC<ConversationProps> = ({
       setShowConvoNameDone(false);
     }
   }, [currentConversation, convoName]);
+
+  useEffect(() => {
+    if (conversationUserNicknames) {
+      const convoUserNicknameMap = conversationUserNicknames.reduce<
+        Record<string, string>
+      >((acc, cur) => {
+        acc[cur.userId] = cur.nickname;
+        return acc;
+      }, {});
+
+      setConvoUserNicknameMap(convoUserNicknameMap);
+    }
+  }, [conversationUserNicknames]);
+
+  useEffect(() => {
+    socket.on('convoUserNicknameUpdated', () => {
+      socket.emit('joinAllExistingConversations', {
+        userId: currentUser?.id,
+      });
+
+      setShowNicknameChangeDialog(false);
+      setOpenOptionsDialog(false);
+    });
+  }, [socket]);
 
   useEffect(() => {
     setIsInfoClicked(false);
@@ -233,7 +263,12 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleClickOptionsForUser = (userId: string, isAdmin: boolean) => {
-    setOptionsDialogUser({ ...optionsDialogUser, userId, isAdmin });
+    setOptionsDialogUser({
+      ...optionsDialogUser,
+      userId,
+      isAdmin,
+      nickname: convoUserNicknameMap[userId] || '',
+    });
     setOpenOptionsDialog(true);
   };
 
@@ -301,6 +336,8 @@ const Conversation: React.FC<ConversationProps> = ({
 
   const handleBlurOptionsDialog = () => setOpenOptionsDialog(false);
 
+  const handleBlurSetNicknameDialog = () => setShowNicknameChangeDialog(false);
+
   const handleSubmitNewConvoNameEnterKey = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSubmitNewConvoName();
@@ -318,19 +355,19 @@ const Conversation: React.FC<ConversationProps> = ({
   // several minutes / an hour or more / a day or more have
   // elapsed since the last message
 
-  // TODO Add logic for setting nicknames for users (once backend
-  // work to support this is completed), along with logic for
-  // setting a conversation photo
+  // TODO Add logic for setting a conversation photo
 
   const handleUpdateNicknameForConvoUser = () => {
-    const userId = optionsDialogUser.userId;
-    const nickname = convoUserNicknames[userId];
+    if (convoUserNicknameMap) {
+      const userId = optionsDialogUser.userId;
+      const nickname = optionsDialogUser.nickname;
 
-    socket.emit('updateUserNicknameForConversation', {
-      conversationId,
-      userId,
-      nickname,
-    });
+      socket.emit('updateUserNicknameForConversation', {
+        conversationId,
+        userId,
+        nickname,
+      });
+    }
   };
 
   return (
@@ -433,6 +470,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     messagesArray[idx - 1].ownerId !==
                       userInfoMap[message.ownerId]?.id)
                 }
+                userNickname={convoUserNicknameMap[message.ownerId] || ''}
               />
             ))}
             <Grid ref={messagesEndRef} />
@@ -607,6 +645,8 @@ const Conversation: React.FC<ConversationProps> = ({
                 (admin) => admin === user
               );
               const isNotCurrentUser = userInfo?.id !== currentUser?.id;
+              const nickname =
+                (userInfo && convoUserNicknameMap[userInfo.id!]) || '';
 
               return (
                 <Grid
@@ -644,6 +684,7 @@ const Conversation: React.FC<ConversationProps> = ({
                       <Typography>
                         {isAdmin && `Admin · `}
                         {userInfo?.name}
+                        {nickname && ` · Nickname: ${nickname}`}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -653,7 +694,7 @@ const Conversation: React.FC<ConversationProps> = ({
                       display: 'flex',
                     }}
                   >
-                    {isAdmin && isNotCurrentUser && (
+                    {isNotCurrentUser && (
                       <Button
                         sx={{
                           display: 'flex',
@@ -684,6 +725,14 @@ const Conversation: React.FC<ConversationProps> = ({
         handleAddOrRemoveAsAdmin={handleAddOrRemoveAsAdmin}
         setShowNicknameChangeDialog={setShowNicknameChangeDialog}
         onBlur={handleBlurOptionsDialog}
+      />
+      <SetConvoUserNicknameDialog
+        open={showNicknameChangeDialog}
+        onClose={handleBlurSetNicknameDialog}
+        optionsDialogUser={optionsDialogUser}
+        setOptionsDialogUser={setOptionsDialogUser}
+        handleSubmitNewNickname={handleUpdateNicknameForConvoUser}
+        convoUserNicknameMap={convoUserNicknameMap}
       />
     </Grid>
   );

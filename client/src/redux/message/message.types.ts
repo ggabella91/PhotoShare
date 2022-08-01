@@ -60,6 +60,11 @@ export interface MessageUser {
   photoS3Key?: string;
 }
 
+export interface Nickname {
+  userId: string;
+  nickname: string;
+}
+
 export interface Conversation {
   id: string;
   name: string;
@@ -69,6 +74,7 @@ export interface Conversation {
   lastMessageTime: number;
   adminUsers: string[];
   historicalUsers: string[];
+  userNicknames: Nickname[];
 }
 
 export interface FindOrCreateUserReq {

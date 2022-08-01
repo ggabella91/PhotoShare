@@ -82,6 +82,7 @@ const ConversationUserOptionsDialog: React.FC<
           sx={{
             width: '100%',
             height: '48px',
+            borderBottom: '1px solid #DBDBDB',
             '&:hover': {
               backgroundColor: 'unset',
             },
