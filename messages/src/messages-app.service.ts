@@ -200,6 +200,9 @@ export class MessagesAppService {
     return updatedConversation;
   }
 
+  // TODO Implement lazy-loading of a given number of conversation
+  // messages per request, with pagination
+
   async findMessagesFromConvo({
     conversationId,
     limit,

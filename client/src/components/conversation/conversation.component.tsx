@@ -4,6 +4,7 @@ import React, {
   useRef,
   ChangeEvent,
   KeyboardEvent,
+  Fragment,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -45,6 +46,7 @@ import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
 import { getConvoName } from '../../pages/messages-page/messages-page.utils';
+import { shouldRenderTimeStamp } from './conversation.utils';
 
 interface ConversationProps {
   conversationId: string;
@@ -456,22 +458,40 @@ const Conversation: React.FC<ConversationProps> = ({
             }}
           >
             {messagesArray?.map((message, idx) => (
-              <MessageComponent
+              <Grid
                 key={message.id}
-                userInfo={userInfoMap[message.ownerId]}
-                message={message}
-                isCurrentUser={message.ownerId === currentUser?.id}
-                isGroupConversation={
-                  !!(conversationUsers && conversationUsers.length > 2)
-                }
-                islastMessageFromDiffUser={
-                  idx === 0 ||
-                  (idx >= 1 &&
-                    messagesArray[idx - 1].ownerId !==
-                      userInfoMap[message.ownerId]?.id)
-                }
-                userNickname={convoUserNicknameMap[message.ownerId] || ''}
-              />
+                sx={{ display: 'flex', flexDirection: 'column' }}
+              >
+                {idx === 0 ||
+                  (shouldRenderTimeStamp(
+                    messagesArray[idx - 1].created,
+                    message.created
+                  ) && (
+                    <Grid sx={{ display: 'flex', justifyContent: 'center' }}>
+                      <Typography>
+                        {new Date(
+                          Date.parse(message.created) -
+                            Date.parse(messagesArray[idx - 1].created)
+                        ).toString()}
+                      </Typography>
+                    </Grid>
+                  ))}
+                <MessageComponent
+                  userInfo={userInfoMap[message.ownerId]}
+                  message={message}
+                  isCurrentUser={message.ownerId === currentUser?.id}
+                  isGroupConversation={
+                    !!(conversationUsers && conversationUsers.length > 2)
+                  }
+                  islastMessageFromDiffUser={
+                    idx === 0 ||
+                    (idx >= 1 &&
+                      messagesArray[idx - 1].ownerId !==
+                        userInfoMap[message.ownerId]?.id)
+                  }
+                  userNickname={convoUserNicknameMap[message.ownerId] || ''}
+                />
+              </Grid>
             ))}
             <Grid ref={messagesEndRef} />
           </Grid>

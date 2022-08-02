@@ -29,3 +29,16 @@ export const calculateElapsedTime = (pastDate: string): string => {
 
   return `${elapsedWeeks}w`;
 };
+
+export const shouldRenderTimeStamp = (
+  lastMesssageTime: string,
+  currentMessageTime: string
+) => {
+  const timeDifference = new Date(
+    Date.parse(currentMessageTime) - Date.parse(lastMesssageTime)
+  ).getHours();
+
+  if (timeDifference > 1) return true;
+
+  return false;
+};
