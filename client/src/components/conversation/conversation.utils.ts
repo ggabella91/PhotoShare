@@ -1,4 +1,4 @@
-export const calculateElapsedTime = (pastDate: string): string => {
+export const renderElapsedTime = (pastDate: string): string => {
   const elapsedTimeMillis = Date.now() - Date.parse(pastDate);
 
   const elapsedSeconds = elapsedTimeMillis / 1000;
@@ -34,11 +34,51 @@ export const shouldRenderTimeStamp = (
   lastMesssageTime: string,
   currentMessageTime: string
 ) => {
-  const timeDifference = new Date(
-    Date.parse(currentMessageTime) - Date.parse(lastMesssageTime)
-  ).getHours();
+  const timeDifferenceInHours =
+    (Date.parse(currentMessageTime) - Date.parse(lastMesssageTime)) /
+    (1000 * 60 * 60);
 
-  if (timeDifference > 1) return true;
+  if (timeDifferenceInHours > 1) return true;
 
   return false;
+};
+
+export const renderTimeStamp = (dateString: string) => {
+  const date = new Date(dateString);
+  const dateTime = date.getTime();
+  const currentTime = Date.now();
+  const elapsedTime = currentTime - dateTime;
+
+  const [weekDay, month, monthDay, year] = date.toDateString().split(' ');
+
+  const elapsedTimeDays = elapsedTime / (1000 * 60 * 60 * 24);
+  const dateYear = date.getFullYear();
+  const currentYear = new Date(currentTime).getFullYear();
+
+  const dateHours = date.getHours();
+  const dateMinutes = date.getMinutes();
+  const formattedTime = getTimeAMOrPM(dateHours, dateMinutes);
+
+  if (dateYear < currentYear) {
+    const year = date.getFullYear();
+    const displayYear = year < 2000 ? year : year % 2000;
+
+    return `${date.getDate()}/${date.getMonth()}/${displayYear}, ${formattedTime}`;
+  } else if (elapsedTimeDays > 6) {
+    return `${month} ${monthDay}, ${year}, ${formattedTime}`;
+  } else if (elapsedTimeDays > 1) {
+    return `${weekDay} ${formattedTime}`;
+  } else {
+    return `${formattedTime}`;
+  }
+};
+
+const getTimeAMOrPM = (dateHours: number, dateMinutes: number) => {
+  const paddedMinutes = dateMinutes < 10 ? `0${dateMinutes}` : `${dateMinutes}`;
+
+  if (dateHours > 12) {
+    return `${dateHours % 12}:${paddedMinutes} PM`;
+  } else {
+    return `${dateHours}:${paddedMinutes} AM`;
+  }
 };

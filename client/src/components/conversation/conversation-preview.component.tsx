@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Typography } from '@mui/material';
-import { calculateElapsedTime } from './conversation.utils';
+import { renderElapsedTime } from './conversation.utils';
 import CustomAvatarGroup, {
   StyleVariation,
 } from './custom-avatar-group.component';
@@ -93,7 +93,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
         <Typography>{conversationName}</Typography>
         {!!lastMessage && (
           <Typography sx={{ fontSize: '14px' }}>
-            {lastMessage.text} · {calculateElapsedTime(lastMessage.created)}
+            {lastMessage.text} · {renderElapsedTime(lastMessage.created)}
           </Typography>
         )}
       </Grid>

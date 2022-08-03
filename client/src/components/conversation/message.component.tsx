@@ -10,6 +10,7 @@ interface MessageComponentProps {
   isGroupConversation: boolean;
   islastMessageFromDiffUser: boolean;
   userNickname?: string;
+  renderedWithTimeStamp: boolean;
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
@@ -19,7 +20,11 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   isGroupConversation,
   islastMessageFromDiffUser,
   userNickname,
+  renderedWithTimeStamp,
 }) => {
+  const addMarginTop =
+    isCurrentUser && islastMessageFromDiffUser && !renderedWithTimeStamp;
+
   return (
     <Grid
       sx={{
@@ -73,8 +78,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
             alignItems: 'center',
             backgroundColor: 'rgb(239, 239, 239)',
             marginBottom: '8px',
-            marginTop:
-              isCurrentUser && islastMessageFromDiffUser ? '15px' : '0px',
+            marginTop: addMarginTop ? '15px' : '0px',
           }}
         >
           <Typography sx={{ fontSize: 14 }}>{message.text}</Typography>
