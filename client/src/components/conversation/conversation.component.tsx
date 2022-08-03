@@ -46,7 +46,7 @@ import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
 import { getConvoName } from '../../pages/messages-page/messages-page.utils';
-import { shouldRenderTimeStamp } from './conversation.utils';
+import { shouldRenderTimeStamp, renderTimeStamp } from './conversation.utils';
 
 interface ConversationProps {
   conversationId: string;
@@ -457,42 +457,51 @@ const Conversation: React.FC<ConversationProps> = ({
               overflowY: 'auto',
             }}
           >
-            {messagesArray?.map((message, idx) => (
-              <Grid
-                key={message.id}
-                sx={{ display: 'flex', flexDirection: 'column' }}
-              >
-                {idx === 0 ||
-                  (shouldRenderTimeStamp(
-                    messagesArray[idx - 1].created,
-                    message.created
-                  ) && (
-                    <Grid sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Typography>
-                        {new Date(
-                          Date.parse(message.created) -
-                            Date.parse(messagesArray[idx - 1].created)
-                        ).toString()}
+            {messagesArray?.map((message, idx) => {
+              const renderTime =
+                idx === 0 ||
+                shouldRenderTimeStamp(
+                  messagesArray[idx - 1].created,
+                  message.created
+                );
+
+              return (
+                <Grid
+                  key={message.id}
+                  sx={{ display: 'flex', flexDirection: 'column' }}
+                >
+                  {renderTime && (
+                    <Grid
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '15px',
+                      }}
+                    >
+                      <Typography sx={{ fontSize: '14px' }}>
+                        {renderTimeStamp(message.created)}
                       </Typography>
                     </Grid>
-                  ))}
-                <MessageComponent
-                  userInfo={userInfoMap[message.ownerId]}
-                  message={message}
-                  isCurrentUser={message.ownerId === currentUser?.id}
-                  isGroupConversation={
-                    !!(conversationUsers && conversationUsers.length > 2)
-                  }
-                  islastMessageFromDiffUser={
-                    idx === 0 ||
-                    (idx >= 1 &&
-                      messagesArray[idx - 1].ownerId !==
-                        userInfoMap[message.ownerId]?.id)
-                  }
-                  userNickname={convoUserNicknameMap[message.ownerId] || ''}
-                />
-              </Grid>
-            ))}
+                  )}
+                  <MessageComponent
+                    userInfo={userInfoMap[message.ownerId]}
+                    message={message}
+                    isCurrentUser={message.ownerId === currentUser?.id}
+                    isGroupConversation={
+                      !!(conversationUsers && conversationUsers.length > 2)
+                    }
+                    islastMessageFromDiffUser={
+                      idx === 0 ||
+                      (idx >= 1 &&
+                        messagesArray[idx - 1].ownerId !==
+                          userInfoMap[message.ownerId]?.id)
+                    }
+                    userNickname={convoUserNicknameMap[message.ownerId] || ''}
+                    renderedWithTimeStamp={renderTime}
+                  />
+                </Grid>
+              );
+            })}
             <Grid ref={messagesEndRef} />
           </Grid>
           <Grid
