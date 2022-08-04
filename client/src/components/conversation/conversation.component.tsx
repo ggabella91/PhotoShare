@@ -353,10 +353,6 @@ const Conversation: React.FC<ConversationProps> = ({
     setIsExistingConvo(true);
   };
 
-  // TODO Add timestamps periodically above messages, e.g. when
-  // several minutes / an hour or more / a day or more have
-  // elapsed since the last message
-
   // TODO Add logic for setting a conversation photo
 
   const handleUpdateNicknameForConvoUser = () => {
@@ -371,6 +367,8 @@ const Conversation: React.FC<ConversationProps> = ({
       });
     }
   };
+
+  const handleUploadConversationPhoto = () => {};
 
   return (
     <Grid
