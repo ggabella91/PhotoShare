@@ -110,6 +110,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const currentConversationMessages = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
   );
+  const currentConversationAvatarPhotos = currentConversation?.avatarS3Keys;
   const messagesArray = currentConversationMessages?.messages;
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const messageJustSent = useRef(false);
@@ -368,7 +369,36 @@ const Conversation: React.FC<ConversationProps> = ({
     }
   };
 
-  const handleUploadConversationPhoto = () => {};
+  const handleUploadConversationPhoto = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.files?.length) {
+      const file = event.target.files[0];
+
+      const formData = new FormData();
+
+      formData.append('conversation-photo', file, file.name);
+      formData.append('conversationId', conversationId);
+
+      if (currentConversationAvatarPhotos?.length === 1) {
+        formData.append(
+          'existingConvoPhoto',
+          currentConversationAvatarPhotos[0]
+        );
+      }
+
+      // TODO Write redux types, actions, saga, reducer logic
+      // associated with uploading a conversation photo to
+      // S3 via the posts service
+
+      // TODO Write websocket message for uploading avatarS3Keys
+      // if conversation photo upload request to posts service
+      // is successful
+
+      // NOTE Send an array with a single S3 key to message
+      // chat gateway if the above succeeds
+    }
+  };
 
   return (
     <Grid
@@ -664,6 +694,16 @@ const Conversation: React.FC<ConversationProps> = ({
                 >
                   Add People
                 </Typography>
+              </Button>
+            </Grid>
+            <Grid>
+              <Button variant='contained' component='label'>
+                <Typography>Change Photo</Typography>
+                <input
+                  type='file'
+                  accept='image/*'
+                  onChange={handleUploadConversationPhoto}
+                />
               </Button>
             </Grid>
             {conversationActiveMessageUsers?.map((user) => {

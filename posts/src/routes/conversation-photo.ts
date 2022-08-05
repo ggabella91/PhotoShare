@@ -32,8 +32,8 @@ router.post(
   resizePhoto,
   async (req: Request, res: Response) => {
     const key = req.file!.filename;
-    const conversationId = req.body.conversationId;
-    const existingPhotoKey = req.body.existingConvoPhoto;
+    const conversationId: string = req.body.conversationId;
+    const existingPhotoKey: string = req.body.existingConvoPhoto;
 
     const s3 = new AWS.S3();
 
