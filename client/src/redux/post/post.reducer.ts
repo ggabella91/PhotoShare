@@ -95,6 +95,10 @@ const INITIAL_STATE: PostState = {
 
   // Used for conversation avatars
   convoAvatarMap: Map<string, PostFile>(),
+
+  // Used for uploading conversation photos
+  uploadConversationPhotoSuccess: null,
+  uploadConversationPhotoFailure: null,
 };
 
 const postReducer = (
@@ -297,6 +301,12 @@ const postReducer = (
           action.payload
         ),
       };
+    case PostActions.UPLOAD_CONVERSATION_PHOTO_SUCCESS:
+      return {
+        ...state,
+        uploadConversationPhotoSuccess: action.payload,
+        uploadConversationPhotoFailure: null,
+      };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
         ...state,
@@ -308,6 +318,12 @@ const postReducer = (
         ...state,
         postError: action.payload,
         postConfirm: null,
+      };
+    case PostActions.UPLOAD_CONVERSATION_PHOTO_FAILURE:
+      return {
+        ...state,
+        uploadConversationPhotoFailure: action.payload,
+        uploadConversationPhotoSuccess: null,
       };
     case PostActions.CREATE_POST_REACTION_FAILURE:
       return {

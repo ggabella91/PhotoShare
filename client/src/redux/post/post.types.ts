@@ -102,6 +102,11 @@ export enum PostActions {
 
   // Actions specific to getting conversation avatars
   GET_CONVERSATION_AVATAR_PHOTO_SUCCESS = 'GET_CONVERSATION_AVATAR_PHOTO_SUCCESS',
+
+  // Actions specific to uploading a conversation photo
+  UPLOAD_CONVERSATION_PHOTO_START = 'UPLOAD_CONVERSATION_PHOTO_START',
+  UPLOAD_CONVERSATION_PHOTO_SUCCESS = 'UPLOAD_CONVERSATION_PHOTO_SUCCESS',
+  UPLOAD_CONVERSATION_PHOTO_FAILURE = 'UPLOAD_CONVERSATION_PHOTO_FAILURE',
 }
 
 export interface PostError {
@@ -123,6 +128,14 @@ export interface Post {
   likes: number;
   isVideo?: boolean;
   videoThumbnailS3Key?: string;
+}
+
+export interface ConversationPhoto {
+  fileName: string;
+  createdAt: Date;
+  conversationId: string;
+  s3Key: string;
+  s3ObjectURL: string;
 }
 
 export interface Reaction {
@@ -397,6 +410,9 @@ export interface PostState {
 
   // Used for conversation avatars
   convoAvatarMap: Map<string, PostFile>;
+
+  uploadConversationPhotoSuccess: ConversationPhoto | null;
+  uploadConversationPhotoFailure: PostError | null;
 }
 
 export interface CreatePostStart {
@@ -801,6 +817,23 @@ export interface GetConversationAvatarPhotoSuccess {
   payload: PostFile;
 }
 
+// Interfaces specific to actions involving conversation photos
+// (different from conversation user avatars)
+export interface UploadConversationPhotoStart {
+  type: typeof PostActions.UPLOAD_CONVERSATION_PHOTO_START;
+  payload: FormData;
+}
+
+export interface UploadConversationPhotoSuccess {
+  type: typeof PostActions.UPLOAD_CONVERSATION_PHOTO_SUCCESS;
+  payload: ConversationPhoto;
+}
+
+export interface UploadConversationPhotoFailure {
+  type: typeof PostActions.UPLOAD_CONVERSATION_PHOTO_FAILURE;
+  payload: PostError;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -879,4 +912,7 @@ export type PostActionTypes =
   | UploadVideoPostFileChunkStart
   | UploadVideoPostFileChunkSuccess
   | UploadVideoPostFileChunkFailure
-  | GetConversationAvatarPhotoSuccess;
+  | GetConversationAvatarPhotoSuccess
+  | UploadConversationPhotoStart
+  | UploadConversationPhotoSuccess
+  | UploadConversationPhotoFailure;

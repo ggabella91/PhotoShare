@@ -34,6 +34,7 @@ import {
   PostsWithLocationReq,
   UploadVideoPostFileChunkReq,
   UploadVideoPostFileChunkResponse,
+  ConversationPhoto,
 } from './post.types';
 
 import {
@@ -76,6 +77,8 @@ import {
   uploadVideoPostFileChunkSuccess,
   uploadVideoPostFileChunkFailure,
   getConversationAvatarPhotoSuccess,
+  uploadConversationPhotoSuccess,
+  uploadConversationPhotoFailure,
 } from './post.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -97,6 +100,23 @@ export function* createPost({ payload: post }: { payload: FormData }) {
     yield put(createPostSuccess(data));
   } catch (err) {
     yield put(createPostFailure(err as PostError));
+  }
+}
+
+export function* uploadConversationPhoto({
+  payload: conversationPhoto,
+}: {
+  payload: FormData;
+}) {
+  try {
+    const { data }: { data: ConversationPhoto } = yield axios.post(
+      'api/posts/conversationPhoto',
+      conversationPhoto
+    );
+
+    yield put(uploadConversationPhotoSuccess(data));
+  } catch (err) {
+    yield put(uploadConversationPhotoFailure(err as PostError));
   }
 }
 
@@ -488,6 +508,13 @@ export function* onCreatePostStart(): SagaIterator {
   );
 }
 
+export function* onUploadConversationPhotoStart(): SagaIterator {
+  yield takeEvery<ActionPattern, PostSaga>(
+    PostActions.UPLOAD_CONVERSATION_PHOTO_START,
+    uploadConversationPhoto
+  );
+}
+
 export function* onCreatePostReactionStart(): SagaIterator {
   yield takeLatest<ActionPattern, PostSaga>(
     PostActions.CREATE_POST_REACTION_START,
@@ -589,6 +616,7 @@ export function* onUploadVideoPostFileChunkStart(): SagaIterator {
 export function* postSagas(): SagaIterator {
   yield all([
     call(onCreatePostStart),
+    call(onUploadConversationPhotoStart),
     call(onCreatePostReactionStart),
     call(onUpdateProfilePhotoStart),
     call(onGetPostDataStart),

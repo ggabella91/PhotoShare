@@ -296,3 +296,8 @@ export const selectConvoAvatarMap = createSelector(
   [selectPostState],
   (postState: PostState) => postState.convoAvatarMap
 );
+
+export const selectUploadConversationPhotoSuccess = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.uploadConversationPhotoSuccess
+);
