@@ -28,6 +28,7 @@ import {
   LocationCoordinates,
   UploadVideoPostFileChunkReq,
   UploadVideoPostFileChunkResponse,
+  ConversationPhoto,
 } from './post.types';
 
 export const createPostStart = (post: FormData): PostActionTypes => ({
@@ -520,4 +521,25 @@ export const getConversationAvatarPhotoSuccess = (
 ): PostActionTypes => ({
   type: PostActions.GET_CONVERSATION_AVATAR_PHOTO_SUCCESS,
   payload: avatarInfo,
+});
+
+export const uploadConversationPhotoStart = (
+  formData: FormData
+): PostActionTypes => ({
+  type: PostActions.UPLOAD_CONVERSATION_PHOTO_START,
+  payload: formData,
+});
+
+export const uploadConversationPhotoSuccess = (
+  conversationPhoto: ConversationPhoto
+): PostActionTypes => ({
+  type: PostActions.UPLOAD_CONVERSATION_PHOTO_SUCCESS,
+  payload: conversationPhoto,
+});
+
+export const uploadConversationPhotoFailure = (
+  error: PostError
+): PostActionTypes => ({
+  type: PostActions.UPLOAD_CONVERSATION_PHOTO_FAILURE,
+  payload: error,
 });

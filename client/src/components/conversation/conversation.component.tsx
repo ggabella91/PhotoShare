@@ -42,7 +42,11 @@ import {
   clearConversationUsers,
 } from '../../redux/user/user.actions';
 
-import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
+import { selectUploadConversationPhotoSuccess } from '../../redux/post/post.selectors';
+import {
+  clearSuggestionPhotoFileArray,
+  uploadConversationPhotoStart,
+} from '../../redux/post/post.actions';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
 import { getConvoName } from '../../pages/messages-page/messages-page.utils';
@@ -98,6 +102,9 @@ const Conversation: React.FC<ConversationProps> = ({
   const conversationMessages = useSelector(selectConversationMessages);
   const conversationUsers = useSelector(selectConversationUsers);
   const usersInfoList = useUserInfoData(conversationUsers);
+  const uploadConversationPhotoSuccess = useSelector(
+    selectUploadConversationPhotoSuccess
+  );
 
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
@@ -191,6 +198,15 @@ const Conversation: React.FC<ConversationProps> = ({
   useEffect(() => {
     setIsInfoClicked(false);
   }, [conversationId]);
+
+  useEffect(() => {
+    // TODO Write websocket message for uploading avatarS3Keys
+    // if conversation photo upload request to posts service
+    // is successful
+    //
+    // NOTE Send an array with a single S3 key to message
+    // chat gateway if the above succeeds
+  }, [uploadConversationPhotoSuccess]);
 
   const messagesEndRef = (node: HTMLDivElement) => {
     messagesRef.current = node;
@@ -354,8 +370,6 @@ const Conversation: React.FC<ConversationProps> = ({
     setIsExistingConvo(true);
   };
 
-  // TODO Add logic for setting a conversation photo
-
   const handleUpdateNicknameForConvoUser = () => {
     if (convoUserNicknameMap) {
       const userId = optionsDialogUser.userId;
@@ -387,16 +401,7 @@ const Conversation: React.FC<ConversationProps> = ({
         );
       }
 
-      // TODO Write redux types, actions, saga, reducer logic
-      // associated with uploading a conversation photo to
-      // S3 via the posts service
-
-      // TODO Write websocket message for uploading avatarS3Keys
-      // if conversation photo upload request to posts service
-      // is successful
-
-      // NOTE Send an array with a single S3 key to message
-      // chat gateway if the above succeeds
+      dispatch(uploadConversationPhotoStart(formData));
     }
   };
 
