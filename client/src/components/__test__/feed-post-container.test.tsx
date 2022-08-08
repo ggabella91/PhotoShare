@@ -31,6 +31,7 @@ describe('feed post container component tests', () => {
 
     render(
       <FeedPostContainer
+        id='1'
         s3Key='post-key'
         custRef={null}
         key='0'

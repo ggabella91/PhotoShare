@@ -8,14 +8,13 @@ const generateKey = (
   const id = v4();
 
   let newFileName = fileName;
+  let extension: string = '';
 
-  if (dropExtension) {
-    newFileName = fileName.substring(0, fileName.indexOf('.'));
-  }
+  [newFileName, extension] = fileName.split('.');
 
   const slugName = slugify(newFileName, { lower: true, strict: true });
 
-  const key = `${id}-${slugName}`;
+  const key = `${id}-${slugName}${dropExtension ? '' : `.${extension}`}`;
 
   return key;
 };

@@ -17,6 +17,7 @@ import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { UpdateConvoPreDto } from './database/dto/update-convo-dto';
 import { UpdateUserNicknameForConvoDto } from './database/dto/update-user-nickname-for-convo-dto';
+import { ConversationDocument } from './database/schemas/conversation.schema';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -40,6 +41,10 @@ export class MessagesAppChatGateway
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
     client.emit('clientId', client.id);
+  }
+
+  handleNotifyUpdateFromEventListener(conversation: ConversationDocument) {
+    this.wss.to(conversation.id).emit('conversationUpdated', conversation);
   }
 
   @SubscribeMessage('forceDisconnectClient')
