@@ -110,7 +110,7 @@ export function* uploadConversationPhoto({
 }) {
   try {
     const { data }: { data: ConversationPhoto } = yield axios.post(
-      'api/posts/conversationPhoto',
+      '/api/posts/conversationPhoto',
       conversationPhoto
     );
 
@@ -285,7 +285,9 @@ export function* getPostFile({
       }
     } else if (
       bucket === 'photo-share-app-profile-photos' ||
-      bucket === 'photo-share-app-profile-photos-dev'
+      bucket === 'photo-share-app-profile-photos-dev' ||
+      bucket === 'photo-share-app-conversation-photos' ||
+      bucket === 'photo-share-app-conversation-photos-dev'
     ) {
       if (user === UserType.self) {
         yield put(getProfilePhotoFileSuccess({ s3Key, fileString: data }));
