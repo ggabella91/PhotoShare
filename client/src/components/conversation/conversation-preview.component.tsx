@@ -35,15 +35,18 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   const navigate = useNavigate();
 
   let bucket: string;
+  let conversationBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
     bucket = 'photo-share-app-profile-photos';
+    conversationBucket = 'photo-share-app-conversation-photos';
   } else {
     bucket = 'photo-share-app-profile-photos-dev';
+    conversationBucket = 'photo-share-app-conversation-photos-dev';
   }
 
   useEffect(() => {
-    if (avatarS3Keys?.length) {
+    if (avatarS3Keys?.length > 1) {
       avatarS3Keys.forEach((s3Key) => {
         dispatch(
           getPostFileStart({
@@ -54,6 +57,15 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
           })
         );
       });
+    } else {
+      dispatch(
+        getPostFileStart({
+          s3Key: avatarS3Keys[0],
+          bucket: conversationBucket,
+          fileRequestType: FileRequestType.singlePost,
+          user: UserType.conversationAvatar,
+        })
+      );
     }
   }, [dispatch, bucket, avatarS3Keys]);
 

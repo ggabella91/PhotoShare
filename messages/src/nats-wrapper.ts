@@ -1,23 +1,26 @@
 import nats, { Stan } from 'node-nats-streaming';
-import {
-  CustomTransportStrategy,
-  Server,
-  ClientProxy,
-  ReadPacket,
-  WritePacket,
-} from '@nestjs/microservices';
+import { ClientProxy, ReadPacket, WritePacket } from '@nestjs/microservices';
 import { Injectable, Logger } from '@nestjs/common';
+import { ConversationPhotoUpdatedListener } from './events/listeners/conversation-photo-updated-listener';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Conversation } from './database/schemas/conversation.schema';
+import { MessagesAppChatGateway } from './messages-app-chat.gateway';
 
 @Injectable()
 class NatsWrapper extends ClientProxy {
   private _client?: Stan;
   logger: Logger;
 
-  constructor() {
+  constructor(
+    @InjectModel(Conversation.name)
+    private conversationModel: Model<Conversation>,
+    private chatGateway: MessagesAppChatGateway
+  ) {
     super();
     this.logger = new Logger('Nats Wrapper');
 
-    this.connect().then(() => this.logger.log('Connected to NATS'));
+    this.connect();
   }
 
   protected publish(
@@ -58,6 +61,11 @@ class NatsWrapper extends ClientProxy {
     return new Promise((resolve, reject) => {
       this.client.on('connect', () => {
         this.logger.log('Connected to NATS');
+        new ConversationPhotoUpdatedListener(
+          this.client,
+          this.conversationModel,
+          this.chatGateway
+        ).listen();
         resolve('');
       });
 

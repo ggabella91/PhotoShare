@@ -1,7 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions } from '@nestjs/microservices';
 import { MessagesAppModule } from './messages-app.module';
-import { NatsWrapper } from './nats-wrapper';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 

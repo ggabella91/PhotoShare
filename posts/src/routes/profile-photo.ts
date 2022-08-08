@@ -7,7 +7,7 @@ import { buffToStream } from '../utils/buffToStream';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
 import { natsWrapper } from '../nats-wrapper';
-import { ProfilePhotoUpdatedPublisher } from '../events/publishers/profile-photo-update-publisher';
+import { ProfilePhotoUpdatedPublisher } from '../events/publishers/profile-photo-updated-publisher';
 
 const router = express.Router();
 

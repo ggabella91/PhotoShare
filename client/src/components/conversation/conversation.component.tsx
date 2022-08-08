@@ -702,12 +702,22 @@ const Conversation: React.FC<ConversationProps> = ({
               </Button>
             </Grid>
             <Grid>
-              <Button variant='contained' component='label'>
+              <Button
+                variant='text'
+                component='label'
+                sx={{
+                  display: 'flex',
+                  '&:hover': {
+                    backgroundColor: 'unset',
+                  },
+                }}
+              >
                 <Typography>Change Photo</Typography>
                 <input
                   type='file'
                   accept='image/*'
                   onChange={handleUploadConversationPhoto}
+                  style={{ display: 'none' }}
                 />
               </Button>
             </Grid>

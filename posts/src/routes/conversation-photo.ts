@@ -6,6 +6,9 @@ import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 import { buffToStream } from '../utils/buffToStream';
 import { AWS } from '../index';
 import { S3 } from 'aws-sdk';
+import { ConversationPhotoUpdatedPublisher } from '../events/publishers/conversation-photo-updated-publisher';
+import { natsWrapper } from '../nats-wrapper';
+import { generateKey } from '../utils/generateKey';
 
 const router = express.Router();
 
@@ -31,9 +34,12 @@ router.post(
   upload.single('conversation-photo'),
   resizePhoto,
   async (req: Request, res: Response) => {
-    const key = req.file!.filename;
+    const key = generateKey(req.file!.originalname, false);
     const conversationId: string = req.body.conversationId;
     const existingPhotoKey: string = req.body.existingConvoPhoto;
+
+    console.log('req.file!.originalname: ', req.file!.originalname);
+    console.log('req.file!.filename: ', req.file!.filename);
 
     const s3 = new AWS.S3();
 
@@ -92,6 +98,10 @@ router.post(
         });
 
         await photoDoc.save();
+
+        await new ConversationPhotoUpdatedPublisher(natsWrapper.client).publish(
+          { conversationId, s3Key: key }
+        );
 
         res.status(201).send(photoDoc);
       }
