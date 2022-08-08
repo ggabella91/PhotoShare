@@ -521,7 +521,10 @@ const Conversation: React.FC<ConversationProps> = ({
                     message={message}
                     isCurrentUser={message.ownerId === currentUser?.id}
                     isGroupConversation={
-                      !!(conversationUsers && conversationUsers.length > 2)
+                      !!(
+                        conversationHistoricalMessageUsers &&
+                        conversationHistoricalMessageUsers.length > 2
+                      )
                     }
                     islastMessageFromDiffUser={
                       idx === 0 ||
@@ -701,18 +704,34 @@ const Conversation: React.FC<ConversationProps> = ({
                 </Typography>
               </Button>
             </Grid>
-            <Grid>
+            <Grid
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                height: '15px',
+                paddingRight: '16px',
+              }}
+            >
               <Button
                 variant='text'
                 component='label'
                 sx={{
                   display: 'flex',
+                  padding: '6px 5px',
                   '&:hover': {
                     backgroundColor: 'unset',
                   },
                 }}
               >
-                <Typography>Change Photo</Typography>
+                <Typography
+                  sx={{
+                    color: '#0095F6',
+                    textTransform: 'capitalize',
+                    fontWeight: 600,
+                  }}
+                >
+                  Change Photo
+                </Typography>
                 <input
                   type='file'
                   accept='image/*'

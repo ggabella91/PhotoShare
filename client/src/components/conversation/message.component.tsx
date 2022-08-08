@@ -22,8 +22,9 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   userNickname,
   renderedWithTimeStamp,
 }) => {
-  const addMarginTop =
-    isCurrentUser && islastMessageFromDiffUser && !renderedWithTimeStamp;
+  const addMarginTop = isCurrentUser && renderedWithTimeStamp;
+  const renderWithNameOrNickname =
+    isGroupConversation && !isCurrentUser && islastMessageFromDiffUser;
 
   return (
     <Grid
@@ -34,8 +35,14 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         height: 'auto',
       }}
     >
-      {isGroupConversation && !isCurrentUser && islastMessageFromDiffUser && (
-        <Grid sx={{ display: 'flex', margin: '25px 0px 2px 48px' }}>
+      {renderWithNameOrNickname && (
+        <Grid
+          sx={{
+            display: 'flex',
+            margin: '25px 0px 2px 48px',
+            marginTop: renderedWithTimeStamp ? '15px !important' : '25px',
+          }}
+        >
           <Typography sx={{ fontSize: '10px' }}>
             {userNickname ? userNickname : userInfo?.name}
           </Typography>
@@ -48,6 +55,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
           width: '100%',
           height: 'auto',
           minHeight: '44px',
+          marginTop:
+            !isGroupConversation && renderedWithTimeStamp ? '15px' : '0px',
         }}
       >
         {!isCurrentUser && (
