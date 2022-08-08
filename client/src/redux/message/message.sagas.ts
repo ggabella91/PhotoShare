@@ -1,5 +1,4 @@
 import {
-  takeLatest,
   takeEvery,
   put,
   all,
@@ -13,7 +12,6 @@ import { ActionPattern } from '@redux-saga/types';
 import {
   Message,
   GetConvoMessagesReq,
-  ConvoMessages,
   MessageError,
   MessageActions,
   MessageActionTypes,
