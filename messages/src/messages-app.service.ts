@@ -242,7 +242,7 @@ export class MessagesAppService {
     const historicalUsers = conversation.historicalUsers;
 
     let newHistoricalUsers: string[];
-    if (historicalUsers.length < connectedUsers.length) {
+    if (connectedUsers && historicalUsers.length < connectedUsers.length) {
       const newUsers = connectedUsers
         .map((user) => user.userId)
         .filter((userId) => !historicalUsers.includes(userId));
