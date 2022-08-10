@@ -24,14 +24,27 @@ export const addConvoMessages = (
   currentConvoMessagesArray: ConvoMessages[],
   convoMessagesToAdd: ConvoMessages
 ) => {
-  const areConvoMessagesInArray = currentConvoMessagesArray.find(
+  const convoMessagesArrayIdx = currentConvoMessagesArray.findIndex(
     (convoMessages) =>
       convoMessages.conversationId === convoMessagesToAdd.conversationId
   );
 
-  if (!areConvoMessagesInArray) {
+  if (convoMessagesArrayIdx < 0) {
     return [...currentConvoMessagesArray, convoMessagesToAdd];
   } else {
+    const currentConvoMessagesForIdx =
+      currentConvoMessagesArray[convoMessagesArrayIdx];
+    const newConvoMessagesForIdx = currentConvoMessagesForIdx.messages.concat(
+      ...convoMessagesToAdd.messages
+    );
+
+    const currentConvoMessagesArrayCopy = [...currentConvoMessagesArray];
+    currentConvoMessagesArrayCopy.splice(convoMessagesArrayIdx, 1, {
+      conversationId: currentConvoMessagesForIdx.conversationId,
+      messages: newConvoMessagesForIdx,
+      queryLength: currentConvoMessagesForIdx.queryLength,
+    });
+
     return [...currentConvoMessagesArray];
   }
 };
@@ -44,7 +57,7 @@ export const addMessage = (
     if (convoMessages.conversationId === message.conversationId) {
       return {
         conversationId: convoMessages.conversationId,
-        messages: [...convoMessages.messages, message],
+        messages: [message, ...convoMessages.messages],
       };
     } else {
       return convoMessages;
