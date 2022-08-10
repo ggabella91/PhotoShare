@@ -22,8 +22,6 @@ interface ConversationPhotoPhotoModel
   build(attrs: ConversationPhotoPhotoAttrs): ConversationPhotoPhotoDoc;
 }
 
-// TODO Create route handler for uploading conversation photos
-
 const conversationPhotoSchema = new mongoose.Schema(
   {
     fileName: {
