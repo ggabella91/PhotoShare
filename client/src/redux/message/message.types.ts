@@ -34,6 +34,7 @@ export interface GetConvoMessagesReq {
 export interface ConvoMessages {
   conversationId: string;
   messages: Message[];
+  queryLength?: number;
 }
 
 export interface Message {

@@ -42,7 +42,6 @@ import {
   clearConversationUsers,
 } from '../../redux/user/user.actions';
 
-import { selectUploadConversationPhotoSuccess } from '../../redux/post/post.selectors';
 import {
   clearSuggestionPhotoFileArray,
   uploadConversationPhotoStart,
@@ -102,9 +101,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const conversationMessages = useSelector(selectConversationMessages);
   const conversationUsers = useSelector(selectConversationUsers);
   const usersInfoList = useUserInfoData(conversationUsers);
-  const uploadConversationPhotoSuccess = useSelector(
-    selectUploadConversationPhotoSuccess
-  );
 
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
@@ -119,6 +115,7 @@ const Conversation: React.FC<ConversationProps> = ({
   );
   const currentConversationAvatarPhotos = currentConversation?.avatarS3Keys;
   const messagesArray = currentConversationMessages?.messages;
+  const messagesArrayReversed = messagesArray && [...messagesArray].reverse();
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const messageJustSent = useRef(false);
   const messagesRef = useRef<HTMLDivElement | null>(null);
@@ -198,15 +195,6 @@ const Conversation: React.FC<ConversationProps> = ({
   useEffect(() => {
     setIsInfoClicked(false);
   }, [conversationId]);
-
-  useEffect(() => {
-    // TODO Write websocket message for uploading avatarS3Keys
-    // if conversation photo upload request to posts service
-    // is successful
-    //
-    // NOTE Send an array with a single S3 key to message
-    // chat gateway if the above succeeds
-  }, [uploadConversationPhotoSuccess]);
 
   const messagesEndRef = (node: HTMLDivElement) => {
     messagesRef.current = node;
@@ -490,11 +478,11 @@ const Conversation: React.FC<ConversationProps> = ({
               overflowY: 'auto',
             }}
           >
-            {messagesArray?.map((message, idx) => {
+            {messagesArrayReversed?.map((message, idx) => {
               const renderTime =
                 idx === 0 ||
                 shouldRenderTimeStamp(
-                  messagesArray[idx - 1].created,
+                  messagesArrayReversed[idx - 1].created,
                   message.created
                 );
 
@@ -529,7 +517,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     islastMessageFromDiffUser={
                       idx === 0 ||
                       (idx >= 1 &&
-                        messagesArray[idx - 1].ownerId !==
+                        messagesArrayReversed[idx - 1].ownerId !==
                           userInfoMap[message.ownerId]?.id)
                     }
                     userNickname={convoUserNicknameMap[message.ownerId] || ''}

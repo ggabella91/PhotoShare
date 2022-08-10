@@ -209,17 +209,31 @@ export class MessagesAppService {
     offset,
   }: FindMessagesFromConvo) {
     let messagesFromConvo: MessageDocument[];
+    let queryLength: number;
+
     if (limit) {
+      if (offset === 1) {
+        queryLength = (await this.messageModel.find({ conversationId })).length;
+      }
+
       messagesFromConvo = await this.messageModel
-        .find({
-          conversationId,
-        })
+        .find(
+          {
+            conversationId,
+          },
+          null,
+          { sort: { _id: -1 } }
+        )
         .limit(limit)
         .skip((offset - 1) * limit);
     } else {
-      messagesFromConvo = await this.messageModel.find({
-        conversationId,
-      });
+      messagesFromConvo = await this.messageModel.find(
+        {
+          conversationId,
+        },
+        null,
+        { sort: { _id: -1 } }
+      );
     }
 
     const messagesFromConvoObjects: LeanDocument<MessageDocument>[] =
@@ -230,7 +244,10 @@ export class MessagesAppService {
       messagesFromConvoObjects
     );
 
-    return messagesFromConvoObjects;
+    return {
+      messages: messagesFromConvoObjects,
+      ...(queryLength && { queryLength }),
+    };
   }
 
   async updateConversation(updateConvoPreDto: UpdateConvoPreDto) {

@@ -80,13 +80,21 @@ export function* getConvoMessages({
   payload: GetConvoMessagesReq;
 }) {
   try {
-    const { data: messages }: { data: Message[] } = yield axios.get(
+    const {
+      data: { messages, queryLength },
+    }: { data: { messages: Message[]; queryLength: number } } = yield axios.get(
       `/api/messages/conversation/${conversationId}${
         limit ? `?limit=${limit}&offset=${pageToShow}` : ''
       }`
     );
 
-    yield put(getConvoMessagesSuccess({ conversationId, messages }));
+    yield put(
+      getConvoMessagesSuccess({
+        conversationId,
+        messages,
+        ...(queryLength && { queryLength }),
+      })
+    );
   } catch (err) {
     yield put(getConvoMessagesFailure(err as MessageError));
   }
