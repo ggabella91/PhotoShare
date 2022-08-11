@@ -14,6 +14,7 @@ import {
 const INITIAL_STATE: MessageState = {
   user: null,
   messages: [],
+  isLoadingMessages: false,
   findOrCreateUserError: null,
   removeUserSessionCookieConfirm: null,
   removeUserSessionCookieError: null,
@@ -25,6 +26,11 @@ const messageReducer = (
   action: MessageActionTypes
 ): MessageState => {
   switch (action.type) {
+    case MessageActions.GET_CONVO_MESSAGES_START:
+      return {
+        ...state,
+        isLoadingMessages: true,
+      };
     case MessageActions.FIND_OR_CREATE_USER_SUCCESS:
       return {
         ...state,
@@ -54,6 +60,7 @@ const messageReducer = (
       return {
         ...state,
         messages: addConvoMessages(state.messages, action.payload),
+        isLoadingMessages: false,
       };
     case MessageActions.ADD_MESSAGE_TO_CONVERSATION:
       return {
@@ -96,6 +103,11 @@ const messageReducer = (
         ...state,
         removeUserSessionCookieError: action.payload,
         removeUserSessionCookieConfirm: null,
+      };
+    case MessageActions.GET_CONVO_MESSAGES_FAILURE:
+      return {
+        ...state,
+        isLoadingMessages: false,
       };
     default:
       return state;

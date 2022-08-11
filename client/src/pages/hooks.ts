@@ -10,7 +10,7 @@ import { FileRequestType, UserType, Location } from '../redux/post/post.types';
 import { selectSuggestionPhotoFileArray } from '../redux/post/post.selectors';
 import { getPostFileStart } from '../redux/post/post.actions';
 
-export const useLazyLoading = (isLoadingPostData: boolean) => {
+export const useLazyLoading = (isLoadingData: boolean) => {
   const [intersectionCounter, setIntersectionCounter] = useState(1);
   const [intersectionMap, setIntersectionMap] = useState<
     Record<string, IntersectionObserverEntry>
@@ -18,9 +18,9 @@ export const useLazyLoading = (isLoadingPostData: boolean) => {
 
   const observer = useRef<IntersectionObserver>();
 
-  const lastElementRef = useCallback(
+  const observedElementRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (isLoadingPostData) return;
+      if (isLoadingData) return;
 
       if (observer.current) {
         observer.current.disconnect();
@@ -48,10 +48,10 @@ export const useLazyLoading = (isLoadingPostData: boolean) => {
         observer.current.observe(node);
       }
     },
-    [isLoadingPostData]
+    [isLoadingData, intersectionMap]
   );
 
-  return { intersectionCounter, lastElementRef };
+  return { intersectionCounter, observedElementRef };
 };
 
 export const useDebounce = (value: string, delay: number) => {

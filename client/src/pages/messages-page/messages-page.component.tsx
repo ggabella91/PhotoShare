@@ -148,6 +148,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         dispatch(
           getConvoMessagesStart({
             conversationId: convo.id,
+            limit: 10,
+            pageToShow: 1,
           })
         )
       );

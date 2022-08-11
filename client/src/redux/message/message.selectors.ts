@@ -29,3 +29,8 @@ export const selectConversationMessages = createSelector(
   [selectMessageState],
   (messageState: MessageState) => messageState.messages as ConvoMessages[]
 );
+
+export const selectIsLoadingMessages = createSelector(
+  [selectMessageState],
+  (messageState: MessageState) => messageState.isLoadingMessages
+);

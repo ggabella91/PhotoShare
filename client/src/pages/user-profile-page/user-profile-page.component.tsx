@@ -261,7 +261,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const { postMetaDataForUser, isLoadingPostData } = postState;
 
-  const { intersectionCounter, lastElementRef } =
+  const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
 
   let navigate = useNavigate();
@@ -717,7 +717,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
                 id={file.s3Key}
                 dataS3Key={file.s3Key}
                 onClick={handleRenderPostModal}
-                custRef={idx === postFileList!.size - 1 ? lastElementRef : null}
+                custRef={
+                  idx === postFileList!.size - 1 ? observedElementRef : null
+                }
                 postLikesCount={postDataList.get(idx)?.likes || 0}
                 postCommentsCount={postDataList.get(idx)?.comments || 0}
               />

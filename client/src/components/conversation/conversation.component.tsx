@@ -30,7 +30,9 @@ import { useUserInfoData } from '../../pages/hooks';
 import {
   selectJoinedConversations,
   selectConversationMessages,
+  selectIsLoadingMessages,
 } from '../../redux/message/message.selectors';
+import { getConvoMessagesStart } from '../../redux/message/message.actions';
 
 import {
   selectCurrentUser,
@@ -50,6 +52,7 @@ import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
 import { getConvoName } from '../../pages/messages-page/messages-page.utils';
 import { shouldRenderTimeStamp, renderTimeStamp } from './conversation.utils';
+import { useLazyLoading } from '../../pages/hooks';
 
 interface ConversationProps {
   conversationId: string;
@@ -100,7 +103,10 @@ const Conversation: React.FC<ConversationProps> = ({
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
   const conversationUsers = useSelector(selectConversationUsers);
+  const isLoadingMessages = useSelector(selectIsLoadingMessages);
   const usersInfoList = useUserInfoData(conversationUsers);
+  const { intersectionCounter, observedElementRef } =
+    useLazyLoading(isLoadingMessages);
 
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
@@ -125,6 +131,16 @@ const Conversation: React.FC<ConversationProps> = ({
     dispatch(clearConversationUsers());
     dispatch(clearSuggestionPhotoFileArray());
   }, []);
+
+  useEffect(() => {
+    dispatch(
+      getConvoMessagesStart({
+        conversationId,
+        limit: 10,
+        pageToShow: 1,
+      })
+    );
+  }, [dispatch, conversationId]);
 
   useEffect(() => {
     if (conversationHistoricalMessageUsers?.length) {
@@ -505,6 +521,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     </Grid>
                   )}
                   <MessageComponent
+                    id={message.id}
                     userInfo={userInfoMap[message.ownerId]}
                     message={message}
                     isCurrentUser={message.ownerId === currentUser?.id}
@@ -522,6 +539,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     }
                     userNickname={convoUserNicknameMap[message.ownerId] || ''}
                     renderedWithTimeStamp={renderTime}
+                    custRef={idx === 0 ? observedElementRef : null}
                   />
                 </Grid>
               );
