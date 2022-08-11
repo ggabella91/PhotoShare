@@ -88,7 +88,7 @@ const ExploreTagPage: React.FC = () => {
     archivePostConfirm,
   } = postState;
 
-  const { intersectionCounter, lastElementRef } =
+  const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
 
   let navigate = useNavigate();
@@ -365,7 +365,7 @@ const ExploreTagPage: React.FC = () => {
                   dataS3Key={file.s3Key}
                   onClick={handleRenderPostModal}
                   custRef={
-                    idx === postFileList!.size - 1 ? lastElementRef : null
+                    idx === postFileList!.size - 1 ? observedElementRef : null
                   }
                   postLikesCount={postDataList.get(idx)?.likes || 0}
                   postCommentsCount={postDataList.get(idx)?.comments || 0}

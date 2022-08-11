@@ -19,6 +19,7 @@ export enum MessageActions {
 export interface MessageState {
   user: MessageUser | null;
   messages: ConvoMessages[];
+  isLoadingMessages: boolean;
   findOrCreateUserError: MessageError | null;
   removeUserSessionCookieConfirm: string | null;
   removeUserSessionCookieError: MessageError | null;

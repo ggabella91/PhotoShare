@@ -235,7 +235,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
-  const { intersectionCounter, lastElementRef } =
+  const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
 
   const [postLikersList, setPostLikersList] =
@@ -650,7 +650,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
               key={el.postId}
               id={el.postId}
               custRef={
-                idx === userInfoAndPostFileList.size - 1 ? lastElementRef : null
+                idx === userInfoAndPostFileList.size - 1
+                  ? observedElementRef
+                  : null
               }
             />
           ))

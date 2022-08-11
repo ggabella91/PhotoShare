@@ -3,7 +3,10 @@ import { Grid, Avatar, Typography } from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
 
+type CustomRef = (node: HTMLDivElement | null) => void;
+
 interface MessageComponentProps {
+  id: string;
   userInfo: UserInfoData;
   message: Message;
   isCurrentUser: boolean;
@@ -11,9 +14,11 @@ interface MessageComponentProps {
   islastMessageFromDiffUser: boolean;
   userNickname?: string;
   renderedWithTimeStamp: boolean;
+  custRef: CustomRef | null;
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
+  id,
   userInfo,
   message,
   isCurrentUser,
@@ -21,6 +26,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   islastMessageFromDiffUser,
   userNickname,
   renderedWithTimeStamp,
+  custRef,
 }) => {
   const addMarginTop = isCurrentUser && renderedWithTimeStamp;
   const renderWithNameOrNickname =
@@ -34,6 +40,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         width: '100%',
         height: 'auto',
       }}
+      id={id}
     >
       {renderWithNameOrNickname && (
         <Grid
