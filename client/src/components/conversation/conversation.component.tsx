@@ -52,7 +52,7 @@ import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
 import { getConvoName } from '../../pages/messages-page/messages-page.utils';
 import { shouldRenderTimeStamp, renderTimeStamp } from './conversation.utils';
-import { useLazyLoading } from '../../pages/hooks';
+// import { useLazyLoading } from '../../pages/hooks';
 
 interface ConversationProps {
   conversationId: string;
@@ -105,8 +105,8 @@ const Conversation: React.FC<ConversationProps> = ({
   const conversationUsers = useSelector(selectConversationUsers);
   const isLoadingMessages = useSelector(selectIsLoadingMessages);
   const usersInfoList = useUserInfoData(conversationUsers);
-  const { intersectionCounter, observedElementRef } =
-    useLazyLoading(isLoadingMessages);
+  // const { intersectionCounter, observedElementRef } =
+  //   useLazyLoading(isLoadingMessages);
 
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
@@ -125,6 +125,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const messageJustSent = useRef(false);
   const messagesRef = useRef<HTMLDivElement | null>(null);
+  const observer = useRef<IntersectionObserver>();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -266,6 +267,25 @@ const Conversation: React.FC<ConversationProps> = ({
       });
 
       resizeObserver.current.observe(node);
+    }
+  };
+
+  const firstElementRef = (node: HTMLDivElement | null) => {
+    if (observer.current) {
+      observer.current.disconnect();
+    }
+
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          console.log('Node is intersecting');
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (node) {
+      observer.current.observe(node);
     }
   };
 
@@ -539,7 +559,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     }
                     userNickname={convoUserNicknameMap[message.ownerId] || ''}
                     renderedWithTimeStamp={renderTime}
-                    custRef={idx === 0 ? observedElementRef : null}
+                    custRef={idx === 0 ? firstElementRef : null}
                   />
                 </Grid>
               );
