@@ -280,6 +280,8 @@ const Conversation: React.FC<ConversationProps> = ({
         if (entries[0].isIntersecting) {
           console.log('Node is intersecting');
         }
+
+        console.log('IntersectionObserver instance was instantiated');
       },
       { threshold: 0.2 }
     );
