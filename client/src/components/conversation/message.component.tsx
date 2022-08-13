@@ -41,6 +41,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         height: 'auto',
       }}
       id={id}
+      ref={custRef}
     >
       {renderWithNameOrNickname && (
         <Grid

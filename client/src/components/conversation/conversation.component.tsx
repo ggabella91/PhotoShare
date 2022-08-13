@@ -4,7 +4,6 @@ import React, {
   useRef,
   ChangeEvent,
   KeyboardEvent,
-  Fragment,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -52,7 +51,7 @@ import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
 import { getConvoName } from '../../pages/messages-page/messages-page.utils';
 import { shouldRenderTimeStamp, renderTimeStamp } from './conversation.utils';
-// import { useLazyLoading } from '../../pages/hooks';
+import { useLazyLoading } from '../../pages/hooks';
 
 interface ConversationProps {
   conversationId: string;
@@ -105,8 +104,8 @@ const Conversation: React.FC<ConversationProps> = ({
   const conversationUsers = useSelector(selectConversationUsers);
   const isLoadingMessages = useSelector(selectIsLoadingMessages);
   const usersInfoList = useUserInfoData(conversationUsers);
-  // const { intersectionCounter, observedElementRef } =
-  //   useLazyLoading(isLoadingMessages);
+  const { intersectionCounter, observedElementRef } =
+    useLazyLoading(isLoadingMessages);
 
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
@@ -121,27 +120,33 @@ const Conversation: React.FC<ConversationProps> = ({
   );
   const currentConversationAvatarPhotos = currentConversation?.avatarS3Keys;
   const messagesArray = currentConversationMessages?.messages;
+  const totalMessagesForConvo = currentConversationMessages?.queryLength;
   const messagesArrayReversed = messagesArray && [...messagesArray].reverse();
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const messageJustSent = useRef(false);
   const messagesRef = useRef<HTMLDivElement | null>(null);
-  const observer = useRef<IntersectionObserver>();
+  const scrolledToBottomRef = useRef(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(clearConversationUsers());
     dispatch(clearSuggestionPhotoFileArray());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(
-      getConvoMessagesStart({
-        conversationId,
-        limit: 10,
-        pageToShow: 1,
-      })
-    );
-  }, [dispatch, conversationId]);
+    if (
+      totalMessagesForConvo &&
+      intersectionCounter < Math.ceil(totalMessagesForConvo / 10)
+    ) {
+      dispatch(
+        getConvoMessagesStart({
+          conversationId,
+          limit: 10,
+          pageToShow: intersectionCounter + 1,
+        })
+      );
+    }
+  }, [dispatch, conversationId, intersectionCounter, totalMessagesForConvo]);
 
   useEffect(() => {
     if (conversationHistoricalMessageUsers?.length) {
@@ -154,7 +159,7 @@ const Conversation: React.FC<ConversationProps> = ({
         )
       );
     }
-  }, [conversationHistoricalMessageUsers]);
+  }, [dispatch, conversationHistoricalMessageUsers]);
 
   useEffect(() => {
     if (usersInfoList?.size) {
@@ -207,16 +212,19 @@ const Conversation: React.FC<ConversationProps> = ({
       setShowNicknameChangeDialog(false);
       setOpenOptionsDialog(false);
     });
-  }, [socket]);
+  }, [socket, currentUser]);
 
   useEffect(() => {
     setIsInfoClicked(false);
-  }, [conversationId]);
+  }, [conversationId, setIsInfoClicked]);
 
   const messagesEndRef = (node: HTMLDivElement) => {
     messagesRef.current = node;
 
-    messagesRef.current?.scrollIntoView();
+    if (!scrolledToBottomRef.current) {
+      messagesRef.current?.scrollIntoView();
+      scrolledToBottomRef.current = true;
+    }
   };
 
   useEffect(() => {
@@ -267,27 +275,6 @@ const Conversation: React.FC<ConversationProps> = ({
       });
 
       resizeObserver.current.observe(node);
-    }
-  };
-
-  const firstElementRef = (node: HTMLDivElement | null) => {
-    if (observer.current) {
-      observer.current.disconnect();
-    }
-
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          console.log('Node is intersecting');
-        }
-
-        console.log('IntersectionObserver instance was instantiated');
-      },
-      { threshold: 0.2 }
-    );
-
-    if (node) {
-      observer.current.observe(node);
     }
   };
 
@@ -561,7 +548,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     }
                     userNickname={convoUserNicknameMap[message.ownerId] || ''}
                     renderedWithTimeStamp={renderTime}
-                    custRef={idx === 0 ? firstElementRef : null}
+                    custRef={idx === 0 ? observedElementRef : null}
                   />
                 </Grid>
               );
