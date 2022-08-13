@@ -45,7 +45,7 @@ export const addConvoMessages = (
       queryLength: currentConvoMessagesForIdx.queryLength,
     });
 
-    return [...currentConvoMessagesArray];
+    return [...currentConvoMessagesArrayCopy];
   }
 };
 

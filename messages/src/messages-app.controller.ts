@@ -55,8 +55,8 @@ export class MessagesAppController {
   @Get('/conversation/:conversationId')
   findMessagesFromConvo(
     @Param('conversationId') conversationId: string,
-    @Query('limit') limit: number,
-    @Query('offset') offset: number
+    @Query('limit') limit: string,
+    @Query('offset') offset: string
   ) {
     return this.appService.findMessagesFromConvo({
       conversationId,
