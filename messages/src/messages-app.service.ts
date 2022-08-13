@@ -200,9 +200,6 @@ export class MessagesAppService {
     return updatedConversation;
   }
 
-  // TODO Implement lazy-loading of a given number of conversation
-  // messages per request, with pagination
-
   async findMessagesFromConvo({
     conversationId,
     limit,
@@ -210,9 +207,11 @@ export class MessagesAppService {
   }: FindMessagesFromConvo) {
     let messagesFromConvo: MessageDocument[];
     let queryLength: number;
+    const parsedLimit = parseInt(limit);
+    const parsedOffset = parseInt(offset);
 
-    if (limit) {
-      if (offset === 1) {
+    if (parsedLimit) {
+      if (parsedOffset === 1) {
         queryLength = (await this.messageModel.find({ conversationId })).length;
       }
 
@@ -224,8 +223,8 @@ export class MessagesAppService {
           null,
           { sort: { _id: -1 } }
         )
-        .limit(limit)
-        .skip((offset - 1) * limit);
+        .limit(parsedLimit)
+        .skip((parsedOffset - 1) * parsedLimit);
     } else {
       messagesFromConvo = await this.messageModel.find(
         {
@@ -244,9 +243,11 @@ export class MessagesAppService {
       messagesFromConvoObjects
     );
 
+    this.logger.log(`queryLength: ${queryLength}`);
+
     return {
       messages: messagesFromConvoObjects,
-      ...(queryLength && { queryLength }),
+      ...(!!queryLength && { queryLength }),
     };
   }
 
