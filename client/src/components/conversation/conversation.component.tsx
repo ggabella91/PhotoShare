@@ -4,6 +4,7 @@ import React, {
   useRef,
   ChangeEvent,
   KeyboardEvent,
+  WheelEvent,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -104,8 +105,11 @@ const Conversation: React.FC<ConversationProps> = ({
   const conversationUsers = useSelector(selectConversationUsers);
   const isLoadingMessages = useSelector(selectIsLoadingMessages);
   const usersInfoList = useUserInfoData(conversationUsers);
-  const { intersectionCounter, observedElementRef } =
-    useLazyLoading(isLoadingMessages);
+  const { intersectionCounter, observedElementRef } = useLazyLoading(
+    isLoadingMessages,
+    true,
+    1000
+  );
 
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
@@ -126,6 +130,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const messageJustSent = useRef(false);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const scrolledToBottomRef = useRef(false);
+  const scrollingInMessagesContainerRef = useRef(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -228,7 +233,9 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   useEffect(() => {
-    messagesRef.current?.scrollIntoView();
+    if (!scrollingInMessagesContainerRef.current) {
+      messagesRef.current?.scrollIntoView();
+    }
   }, [messagesArray]);
 
   const handleMessageChange = (e: ChangeEvent) => {
@@ -276,6 +283,11 @@ const Conversation: React.FC<ConversationProps> = ({
 
       resizeObserver.current.observe(node);
     }
+  };
+
+  const handleMessagesContainerScroll = (e: WheelEvent<HTMLDivElement>) => {
+    scrollingInMessagesContainerRef.current = true;
+    setTimeout(() => (scrollingInMessagesContainerRef.current = false), 500);
   };
 
   const handleChangeConvoName = (e: ChangeEvent) => {
@@ -502,6 +514,7 @@ const Conversation: React.FC<ConversationProps> = ({
               maxHeight: '660px',
               overflowY: 'auto',
             }}
+            onScroll={handleMessagesContainerScroll}
           >
             {messagesArrayReversed?.map((message, idx) => {
               const renderTime =
