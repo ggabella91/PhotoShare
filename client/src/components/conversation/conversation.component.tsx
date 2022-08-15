@@ -131,27 +131,44 @@ const Conversation: React.FC<ConversationProps> = ({
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const scrolledToBottomRef = useRef(false);
   const scrollingInMessagesContainerRef = useRef(false);
+  const pageToFetch = useRef(1);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(clearConversationUsers());
-    dispatch(clearSuggestionPhotoFileArray());
+    // dispatch(clearConversationUsers());
+    // dispatch(clearSuggestionPhotoFileArray());
   }, [dispatch]);
 
+  // TODO Add message redux state map / object prop that tracks
+  // which conversations user data was already fetched for,
+  // to prevent unnecessary re-fetching of that data
+
   useEffect(() => {
-    if (
+    const shouldFetchMoreMessages = () =>
+      messagesArray &&
       totalMessagesForConvo &&
-      intersectionCounter < Math.ceil(totalMessagesForConvo / 10)
-    ) {
+      intersectionCounter !== pageToFetch.current &&
+      messagesArray.length < totalMessagesForConvo &&
+      pageToFetch.current + 1 <= Math.ceil(totalMessagesForConvo / 10);
+
+    if (shouldFetchMoreMessages()) {
       dispatch(
         getConvoMessagesStart({
           conversationId,
           limit: 10,
-          pageToShow: intersectionCounter + 1,
+          pageToShow: pageToFetch.current + 1,
         })
       );
+
+      pageToFetch.current++;
     }
-  }, [dispatch, conversationId, intersectionCounter, totalMessagesForConvo]);
+  }, [
+    dispatch,
+    conversationId,
+    intersectionCounter,
+    messagesArray,
+    totalMessagesForConvo,
+  ]);
 
   useEffect(() => {
     if (conversationHistoricalMessageUsers?.length) {
