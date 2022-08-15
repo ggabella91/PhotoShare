@@ -27,9 +27,9 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   setIsInfoClicked,
 }) => {
   const conversationMessages = useSelector(selectConversationMessages);
-  const lastMessage = conversationMessages
-    .find((convoMessage) => convoMessage.conversationId === conversationId)
-    ?.messages.at(-1);
+  const lastMessage = conversationMessages.find(
+    (convoMessage) => convoMessage.conversationId === conversationId
+  )?.messages[0];
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
