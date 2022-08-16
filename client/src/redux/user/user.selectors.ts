@@ -114,3 +114,8 @@ export const selectConversationUsers = createSelector(
   [selectUser],
   (user: UserState) => user.conversationUsers
 );
+
+export const selectConversationToUserDataMap = createSelector(
+  [selectUser],
+  (user: UserState) => user.conversationToUserDataMap
+);

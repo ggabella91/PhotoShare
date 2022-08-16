@@ -76,7 +76,10 @@ export const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-export const useUserInfoData = (usersList: User[] | null) => {
+export const useUserInfoData = (
+  usersList: User[] | null,
+  shouldFetchData?: boolean
+) => {
   const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
   const [userSuggestionsList, setUserSuggestionsList] = useState<
     List<UserInfoData>
@@ -119,7 +122,7 @@ export const useUserInfoData = (usersList: User[] | null) => {
     } else {
       setUserSuggestionsList(List());
     }
-  }, [usersList]);
+  }, [dispatch, usersList, bucket]);
 
   useEffect(() => {
     if (usersList && userSuggestionProfilePhotoFiles?.length) {
