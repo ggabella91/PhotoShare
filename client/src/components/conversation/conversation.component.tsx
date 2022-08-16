@@ -152,10 +152,6 @@ const Conversation: React.FC<ConversationProps> = ({
     // dispatch(clearSuggestionPhotoFileArray());
   }, [dispatch]);
 
-  // TODO Add message redux state map / object prop that tracks
-  // which conversations user data was already fetched for,
-  // to prevent unnecessary re-fetching of that data
-
   useEffect(() => {
     const shouldFetchMoreMessages = () =>
       messagesArray &&
