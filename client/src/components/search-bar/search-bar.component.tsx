@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -92,11 +92,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     bucket = 'photo-share-app-profile-photos-dev';
   }
 
-  useEffect(() => {
+  useCallback(() => {
     clearUserSuggestions();
     setUserSuggestionsList(List());
     clearSuggestionPhotoFileArray();
-  }, [currentUser]);
+  }, [
+    clearUserSuggestions,
+    setUserSuggestionsList,
+    clearSuggestionPhotoFileArray,
+  ]);
 
   useEffect(() => {
     if (searchString.length >= 3) {

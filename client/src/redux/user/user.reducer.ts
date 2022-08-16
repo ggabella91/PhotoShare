@@ -1,3 +1,4 @@
+import { Map } from 'immutable';
 import { UserActions, UserActionTypes, UserState } from './user.types';
 import { addUserToUsersArray } from './user.utils';
 
@@ -25,6 +26,7 @@ const INITIAL_STATE: UserState = {
   deleteAccountError: null,
   feedPostReactingUsers: null,
   conversationUsers: null,
+  conversationToUserDataMap: Map([]),
 };
 
 const userReducer = (
@@ -90,6 +92,14 @@ const userReducer = (
           action.payload
         ),
         otherUserError: null,
+      };
+    case UserActions.ADD_TO_CONVERSATION_TO_USER_DATA_MAP:
+      return {
+        ...state,
+        conversationToUserDataMap: state.conversationToUserDataMap.set(
+          action.payload.conversationId,
+          action.payload.userData
+        ),
       };
     case UserActions.SIGN_UP_SUCCESS:
       return {

@@ -79,8 +79,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   );
 
   useEffect(() => {
-    dispatch(clearUserSuggestions());
-    dispatch(clearSuggestionPhotoFileArray());
+    // dispatch(clearUserSuggestions());
+    // dispatch(clearSuggestionPhotoFileArray());
   }, []);
 
   useEffect(() => {

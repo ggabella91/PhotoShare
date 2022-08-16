@@ -37,11 +37,13 @@ import { getConvoMessagesStart } from '../../redux/message/message.actions';
 import {
   selectCurrentUser,
   selectConversationUsers,
+  selectConversationToUserDataMap,
 } from '../../redux/user/user.selectors';
 import { OtherUserType } from '../../redux/user/user.types';
 import {
   getOtherUserStart,
   clearConversationUsers,
+  addToConversationToUserDataMap,
 } from '../../redux/user/user.actions';
 
 import {
@@ -64,7 +66,7 @@ interface ConversationProps {
   setIsExistingConvo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type UserInfoMap = Record<string, UserInfoData>;
+export type UserInfoMap = Record<string, UserInfoData>;
 
 export interface OptionsDialogUser {
   userId: string;
@@ -103,8 +105,19 @@ const Conversation: React.FC<ConversationProps> = ({
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
   const conversationUsers = useSelector(selectConversationUsers);
+  const conversationToUserDataMap = useSelector(
+    selectConversationToUserDataMap
+  );
   const isLoadingMessages = useSelector(selectIsLoadingMessages);
-  const usersInfoList = useUserInfoData(conversationUsers);
+
+  // TODO Update second argument passed into this custom hook
+  // when conversationToUserDataMap from user redux state is
+  // updated with user data from a corresponding convo
+
+  const usersInfoList = useUserInfoData(
+    conversationUsers,
+    !conversationToUserDataMap.get(conversationId)
+  );
   const { intersectionCounter, observedElementRef } = useLazyLoading(
     isLoadingMessages,
     true,
@@ -171,7 +184,10 @@ const Conversation: React.FC<ConversationProps> = ({
   ]);
 
   useEffect(() => {
-    if (conversationHistoricalMessageUsers?.length) {
+    if (
+      !conversationToUserDataMap?.has(conversationId) &&
+      conversationHistoricalMessageUsers?.length
+    ) {
       conversationHistoricalMessageUsers.forEach((userId) =>
         dispatch(
           getOtherUserStart({
@@ -181,9 +197,16 @@ const Conversation: React.FC<ConversationProps> = ({
         )
       );
     }
-  }, [dispatch, conversationHistoricalMessageUsers]);
+  }, [
+    dispatch,
+    conversationHistoricalMessageUsers,
+    conversationToUserDataMap,
+    conversationId,
+  ]);
 
   useEffect(() => {
+    const cachedUserData = conversationToUserDataMap.get(conversationId);
+
     if (usersInfoList?.size) {
       const userInfoMap = usersInfoList.reduce<UserInfoMap>((acc, cur) => {
         acc[cur.id!] = cur;
@@ -191,8 +214,31 @@ const Conversation: React.FC<ConversationProps> = ({
       }, {});
 
       setUserInfoMap(userInfoMap);
+    } else if (cachedUserData) {
+      setUserInfoMap(cachedUserData);
     }
-  }, [usersInfoList]);
+  }, [usersInfoList, conversationToUserDataMap, conversationId]);
+
+  useEffect(() => {
+    if (
+      !conversationToUserDataMap.get(conversationId) &&
+      Object.keys(userInfoMap).length ===
+        conversationHistoricalMessageUsers?.length
+    ) {
+      dispatch(
+        addToConversationToUserDataMap({
+          conversationId,
+          userData: userInfoMap,
+        })
+      );
+    }
+  }, [
+    dispatch,
+    conversationId,
+    userInfoMap,
+    conversationHistoricalMessageUsers,
+    conversationToUserDataMap,
+  ]);
 
   useEffect(() => {
     if (currentConversation && currentConversation.name !== 'default') {
