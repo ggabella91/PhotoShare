@@ -1,3 +1,6 @@
+import { Map } from 'immutable';
+import { UserInfoMap } from '../../components/conversation/conversation.component';
+
 export enum MessageActions {
   FIND_OR_CREATE_USER_START = 'FIND_OR_CREATE_USER_START',
   FIND_OR_CREATE_USER_SUCCESS = 'FIND_OR_CREATE_USER_SUCCESS',
@@ -14,6 +17,7 @@ export enum MessageActions {
   REMOVE_USER_FROM_CONVO_USERS_ARRAY = 'REMOVE_USER_FROM_CONVO_USERS_ARRAY',
   RESET_CONVO_USERS_ARRAY = 'RESET_CONVO_USERS_ARRAY',
   CLEAR_JOINED_CONVOS_ARRAY = 'CLEAR_JOINED_CONVOS_ARRAY',
+  ADD_TO_CONVERSATION_TO_USER_DATA_MAP = 'ADD_TO_CONVERSATION_TO_USER_DATA_MAP',
 }
 
 export interface MessageState {
@@ -24,6 +28,7 @@ export interface MessageState {
   removeUserSessionCookieConfirm: string | null;
   removeUserSessionCookieError: MessageError | null;
   usersArrayForNewConvoReq: Partial<MessageUser>[];
+  conversationToUserDataMap: Map<string, UserInfoMap>;
 }
 
 export interface GetConvoMessagesReq {
@@ -159,6 +164,15 @@ export interface ClearJoinedConvosArray {
   type: typeof MessageActions.CLEAR_JOINED_CONVOS_ARRAY;
 }
 
+export interface ConvoIdAndUserData {
+  conversationId: string;
+  userData: UserInfoMap;
+}
+export interface AddToConversationToUserDataMap {
+  type: typeof MessageActions.ADD_TO_CONVERSATION_TO_USER_DATA_MAP;
+  payload: ConvoIdAndUserData;
+}
+
 export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
@@ -174,4 +188,5 @@ export type MessageActionTypes =
   | AddUserToConvoUsersArray
   | RemoveUserFromConvoUsersArray
   | ResetConvoUsersArray
-  | ClearJoinedConvosArray;
+  | ClearJoinedConvosArray
+  | AddToConversationToUserDataMap;

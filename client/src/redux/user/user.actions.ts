@@ -9,7 +9,6 @@ import {
   ChangePassword,
   ResetPassword,
   Error,
-  ConvoIdAndUserData,
 } from './user.types';
 
 export const signUpStart = ({
@@ -250,11 +249,4 @@ export const getConversationUserSuccess = (user: User): UserActionTypes => ({
 
 export const clearConversationUsers = (): UserActionTypes => ({
   type: UserActions.CLEAR_CONVERSATION_USERS,
-});
-
-export const addToConversationToUserDataMap = (
-  convoIdAndUserData: ConvoIdAndUserData
-): UserActionTypes => ({
-  type: UserActions.ADD_TO_CONVERSATION_TO_USER_DATA_MAP,
-  payload: convoIdAndUserData,
 });

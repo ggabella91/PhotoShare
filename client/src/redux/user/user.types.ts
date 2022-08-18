@@ -45,7 +45,6 @@ export enum UserActions {
   GET_FEED_POST_REACTOR_SUCCESS = 'GET_FEED_POST_REACTOR_SUCCESS',
   GET_CONVERSATION_USER_SUCCESS = 'GET_CONVERSATION_USER_SUCCESS',
   CLEAR_CONVERSATION_USERS = 'CLEAR_CONVERSATION_USERS',
-  ADD_TO_CONVERSATION_TO_USER_DATA_MAP = 'ADD_TO_CONVERSATION_TO_USER_DATA_MAP',
 }
 
 export interface UserSignUp {
@@ -144,7 +143,6 @@ export interface UserState {
   deleteAccountError: null | Error;
   feedPostReactingUsers: User[] | null;
   conversationUsers: User[] | null;
-  conversationToUserDataMap: Map<string, UserInfoMap>;
 }
 
 export interface SignUpStart {
@@ -361,16 +359,6 @@ export interface ClearConversationUsers {
   type: typeof UserActions.CLEAR_CONVERSATION_USERS;
 }
 
-export interface ConvoIdAndUserData {
-  conversationId: string;
-  userData: UserInfoMap;
-}
-
-export interface AddToConversationToUserDataMap {
-  type: typeof UserActions.ADD_TO_CONVERSATION_TO_USER_DATA_MAP;
-  payload: ConvoIdAndUserData;
-}
-
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -415,5 +403,4 @@ export type UserActionTypes =
   | SetIsCurrentUserProfilePage
   | GetFeedPostReactorsSuccess
   | GetConversationUserSuccess
-  | ClearConversationUsers
-  | AddToConversationToUserDataMap;
+  | ClearConversationUsers;

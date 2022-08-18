@@ -34,3 +34,8 @@ export const selectIsLoadingMessages = createSelector(
   [selectMessageState],
   (messageState: MessageState) => messageState.isLoadingMessages
 );
+
+export const selectConversationToUserDataMap = createSelector(
+  [selectMessageState],
+  (messageState: MessageState) => messageState.conversationToUserDataMap
+);
