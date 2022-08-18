@@ -76,10 +76,7 @@ export const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-export const useUserInfoData = (
-  usersList: User[] | null,
-  shouldFetchData?: boolean
-) => {
+export const useUserInfoData = (usersList: User[] | null) => {
   const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
   const [userSuggestionsList, setUserSuggestionsList] = useState<
     List<UserInfoData>

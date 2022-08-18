@@ -31,19 +31,21 @@ import {
   selectJoinedConversations,
   selectConversationMessages,
   selectIsLoadingMessages,
+  selectConversationToUserDataMap,
 } from '../../redux/message/message.selectors';
-import { getConvoMessagesStart } from '../../redux/message/message.actions';
+import {
+  getConvoMessagesStart,
+  addToConversationToUserDataMap,
+} from '../../redux/message/message.actions';
 
 import {
   selectCurrentUser,
   selectConversationUsers,
-  selectConversationToUserDataMap,
 } from '../../redux/user/user.selectors';
 import { OtherUserType } from '../../redux/user/user.types';
 import {
   getOtherUserStart,
   clearConversationUsers,
-  addToConversationToUserDataMap,
 } from '../../redux/user/user.actions';
 
 import {
@@ -109,26 +111,19 @@ const Conversation: React.FC<ConversationProps> = ({
     selectConversationToUserDataMap
   );
   const isLoadingMessages = useSelector(selectIsLoadingMessages);
-
-  // TODO Update second argument passed into this custom hook
-  // when conversationToUserDataMap from user redux state is
-  // updated with user data from a corresponding convo
-
-  const usersInfoList = useUserInfoData(
-    conversationUsers,
-    !conversationToUserDataMap.get(conversationId)
+  const currentConversation = joinedConversations?.find(
+    (conversation) => conversation.id === conversationId
   );
+  const conversationHistoricalMessageUsers =
+    currentConversation?.historicalUsers;
+
+  const usersInfoList = useUserInfoData(conversationUsers);
   const { intersectionCounter, observedElementRef } = useLazyLoading(
     isLoadingMessages,
     true,
     1000
   );
 
-  const currentConversation = joinedConversations?.find(
-    (conversation) => conversation.id === conversationId
-  );
-  const conversationHistoricalMessageUsers =
-    currentConversation?.historicalUsers;
   const conversationActiveMessageUsers = currentConversation?.connectedUsers;
   const conversationAdminUsers = currentConversation?.adminUsers;
   const conversationUserNicknames = currentConversation?.userNicknames;
@@ -201,25 +196,29 @@ const Conversation: React.FC<ConversationProps> = ({
   ]);
 
   useEffect(() => {
-    const cachedUserData = conversationToUserDataMap.get(conversationId);
+    const cachedUserData = conversationToUserDataMap?.get(conversationId);
 
-    if (usersInfoList?.size) {
+    if (cachedUserData) {
+      setUserInfoMap(cachedUserData);
+    } else if (usersInfoList?.size) {
       const userInfoMap = usersInfoList.reduce<UserInfoMap>((acc, cur) => {
         acc[cur.id!] = cur;
         return acc;
       }, {});
 
       setUserInfoMap(userInfoMap);
-    } else if (cachedUserData) {
-      setUserInfoMap(cachedUserData);
     }
   }, [usersInfoList, conversationToUserDataMap, conversationId]);
 
   useEffect(() => {
+    const userInfoMapKeys = Object.keys(userInfoMap);
+
     if (
-      !conversationToUserDataMap.get(conversationId) &&
-      Object.keys(userInfoMap).length ===
-        conversationHistoricalMessageUsers?.length
+      !conversationToUserDataMap?.get(conversationId) &&
+      conversationHistoricalMessageUsers &&
+      conversationHistoricalMessageUsers.every((key) =>
+        userInfoMapKeys.includes(key)
+      )
     ) {
       dispatch(
         addToConversationToUserDataMap({

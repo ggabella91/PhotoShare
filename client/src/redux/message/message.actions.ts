@@ -8,6 +8,7 @@ import {
   MessageActions,
   MessageActionTypes,
   MessageUser,
+  ConvoIdAndUserData,
 } from './message.types';
 
 export const findOrCreateUserStart = (
@@ -107,4 +108,11 @@ export const resetConvoUsersArray = (): MessageActionTypes => ({
 
 export const clearJoinedConvosArray = (): MessageActionTypes => ({
   type: MessageActions.CLEAR_JOINED_CONVOS_ARRAY,
+});
+
+export const addToConversationToUserDataMap = (
+  convoIdAndUserData: ConvoIdAndUserData
+): MessageActionTypes => ({
+  type: MessageActions.ADD_TO_CONVERSATION_TO_USER_DATA_MAP,
+  payload: convoIdAndUserData,
 });

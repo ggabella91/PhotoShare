@@ -1,3 +1,5 @@
+import { Map } from 'immutable';
+import { UserInfoMap } from '../../components/conversation/conversation.component';
 import {
   MessageState,
   MessageActions,
@@ -19,6 +21,7 @@ const INITIAL_STATE: MessageState = {
   removeUserSessionCookieConfirm: null,
   removeUserSessionCookieError: null,
   usersArrayForNewConvoReq: [],
+  conversationToUserDataMap: Map<string, UserInfoMap>(),
 };
 
 const messageReducer = (
@@ -81,6 +84,14 @@ const messageReducer = (
         usersArrayForNewConvoReq: removeUserFromArray(
           state.usersArrayForNewConvoReq,
           action.payload
+        ),
+      };
+    case MessageActions.ADD_TO_CONVERSATION_TO_USER_DATA_MAP:
+      return {
+        ...state,
+        conversationToUserDataMap: state.conversationToUserDataMap.set(
+          action.payload.conversationId,
+          action.payload.userData
         ),
       };
     case MessageActions.RESET_CONVO_USERS_ARRAY:
