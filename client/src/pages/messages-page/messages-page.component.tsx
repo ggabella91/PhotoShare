@@ -129,9 +129,9 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
     socket.on('chatToClient', (message) => {
       dispatch(addMessageToConversation(message));
 
-      socket.emit('joinAllExistingConversations', {
-        userId: currentUser?.id,
-      });
+      // socket.emit('joinAllExistingConversations', {
+      //   userId: currentUser?.id,
+      // });
     });
 
     socket.on('conversationUpdated', () => {
@@ -140,7 +140,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         userId: currentUser?.id,
       });
     });
-  }, [socket]);
+  }, [dispatch, socket]);
 
   useEffect(() => {
     if (joinedConversations?.length) {
@@ -154,7 +154,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         )
       );
     }
-  }, [joinedConversations]);
+  }, [dispatch, joinedConversations]);
 
   useEffect(() => {
     if (!currentUser && messageUser && isSocketConnectionActive) {
@@ -162,7 +162,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
       dispatch(removeUserSessionCookieStart(userId));
     }
-  }, [currentUser, messageUser, isSocketConnectionActive]);
+  }, [dispatch, currentUser, messageUser, isSocketConnectionActive]);
 
   useEffect(() => {
     if (

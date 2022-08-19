@@ -5,6 +5,11 @@ import {
   MessageUser,
 } from './message.types';
 
+interface UpdatedConvo {
+  conversationId: string;
+  messageCreatedTime: string;
+}
+
 export const updateJoinedConversationsArray = (
   currentConvosArray: Conversation[],
   conversationsToAdd: Conversation | Conversation[]
@@ -18,6 +23,23 @@ export const updateJoinedConversationsArray = (
       return currentConvosArray;
     }
   }
+};
+
+export const updateAndSortJoinedConversationsArray = (
+  currentConvosArray: Conversation[],
+  updatedConvo: UpdatedConvo
+) => {
+  const convoToUpdateIdx = currentConvosArray.findIndex(
+    (convo) => convo.id === updatedConvo.conversationId
+  );
+  const currentConvosArrayCopy = [...currentConvosArray];
+  currentConvosArrayCopy[convoToUpdateIdx].lastMessageTime = Date.parse(
+    updatedConvo.messageCreatedTime
+  );
+
+  return currentConvosArrayCopy.sort(
+    (a, b) => b.lastMessageTime - a.lastMessageTime
+  );
 };
 
 export const addConvoMessages = (

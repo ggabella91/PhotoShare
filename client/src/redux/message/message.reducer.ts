@@ -11,6 +11,7 @@ import {
   addConvoMessages,
   addMessage,
   removeUserFromArray,
+  updateAndSortJoinedConversationsArray,
 } from './message.utils';
 
 const INITIAL_STATE: MessageState = {
@@ -69,6 +70,18 @@ const messageReducer = (
       return {
         ...state,
         messages: addMessage(state.messages, action.payload),
+        user: state.user
+          ? {
+              ...state.user,
+              joinedConversations: updateAndSortJoinedConversationsArray(
+                state.user?.joinedConversations,
+                {
+                  conversationId: action.payload.conversationId,
+                  messageCreatedTime: action.payload.created,
+                }
+              ),
+            }
+          : null,
       };
     case MessageActions.ADD_USER_TO_CONVO_USERS_ARRAY:
       return {
