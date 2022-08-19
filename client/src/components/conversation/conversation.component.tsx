@@ -143,11 +143,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(clearConversationUsers());
-    // dispatch(clearSuggestionPhotoFileArray());
-  }, [dispatch]);
-
-  useEffect(() => {
     const shouldFetchMoreMessages = () =>
       messagesArray &&
       totalMessagesForConvo &&
@@ -295,6 +290,12 @@ const Conversation: React.FC<ConversationProps> = ({
       messagesRef.current?.scrollIntoView();
     }
   }, [messagesArray]);
+
+  useEffect(() => {
+    if (!isInfoClicked) {
+      messagesRef.current?.scrollIntoView();
+    }
+  }, [isInfoClicked]);
 
   const handleMessageChange = (e: ChangeEvent) => {
     if (messageJustSent.current === true) {
@@ -446,7 +447,9 @@ const Conversation: React.FC<ConversationProps> = ({
     }
   };
 
-  const handleClickInfoIcon = () => setIsInfoClicked(!isInfoClicked);
+  const handleClickInfoIcon = () => {
+    setIsInfoClicked(!isInfoClicked);
+  };
 
   const handleShowAddPeopleModal = () => {
     setShowConvoDialog(true);
