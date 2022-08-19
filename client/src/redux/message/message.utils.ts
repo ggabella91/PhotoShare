@@ -80,6 +80,9 @@ export const addMessage = (
       return {
         conversationId: convoMessages.conversationId,
         messages: [message, ...convoMessages.messages],
+        ...(convoMessages.queryLength && {
+          queryLength: convoMessages.queryLength,
+        }),
       };
     } else {
       return convoMessages;

@@ -65,7 +65,9 @@ export const renderTimeStamp = (dateString: string) => {
 
     return `${date.getDate()}/${date.getMonth()}/${displayYear}, ${formattedTime}`;
   } else if (elapsedTimeDays > 6) {
-    return `${month} ${monthDay}, ${year}, ${formattedTime}`;
+    return `${month} ${
+      monthDay.startsWith('0') ? monthDay.slice(1) : monthDay
+    }, ${year}, ${formattedTime}`;
   } else if (elapsedTimeDays > 1) {
     return `${weekDay} ${formattedTime}`;
   } else {
@@ -79,6 +81,6 @@ const getTimeAMOrPM = (dateHours: number, dateMinutes: number) => {
   if (dateHours > 12) {
     return `${dateHours % 12}:${paddedMinutes} PM`;
   } else {
-    return `${dateHours}:${paddedMinutes} AM`;
+    return `${dateHours === 0 ? 12 : dateHours}:${paddedMinutes} AM`;
   }
 };
