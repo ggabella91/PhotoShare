@@ -139,27 +139,30 @@ const Conversation: React.FC<ConversationProps> = ({
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const scrolledToBottomRef = useRef(false);
   const scrollingInMessagesContainerRef = useRef(false);
-  const pageToFetch = useRef(1);
+  const pageToFetch = useRef<Record<string, number>>({});
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!(conversationId in pageToFetch.current)) {
+      pageToFetch.current[conversationId] = 1;
+    }
+
     const shouldFetchMoreMessages = () =>
       messagesArray &&
       totalMessagesForConvo &&
-      intersectionCounter !== pageToFetch.current &&
+      intersectionCounter !== pageToFetch.current[conversationId] &&
       messagesArray.length < totalMessagesForConvo &&
-      pageToFetch.current + 1 <= Math.ceil(totalMessagesForConvo / 10);
+      pageToFetch.current[conversationId] + 1 <=
+        Math.ceil(totalMessagesForConvo / 10);
 
     if (shouldFetchMoreMessages()) {
       dispatch(
         getConvoMessagesStart({
           conversationId,
           limit: 10,
-          pageToShow: pageToFetch.current + 1,
+          pageToShow: ++pageToFetch.current[conversationId],
         })
       );
-
-      pageToFetch.current++;
     }
   }, [
     dispatch,

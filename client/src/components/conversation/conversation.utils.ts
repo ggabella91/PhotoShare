@@ -73,6 +73,8 @@ export const renderTimeStamp = (dateString: string) => {
   }
 };
 
+// TODO Fix formatting for 00:XX hour (12:XX AM)
+
 const getTimeAMOrPM = (dateHours: number, dateMinutes: number) => {
   const paddedMinutes = dateMinutes < 10 ? `0${dateMinutes}` : `${dateMinutes}`;
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
@@ -36,7 +36,7 @@ import {
   generateFinalConvoUsersAndS3KeysArrays,
   getConvoName,
 } from './messages-page.utils';
-import { MessageUser } from '../../redux/message/message.types';
+import { Conversation, MessageUser } from '../../redux/message/message.types';
 
 interface MessagesPageProps {
   openNewConvoModal?: boolean;
@@ -65,6 +65,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const avatarS3Keys = joinedConversations?.find(
     (convo) => convo.id === conversationId
   )?.avatarS3Keys || [''];
+  const previouslyJoinedConversations = useRef<Conversation[]>([]);
 
   const dispatch = useDispatch();
 
@@ -128,10 +129,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
     socket.on('chatToClient', (message) => {
       dispatch(addMessageToConversation(message));
-
-      // socket.emit('joinAllExistingConversations', {
-      //   userId: currentUser?.id,
-      // });
     });
 
     socket.on('conversationUpdated', () => {
@@ -143,8 +140,19 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   }, [dispatch, socket]);
 
   useEffect(() => {
-    if (joinedConversations?.length) {
-      joinedConversations.forEach((convo) =>
+    if (
+      joinedConversations &&
+      joinedConversations.length !==
+        previouslyJoinedConversations.current.length
+    ) {
+      const newConvos = joinedConversations.filter(
+        (convo) =>
+          !previouslyJoinedConversations.current.some(
+            (prevConvo) => prevConvo.id === convo.id
+          )
+      );
+
+      newConvos.forEach((convo) =>
         dispatch(
           getConvoMessagesStart({
             conversationId: convo.id,
@@ -153,6 +161,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
           })
         )
       );
+
+      previouslyJoinedConversations.current = [...joinedConversations];
     }
   }, [dispatch, joinedConversations]);
 
