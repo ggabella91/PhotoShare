@@ -6,6 +6,7 @@ interface ConversationUserOptionsDialogProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onBlur: () => void;
   userId: string;
+  isNotCurrentUser: boolean;
   isAdmin: boolean;
   handleRemoveFromGroup: () => void;
   handleAddOrRemoveAsAdmin: () => void;
@@ -19,6 +20,7 @@ const ConversationUserOptionsDialog: React.FC<
   setOpen,
   onBlur,
   userId,
+  isNotCurrentUser,
   isAdmin,
   handleRemoveFromGroup,
   handleAddOrRemoveAsAdmin,
@@ -37,46 +39,50 @@ const ConversationUserOptionsDialog: React.FC<
       }}
       onClose={onBlur}
     >
-      <Grid>
-        <Button
-          sx={{
-            width: '100%',
-            height: '48px',
-            borderBottom: '1px solid #DBDBDB',
-            '&:hover': {
-              backgroundColor: 'unset',
-            },
-          }}
-          onClick={handleRemoveFromGroup}
-        >
-          <Typography
+      {isNotCurrentUser && (
+        <Grid>
+          <Button
             sx={{
-              color: '#ED4956',
-              textTransform: 'none',
-              fontWeight: 600,
+              width: '100%',
+              height: '48px',
+              borderBottom: '1px solid #DBDBDB',
+              '&:hover': {
+                backgroundColor: 'unset',
+              },
             }}
+            onClick={handleRemoveFromGroup}
           >
-            Remove From Group
-          </Typography>
-        </Button>
-      </Grid>
-      <Grid>
-        <Button
-          sx={{
-            width: '100%',
-            height: '48px',
-            borderBottom: '1px solid #DBDBDB',
-            '&:hover': {
-              backgroundColor: 'unset',
-            },
-          }}
-          onClick={handleAddOrRemoveAsAdmin}
-        >
-          <Typography sx={{ color: 'black', textTransform: 'none' }}>
-            {isAdmin ? 'Remove as admin' : 'Make Admin'}
-          </Typography>
-        </Button>
-      </Grid>
+            <Typography
+              sx={{
+                color: '#ED4956',
+                textTransform: 'none',
+                fontWeight: 600,
+              }}
+            >
+              Remove From Group
+            </Typography>
+          </Button>
+        </Grid>
+      )}
+      {isNotCurrentUser && (
+        <Grid>
+          <Button
+            sx={{
+              width: '100%',
+              height: '48px',
+              borderBottom: '1px solid #DBDBDB',
+              '&:hover': {
+                backgroundColor: 'unset',
+              },
+            }}
+            onClick={handleAddOrRemoveAsAdmin}
+          >
+            <Typography sx={{ color: 'black', textTransform: 'none' }}>
+              {isAdmin ? 'Remove as admin' : 'Make Admin'}
+            </Typography>
+          </Button>
+        </Grid>
+      )}
       <Grid>
         <Button
           sx={{
