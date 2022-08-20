@@ -139,7 +139,11 @@ export class MessagesAppService {
     const nicknameIdx = userNicknames.findIndex(
       (nickname) => nickname.userId === userId
     );
-    userNicknames.splice(nicknameIdx, 1, { userId, nickname });
+    if (nicknameIdx >= 0) {
+      userNicknames.splice(nicknameIdx, 1, { userId, nickname });
+    } else {
+      userNicknames.push({ userId, nickname });
+    }
 
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
       conversationId,
