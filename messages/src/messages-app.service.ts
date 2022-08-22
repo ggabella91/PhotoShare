@@ -189,6 +189,12 @@ export class MessagesAppService {
     return savedMessage;
   }
 
+  async deleteMessage(messageId: string) {
+    const deletedMessage = await this.messageModel.findByIdAndDelete(messageId);
+
+    this.logger.log(`Deleted message with id ${messageId}: ${deletedMessage}`);
+  }
+
   async updateLastMessageTimeForConvo(conversationId: string) {
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
       conversationId,
