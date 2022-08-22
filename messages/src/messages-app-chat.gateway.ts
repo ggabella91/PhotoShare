@@ -18,6 +18,7 @@ import { CreateMessageDto } from './database/dto/create-message.dto';
 import { UpdateConvoPreDto } from './database/dto/update-convo-dto';
 import { UpdateUserNicknameForConvoDto } from './database/dto/update-user-nickname-for-convo-dto';
 import { ConversationDocument } from './database/schemas/conversation.schema';
+import { DeleteMessageDto } from './database/dto/delete-message.dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -65,6 +66,19 @@ export class MessagesAppChatGateway
     await this.appService.updateLastMessageTimeForConvo(conversationId);
 
     this.wss.to(conversationId).emit('chatToClient', createdMessage);
+  }
+
+  @SubscribeMessage('deleteMessage')
+  async handleDeleteMessage(@MessageBody() message: DeleteMessageDto) {
+    const { conversationId, messageId } = message;
+
+    await this.appService.deleteMessage(messageId);
+
+    this.wss
+      .to(conversationId)
+      .emit('messageDeleted', {
+        message: `Deleted message with id ${messageId}`,
+      });
   }
 
   @SubscribeMessage('createConversation')
