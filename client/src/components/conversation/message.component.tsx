@@ -1,7 +1,8 @@
-import React from 'react';
-import { Grid, Avatar, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Grid, Avatar, Typography, Button } from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 type CustomRef = (node: HTMLDivElement | null) => void;
 
@@ -28,9 +29,23 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   renderedWithTimeStamp,
   custRef,
 }) => {
+  const [showMoreButton, setShowMoreButton] = useState(false);
   const addMarginTop = isCurrentUser && renderedWithTimeStamp;
   const renderWithNameOrNickname =
     isGroupConversation && !isCurrentUser && islastMessageFromDiffUser;
+
+  const handleClickMore = () => {
+    // TODO Render small modal positioned near 'More' icon button
+    // that gives user options to remove or forward message
+  };
+
+  const handleMouseEnter = () => setShowMoreButton(true);
+
+  const handleMouseLeave = () => setShowMoreButton(false);
+
+  // TODO Add button with functionality for replying to a message.
+  // Should render message being replied to, overlayed by message
+  // being sent as the reply
 
   return (
     <Grid
@@ -42,6 +57,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
       }}
       id={id}
       ref={custRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {renderWithNameOrNickname && (
         <Grid
@@ -90,15 +107,41 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         <Grid
           sx={{
             display: 'flex',
-            borderRadius: '20px',
-            padding: '10px',
-            alignItems: 'center',
-            backgroundColor: 'rgb(239, 239, 239)',
-            marginBottom: '8px',
-            marginTop: addMarginTop ? '15px' : '0px',
+            flexDirection: isCurrentUser ? 'row' : 'row-reverse',
           }}
         >
-          <Typography sx={{ fontSize: 14 }}>{message.text}</Typography>
+          {showMoreButton && (
+            <Button
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                paddingBottom: 0,
+                '&:hover': {
+                  backgroundColor: 'unset',
+                },
+              }}
+              onClick={handleClickMore}
+            >
+              <MoreVertIcon
+                fontSize='small'
+                sx={{ color: 'black', transform: 'translateY(-18px)' }}
+              />
+            </Button>
+          )}
+          <Grid
+            sx={{
+              display: 'flex',
+              borderRadius: '20px',
+              padding: '10px',
+              alignItems: 'center',
+              backgroundColor: 'rgb(239, 239, 239)',
+              marginBottom: '8px',
+              marginTop: addMarginTop ? '15px' : '0px',
+            }}
+          >
+            <Typography sx={{ fontSize: 14 }}>{message.text}</Typography>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>
