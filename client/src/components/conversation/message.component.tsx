@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Grid, Avatar, Typography, Button } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Grid, Avatar, Typography, Button, Popover } from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -30,18 +30,26 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   custRef,
 }) => {
   const [showMoreButton, setShowMoreButton] = useState(false);
+  const [openPopover, setOpenPopover] = useState(false);
   const addMarginTop = isCurrentUser && renderedWithTimeStamp;
   const renderWithNameOrNickname =
     isGroupConversation && !isCurrentUser && islastMessageFromDiffUser;
+  const moreIconButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClickMore = () => {
     // TODO Render small modal positioned near 'More' icon button
     // that gives user options to remove or forward message
+    setOpenPopover(true);
   };
 
   const handleMouseEnter = () => setShowMoreButton(true);
 
   const handleMouseLeave = () => setShowMoreButton(false);
+
+  const handleClosePopover = () => {
+    setOpenPopover(false);
+    setShowMoreButton(false);
+  };
 
   // TODO Add button with functionality for replying to a message.
   // Should render message being replied to, overlayed by message
@@ -111,23 +119,94 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
           }}
         >
           {showMoreButton && (
-            <Button
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-                paddingBottom: 0,
-                '&:hover': {
-                  backgroundColor: 'unset',
-                },
-              }}
-              onClick={handleClickMore}
-            >
-              <MoreVertIcon
-                fontSize='small'
-                sx={{ color: 'black', transform: 'translateY(-18px)' }}
-              />
-            </Button>
+            <Grid sx={{ display: 'flex' }}>
+              <Button
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  paddingBottom: 0,
+                  '&:hover': {
+                    backgroundColor: 'unset',
+                  },
+                }}
+                onClick={handleClickMore}
+                ref={moreIconButtonRef}
+              >
+                <MoreVertIcon
+                  fontSize='small'
+                  sx={{ color: 'black', transform: 'translateY(-18px)' }}
+                />
+              </Button>
+              {moreIconButtonRef.current && (
+                <Popover
+                  id={id}
+                  open={openPopover}
+                  anchorEl={moreIconButtonRef.current}
+                  onClose={handleClosePopover}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                  transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }}
+                >
+                  <Grid
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '136px',
+                      height: '86px',
+                    }}
+                  >
+                    <Grid sx={{ display: 'flex' }}>
+                      <Button
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'flex-start',
+                          width: '100%',
+                          height: '43px',
+                          paddingLeft: '15px',
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            color: 'black',
+                            textTransform: 'capitalize',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Remove
+                        </Typography>
+                      </Button>
+                    </Grid>
+                    <Grid sx={{ display: 'flex' }}>
+                      <Button
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'flex-start',
+                          width: '100%',
+                          height: '43px',
+                          paddingLeft: '15px',
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            color: 'black',
+                            textTransform: 'capitalize',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Forward
+                        </Typography>
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Popover>
+              )}
+            </Grid>
           )}
           <Grid
             sx={{
