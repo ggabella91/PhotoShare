@@ -47,6 +47,7 @@ import { Socket } from 'socket.io-client';
 import { getConvoName } from '../../pages/messages-page/messages-page.utils';
 import { shouldRenderTimeStamp, renderTimeStamp } from './conversation.utils';
 import { useLazyLoading } from '../../pages/hooks';
+import { Message } from '../../redux/message/message.types';
 
 interface ConversationProps {
   conversationId: string;
@@ -283,6 +284,14 @@ const Conversation: React.FC<ConversationProps> = ({
     setMessage('');
   };
 
+  const handleRemoveMessage = (messageId: string) => {
+    // TODO Make websocket call to delete message by given id
+  };
+
+  const handleForwardMessage = (message: Message) => {
+    // TODO Implement forwarding of message to another conversation
+  };
+
   const textAreaRef = (node: HTMLElement | null) => {
     if (node) {
       resizeObserver.current = new ResizeObserver((entries) => {
@@ -434,6 +443,8 @@ const Conversation: React.FC<ConversationProps> = ({
                     userNickname={convoUserNicknameMap[message.ownerId] || ''}
                     renderedWithTimeStamp={renderTime}
                     custRef={idx === 0 ? observedElementRef : null}
+                    handleRemoveMessage={() => handleRemoveMessage(message.id)}
+                    handleForwardMessage={() => handleForwardMessage(message)}
                   />
                 </Grid>
               );

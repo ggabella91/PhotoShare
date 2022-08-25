@@ -16,6 +16,8 @@ interface MessageComponentProps {
   userNickname?: string;
   renderedWithTimeStamp: boolean;
   custRef: CustomRef | null;
+  handleRemoveMessage: () => void;
+  handleForwardMessage: () => void;
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
@@ -28,6 +30,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   userNickname,
   renderedWithTimeStamp,
   custRef,
+  handleRemoveMessage,
+  handleForwardMessage,
 }) => {
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
@@ -37,8 +41,6 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   const moreIconButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClickMore = () => {
-    // TODO Render small modal positioned near 'More' icon button
-    // that gives user options to remove or forward message
     setOpenPopover(true);
   };
 
@@ -170,6 +172,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                           height: '43px',
                           paddingLeft: '15px',
                         }}
+                        onClick={handleRemoveMessage}
                       >
                         <Typography
                           sx={{
@@ -191,6 +194,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                           height: '43px',
                           paddingLeft: '15px',
                         }}
+                        onClick={handleForwardMessage}
                       >
                         <Typography
                           sx={{
