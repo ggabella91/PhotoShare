@@ -17,6 +17,7 @@ import {
   UpdateConvoDto,
 } from './database/dto/update-convo-dto';
 import { WsException } from '@nestjs/websockets';
+import { RemoveMessageDto } from './database/dto/remove-message.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -189,10 +190,15 @@ export class MessagesAppService {
     return savedMessage;
   }
 
-  async deleteMessage(messageId: string) {
-    const deletedMessage = await this.messageModel.findByIdAndDelete(messageId);
+  async removeMessage(removeMessageDto: RemoveMessageDto) {
+    const removedMessage = await this.messageModel.findByIdAndUpdate(
+      removeMessageDto.messageId,
+      { hidden: true }
+    );
 
-    this.logger.log(`Deleted message with id ${messageId}: ${deletedMessage}`);
+    this.logger.log(
+      `Removed message with id ${removeMessageDto.messageId} ${removedMessage} for conversation with id ${removeMessageDto.conversationId}`
+    );
   }
 
   async updateLastMessageTimeForConvo(conversationId: string) {
