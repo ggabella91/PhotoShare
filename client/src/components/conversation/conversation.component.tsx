@@ -108,6 +108,7 @@ const Conversation: React.FC<ConversationProps> = ({
     (convoMessage) => convoMessage.conversationId === conversationId
   );
   const messagesArray = currentConversationMessages?.messages;
+  const messagesArrayLength = messagesArray?.length;
   const totalMessagesForConvo = currentConversationMessages?.queryLength;
   const messagesArrayReversed = messagesArray && [...messagesArray].reverse();
   const resizeObserver = useRef<ResizeObserver | null>(null);
@@ -124,10 +125,10 @@ const Conversation: React.FC<ConversationProps> = ({
     }
 
     const shouldFetchMoreMessages = () =>
-      messagesArray &&
+      messagesArrayLength &&
       totalMessagesForConvo &&
       intersectionCounter !== pageToFetch.current[conversationId] &&
-      messagesArray.length < totalMessagesForConvo &&
+      messagesArrayLength < totalMessagesForConvo &&
       pageToFetch.current[conversationId] + 1 <=
         Math.ceil(totalMessagesForConvo / 10);
 
@@ -144,7 +145,7 @@ const Conversation: React.FC<ConversationProps> = ({
     dispatch,
     conversationId,
     intersectionCounter,
-    messagesArray,
+    messagesArrayLength,
     totalMessagesForConvo,
   ]);
 
@@ -285,7 +286,10 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleRemoveMessage = (messageId: string) => {
-    // TODO Make websocket call to delete message by given id
+    socket.emit('removeMessage', {
+      conversationId,
+      messageId,
+    });
   };
 
   const handleForwardMessage = (message: Message) => {
@@ -443,8 +447,8 @@ const Conversation: React.FC<ConversationProps> = ({
                     userNickname={convoUserNicknameMap[message.ownerId] || ''}
                     renderedWithTimeStamp={renderTime}
                     custRef={idx === 0 ? observedElementRef : null}
-                    handleRemoveMessage={() => handleRemoveMessage(message.id)}
-                    handleForwardMessage={() => handleForwardMessage(message)}
+                    onRemoveMessage={() => handleRemoveMessage(message.id)}
+                    onForwardMessage={() => handleForwardMessage(message)}
                   />
                 </Grid>
               );

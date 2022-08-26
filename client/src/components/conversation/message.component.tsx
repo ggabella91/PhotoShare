@@ -16,8 +16,8 @@ interface MessageComponentProps {
   userNickname?: string;
   renderedWithTimeStamp: boolean;
   custRef: CustomRef | null;
-  handleRemoveMessage: () => void;
-  handleForwardMessage: () => void;
+  onRemoveMessage: () => void;
+  onForwardMessage: () => void;
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
@@ -30,8 +30,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   userNickname,
   renderedWithTimeStamp,
   custRef,
-  handleRemoveMessage,
-  handleForwardMessage,
+  onRemoveMessage,
+  onForwardMessage,
 }) => {
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
@@ -49,6 +49,18 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   const handleMouseLeave = () => setShowMoreButton(false);
 
   const handleClosePopover = () => {
+    setOpenPopover(false);
+    setShowMoreButton(false);
+  };
+
+  const handleRemoveMessage = () => {
+    onRemoveMessage();
+    setOpenPopover(false);
+    setShowMoreButton(false);
+  };
+
+  const handleForwardMessage = () => {
+    onForwardMessage();
     setOpenPopover(false);
     setShowMoreButton(false);
   };
@@ -218,12 +230,26 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               borderRadius: '20px',
               padding: '10px',
               alignItems: 'center',
-              backgroundColor: 'rgb(239, 239, 239)',
+              backgroundColor: message.hidden ? 'none' : 'rgb(239, 239, 239)',
+              border: message.hidden ? '1px solid rgb(219,219,219)' : 'unset',
               marginBottom: '8px',
               marginTop: addMarginTop ? '15px' : '0px',
             }}
           >
-            <Typography sx={{ fontSize: 14 }}>{message.text}</Typography>
+            <Typography
+              sx={{
+                fontSize: 14,
+                fontStyle: message.hidden ? 'italic' : 'unset',
+              }}
+            >
+              {message.hidden
+                ? `${
+                    isCurrentUser
+                      ? 'You unsent a message'
+                      : 'Message unsent by user'
+                  }`
+                : message.text}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

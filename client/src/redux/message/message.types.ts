@@ -14,6 +14,7 @@ export enum MessageActions {
   GET_CONVO_MESSAGES_FAILURE = 'GET_CONVO_MESSAGES_FAILURE',
   ADD_MESSAGE_TO_CONVERSATION = 'ADD_MESSAGE_TO_CONVERSATION',
   ADD_USER_TO_CONVO_USERS_ARRAY = 'ADD_USER_TO_CONVO_USERS_ARRAY',
+  REMOVE_MESSAGE_FROM_CONVERSATION = 'REMOVE_MESSAGE_FROM_CONVERSATION',
   REMOVE_USER_FROM_CONVO_USERS_ARRAY = 'REMOVE_USER_FROM_CONVO_USERS_ARRAY',
   RESET_CONVO_USERS_ARRAY = 'RESET_CONVO_USERS_ARRAY',
   CLEAR_JOINED_CONVOS_ARRAY = 'CLEAR_JOINED_CONVOS_ARRAY',
@@ -49,6 +50,7 @@ export interface Message {
   text: string;
   conversationId: string;
   created: string;
+  hidden?: boolean;
 }
 
 export interface MessageError {
@@ -89,6 +91,11 @@ export interface FindOrCreateUserReq {
   name: string;
   username: string;
   photoS3Key?: string;
+}
+
+export interface MessageToRemove {
+  conversationId: string;
+  messageId: string;
 }
 
 export interface FindOrCreateUserStart {
@@ -151,6 +158,11 @@ export interface AddUserToConvoUsersArray {
   payload: Partial<MessageUser>;
 }
 
+export interface RemoveMessageFromConversation {
+  type: typeof MessageActions.REMOVE_MESSAGE_FROM_CONVERSATION;
+  payload: MessageToRemove;
+}
+
 export interface RemoveUserFromConvoUsersArray {
   type: typeof MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY;
   payload: string;
@@ -186,6 +198,7 @@ export type MessageActionTypes =
   | GetConvoMessagesFailure
   | AddMessageToConversation
   | AddUserToConvoUsersArray
+  | RemoveMessageFromConversation
   | RemoveUserFromConvoUsersArray
   | ResetConvoUsersArray
   | ClearJoinedConvosArray

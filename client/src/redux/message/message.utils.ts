@@ -3,6 +3,7 @@ import {
   Message,
   Conversation,
   MessageUser,
+  MessageToRemove,
 } from './message.types';
 
 interface UpdatedConvo {
@@ -80,6 +81,30 @@ export const addMessage = (
       return {
         conversationId: convoMessages.conversationId,
         messages: [message, ...convoMessages.messages],
+        ...(convoMessages.queryLength && {
+          queryLength: convoMessages.queryLength,
+        }),
+      };
+    } else {
+      return convoMessages;
+    }
+  });
+};
+
+export const markMessageRemoved = (
+  convoMessagesArray: ConvoMessages[],
+  messageToRemove: MessageToRemove
+) => {
+  return convoMessagesArray.map((convoMessages) => {
+    if (convoMessages.conversationId === messageToRemove.conversationId) {
+      return {
+        conversationId: convoMessages.conversationId,
+        messages: convoMessages.messages.map((message) => {
+          if (message.id === messageToRemove.messageId) {
+            return { ...message, hidden: true };
+          }
+          return message;
+        }),
         ...(convoMessages.queryLength && {
           queryLength: convoMessages.queryLength,
         }),
