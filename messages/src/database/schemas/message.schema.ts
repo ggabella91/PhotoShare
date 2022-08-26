@@ -35,6 +35,9 @@ export class Message {
     ref: 'Conversation',
   })
   conversationId: Conversation;
+
+  @Prop()
+  hidden: boolean;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

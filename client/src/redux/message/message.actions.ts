@@ -9,6 +9,7 @@ import {
   MessageActionTypes,
   MessageUser,
   ConvoIdAndUserData,
+  MessageToRemove,
 } from './message.types';
 
 export const findOrCreateUserStart = (
@@ -93,6 +94,13 @@ export const addUserToConvoUsersArray = (
 ): MessageActionTypes => ({
   type: MessageActions.ADD_USER_TO_CONVO_USERS_ARRAY,
   payload: user,
+});
+
+export const removeMessageFromConversation = (
+  messageToRemove: MessageToRemove
+): MessageActionTypes => ({
+  type: MessageActions.REMOVE_MESSAGE_FROM_CONVERSATION,
+  payload: messageToRemove,
 });
 
 export const removeUserFromConvoUsersArray = (

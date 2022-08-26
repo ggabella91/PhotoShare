@@ -30,6 +30,7 @@ import {
   addMessageToConversation,
   getConvoMessagesStart,
   resetConvoUsersArray,
+  removeMessageFromConversation,
 } from '../../redux/message/message.actions';
 
 import {
@@ -129,6 +130,10 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
     socket.on('chatToClient', (message) => {
       dispatch(addMessageToConversation(message));
+    });
+
+    socket.on('messageRemoved', (message) => {
+      dispatch(removeMessageFromConversation(message));
     });
 
     socket.on('conversationUpdated', () => {
