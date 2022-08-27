@@ -15,10 +15,7 @@ import { useDebounce, useUserInfoData } from '../hooks';
 import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
 
 import { User } from '../../redux/user/user.types';
-import {
-  selectConversationUsers,
-  selectUserSuggestions,
-} from '../../redux/user/user.selectors';
+import { selectUserSuggestions } from '../../redux/user/user.selectors';
 import {
   getUserSuggestionsStart,
   clearUserSuggestions,
@@ -69,7 +66,7 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
     if (debouncedUserSearchString.length >= 3) {
       dispatch(getUserSuggestionsStart(debouncedUserSearchString));
     }
-  }, [debouncedUserSearchString]);
+  }, [dispatch, debouncedUserSearchString]);
 
   useEffect(() => {
     let filteredSuggestions: User[];

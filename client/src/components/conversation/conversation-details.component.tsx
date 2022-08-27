@@ -448,7 +448,6 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
       <ConversationUserOptionsDialog
         open={openOptionsDialog}
         setOpen={setOpenOptionsDialog}
-        userId={optionsDialogUser.userId}
         isNotCurrentUser={optionsDialogUser.userId !== currentUser?.id}
         isAdmin={optionsDialogUser.isAdmin}
         handleRemoveFromGroup={handleRemoveFromGroup}
