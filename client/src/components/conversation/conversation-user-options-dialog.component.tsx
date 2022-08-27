@@ -5,7 +5,6 @@ interface ConversationUserOptionsDialogProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onBlur: () => void;
-  userId: string;
   isNotCurrentUser: boolean;
   isAdmin: boolean;
   handleRemoveFromGroup: () => void;
@@ -19,7 +18,6 @@ const ConversationUserOptionsDialog: React.FC<
   open,
   setOpen,
   onBlur,
-  userId,
   isNotCurrentUser,
   isAdmin,
   handleRemoveFromGroup,

@@ -10,6 +10,7 @@ import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
 export enum StyleVariation {
   preview = 'preview',
   conversationHeader = 'conversationHeader',
+  forwardMessage = 'forwardMessage',
 }
 
 interface CustomAvatarGroupProps {
@@ -19,6 +20,7 @@ interface CustomAvatarGroupProps {
 }
 
 const previewStyleObj = { height: '56px', width: '56px' };
+const forwardStyleObj = { height: '44px', width: '44px' };
 const headerStyleObj = {
   marginLeft: '15px',
   marginRight: '15px',
@@ -39,6 +41,16 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
       )
     : [''];
 
+  const getStyle = () => {
+    if (styleVariation === StyleVariation.preview) {
+      return previewStyleObj;
+    } else if (styleVariation === StyleVariation.conversationHeader) {
+      return headerStyleObj;
+    } else {
+      return forwardStyleObj;
+    }
+  };
+
   return (
     <>
       <AvatarGroup max={3} spacing='small'>
@@ -51,11 +63,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
             }
             alt={conversationName}
             key={idx}
-            sx={
-              styleVariation === StyleVariation.preview
-                ? previewStyleObj
-                : headerStyleObj
-            }
+            sx={getStyle()}
           />
         ))}
       </AvatarGroup>
