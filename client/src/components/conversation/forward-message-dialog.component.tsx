@@ -129,7 +129,9 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
       />
       <Grid sx={{ width: '100%', height: 'auto' }}>
         {joinedConversations
-          ?.filter((convo) => convo.name.includes(convoSearchString))
+          ?.filter((convo) =>
+            convo.name.includes(convoSearchString.toLowerCase())
+          )
           .map((conversation) => (
             <ForwardConvoDetails
               key={conversation.id}
