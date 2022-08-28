@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Avatar, Grid, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { Grid, Typography } from '@mui/material';
 import { RadioButtonUnchecked, CheckCircle } from '@mui/icons-material';
 import CustomAvatarGroup, {
   StyleVariation,
@@ -39,13 +39,9 @@ const ForwardConvoDetails = ({
   }, [conversation.id, convosToReceiveMessage]);
 
   const handleClick = () => {
-    const convoChipFound = convosToReceiveMessage.find(
-      (convo) => convo.id === conversation.id
-    );
-
     let newConvosToReceiveMessage: Conversation[];
 
-    if (!convoChipFound) {
+    if (!isChecked) {
       newConvosToReceiveMessage = [...convosToReceiveMessage, conversation];
       setConvosToReceiveMessage(newConvosToReceiveMessage);
     } else {
