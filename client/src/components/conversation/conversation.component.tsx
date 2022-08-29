@@ -22,6 +22,7 @@ import ConversationDetails from './conversation-details.component';
 import CustomAvatarGroup, {
   StyleVariation,
 } from './custom-avatar-group.component';
+import ForwardMessageDialog from './forward-message-dialog.component';
 import { useUserInfoData } from '../../pages/hooks';
 
 import {
@@ -82,6 +83,11 @@ const Conversation: React.FC<ConversationProps> = ({
   const [convoUserNicknameMap, setConvoUserNicknameMap] = useState<
     Record<string, string>
   >({});
+  const [showForwardMessageDialog, setShowForwardMessageDialog] =
+    useState(false);
+  const [messageToForward, setMessageToForward] = useState<Message | null>(
+    null
+  );
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -292,8 +298,20 @@ const Conversation: React.FC<ConversationProps> = ({
     });
   };
 
-  const handleForwardMessage = (message: Message) => {
-    // TODO Implement forwarding of message to another conversation
+  const handleShowForwardMessageDialog = (message: Message) => {
+    setShowForwardMessageDialog(true);
+    setMessageToForward(message);
+  };
+
+  const handleForwardMessage = (conversationId: string) => {
+    if (currentUser && messageToForward) {
+      socket.emit('chatToServer', {
+        text: messageToForward.text,
+        created: new Date(),
+        ownerId: currentUser.id,
+        conversationId,
+      });
+    }
   };
 
   const textAreaRef = (node: HTMLElement | null) => {
@@ -448,7 +466,9 @@ const Conversation: React.FC<ConversationProps> = ({
                     renderedWithTimeStamp={renderTime}
                     custRef={idx === 0 ? observedElementRef : null}
                     onRemoveMessage={() => handleRemoveMessage(message.id)}
-                    onForwardMessage={() => handleForwardMessage(message)}
+                    onForwardMessage={() =>
+                      handleShowForwardMessageDialog(message)
+                    }
                   />
                 </Grid>
               );
@@ -519,6 +539,13 @@ const Conversation: React.FC<ConversationProps> = ({
               />
             </Box>
           </Grid>
+          <ForwardMessageDialog
+            showForwardMessageDialog={showForwardMessageDialog}
+            setShowForwardMessageDialog={setShowForwardMessageDialog}
+            onSendMessage={(conversationId: string) =>
+              handleForwardMessage(conversationId)
+            }
+          />
         </>
       ) : (
         <ConversationDetails
