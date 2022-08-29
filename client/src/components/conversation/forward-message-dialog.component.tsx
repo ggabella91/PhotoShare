@@ -15,13 +15,13 @@ import { selectJoinedConversations } from '../../redux/message/message.selectors
 
 import { Conversation } from '../../redux/message/message.types';
 
-interface CreateOrUpdateConvoDialogProps {
+interface ForwardMessageDialogProps {
   showForwardMessageDialog: boolean;
   setShowForwardMessageDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  onSendMessage: () => void;
+  onSendMessage: (conversationId: string) => void;
 }
 
-const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
+const ForwardMessageDialog: React.FC<ForwardMessageDialogProps> = ({
   showForwardMessageDialog,
   setShowForwardMessageDialog,
   onSendMessage,
@@ -53,6 +53,12 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
     setConvosToReceiveMessage(newConvosToReceiveMessage);
   };
 
+  const handleSendMessage = () => {
+    convosToReceiveMessage.forEach((convo) => onSendMessage(convo.id));
+    setConvosToReceiveMessage([]);
+    setShowForwardMessageDialog(false);
+  };
+
   return (
     <Dialog
       onClose={handleCloseDialog}
@@ -76,7 +82,7 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
             paddingTop: '8px',
             '&:hover': { backgroundColor: 'unset' },
           }}
-          onClick={onSendMessage}
+          onClick={handleSendMessage}
           disabled={!convosToReceiveMessage.length}
         >
           <Typography
@@ -145,4 +151,4 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
   );
 };
 
-export default CreateOrUpdateConvoDialog;
+export default ForwardMessageDialog;
