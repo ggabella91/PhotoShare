@@ -51,6 +51,8 @@ export interface Message {
   conversationId: string;
   created: string;
   hidden?: boolean;
+  isReply?: boolean;
+  messageReplyingTo?: string;
 }
 
 export interface MessageError {
