@@ -3,4 +3,8 @@ export class CreateMessageDto {
   created: Date;
   ownerId: string;
   conversationId: string;
+  isReply?: boolean;
+  messageReplyingToId?: string;
+  messageReplyingToOwnerId?: string;
+  messageReplyingToOwnerName?: string;
 }
