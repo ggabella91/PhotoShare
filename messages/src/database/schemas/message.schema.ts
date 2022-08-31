@@ -43,7 +43,13 @@ export class Message {
   isReply: boolean;
 
   @Prop()
-  messageReplyingTo: string;
+  messageReplyingToId: string;
+
+  @Prop()
+  messageReplyingToOwnerId: string;
+
+  @Prop()
+  messageReplyingToOwnerName: string;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
