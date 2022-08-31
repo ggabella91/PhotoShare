@@ -52,7 +52,9 @@ export interface Message {
   created: string;
   hidden?: boolean;
   isReply?: boolean;
-  messageReplyingTo?: string;
+  messageReplyingToId?: string;
+  messageReplyingToOwnerId?: string;
+  messageReplyingToOwnerName?: string;
 }
 
 export interface MessageError {

@@ -11,7 +11,7 @@ interface MessageComponentProps {
   id: string;
   userInfo: UserInfoData;
   message: Message;
-  isCurrentUser: boolean;
+  currentUserId: string | undefined;
   isGroupConversation: boolean;
   islastMessageFromDiffUser: boolean;
   userNickname?: string;
@@ -21,13 +21,15 @@ interface MessageComponentProps {
   onRemoveMessage: () => void;
   onForwardMessage: () => void;
   onReplyToMessage: () => void;
+  onClickMessageRepliedTo: (messageId: string) => void;
+  messageReplyingToOwnerNickname?: string;
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
   id,
   userInfo,
   message,
-  isCurrentUser,
+  currentUserId,
   isGroupConversation,
   islastMessageFromDiffUser,
   userNickname,
@@ -37,12 +39,17 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   onRemoveMessage,
   onForwardMessage,
   onReplyToMessage,
+  onClickMessageRepliedTo,
+  messageReplyingToOwnerNickname,
 }) => {
   const [showOptionsButtons, setShowOptionsButtons] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
+  const isCurrentUser = currentUserId === message.ownerId;
   const addMarginTop = isCurrentUser && renderedWithTimeStamp;
   const renderWithNameOrNickname =
     isGroupConversation && !isCurrentUser && islastMessageFromDiffUser;
+  const isRepliedToMessageOwnerCurrentUser =
+    message.isReply && message.messageReplyingToOwnerId === currentUserId;
   const moreIconButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClickMore = () => {
@@ -93,7 +100,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {renderWithNameOrNickname && (
+      {renderWithNameOrNickname && !message.isReply && (
         <Grid
           sx={{
             display: 'flex',
@@ -104,6 +111,38 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
           <Typography sx={{ fontSize: '10px' }}>
             {userNickname ? userNickname : userInfo?.name}
           </Typography>
+        </Grid>
+      )}
+      {message.isReply && (
+        <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Grid
+            sx={{
+              display: 'flex',
+              justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
+              margin: '25px 0px 2px 48px',
+              marginTop: renderedWithTimeStamp ? '15px !important' : '25px',
+            }}
+          >
+            <Typography sx={{ fontSize: '10px' }}>
+              {`${
+                isCurrentUser
+                  ? 'You'
+                  : userNickname
+                  ? userNickname
+                  : userInfo?.name.split(' ')[0]
+              } replied to ${
+                isRepliedToMessageOwnerCurrentUser
+                  ? `${isCurrentUser ? 'yourself' : 'you'}`
+                  : messageReplyingToOwnerNickname
+                  ? messageReplyingToOwnerNickname
+                  : message.messageReplyingToOwnerName?.split(' ')[0]
+              }`}
+            </Typography>
+          </Grid>
+          <Grid>
+            {/* Render message being replied to, should 
+            be located slightly under the message reply */}
+          </Grid>
         </Grid>
       )}
       <Grid

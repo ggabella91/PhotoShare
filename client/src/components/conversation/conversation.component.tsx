@@ -292,6 +292,18 @@ const Conversation: React.FC<ConversationProps> = ({
         created: new Date(),
         ownerId: currentUser.id,
         conversationId,
+        ...(isReplyModeOn && { isReply: true }),
+        ...(isReplyModeOn &&
+          messageToReplyTo && { messageReplyingToId: messageToReplyTo.id }),
+        ...(isReplyModeOn &&
+          messageToReplyTo && {
+            messageReplyingToOwnerId: messageToReplyTo.ownerId,
+          }),
+        ...(isReplyModeOn &&
+          messageToReplyTo && {
+            messageReplyingToOwnerName:
+              userInfoMap[messageToReplyTo.ownerId].name.split(' ')[0],
+          }),
       });
     }
     setMessage('');
@@ -328,6 +340,20 @@ const Conversation: React.FC<ConversationProps> = ({
   const handleTurnOffReplyMode = () => {
     setIsReplyModeOn(false);
     setMessageToReplyTo(null);
+  };
+
+  const findNicknameForOwnerOfMessageRepliedTo = (messageId: string) => {
+    const message = messagesArray?.find((message) => message.id === messageId);
+
+    if (message) {
+      return convoUserNicknameMap[message.ownerId];
+    } else {
+      return undefined;
+    }
+  };
+
+  const handleClickMessageRepliedTo = (messageId: string) => {
+    // TODO Scroll to message ref in allMessagesRefsMap corresponding to messageId key
   };
 
   const handleStoreMessageRef = (
@@ -473,7 +499,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     id={message.id}
                     userInfo={userInfoMap[message.ownerId]}
                     message={message}
-                    isCurrentUser={message.ownerId === currentUser?.id}
+                    currentUserId={currentUser?.id}
                     isGroupConversation={
                       !!(
                         conversationHistoricalMessageUsers &&
@@ -497,6 +523,14 @@ const Conversation: React.FC<ConversationProps> = ({
                       handleShowForwardMessageDialog(message)
                     }
                     onReplyToMessage={() => handleBeginReplyToMessage(message)}
+                    onClickMessageRepliedTo={(messageId: string) =>
+                      handleClickMessageRepliedTo(messageId)
+                    }
+                    messageReplyingToOwnerNickname={
+                      message.isReply
+                        ? findNicknameForOwnerOfMessageRepliedTo(message.id)
+                        : undefined
+                    }
                   />
                 </Grid>
               );
