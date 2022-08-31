@@ -38,6 +38,12 @@ export class Message {
 
   @Prop()
   hidden: boolean;
+
+  @Prop()
+  isReply: boolean;
+
+  @Prop()
+  messageReplyingTo: string;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
