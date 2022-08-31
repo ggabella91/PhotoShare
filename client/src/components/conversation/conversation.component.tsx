@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InfoIcon from '@mui/icons-material/Info';
+import CloseIcon from '@mui/icons-material/Close';
 import MessageComponent from './message.component';
 import ConversationDetails from './conversation-details.component';
 import CustomAvatarGroup, {
@@ -88,6 +89,10 @@ const Conversation: React.FC<ConversationProps> = ({
   const [messageToForward, setMessageToForward] = useState<Message | null>(
     null
   );
+  const [isReplyModeOn, setIsReplyModeOn] = useState(false);
+  const [messageToReplyTo, setMessageToReplyTo] = useState<Message | null>(
+    null
+  );
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -123,6 +128,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const scrolledToBottomRef = useRef(false);
   const scrollingInMessagesContainerRef = useRef(false);
   const pageToFetch = useRef<Record<string, number>>({});
+  const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -314,6 +320,24 @@ const Conversation: React.FC<ConversationProps> = ({
     }
   };
 
+  const handleBeginReplyToMessage = (message: Message) => {
+    setIsReplyModeOn(true);
+    setMessageToReplyTo(message);
+  };
+
+  const handleTurnOffReplyMode = () => {
+    setIsReplyModeOn(false);
+    setMessageToReplyTo(null);
+  };
+
+  const handleStoreMessageRef = (
+    node: HTMLDivElement | null,
+    messageId: string
+  ) => {
+    allMessagesRefsMap[messageId] = node;
+    console.log('allMessagesRefsMap: ', allMessagesRefsMap);
+  };
+
   const textAreaRef = (node: HTMLElement | null) => {
     if (node) {
       resizeObserver.current = new ResizeObserver((entries) => {
@@ -465,16 +489,67 @@ const Conversation: React.FC<ConversationProps> = ({
                     userNickname={convoUserNicknameMap[message.ownerId] || ''}
                     renderedWithTimeStamp={renderTime}
                     custRef={idx === 0 ? observedElementRef : null}
+                    messageRef={(node) =>
+                      handleStoreMessageRef(node, message.id)
+                    }
                     onRemoveMessage={() => handleRemoveMessage(message.id)}
                     onForwardMessage={() =>
                       handleShowForwardMessageDialog(message)
                     }
+                    onReplyToMessage={() => handleBeginReplyToMessage(message)}
                   />
                 </Grid>
               );
             })}
             <Grid ref={messagesEndRef} />
           </Grid>
+          {isReplyModeOn && (
+            <Grid
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                borderTop: '1px solid rgb(219,219,219)',
+              }}
+            >
+              <Grid
+                sx={{
+                  display: 'flex',
+                  position: 'relative',
+                  paddingLeft: '10px',
+                  paddingTop: '5px',
+                }}
+              >
+                <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+                  {messageToReplyTo &&
+                    `Replying to ${
+                      messageToReplyTo?.ownerId === currentUser?.id
+                        ? 'yourself'
+                        : userInfoMap[messageToReplyTo.ownerId].name.split(
+                            ' '
+                          )[0]
+                    }`}
+                </Typography>
+                <Button
+                  sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    minWidth: 'unset',
+                    padding: 0,
+                    '&:hover': { backgroundColor: 'unset' },
+                  }}
+                  onClick={handleTurnOffReplyMode}
+                >
+                  <CloseIcon fontSize='small' sx={{ color: 'black' }} />
+                </Button>
+              </Grid>
+              <Grid sx={{ display: 'flex', paddingLeft: '10px' }}>
+                <Typography sx={{ fontSize: 13 }}>
+                  {messageToReplyTo?.text}
+                </Typography>
+              </Grid>
+            </Grid>
+          )}
           <Grid
             item
             xs={12}
