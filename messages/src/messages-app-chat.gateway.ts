@@ -19,6 +19,7 @@ import { UpdateConvoPreDto } from './database/dto/update-convo-dto';
 import { UpdateUserNicknameForConvoDto } from './database/dto/update-user-nickname-for-convo-dto';
 import { ConversationDocument } from './database/schemas/conversation.schema';
 import { RemoveMessageDto } from './database/dto/remove-message.dto';
+import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -66,6 +67,18 @@ export class MessagesAppChatGateway
     await this.appService.updateLastMessageTimeForConvo(conversationId);
 
     this.wss.to(conversationId).emit('chatToClient', createdMessage);
+  }
+
+  @SubscribeMessage('findSingleMessage')
+  async handleFindSingleMessage(
+    client: Socket,
+    findSingleMessageDto: FindSingleMessageDto
+  ) {
+    const message = await this.appService.findSingleMessage(
+      findSingleMessageDto
+    );
+
+    client.emit('foundSingleMessage', message);
   }
 
   @SubscribeMessage('removeMessage')

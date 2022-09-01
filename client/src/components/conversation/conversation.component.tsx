@@ -128,6 +128,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const scrolledToBottomRef = useRef(false);
   const scrollingInMessagesContainerRef = useRef(false);
   const pageToFetch = useRef<Record<string, number>>({});
+  const messagesRepliedTo = useRef<Record<string, Message>>({});
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
   const dispatch = useDispatch();
 
@@ -252,7 +253,25 @@ const Conversation: React.FC<ConversationProps> = ({
     if (!scrollingInMessagesContainerRef.current) {
       messagesRef.current?.scrollIntoView();
     }
-  }, [messagesArray]);
+
+    messagesArray?.forEach((message) => {
+      if (
+        message.isReply &&
+        !(message.messageReplyingToId! in messagesRepliedTo.current)
+      ) {
+        socket.emit('findSingleMessage', {
+          messageId: message.messageReplyingToId,
+        });
+      }
+    });
+  }, [messagesArray, socket]);
+
+  useEffect(() => {
+    socket.on(
+      'foundSingleMessage',
+      (message: Message) => (messagesRepliedTo.current[message.id] = message)
+    );
+  }, [socket]);
 
   useEffect(() => {
     if (!isInfoClicked) {
@@ -530,6 +549,12 @@ const Conversation: React.FC<ConversationProps> = ({
                       message.isReply
                         ? findNicknameForOwnerOfMessageRepliedTo(message.id)
                         : undefined
+                    }
+                    messageReplyingToText={
+                      message.messageReplyingToId
+                        ? messagesRepliedTo.current[message.messageReplyingToId]
+                            .text
+                        : ''
                     }
                   />
                 </Grid>
