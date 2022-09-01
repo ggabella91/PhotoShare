@@ -23,6 +23,7 @@ interface MessageComponentProps {
   onReplyToMessage: () => void;
   onClickMessageRepliedTo: (messageId: string) => void;
   messageReplyingToOwnerNickname?: string;
+  messageReplyingToText?: string;
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
@@ -41,6 +42,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   onReplyToMessage,
   onClickMessageRepliedTo,
   messageReplyingToOwnerNickname,
+  messageReplyingToText,
 }) => {
   const [showOptionsButtons, setShowOptionsButtons] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
@@ -140,8 +142,28 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
             </Typography>
           </Grid>
           <Grid>
-            {/* Render message being replied to, should 
-            be located slightly under the message reply */}
+            <Grid
+              sx={{
+                display: 'flex',
+                borderRadius: '20px',
+                padding: '10px',
+                alignItems: 'center',
+                backgroundColor: 'rgb(214, 214, 214)',
+                marginBottom: '8px',
+                marginTop: addMarginTop ? '15px' : '0px',
+                marginLeft: isCurrentUser ? 'unset' : '15px',
+                marginRight: isCurrentUser ? '5px' : 'unset',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: 14,
+                  fontStyle: 'unset',
+                }}
+              >
+                {messageReplyingToText}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       )}
