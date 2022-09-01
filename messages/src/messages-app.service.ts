@@ -11,13 +11,14 @@ import { CreateConvoPreDto } from './database/dto/create-convo.dto';
 import { CreateMessageDto } from './database/dto/create-message.dto';
 import { CreateUserDto } from './database/dto/create-user.dto';
 import { UpdateUserNicknameForConvoDto } from './database/dto/update-user-nickname-for-convo-dto';
-import { FindMessagesFromConvo } from './database/dto/find-message-from-convo.dto';
+import { FindMessagesFromConvo } from './database/dto/find-messages-from-convo.dto';
 import {
   UpdateConvoPreDto,
   UpdateConvoDto,
 } from './database/dto/update-convo-dto';
 import { WsException } from '@nestjs/websockets';
 import { RemoveMessageDto } from './database/dto/remove-message.dto';
+import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -265,6 +266,13 @@ export class MessagesAppService {
       messages: messagesFromConvoObjects,
       ...(!!queryLength && { queryLength }),
     };
+  }
+
+  async findSingleMessage(findSingleMessageDto: FindSingleMessageDto) {
+    const { messageId } = findSingleMessageDto;
+    const message = (await this.messageModel.findById(messageId)).toObject();
+
+    return message;
   }
 
   async updateConversation(updateConvoPreDto: UpdateConvoPreDto) {
