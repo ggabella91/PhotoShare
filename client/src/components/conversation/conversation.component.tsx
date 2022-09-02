@@ -372,7 +372,16 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleClickMessageRepliedTo = (messageId: string) => {
-    // TODO Scroll to message ref in allMessagesRefsMap corresponding to messageId key
+    const originalMessage = allMessagesRefsMap[messageId];
+    console.log('originalMessage: ', originalMessage);
+
+    if (originalMessage) {
+      originalMessage.scrollIntoView();
+    } else {
+      // TODO Fetch messages until the original message is found,
+      // and scroll up to it. May need a ref to track that messages
+      // are still being fetched, to retain state between renders
+    }
   };
 
   const handleStoreMessageRef = (
@@ -380,7 +389,6 @@ const Conversation: React.FC<ConversationProps> = ({
     messageId: string
   ) => {
     allMessagesRefsMap[messageId] = node;
-    console.log('allMessagesRefsMap: ', allMessagesRefsMap);
   };
 
   const textAreaRef = (node: HTMLElement | null) => {
@@ -553,7 +561,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     messageReplyingToText={
                       message.messageReplyingToId
                         ? messagesRepliedTo.current[message.messageReplyingToId]
-                            .text
+                            ?.text
                         : ''
                     }
                   />
