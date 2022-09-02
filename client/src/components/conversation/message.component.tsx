@@ -83,9 +83,10 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
     onReplyToMessage();
   };
 
-  // TODO Add button with functionality for replying to a message.
-  // Should render message being replied to, overlayed by message
-  // being sent as the reply
+  const handleClickMessageRepliedTo = () => {
+    message.messageReplyingToId &&
+      onClickMessageRepliedTo(message.messageReplyingToId);
+  };
 
   // TODO Limit options for messages that are removed (hidden)
 
@@ -116,13 +117,21 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         </Grid>
       )}
       {message.isReply && (
-        <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Grid
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+          }}
+        >
           <Grid
             sx={{
               display: 'flex',
               justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
               margin: '25px 0px 2px 48px',
               marginTop: renderedWithTimeStamp ? '15px !important' : '25px',
+              marginLeft: isCurrentUser ? 'unset' : '15px',
+              marginRight: isCurrentUser ? '5px' : 'unset',
             }}
           >
             <Typography sx={{ fontSize: '10px' }}>
@@ -141,28 +150,53 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               }`}
             </Typography>
           </Grid>
-          <Grid>
+          <Grid
+            sx={{
+              display: 'flex',
+              justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
+            }}
+          >
             <Grid
               sx={{
                 display: 'flex',
+                position: 'absolute',
+                zIndex: '10',
+                top: '30px',
                 borderRadius: '20px',
                 padding: '10px',
                 alignItems: 'center',
                 backgroundColor: 'rgb(214, 214, 214)',
-                marginBottom: '8px',
-                marginTop: addMarginTop ? '15px' : '0px',
                 marginLeft: isCurrentUser ? 'unset' : '15px',
                 marginRight: isCurrentUser ? '5px' : 'unset',
+                cursor: 'pointer',
+                '&:focus-visible': {
+                  outline: 'Highlight 1px auto',
+                },
               }}
             >
-              <Typography
+              <Button
                 sx={{
-                  fontSize: 14,
-                  fontStyle: 'unset',
+                  width: '100%',
+                  height: '100%',
+                  textTransform: 'unset',
+                  padding: 0,
+                  '&:hover': {
+                    backgroundColor: 'unset',
+                  },
                 }}
+                disableRipple
+                onClick={handleClickMessageRepliedTo}
               >
-                {messageReplyingToText}
-              </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 14,
+                    fontStyle: 'unset',
+                    color: 'black',
+                  }}
+                >
+                  {messageReplyingToText}
+                </Typography>
+              </Button>
             </Grid>
           </Grid>
         </Grid>
@@ -175,7 +209,9 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
           height: 'auto',
           minHeight: '44px',
           marginTop:
-            !isGroupConversation && renderedWithTimeStamp ? '15px' : '0px',
+            message.isReply || (!isGroupConversation && renderedWithTimeStamp)
+              ? '15px'
+              : '0px',
         }}
       >
         {!isCurrentUser && (
@@ -323,6 +359,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               borderRadius: '20px',
               padding: '10px',
               alignItems: 'center',
+              zIndex: 20,
               backgroundColor: message.hidden ? 'none' : 'rgb(239, 239, 239)',
               border: message.hidden ? '1px solid rgb(219,219,219)' : 'unset',
               marginBottom: '8px',
