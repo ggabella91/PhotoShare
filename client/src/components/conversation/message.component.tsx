@@ -47,7 +47,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   const [showOptionsButtons, setShowOptionsButtons] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
   const isCurrentUser = currentUserId === message.ownerId;
-  const addMarginTop = isCurrentUser && renderedWithTimeStamp;
+  const addMarginTop =
+    (isCurrentUser && renderedWithTimeStamp) || message.isReply;
   const renderWithNameOrNickname =
     isGroupConversation && !isCurrentUser && islastMessageFromDiffUser;
   const isRepliedToMessageOwnerCurrentUser =
@@ -129,7 +130,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               display: 'flex',
               justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
               margin: '25px 0px 2px 48px',
-              marginTop: renderedWithTimeStamp ? '15px !important' : '25px',
+              marginTop: '15px !important',
               marginLeft: isCurrentUser ? 'unset' : '15px',
               marginRight: isCurrentUser ? '5px' : 'unset',
             }}
@@ -165,9 +166,10 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                 borderRadius: '20px',
                 padding: '10px',
                 alignItems: 'center',
-                backgroundColor: 'rgb(214, 214, 214)',
+                backgroundColor: 'rgb(239, 239, 239)',
                 marginLeft: isCurrentUser ? 'unset' : '15px',
                 marginRight: isCurrentUser ? '5px' : 'unset',
+                maxWidth: '345px',
                 cursor: 'pointer',
                 '&:focus-visible': {
                   outline: 'Highlight 1px auto',
@@ -192,6 +194,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                     fontSize: 14,
                     fontStyle: 'unset',
                     color: 'black',
+                    textAlign: 'start',
                   }}
                 >
                   {messageReplyingToText}
@@ -360,10 +363,11 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               padding: '10px',
               alignItems: 'center',
               zIndex: 20,
-              backgroundColor: message.hidden ? 'none' : 'rgb(239, 239, 239)',
+              backgroundColor: message.hidden ? 'none' : 'rgb(222, 222, 222)',
               border: message.hidden ? '1px solid rgb(219,219,219)' : 'unset',
               marginBottom: '8px',
               marginTop: addMarginTop ? '15px' : '0px',
+              maxWidth: '365px',
             }}
             ref={messageRef}
           >
@@ -371,6 +375,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               sx={{
                 fontSize: 14,
                 fontStyle: message.hidden ? 'italic' : 'unset',
+                textAlign: 'start',
               }}
             >
               {message.hidden

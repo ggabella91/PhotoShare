@@ -7,6 +7,8 @@ import CustomAvatarGroup, {
   StyleVariation,
 } from './custom-avatar-group.component';
 
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+
 import { FileRequestType, UserType } from '../../redux/post/post.types';
 
 import { getPostFileStart } from '../../redux/post/post.actions';
@@ -27,9 +29,12 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   setIsInfoClicked,
 }) => {
   const conversationMessages = useSelector(selectConversationMessages);
+  const currentUser = useSelector(selectCurrentUser);
   const lastMessage = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
   )?.messages[0];
+  const isCurrentUserMessageOwner =
+    currentUser && lastMessage?.ownerId === currentUser.id;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -105,7 +110,12 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
         <Typography>{conversationName}</Typography>
         {!!lastMessage && (
           <Typography sx={{ fontSize: '14px' }}>
-            {lastMessage.text} · {renderElapsedTime(lastMessage.created)}
+            {lastMessage.hidden
+              ? isCurrentUserMessageOwner
+                ? 'You unsent a message'
+                : 'Message unsent by owner'
+              : lastMessage.text}{' '}
+            · {renderElapsedTime(lastMessage.created)}
           </Typography>
         )}
       </Grid>

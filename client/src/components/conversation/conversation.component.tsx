@@ -93,6 +93,9 @@ const Conversation: React.FC<ConversationProps> = ({
   const [messageToReplyTo, setMessageToReplyTo] = useState<Message | null>(
     null
   );
+  const [messagesArrayReversed, setMessagesArrayReversed] = useState<Message[]>(
+    []
+  );
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -121,7 +124,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const messagesArray = currentConversationMessages?.messages;
   const messagesArrayLength = messagesArray?.length;
   const totalMessagesForConvo = currentConversationMessages?.queryLength;
-  const messagesArrayReversed = messagesArray && [...messagesArray].reverse();
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const messageJustSent = useRef(false);
   const messagesRef = useRef<HTMLDivElement | null>(null);
@@ -252,6 +254,11 @@ const Conversation: React.FC<ConversationProps> = ({
   useEffect(() => {
     if (!scrollingInMessagesContainerRef.current) {
       messagesRef.current?.scrollIntoView();
+    }
+
+    if (messagesArray) {
+      const messagesReversed = [...messagesArray].reverse();
+      setMessagesArrayReversed(messagesReversed);
     }
 
     messagesArray?.forEach((message) => {
