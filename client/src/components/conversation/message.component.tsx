@@ -1,9 +1,19 @@
 import React, { useState, useRef } from 'react';
-import { Grid, Avatar, Typography, Button, Popover } from '@mui/material';
+import { useSelector } from 'react-redux';
+import {
+  Grid,
+  Avatar,
+  Typography,
+  Button,
+  Popover,
+  Tooltip,
+} from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
+import { selectConversationUserNicknamesMaps } from '../../redux/message/message.selectors';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ReplyIcon from '@mui/icons-material/Reply';
+import { renderTimeStamp } from './conversation.utils';
 
 type CustomRef = (node: HTMLDivElement | null) => void;
 
@@ -14,7 +24,6 @@ interface MessageComponentProps {
   currentUserId: string | undefined;
   isGroupConversation: boolean;
   islastMessageFromDiffUser: boolean;
-  userNickname?: string;
   renderedWithTimeStamp: boolean;
   custRef: CustomRef | null;
   messageRef: CustomRef;
@@ -22,7 +31,6 @@ interface MessageComponentProps {
   onForwardMessage: () => void;
   onReplyToMessage: () => void;
   onClickMessageRepliedTo: (messageId: string) => void;
-  messageReplyingToOwnerNickname?: string;
   messageReplyingToText?: string;
 }
 
@@ -33,7 +41,6 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   currentUserId,
   isGroupConversation,
   islastMessageFromDiffUser,
-  userNickname,
   renderedWithTimeStamp,
   custRef,
   messageRef,
@@ -41,11 +48,16 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   onForwardMessage,
   onReplyToMessage,
   onClickMessageRepliedTo,
-  messageReplyingToOwnerNickname,
   messageReplyingToText,
 }) => {
   const [showOptionsButtons, setShowOptionsButtons] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
+  const userNicknamesMaps = useSelector(selectConversationUserNicknamesMaps);
+  const userNickname =
+    currentUserId && userNicknamesMaps[message.conversationId][currentUserId];
+  const messageReplyingToOwnerNickname =
+    message.messageReplyingToOwnerId &&
+    userNicknamesMaps[message.conversationId][message.messageReplyingToOwnerId];
   const isCurrentUser = currentUserId === message.ownerId;
   const addMarginTop =
     (isCurrentUser && renderedWithTimeStamp) || message.isReply;
@@ -59,7 +71,9 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
     setOpenPopover(true);
   };
 
-  const handleMouseEnter = () => setShowOptionsButtons(true);
+  const handleMouseEnter = () => {
+    if (!message.hidden) setShowOptionsButtons(true);
+  };
 
   const handleMouseLeave = () => setShowOptionsButtons(false);
 
@@ -88,8 +102,6 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
     message.messageReplyingToId &&
       onClickMessageRepliedTo(message.messageReplyingToId);
   };
-
-  // TODO Limit options for messages that are removed (hidden)
 
   return (
     <Grid
@@ -136,7 +148,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
             }}
           >
             <Typography sx={{ fontSize: '10px' }}>
-              {`${
+              <ReplyIcon sx={{ fontSize: '12px', marginBottom: '2px' }} />
+              {` ${
                 isCurrentUser
                   ? 'You'
                   : userNickname
@@ -169,6 +182,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                 backgroundColor: 'rgb(239, 239, 239)',
                 marginLeft: isCurrentUser ? 'unset' : '15px',
                 marginRight: isCurrentUser ? '5px' : 'unset',
+                marginBottom: '5px',
                 maxWidth: '345px',
                 cursor: 'pointer',
                 '&:focus-visible': {
@@ -216,6 +230,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               ? '15px'
               : '0px',
         }}
+        ref={messageRef}
       >
         {!isCurrentUser && (
           <Grid
@@ -259,10 +274,12 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                   onClick={handleClickMore}
                   ref={moreIconButtonRef}
                 >
-                  <MoreVertIcon
-                    fontSize='small'
-                    sx={{ color: 'black', transform: 'translateY(-18px)' }}
-                  />
+                  <Tooltip title='More'>
+                    <MoreVertIcon
+                      fontSize='small'
+                      sx={{ color: 'black', transform: 'translateY(-18px)' }}
+                    />
+                  </Tooltip>
                 </Button>
                 {moreIconButtonRef.current && (
                   <Popover
@@ -348,10 +365,12 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                   }}
                   onClick={handleClickReply}
                 >
-                  <ReplyIcon
-                    fontSize='small'
-                    sx={{ color: 'black', transform: 'translateY(-18px)' }}
-                  />
+                  <Tooltip title='Reply'>
+                    <ReplyIcon
+                      fontSize='small'
+                      sx={{ color: 'black', transform: 'translateY(-18px)' }}
+                    />
+                  </Tooltip>
                 </Button>
               </Grid>
             </Grid>
@@ -369,23 +388,24 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               marginTop: addMarginTop ? '15px' : '0px',
               maxWidth: '365px',
             }}
-            ref={messageRef}
           >
-            <Typography
-              sx={{
-                fontSize: 14,
-                fontStyle: message.hidden ? 'italic' : 'unset',
-                textAlign: 'start',
-              }}
-            >
-              {message.hidden
-                ? `${
-                    isCurrentUser
-                      ? 'You unsent a message'
-                      : 'Message unsent by user'
-                  }`
-                : message.text}
-            </Typography>
+            <Tooltip title={renderTimeStamp(message.created)}>
+              <Typography
+                sx={{
+                  fontSize: 14,
+                  fontStyle: message.hidden ? 'italic' : 'unset',
+                  textAlign: 'start',
+                }}
+              >
+                {message.hidden
+                  ? `${
+                      isCurrentUser
+                        ? 'You unsent a message'
+                        : 'Message unsent by user'
+                    }`
+                  : message.text}
+              </Typography>
+            </Tooltip>
           </Grid>
         </Grid>
       </Grid>

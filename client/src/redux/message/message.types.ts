@@ -1,3 +1,4 @@
+import { Message } from '@mui/icons-material';
 import { Map } from 'immutable';
 import { UserInfoMap } from '../../components/conversation/conversation.component';
 
@@ -19,6 +20,7 @@ export enum MessageActions {
   RESET_CONVO_USERS_ARRAY = 'RESET_CONVO_USERS_ARRAY',
   CLEAR_JOINED_CONVOS_ARRAY = 'CLEAR_JOINED_CONVOS_ARRAY',
   ADD_TO_CONVERSATION_TO_USER_DATA_MAP = 'ADD_TO_CONVERSATION_TO_USER_DATA_MAP',
+  ADD_CONVERSATION_USER_NICKNAMES_MAP = 'ADD_CONVERSATION_USER_NICKNAMES_MAP',
 }
 
 export interface MessageState {
@@ -30,6 +32,7 @@ export interface MessageState {
   removeUserSessionCookieError: MessageError | null;
   usersArrayForNewConvoReq: Partial<MessageUser>[];
   conversationToUserDataMap: Map<string, UserInfoMap>;
+  conversationUserNicknamesMaps: Record<string, Record<string, string>>;
 }
 
 export interface GetConvoMessagesReq {
@@ -100,6 +103,11 @@ export interface FindOrCreateUserReq {
 export interface MessageToRemove {
   conversationId: string;
   messageId: string;
+}
+
+export interface AddUserNicknameMap {
+  conversationId: string;
+  userNicknameMap: Record<string, string>;
 }
 
 export interface FindOrCreateUserStart {
@@ -189,6 +197,11 @@ export interface AddToConversationToUserDataMap {
   payload: ConvoIdAndUserData;
 }
 
+export interface AddConversationUserNicknamesMap {
+  type: typeof MessageActions.ADD_CONVERSATION_USER_NICKNAMES_MAP;
+  payload: AddUserNicknameMap;
+}
+
 export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
@@ -206,4 +219,5 @@ export type MessageActionTypes =
   | RemoveUserFromConvoUsersArray
   | ResetConvoUsersArray
   | ClearJoinedConvosArray
-  | AddToConversationToUserDataMap;
+  | AddToConversationToUserDataMap
+  | AddConversationUserNicknamesMap;

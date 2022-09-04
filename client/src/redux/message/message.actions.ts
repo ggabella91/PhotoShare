@@ -10,6 +10,7 @@ import {
   MessageUser,
   ConvoIdAndUserData,
   MessageToRemove,
+  AddUserNicknameMap,
 } from './message.types';
 
 export const findOrCreateUserStart = (
@@ -123,4 +124,11 @@ export const addToConversationToUserDataMap = (
 ): MessageActionTypes => ({
   type: MessageActions.ADD_TO_CONVERSATION_TO_USER_DATA_MAP,
   payload: convoIdAndUserData,
+});
+
+export const addConversationUserNicknamesMap = (
+  addUserNicknameMap: AddUserNicknameMap
+): MessageActionTypes => ({
+  type: MessageActions.ADD_CONVERSATION_USER_NICKNAMES_MAP,
+  payload: addUserNicknameMap,
 });

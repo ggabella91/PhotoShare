@@ -35,6 +35,7 @@ import {
 import {
   getConvoMessagesStart,
   addToConversationToUserDataMap,
+  addConversationUserNicknamesMap,
 } from '../../redux/message/message.actions';
 
 import {
@@ -81,9 +82,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const [message, setMessage] = useState('');
   const [userInfoMap, setUserInfoMap] = useState<UserInfoMap>({});
   const [textAreaParentDivHeight, setTextAreaParentDivHeight] = useState(80);
-  const [convoUserNicknameMap, setConvoUserNicknameMap] = useState<
-    Record<string, string>
-  >({});
   const [showForwardMessageDialog, setShowForwardMessageDialog] =
     useState(false);
   const [messageToForward, setMessageToForward] = useState<Message | null>(
@@ -129,6 +127,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const scrolledToBottomRef = useRef(false);
   const scrollingInMessagesContainerRef = useRef(false);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const pageToFetch = useRef<Record<string, number>>({});
   const messagesRepliedTo = useRef<Record<string, Message>>({});
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
@@ -234,7 +233,12 @@ const Conversation: React.FC<ConversationProps> = ({
         return acc;
       }, {});
 
-      setConvoUserNicknameMap(convoUserNicknameMap);
+      dispatch(
+        addConversationUserNicknamesMap({
+          conversationId,
+          userNicknameMap: convoUserNicknameMap,
+        })
+      );
     }
   }, [conversationUserNicknames]);
 
@@ -368,22 +372,13 @@ const Conversation: React.FC<ConversationProps> = ({
     setMessageToReplyTo(null);
   };
 
-  const findNicknameForOwnerOfMessageRepliedTo = (messageId: string) => {
-    const message = messagesArray?.find((message) => message.id === messageId);
-
-    if (message) {
-      return convoUserNicknameMap[message.ownerId];
-    } else {
-      return undefined;
-    }
-  };
-
   const handleClickMessageRepliedTo = (messageId: string) => {
     const originalMessage = allMessagesRefsMap[messageId];
     console.log('originalMessage: ', originalMessage);
 
     if (originalMessage) {
       originalMessage.scrollIntoView();
+      messagesContainerRef.current?.scrollBy({ top: -20 });
     } else {
       // TODO Fetch messages until the original message is found,
       // and scroll up to it. May need a ref to track that messages
@@ -502,6 +497,7 @@ const Conversation: React.FC<ConversationProps> = ({
               overflowY: 'auto',
             }}
             onScroll={handleMessagesContainerScroll}
+            ref={messagesContainerRef}
           >
             {messagesArrayReversed?.map((message, idx) => {
               const renderTime =
@@ -546,7 +542,6 @@ const Conversation: React.FC<ConversationProps> = ({
                         messagesArrayReversed[idx - 1].ownerId !==
                           userInfoMap[message.ownerId]?.id)
                     }
-                    userNickname={convoUserNicknameMap[message.ownerId] || ''}
                     renderedWithTimeStamp={renderTime}
                     custRef={idx === 0 ? observedElementRef : null}
                     messageRef={(node) =>
@@ -559,11 +554,6 @@ const Conversation: React.FC<ConversationProps> = ({
                     onReplyToMessage={() => handleBeginReplyToMessage(message)}
                     onClickMessageRepliedTo={(messageId: string) =>
                       handleClickMessageRepliedTo(messageId)
-                    }
-                    messageReplyingToOwnerNickname={
-                      message.isReply
-                        ? findNicknameForOwnerOfMessageRepliedTo(message.id)
-                        : undefined
                     }
                     messageReplyingToText={
                       message.messageReplyingToId
@@ -702,7 +692,6 @@ const Conversation: React.FC<ConversationProps> = ({
           currentConversation={currentConversation}
           socket={socket}
           userInfoMap={userInfoMap}
-          convoUserNicknameMap={convoUserNicknameMap}
           setIsExistingConvo={setIsExistingConvo}
           setShowConvoDialog={setShowConvoDialog}
         />

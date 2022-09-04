@@ -17,6 +17,7 @@ import {
   selectCurrentUser,
   selectConversationUsers,
 } from '../../redux/user/user.selectors';
+import { selectConversationUserNicknamesMaps } from '../../redux/message/message.selectors';
 import { Conversation } from '../../redux/message/message.types';
 import { uploadConversationPhotoStart } from '../../redux/post/post.actions';
 import { UserInfoData } from '../search-bar/search-bar.component';
@@ -34,7 +35,6 @@ interface ConversationDetailsProps {
   socket: Socket;
   conversationId: string;
   userInfoMap: UserInfoMap;
-  convoUserNicknameMap: Record<string, string>;
   setShowConvoDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setIsExistingConvo: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -44,7 +44,6 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
   socket,
   conversationId,
   userInfoMap,
-  convoUserNicknameMap,
   setShowConvoDialog,
   setIsExistingConvo,
 }) => {
@@ -65,7 +64,10 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
   const conversationActiveMessageUsers = currentConversation?.connectedUsers;
   const conversationAdminUsers = currentConversation?.adminUsers;
   const currentConversationAvatarPhotos = currentConversation?.avatarS3Keys;
-  const conversationUserNicknames = currentConversation?.userNicknames;
+  const allConversationUserNicknamesMaps = useSelector(
+    selectConversationUserNicknamesMaps
+  );
+  const convoUserNicknameMap = allConversationUserNicknamesMaps[conversationId];
   const dispatch = useDispatch();
 
   useEffect(() => {
