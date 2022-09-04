@@ -5,6 +5,13 @@ import { User } from './user.schema';
 
 export type MessageDocument = Message & Document;
 
+// TODO Add property for timestamp for when a message is unsent,
+// to be added when the message is hidden
+
+// TODO Add property with array with userId's for whom a
+// message is permanently removed (doesn't even render "Message
+// removed" and done on a per-user basis)
+
 @Schema({
   toObject: {
     transform: function (doc, ret) {

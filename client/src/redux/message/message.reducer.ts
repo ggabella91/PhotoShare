@@ -24,6 +24,7 @@ const INITIAL_STATE: MessageState = {
   removeUserSessionCookieError: null,
   usersArrayForNewConvoReq: [],
   conversationToUserDataMap: Map<string, UserInfoMap>(),
+  conversationUserNicknamesMaps: {},
 };
 
 const messageReducer = (
@@ -112,6 +113,14 @@ const messageReducer = (
           action.payload.conversationId,
           action.payload.userData
         ),
+      };
+    case MessageActions.ADD_CONVERSATION_USER_NICKNAMES_MAP:
+      return {
+        ...state,
+        conversationUserNicknamesMaps: {
+          ...state.conversationUserNicknamesMaps,
+          [action.payload.conversationId]: action.payload.userNicknameMap,
+        },
       };
     case MessageActions.RESET_CONVO_USERS_ARRAY:
       return {
