@@ -19,6 +19,7 @@ import {
 import { WsException } from '@nestjs/websockets';
 import { RemoveMessageDto } from './database/dto/remove-message.dto';
 import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
+import { PermanentlyRemoveMessageForUserDto } from './database/dto/permanently-remove-message-for-user.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -194,11 +195,29 @@ export class MessagesAppService {
   async removeMessage(removeMessageDto: RemoveMessageDto) {
     const removedMessage = await this.messageModel.findByIdAndUpdate(
       removeMessageDto.messageId,
-      { hidden: true }
+      { hidden: true, messageHiddenTime: new Date() }
     );
 
     this.logger.log(
       `Removed message with id ${removeMessageDto.messageId} ${removedMessage} for conversation with id ${removeMessageDto.conversationId}`
+    );
+  }
+
+  async permanentlyRemoveMessageForUser(
+    permanentlyRemoveMessageForUserDto: PermanentlyRemoveMessageForUserDto
+  ) {
+    const removedMessage = await this.messageModel.findById(
+      permanentlyRemoveMessageForUserDto.messageId
+    );
+
+    removedMessage.usersMessageIsRemovedFor.push(
+      permanentlyRemoveMessageForUserDto.userId
+    );
+
+    await removedMessage.save();
+
+    this.logger.log(
+      `Permanently removed message with id ${permanentlyRemoveMessageForUserDto.messageId} ${removedMessage} for conversation with id ${permanentlyRemoveMessageForUserDto.conversationId}, for user with id ${permanentlyRemoveMessageForUserDto.userId}`
     );
   }
 
