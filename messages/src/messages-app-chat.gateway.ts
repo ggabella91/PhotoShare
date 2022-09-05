@@ -20,6 +20,7 @@ import { UpdateUserNicknameForConvoDto } from './database/dto/update-user-nickna
 import { ConversationDocument } from './database/schemas/conversation.schema';
 import { RemoveMessageDto } from './database/dto/remove-message.dto';
 import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
+import { PermanentlyRemoveMessageForUserDto } from './database/dto/permanently-remove-message-for-user.dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -83,11 +84,30 @@ export class MessagesAppChatGateway
 
   @SubscribeMessage('removeMessage')
   async handleRemoveMessage(@MessageBody() removeMessageDto: RemoveMessageDto) {
-    const { conversationId, messageId } = removeMessageDto;
+    const { conversationId } = removeMessageDto;
 
     await this.appService.removeMessage(removeMessageDto);
 
     this.wss.to(conversationId).emit('messageRemoved', removeMessageDto);
+  }
+
+  @SubscribeMessage('permanentlyRemoveMessageForUser')
+  async handlePermanentlyRemoveMessageForUser(
+    @MessageBody()
+    permanentlyRemoveMessageForUserDto: PermanentlyRemoveMessageForUserDto
+  ) {
+    const { conversationId } = permanentlyRemoveMessageForUserDto;
+
+    await this.appService.permanentlyRemoveMessageForUser(
+      permanentlyRemoveMessageForUserDto
+    );
+
+    this.wss
+      .to(conversationId)
+      .emit(
+        'messagePermanentlyRemovedForUser',
+        permanentlyRemoveMessageForUserDto
+      );
   }
 
   @SubscribeMessage('createConversation')
