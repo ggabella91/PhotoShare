@@ -339,11 +339,22 @@ const Conversation: React.FC<ConversationProps> = ({
     setMessage('');
   };
 
-  const handleRemoveMessage = (messageId: string) => {
-    socket.emit('removeMessage', {
-      conversationId,
-      messageId,
-    });
+  const handleRemoveMessage = (
+    messageId: string,
+    isHidden: boolean | undefined
+  ) => {
+    if (!isHidden) {
+      socket.emit('removeMessage', {
+        conversationId,
+        messageId,
+      });
+    } else if (currentUser) {
+      socket.emit('permanentlyRemoveMessageForUser', {
+        userId: currentUser.id,
+        conversationId,
+        messageId,
+      });
+    }
   };
 
   const handleShowForwardMessageDialog = (message: Message) => {
@@ -547,7 +558,9 @@ const Conversation: React.FC<ConversationProps> = ({
                     messageRef={(node) =>
                       handleStoreMessageRef(node, message.id)
                     }
-                    onRemoveMessage={() => handleRemoveMessage(message.id)}
+                    onRemoveMessage={() =>
+                      handleRemoveMessage(message.id, message.hidden)
+                    }
                     onForwardMessage={() =>
                       handleShowForwardMessageDialog(message)
                     }
