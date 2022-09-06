@@ -1,4 +1,3 @@
-import { Message } from '@mui/icons-material';
 import { Map } from 'immutable';
 import { UserInfoMap } from '../../components/conversation/conversation.component';
 
@@ -54,6 +53,7 @@ export interface Message {
   conversationId: string;
   created: string;
   hidden?: boolean;
+  usersMessageIsRemovedFor: string[];
   isReply?: boolean;
   messageReplyingToId?: string;
   messageReplyingToOwnerId?: string;

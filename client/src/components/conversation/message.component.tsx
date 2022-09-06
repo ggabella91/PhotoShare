@@ -103,6 +103,13 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
       onClickMessageRepliedTo(message.messageReplyingToId);
   };
 
+  if (
+    currentUserId &&
+    message.usersMessageIsRemovedFor.includes(currentUserId)
+  ) {
+    return null;
+  }
+
   return (
     <Grid
       sx={{
@@ -326,53 +333,57 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                           </Typography>
                         </Button>
                       </Grid>
-                      <Grid sx={{ display: 'flex' }}>
-                        <Button
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            width: '100%',
-                            height: '43px',
-                            paddingLeft: '15px',
-                          }}
-                          onClick={handleForwardMessage}
-                        >
-                          <Typography
+                      {!message.hidden && (
+                        <Grid sx={{ display: 'flex' }}>
+                          <Button
                             sx={{
-                              color: 'black',
-                              textTransform: 'capitalize',
-                              fontWeight: 600,
+                              display: 'flex',
+                              justifyContent: 'flex-start',
+                              width: '100%',
+                              height: '43px',
+                              paddingLeft: '15px',
                             }}
+                            onClick={handleForwardMessage}
                           >
-                            Forward
-                          </Typography>
-                        </Button>
-                      </Grid>
+                            <Typography
+                              sx={{
+                                color: 'black',
+                                textTransform: 'capitalize',
+                                fontWeight: 600,
+                              }}
+                            >
+                              Forward
+                            </Typography>
+                          </Button>
+                        </Grid>
+                      )}
                     </Grid>
                   </Popover>
                 )}
               </Grid>
-              <Grid sx={{ display: 'flex' }}>
-                <Button
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    paddingBottom: 0,
-                    '&:hover': {
-                      backgroundColor: 'unset',
-                    },
-                  }}
-                  onClick={handleClickReply}
-                >
-                  <Tooltip title='Reply'>
-                    <ReplyIcon
-                      fontSize='small'
-                      sx={{ color: 'black', transform: 'translateY(-18px)' }}
-                    />
-                  </Tooltip>
-                </Button>
-              </Grid>
+              {!message.hidden && (
+                <Grid sx={{ display: 'flex' }}>
+                  <Button
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-end',
+                      paddingBottom: 0,
+                      '&:hover': {
+                        backgroundColor: 'unset',
+                      },
+                    }}
+                    onClick={handleClickReply}
+                  >
+                    <Tooltip title='Reply'>
+                      <ReplyIcon
+                        fontSize='small'
+                        sx={{ color: 'black', transform: 'translateY(-18px)' }}
+                      />
+                    </Tooltip>
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           )}
           <Grid
