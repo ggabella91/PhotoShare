@@ -15,8 +15,6 @@ import {
 } from '../../redux/user/user.selectors';
 import { clearUserSuggestions } from '../../redux/user/user.actions';
 
-import { clearSuggestionPhotoFileArray } from '../../redux/post/post.actions';
-
 import {
   selectMessageUser,
   selectJoinedConversations,
@@ -81,11 +79,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   );
 
   useEffect(() => {
-    // dispatch(clearUserSuggestions());
-    // dispatch(clearSuggestionPhotoFileArray());
-  }, []);
-
-  useEffect(() => {
     // When component unmounts, such as when the user
     // signs out
     return () => {
@@ -134,6 +127,11 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
     socket.on('messageRemoved', (message) => {
       dispatch(removeMessageFromConversation(message));
+    });
+
+    socket.on('permanentlyRemoveMessageForUser', () => {
+      // TODO Handle dispatching action for when a message
+      // is permanently deleted for a user
     });
 
     socket.on('conversationUpdated', () => {
