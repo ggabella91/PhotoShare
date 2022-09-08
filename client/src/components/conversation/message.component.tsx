@@ -71,9 +71,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
     setOpenPopover(true);
   };
 
-  const handleMouseEnter = () => {
-    if (!message.hidden) setShowOptionsButtons(true);
-  };
+  const handleMouseEnter = () => setShowOptionsButtons(true);
 
   const handleMouseLeave = () => setShowOptionsButtons(false);
 
