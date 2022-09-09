@@ -13,6 +13,7 @@ import {
   removeUserFromArray,
   updateAndSortJoinedConversationsArray,
   markMessageRemoved,
+  markMessagePermanentlyRemovedForUser,
 } from './message.utils';
 
 const INITIAL_STATE: MessageState = {
@@ -97,6 +98,14 @@ const messageReducer = (
       return {
         ...state,
         messages: markMessageRemoved(state.messages, action.payload),
+      };
+    case MessageActions.PERMANENTLY_REMOVE_MESSAGE_FOR_USER:
+      return {
+        ...state,
+        messages: markMessagePermanentlyRemovedForUser(
+          state.messages,
+          action.payload
+        ),
       };
     case MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY:
       return {

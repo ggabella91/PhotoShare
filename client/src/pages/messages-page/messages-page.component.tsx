@@ -29,6 +29,7 @@ import {
   getConvoMessagesStart,
   resetConvoUsersArray,
   removeMessageFromConversation,
+  permanentlyRemoveMessageForUser,
 } from '../../redux/message/message.actions';
 
 import {
@@ -75,6 +76,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         port: 443,
         query: { userId: currentUser?.id || '' },
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -129,9 +131,8 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       dispatch(removeMessageFromConversation(message));
     });
 
-    socket.on('permanentlyRemoveMessageForUser', () => {
-      // TODO Handle dispatching action for when a message
-      // is permanently deleted for a user
+    socket.on('messagePermanentlyRemovedForUser', (message) => {
+      dispatch(permanentlyRemoveMessageForUser(message));
     });
 
     socket.on('conversationUpdated', () => {
@@ -140,6 +141,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         userId: currentUser?.id,
       });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, socket]);
 
   useEffect(() => {

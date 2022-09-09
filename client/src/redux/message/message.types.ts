@@ -15,6 +15,7 @@ export enum MessageActions {
   ADD_MESSAGE_TO_CONVERSATION = 'ADD_MESSAGE_TO_CONVERSATION',
   ADD_USER_TO_CONVO_USERS_ARRAY = 'ADD_USER_TO_CONVO_USERS_ARRAY',
   REMOVE_MESSAGE_FROM_CONVERSATION = 'REMOVE_MESSAGE_FROM_CONVERSATION',
+  PERMANENTLY_REMOVE_MESSAGE_FOR_USER = 'PERMANENTLY_REMOVE_MESSAGE_FOR_USER',
   REMOVE_USER_FROM_CONVO_USERS_ARRAY = 'REMOVE_USER_FROM_CONVO_USERS_ARRAY',
   RESET_CONVO_USERS_ARRAY = 'RESET_CONVO_USERS_ARRAY',
   CLEAR_JOINED_CONVOS_ARRAY = 'CLEAR_JOINED_CONVOS_ARRAY',
@@ -105,6 +106,12 @@ export interface MessageToRemove {
   messageId: string;
 }
 
+export interface MessageToPermanentlyRemoveForUser {
+  conversationId: string;
+  messageId: string;
+  userId: string;
+}
+
 export interface AddUserNicknameMap {
   conversationId: string;
   userNicknameMap: Record<string, string>;
@@ -175,6 +182,11 @@ export interface RemoveMessageFromConversation {
   payload: MessageToRemove;
 }
 
+export interface PermanentlyRemoveMessageForUser {
+  type: typeof MessageActions.PERMANENTLY_REMOVE_MESSAGE_FOR_USER;
+  payload: MessageToPermanentlyRemoveForUser;
+}
+
 export interface RemoveUserFromConvoUsersArray {
   type: typeof MessageActions.REMOVE_USER_FROM_CONVO_USERS_ARRAY;
   payload: string;
@@ -216,6 +228,7 @@ export type MessageActionTypes =
   | AddMessageToConversation
   | AddUserToConvoUsersArray
   | RemoveMessageFromConversation
+  | PermanentlyRemoveMessageForUser
   | RemoveUserFromConvoUsersArray
   | ResetConvoUsersArray
   | ClearJoinedConvosArray
