@@ -54,13 +54,15 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   const [openPopover, setOpenPopover] = useState(false);
   const userNicknamesMaps = useSelector(selectConversationUserNicknamesMaps);
   const userNickname =
-    currentUserId && userNicknamesMaps[message.conversationId][currentUserId];
+    userNicknamesMaps[message.conversationId][message.ownerId];
   const messageReplyingToOwnerNickname =
     message.messageReplyingToOwnerId &&
     userNicknamesMaps[message.conversationId][message.messageReplyingToOwnerId];
   const isCurrentUser = currentUserId === message.ownerId;
   const addMarginTop =
-    (isCurrentUser && renderedWithTimeStamp) || message.isReply;
+    (isCurrentUser && islastMessageFromDiffUser) ||
+    (isCurrentUser && renderedWithTimeStamp) ||
+    message.isReply;
   const renderWithNameOrNickname =
     isGroupConversation && !isCurrentUser && islastMessageFromDiffUser;
   const isRepliedToMessageOwnerCurrentUser =
@@ -100,13 +102,6 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
     message.messageReplyingToId &&
       onClickMessageRepliedTo(message.messageReplyingToId);
   };
-
-  if (
-    currentUserId &&
-    message.usersMessageIsRemovedFor.includes(currentUserId)
-  ) {
-    return null;
-  }
 
   return (
     <Grid
@@ -148,7 +143,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
               margin: '25px 0px 2px 48px',
               marginTop: '15px !important',
-              marginLeft: isCurrentUser ? 'unset' : '15px',
+              marginLeft: isCurrentUser ? 'unset' : '35px',
               marginRight: isCurrentUser ? '5px' : 'unset',
             }}
           >
@@ -185,7 +180,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                 padding: '10px',
                 alignItems: 'center',
                 backgroundColor: 'rgb(239, 239, 239)',
-                marginLeft: isCurrentUser ? 'unset' : '15px',
+                marginLeft: isCurrentUser ? 'unset' : '40px',
                 marginRight: isCurrentUser ? '5px' : 'unset',
                 marginBottom: '5px',
                 maxWidth: '345px',

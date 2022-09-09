@@ -260,8 +260,13 @@ const Conversation: React.FC<ConversationProps> = ({
       messagesRef.current?.scrollIntoView();
     }
 
-    if (messagesArray) {
-      const messagesReversed = [...messagesArray].reverse();
+    if (messagesArray && currentUser) {
+      const messagesReversed = [...messagesArray]
+        .reverse()
+        .filter(
+          (message) =>
+            !message.usersMessageIsRemovedFor.includes(currentUser.id)
+        );
       setMessagesArrayReversed(messagesReversed);
     }
 
@@ -275,7 +280,7 @@ const Conversation: React.FC<ConversationProps> = ({
         });
       }
     });
-  }, [messagesArray, socket]);
+  }, [messagesArray, currentUser, socket]);
 
   useEffect(() => {
     socket.on(
