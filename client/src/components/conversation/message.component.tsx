@@ -306,7 +306,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                         display: 'flex',
                         flexDirection: 'column',
                         width: '136px',
-                        height: '86px',
+                        height: message.hidden ? '43px' : '86px',
                       }}
                     >
                       <Grid sx={{ display: 'flex' }}>

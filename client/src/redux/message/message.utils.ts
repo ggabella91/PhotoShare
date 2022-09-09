@@ -4,6 +4,7 @@ import {
   Conversation,
   MessageUser,
   MessageToRemove,
+  MessageToPermanentlyRemoveForUser,
 } from './message.types';
 
 interface UpdatedConvo {
@@ -102,6 +103,39 @@ export const markMessageRemoved = (
         messages: convoMessages.messages.map((message) => {
           if (message.id === messageToRemove.messageId) {
             return { ...message, hidden: true };
+          }
+          return message;
+        }),
+        ...(convoMessages.queryLength && {
+          queryLength: convoMessages.queryLength,
+        }),
+      };
+    } else {
+      return convoMessages;
+    }
+  });
+};
+
+export const markMessagePermanentlyRemovedForUser = (
+  convoMessagesArray: ConvoMessages[],
+  messageToPermanentlyRemoveForUser: MessageToPermanentlyRemoveForUser
+) => {
+  return convoMessagesArray.map((convoMessages) => {
+    if (
+      convoMessages.conversationId ===
+      messageToPermanentlyRemoveForUser.conversationId
+    ) {
+      return {
+        conversationId: convoMessages.conversationId,
+        messages: convoMessages.messages.map((message) => {
+          if (message.id === messageToPermanentlyRemoveForUser.messageId) {
+            return {
+              ...message,
+              usersMessageIsRemovedFor: [
+                ...message.usersMessageIsRemovedFor,
+                messageToPermanentlyRemoveForUser.userId,
+              ],
+            };
           }
           return message;
         }),

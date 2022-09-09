@@ -10,6 +10,7 @@ import {
   MessageUser,
   ConvoIdAndUserData,
   MessageToRemove,
+  MessageToPermanentlyRemoveForUser,
   AddUserNicknameMap,
 } from './message.types';
 
@@ -102,6 +103,13 @@ export const removeMessageFromConversation = (
 ): MessageActionTypes => ({
   type: MessageActions.REMOVE_MESSAGE_FROM_CONVERSATION,
   payload: messageToRemove,
+});
+
+export const permanentlyRemoveMessageForUser = (
+  messageToPermanentlyRemoveForUser: MessageToPermanentlyRemoveForUser
+): MessageActionTypes => ({
+  type: MessageActions.PERMANENTLY_REMOVE_MESSAGE_FOR_USER,
+  payload: messageToPermanentlyRemoveForUser,
 });
 
 export const removeUserFromConvoUsersArray = (
