@@ -393,7 +393,15 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               maxWidth: '365px',
             }}
           >
-            <Tooltip title={renderTimeStamp(message.created)}>
+            <Tooltip
+              title={`${message.hidden ? 'Sent: ' : ''}${renderTimeStamp(
+                message.created
+              )}${
+                message.hidden
+                  ? `\nUnsent: ${renderTimeStamp(message.messageHiddenTime)}`
+                  : ''
+              }`}
+            >
               <Typography
                 sx={{
                   fontSize: 14,

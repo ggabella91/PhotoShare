@@ -54,6 +54,7 @@ export interface Message {
   conversationId: string;
   created: string;
   hidden?: boolean;
+  messageHiddenTime: string;
   usersMessageIsRemovedFor: string[];
   isReply?: boolean;
   messageReplyingToId?: string;
