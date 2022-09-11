@@ -37,6 +37,12 @@ export class User {
 
   @Prop()
   photoS3Key?: string;
+
+  @Prop()
+  isOnline: boolean;
+
+  @Prop()
+  lastActiveTime: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

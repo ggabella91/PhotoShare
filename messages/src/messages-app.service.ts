@@ -161,10 +161,29 @@ export class MessagesAppService {
     const user = await this.userModel.findOne({ userId }).exec();
 
     const updatedAuthStatusUser = await user
-      .update({ sessionCookie: {} })
+      .update(
+        { sessionCookie: {}, isOnline: false, lastActiveTime: new Date() },
+        { new: true }
+      )
       .exec();
 
+    this.logger.log(`User with ${userId} is now offline`);
+
     return updatedAuthStatusUser;
+  }
+
+  async setUserStatusToOnline(userId: string) {
+    const user = await this.userModel.findByIdAndUpdate(
+      userId,
+      {
+        isOnline: true,
+      },
+      { new: true }
+    );
+
+    this.logger.log(`User with ${userId} is now online`);
+
+    return user;
   }
 
   async findAllConversationsForUser(userId: string) {
