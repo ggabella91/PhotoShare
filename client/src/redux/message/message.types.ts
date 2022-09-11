@@ -76,6 +76,8 @@ export interface MessageUser {
   sessionCookie: Record<string, any>;
   isAuthenticated: boolean;
   photoS3Key?: string;
+  isOnline: boolean;
+  lastActiveTime: string;
 }
 
 export interface Nickname {
