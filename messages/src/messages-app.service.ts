@@ -172,16 +172,19 @@ export class MessagesAppService {
     return updatedAuthStatusUser;
   }
 
-  async setUserStatusToOnline(userId: string) {
+  async updateUserStatus(userId: string, isOnline: boolean) {
     const user = await this.userModel.findByIdAndUpdate(
       userId,
       {
-        isOnline: true,
+        isOnline,
+        lastActiveTime: new Date(),
       },
       { new: true }
     );
 
-    this.logger.log(`User with ${userId} is now online`);
+    this.logger.log(
+      `User with ${userId} is now ${isOnline ? 'online' : 'offline'}`
+    );
 
     return user;
   }
