@@ -39,16 +39,21 @@ export class MessagesAppChatGateway
 
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
-    const userId = client.handshake.query.userId;
+    const userId = client.handshake.query.userId[0];
+
     // TODO Call app service method to set user isOnline
     // property to false
+    this.appService.updateUserStatus(userId, false);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
     client.emit('clientId', client.id);
+    const userId = client.handshake.query.userId[0];
+
     // TODO Call app service method to set user isOnline
     // property to true
+    this.appService.updateUserStatus(userId, false);
   }
 
   handleNotifyUpdateFromEventListener(conversation: ConversationDocument) {
@@ -59,8 +64,6 @@ export class MessagesAppChatGateway
   async handleForceDisconnectClient(client: Socket) {
     client.disconnect();
     this.logger.log(`Client force-disconnected: ${client.id}`);
-    // TODO Call app service method to set user isOnline
-    // property to false
   }
 
   @SubscribeMessage('chatToServer')
