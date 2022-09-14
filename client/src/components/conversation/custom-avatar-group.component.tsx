@@ -7,6 +7,7 @@ import { getConvoAvatars } from '../../pages/messages-page/messages-page.utils';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
+import { MessageUser } from '../../redux/message/message.types';
 
 export enum StyleVariation {
   preview = 'preview',
@@ -18,6 +19,7 @@ interface CustomAvatarGroupProps {
   avatarS3Keys: string[];
   conversationName: string;
   styleVariation: StyleVariation;
+  messageUsers?: MessageUser[];
 }
 
 const previewStyleObj = { height: '56px', width: '56px' };
@@ -33,6 +35,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
   avatarS3Keys,
   conversationName,
   styleVariation,
+  messageUsers,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
   const convoAvatarMap = useSelector(selectConvoAvatarMap);
@@ -69,6 +72,10 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
     styleVariation === StyleVariation.preview
   ) {
     const avatarFileString = convoAvatarFileStrings[0];
+    const messageUser = messageUsers?.find(
+      (user) => user.photoS3Key === avatarS3Keys[0]
+    );
+    const isOnline = messageUser?.isOnline;
 
     return (
       <Badge
@@ -76,7 +83,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         variant='dot'
         sx={{
-          color: '#44b700',
+          color: isOnline ? '#44b700' : '#bbbbbb',
           boxShadow: `0 0 0 2px #ffffff`,
         }}
       >

@@ -44,3 +44,8 @@ export const selectConversationUserNicknamesMaps = createSelector(
   [selectMessageState],
   (messageState: MessageState) => messageState.conversationUserNicknamesMaps
 );
+
+export const selectConversationMessageUsersMap = createSelector(
+  [selectMessageState],
+  (messageState: MessageState) => messageState.conversationMessageUsersMap
+);
