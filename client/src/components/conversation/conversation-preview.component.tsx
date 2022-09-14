@@ -13,7 +13,10 @@ import { FileRequestType, UserType } from '../../redux/post/post.types';
 
 import { getPostFileStart } from '../../redux/post/post.actions';
 
-import { selectConversationMessages } from '../../redux/message/message.selectors';
+import {
+  selectConversationMessages,
+  selectConversationMessageUsersMap,
+} from '../../redux/message/message.selectors';
 import { getConversationUsersStart } from '../../redux/message/message.actions';
 
 interface ConversationPreviewProps {
@@ -31,6 +34,11 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
 }) => {
   const conversationMessages = useSelector(selectConversationMessages);
   const currentUser = useSelector(selectCurrentUser);
+  const conversationMessageUsersMap = useSelector(
+    selectConversationMessageUsersMap
+  );
+  const conversationMessageUsers =
+    conversationMessageUsersMap && conversationMessageUsersMap[conversationId];
   const lastMessage = conversationMessages.find(
     (convoMessage) => convoMessage.conversationId === conversationId
   )?.messages[0];
@@ -102,6 +110,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
         conversationName={conversationName}
         avatarS3Keys={avatarS3Keys}
         styleVariation={StyleVariation.preview}
+        messageUsers={conversationMessageUsers}
       />
       <Grid
         sx={{
