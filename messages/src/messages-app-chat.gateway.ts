@@ -53,7 +53,7 @@ export class MessagesAppChatGateway
 
     // TODO Call app service method to set user isOnline
     // property to true
-    this.appService.updateUserStatus(userId, false);
+    this.appService.updateUserStatus(userId, true);
   }
 
   handleNotifyUpdateFromEventListener(conversation: ConversationDocument) {

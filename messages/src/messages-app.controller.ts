@@ -65,6 +65,11 @@ export class MessagesAppController {
     });
   }
 
+  @Get('/conversation/users/:conversationId')
+  getConversationUsers(@Param('conversationId') conversationId: string) {
+    return this.appService.getConversationUsers({ conversationId });
+  }
+
   @Put('/conversation')
   updateConversation(@Body() updateConvoPreDto: UpdateConvoPreDto) {
     return this.appService.updateConversation(updateConvoPreDto);
