@@ -14,6 +14,7 @@ import { FileRequestType, UserType } from '../../redux/post/post.types';
 import { getPostFileStart } from '../../redux/post/post.actions';
 
 import { selectConversationMessages } from '../../redux/message/message.selectors';
+import { getConversationUsersStart } from '../../redux/message/message.actions';
 
 interface ConversationPreviewProps {
   conversationName: string;
@@ -49,6 +50,10 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
     bucket = 'photo-share-app-profile-photos-dev';
     conversationBucket = 'photo-share-app-conversation-photos-dev';
   }
+
+  useEffect(() => {
+    dispatch(getConversationUsersStart(conversationId));
+  }, [dispatch, conversationId]);
 
   useEffect(() => {
     if (avatarS3Keys?.length > 1) {

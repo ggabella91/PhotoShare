@@ -21,6 +21,9 @@ export enum MessageActions {
   CLEAR_JOINED_CONVOS_ARRAY = 'CLEAR_JOINED_CONVOS_ARRAY',
   ADD_TO_CONVERSATION_TO_USER_DATA_MAP = 'ADD_TO_CONVERSATION_TO_USER_DATA_MAP',
   ADD_CONVERSATION_USER_NICKNAMES_MAP = 'ADD_CONVERSATION_USER_NICKNAMES_MAP',
+  GET_CONVERSATION_USERS_START = 'GET_CONVERSATION_USERS_START',
+  GET_CONVERSATION_USERS_SUCCESS = 'GET_CONVERSATION_USERS_SUCCESS',
+  GET_CONVERSATION_USERS_FAILURE = 'GET_CONVERSATION_USERS_FAILURE',
 }
 
 export interface MessageState {
@@ -33,6 +36,7 @@ export interface MessageState {
   usersArrayForNewConvoReq: Partial<MessageUser>[];
   conversationToUserDataMap: Map<string, UserInfoMap>;
   conversationUserNicknamesMaps: Record<string, Record<string, string>>;
+  conversationMessageUsersMap: Record<string, MessageUser[]>;
 }
 
 export interface GetConvoMessagesReq {
@@ -113,6 +117,11 @@ export interface MessageToPermanentlyRemoveForUser {
   conversationId: string;
   messageId: string;
   userId: string;
+}
+
+export interface MessageUsersResponse {
+  conversationId: string;
+  messageUsers: MessageUser[];
 }
 
 export interface AddUserNicknameMap {
@@ -217,6 +226,21 @@ export interface AddConversationUserNicknamesMap {
   payload: AddUserNicknameMap;
 }
 
+export interface GetConversationUsersStart {
+  type: typeof MessageActions.GET_CONVERSATION_USERS_START;
+  payload: string;
+}
+
+export interface GetConversationUsersSuccess {
+  type: typeof MessageActions.GET_CONVERSATION_USERS_SUCCESS;
+  payload: MessageUsersResponse;
+}
+
+export interface GetConversationUsersFailure {
+  type: typeof MessageActions.GET_CONVERSATION_USERS_FAILURE;
+  payload: MessageError;
+}
+
 export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
@@ -236,4 +260,7 @@ export type MessageActionTypes =
   | ResetConvoUsersArray
   | ClearJoinedConvosArray
   | AddToConversationToUserDataMap
-  | AddConversationUserNicknamesMap;
+  | AddConversationUserNicknamesMap
+  | GetConversationUsersStart
+  | GetConversationUsersSuccess
+  | GetConversationUsersFailure;

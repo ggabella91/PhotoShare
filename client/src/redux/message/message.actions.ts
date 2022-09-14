@@ -12,6 +12,7 @@ import {
   MessageToRemove,
   MessageToPermanentlyRemoveForUser,
   AddUserNicknameMap,
+  MessageUsersResponse,
 } from './message.types';
 
 export const findOrCreateUserStart = (
@@ -139,4 +140,25 @@ export const addConversationUserNicknamesMap = (
 ): MessageActionTypes => ({
   type: MessageActions.ADD_CONVERSATION_USER_NICKNAMES_MAP,
   payload: addUserNicknameMap,
+});
+
+export const getConversationUsersStart = (
+  conversationId: string
+): MessageActionTypes => ({
+  type: MessageActions.GET_CONVERSATION_USERS_START,
+  payload: conversationId,
+});
+
+export const getConversationUsersSuccess = (
+  messageUsers: MessageUsersResponse
+): MessageActionTypes => ({
+  type: MessageActions.GET_CONVERSATION_USERS_SUCCESS,
+  payload: messageUsers,
+});
+
+export const getConversationUsersFailure = (
+  error: MessageError
+): MessageActionTypes => ({
+  type: MessageActions.GET_CONVERSATION_USERS_FAILURE,
+  payload: error,
 });

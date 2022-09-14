@@ -45,6 +45,8 @@ export class MessagesAppService {
           name: user.name,
           username: user.username,
           photoS3Key: user.photoS3Key,
+          isOnline: false,
+          lastActiveTime: new Date(),
         })
       )
     );
@@ -124,6 +126,43 @@ export class MessagesAppService {
     }
   }
 
+  async getConversationUsers({ conversationId }) {
+    const conversation = await this.conversationModel.findById(conversationId);
+
+    this.logger.log(`conversation with id ${conversationId}: `, conversation);
+
+    if (!conversation) return [];
+
+    const connectedUserIds = conversation.connectedUsers.map((user) =>
+      user.toString()
+    );
+
+    this.logger.log('connectedUserIds: ', connectedUserIds);
+
+    const connectedMessageUsers = await Promise.all(
+      connectedUserIds.map((userId) =>
+        this.userModel.findOne({ userId }).exec()
+      )
+    );
+
+    this.logger.log(
+      `Connected users for conversation with id ${conversationId}: `,
+      connectedMessageUsers
+    );
+
+    if (connectedMessageUsers.length) {
+      const connectedMessageUserObjects = connectedMessageUsers.map((user) => {
+        const userObj = user.toObject();
+        delete userObj.sessionCookie;
+        return userObj;
+      });
+
+      return connectedMessageUserObjects;
+    } else {
+      return [];
+    }
+  }
+
   async updateUserNicknameForConvo({
     conversationId,
     userId,
@@ -173,8 +212,8 @@ export class MessagesAppService {
   }
 
   async updateUserStatus(userId: string, isOnline: boolean) {
-    const user = await this.userModel.findByIdAndUpdate(
-      userId,
+    const user = await this.userModel.findOneAndUpdate(
+      { userId },
       {
         isOnline,
         lastActiveTime: new Date(),
@@ -183,7 +222,7 @@ export class MessagesAppService {
     );
 
     this.logger.log(
-      `User with ${userId} is now ${isOnline ? 'online' : 'offline'}`
+      `User with id ${userId} is now ${isOnline ? 'online' : 'offline'}`
     );
 
     return user;
@@ -352,6 +391,8 @@ export class MessagesAppService {
             name: user.name,
             username: user.username,
             photoS3Key: user.photoS3Key,
+            isOnline: false,
+            lastActiveTime: new Date(),
           })
         )
       );

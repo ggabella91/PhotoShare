@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Avatar, AvatarGroup } from '@mui/material';
+import Badge from '@mui/material/Badge';
 import { getConvoAvatars } from '../../pages/messages-page/messages-page.utils';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
@@ -51,21 +52,45 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
     }
   };
 
+  const renderAvatar = (avatarFileString: string, idx: number) => (
+    <Avatar
+      src={
+        !!avatarFileString ? `data:image/jpeg;base64,${avatarFileString}` : ''
+      }
+      alt={conversationName}
+      key={idx}
+      sx={getStyle()}
+    />
+  );
+
+  if (
+    (convoAvatarFileStrings.length === 1 &&
+      styleVariation === StyleVariation.conversationHeader) ||
+    styleVariation === StyleVariation.preview
+  ) {
+    const avatarFileString = convoAvatarFileStrings[0];
+
+    return (
+      <Badge
+        overlap='circular'
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        variant='dot'
+        sx={{
+          color: '#44b700',
+          boxShadow: `0 0 0 2px #ffffff`,
+        }}
+      >
+        {renderAvatar(avatarFileString, 0)}
+      </Badge>
+    );
+  }
+
   return (
     <>
       <AvatarGroup max={3} spacing='small'>
-        {convoAvatarFileStrings.map((avatarFileString, idx) => (
-          <Avatar
-            src={
-              !!avatarFileString
-                ? `data:image/jpeg;base64,${avatarFileString}`
-                : ''
-            }
-            alt={conversationName}
-            key={idx}
-            sx={getStyle()}
-          />
-        ))}
+        {convoAvatarFileStrings.map((avatarFileString, idx) =>
+          renderAvatar(avatarFileString, idx)
+        )}
       </AvatarGroup>
     </>
   );
