@@ -26,6 +26,8 @@ import {
   removeUserSessionCookieFailure,
   getConvoMessagesSuccess,
   getConvoMessagesFailure,
+  getConversationUsersFailure,
+  getConversationUsersSuccess,
 } from './message.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -100,6 +102,22 @@ export function* getConvoMessages({
   }
 }
 
+export function* getConversationUsers({
+  payload: conversationId,
+}: {
+  payload: string;
+}) {
+  try {
+    const { data: messageUsers }: { data: MessageUser[] } = yield axios.get(
+      `/api/messages/conversation/users/${conversationId}`
+    );
+
+    yield put(getConversationUsersSuccess({ conversationId, messageUsers }));
+  } catch (err) {
+    yield put(getConversationUsersFailure(err as MessageError));
+  }
+}
+
 export function* onFindOrCreateUserStart(): SagaIterator {
   yield takeEvery<ActionPattern, MessageSaga>(
     MessageActions.FIND_OR_CREATE_USER_START,
@@ -121,10 +139,18 @@ export function* onGetConvoMessagesStart(): SagaIterator {
   );
 }
 
+export function* onGetConversationUsersStart(): SagaIterator {
+  yield takeEvery<ActionPattern, MessageSaga>(
+    MessageActions.GET_CONVERSATION_USERS_START,
+    getConversationUsers
+  );
+}
+
 export function* messageSagas(): SagaIterator {
   yield all([
     call(onFindOrCreateUserStart),
     call(onRemoveUserSessionCookieStart),
     call(onGetConvoMessagesStart),
+    call(onGetConversationUsersStart),
   ]);
 }

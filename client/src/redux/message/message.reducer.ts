@@ -26,6 +26,7 @@ const INITIAL_STATE: MessageState = {
   usersArrayForNewConvoReq: [],
   conversationToUserDataMap: Map<string, UserInfoMap>(),
   conversationUserNicknamesMaps: {},
+  conversationMessageUsersMap: {},
 };
 
 const messageReducer = (
@@ -129,6 +130,14 @@ const messageReducer = (
         conversationUserNicknamesMaps: {
           ...state.conversationUserNicknamesMaps,
           [action.payload.conversationId]: action.payload.userNicknameMap,
+        },
+      };
+    case MessageActions.GET_CONVERSATION_USERS_SUCCESS:
+      return {
+        ...state,
+        conversationMessageUsersMap: {
+          ...state.conversationMessageUsersMap,
+          [action.payload.conversationId]: action.payload.messageUsers,
         },
       };
     case MessageActions.RESET_CONVO_USERS_ARRAY:
