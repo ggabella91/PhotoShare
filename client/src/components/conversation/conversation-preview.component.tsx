@@ -48,6 +48,8 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  console.log('conversationMessageUsers: ', conversationMessageUsers);
+
   let bucket: string;
   let conversationBucket: string;
 
