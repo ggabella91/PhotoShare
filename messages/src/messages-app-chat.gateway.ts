@@ -39,7 +39,7 @@ export class MessagesAppChatGateway
 
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
-    const userId = client.handshake.query.userId[0];
+    const userId = client.handshake.query.userId as string;
 
     // TODO Call app service method to set user isOnline
     // property to false
@@ -49,7 +49,7 @@ export class MessagesAppChatGateway
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
     client.emit('clientId', client.id);
-    const userId = client.handshake.query.userId[0];
+    const userId = client.handshake.query.userId as string;
 
     // TODO Call app service method to set user isOnline
     // property to true
