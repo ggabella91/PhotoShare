@@ -222,7 +222,8 @@ export class MessagesAppService {
     );
 
     this.logger.log(
-      `User with id ${userId} is now ${isOnline ? 'online' : 'offline'}`
+      `User with id ${userId} is now ${isOnline ? 'online' : 'offline'}: `,
+      user
     );
 
     return user;
