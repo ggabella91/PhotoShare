@@ -77,13 +77,17 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
     );
     const isOnline = messageUser?.isOnline;
 
+    if (!isOnline) {
+      return renderAvatar(avatarFileString, 0);
+    }
+
     return (
       <Badge
         overlap='circular'
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         variant='dot'
         sx={{
-          color: isOnline ? '#44b700' : '#bbbbbb',
+          color: '#44b700',
           boxShadow: `0 0 0 2px #ffffff`,
         }}
       >
