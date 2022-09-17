@@ -87,8 +87,14 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         variant='dot'
         sx={{
-          color: '#44b700',
-          boxShadow: `0 0 0 2px #ffffff`,
+          '& .MuiBadge-badge': {
+            backgroundColor: '#44b700',
+            color: '#44b700',
+            boxShadow: `0 0 0 3px #ffffff`,
+            width: '15px',
+            height: '15px',
+            borderRadius: '50%',
+          },
         }}
       >
         {renderAvatar(avatarFileString, 0)}
