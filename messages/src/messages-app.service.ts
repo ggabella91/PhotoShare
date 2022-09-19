@@ -20,6 +20,7 @@ import { WsException } from '@nestjs/websockets';
 import { RemoveMessageDto } from './database/dto/remove-message.dto';
 import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
 import { PermanentlyRemoveMessageForUserDto } from './database/dto/permanently-remove-message-for-user.dto';
+import { UpdateUsersMessageLastViewedDto } from './database/dto/update-message-last-viewed.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -283,8 +284,22 @@ export class MessagesAppService {
     );
   }
 
-  // TODO Implement method to update message when it is the last
-  // messaged viewed by a given user in a conversation
+  async updateUsersForWhomMessageIsLastOneViewed(
+    updateUsersMessageLastViewedDto: UpdateUsersMessageLastViewedDto
+  ) {
+    const { messageId, usersForWhomMessageWasLastOneSeen } =
+      updateUsersMessageLastViewedDto;
+
+    const updatedMessage = await this.messageModel.findByIdAndUpdate(
+      messageId,
+      { usersForWhomMessageWasLastOneSeen },
+      { new: true }
+    );
+
+    this.logger.log(`Updated message with id ${messageId}: `, updatedMessage);
+
+    return updatedMessage;
+  }
 
   async updateLastMessageTimeForConvo(conversationId: string) {
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
