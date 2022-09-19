@@ -283,6 +283,9 @@ export class MessagesAppService {
     );
   }
 
+  // TODO Implement method to update message when it is the last
+  // messaged viewed by a given user in a conversation
+
   async updateLastMessageTimeForConvo(conversationId: string) {
     const updatedConversation = await this.conversationModel.findByIdAndUpdate(
       conversationId,
