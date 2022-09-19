@@ -7,4 +7,5 @@ export class CreateMessageDto {
   messageReplyingToId?: string;
   messageReplyingToOwnerId?: string;
   messageReplyingToOwnerName?: string;
+  usersForWhomMessageWasLastOneSeen: string;
 }

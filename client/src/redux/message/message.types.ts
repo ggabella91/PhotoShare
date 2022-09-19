@@ -64,6 +64,7 @@ export interface Message {
   messageReplyingToId?: string;
   messageReplyingToOwnerId?: string;
   messageReplyingToOwnerName?: string;
+  usersForWhomMessageWasLastOneSeen: string[];
 }
 
 export interface MessageError {

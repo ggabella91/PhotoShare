@@ -56,6 +56,9 @@ export class Message {
 
   @Prop()
   messageReplyingToOwnerName: string;
+
+  @Prop()
+  usersForWhomMessageWasLastOneSeen: string[];
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
