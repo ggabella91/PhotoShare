@@ -339,6 +339,7 @@ const Conversation: React.FC<ConversationProps> = ({
             messageReplyingToOwnerName:
               userInfoMap[messageToReplyTo.ownerId].name.split(' ')[0],
           }),
+        usersForWhomMessageWasLastOneSeen: [],
       });
     }
     setMessage('');
@@ -374,6 +375,7 @@ const Conversation: React.FC<ConversationProps> = ({
         created: new Date(),
         ownerId: currentUser.id,
         conversationId,
+        usersForWhomMessageWasLastOneSeen: [],
       });
     }
   };
