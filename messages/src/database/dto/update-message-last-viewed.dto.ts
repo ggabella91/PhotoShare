@@ -1,5 +1,6 @@
 export class UpdateUsersMessageLastViewedDto {
   conversationId: string;
   messageId: string;
-  usersForWhomMessageWasLastOneSeen: string[];
+  removeUserFromLastSeenArray: boolean;
+  userId: string;
 }
