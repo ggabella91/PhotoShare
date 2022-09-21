@@ -291,6 +291,12 @@ export class MessagesAppService {
       updateUsersMessageLastViewedDto;
 
     const message = await this.messageModel.findById(messageId);
+
+    this.logger.log(
+      'message within updateUsersForWhomMessageIsLastOneViewed: ',
+      message
+    );
+
     let usersWhoViewedMessageLast = message.usersForWhomMessageWasLastOneSeen;
 
     if (removeUserFromLastSeenArray) {
@@ -309,7 +315,7 @@ export class MessagesAppService {
 
     this.logger.log(`Updated message with id ${messageId}: `, message);
 
-    return message;
+    return message.toObject();
   }
 
   async updateLastMessageTimeForConvo(conversationId: string) {
