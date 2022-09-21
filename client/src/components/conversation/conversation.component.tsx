@@ -130,6 +130,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const pageToFetch = useRef<Record<string, number>>({});
   const messagesRepliedTo = useRef<Record<string, Message>>({});
+  const lastMessageIdSeenRef = useRef('');
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
   const dispatch = useDispatch();
 
@@ -287,6 +288,13 @@ const Conversation: React.FC<ConversationProps> = ({
       'foundSingleMessage',
       (message: Message) => (messagesRepliedTo.current[message.id] = message)
     );
+
+    socket.on('userMessageLastViewedByUpdated', (message: Message) => {
+      if (message.id !== lastMessageIdSeenRef.current) {
+        lastMessageIdSeenRef.current = message.id;
+        console.log(`lastMessageIdSeenRef updated: ${message.id}`);
+      }
+    });
   }, [socket]);
 
   useEffect(() => {
@@ -430,6 +438,35 @@ const Conversation: React.FC<ConversationProps> = ({
     setIsInfoClicked(!isInfoClicked);
   };
 
+  const handleMessagesContainerFocus = () => {
+    const latestMessage = messagesArrayReversed.at(-1);
+    console.log('latestMessage: ', latestMessage);
+
+    if (
+      socket &&
+      currentUser &&
+      latestMessage &&
+      latestMessage.id !== lastMessageIdSeenRef.current
+    ) {
+      // Remove user from previous last-viewed message
+      lastMessageIdSeenRef.current &&
+        socket.emit('updateUsersMessageLastViewedBy', {
+          conversationId,
+          messageId: lastMessageIdSeenRef.current,
+          removeUserFromLastSeenArray: true,
+          userId: currentUser.id,
+        });
+
+      // Add user to new last-viewed message
+      socket.emit('updateUsersMessageLastViewedBy', {
+        conversationId,
+        messageId: latestMessage.id,
+        removeUserFromLastSeenArray: false,
+        userId: currentUser.id,
+      });
+    }
+  };
+
   return (
     <Grid
       sx={{
@@ -487,6 +524,9 @@ const Conversation: React.FC<ConversationProps> = ({
             alignItems: 'center',
             justifyContent: 'flex-end',
           }}
+          tabIndex={0}
+          onFocus={handleMessagesContainerFocus}
+          onClick={handleMessagesContainerFocus}
         >
           {!isInfoClicked ? (
             <InfoOutlinedIcon
@@ -581,6 +621,7 @@ const Conversation: React.FC<ConversationProps> = ({
                             ?.text
                         : ''
                     }
+                    lastMessageSeenRef={lastMessageIdSeenRef}
                   />
                 </Grid>
               );
