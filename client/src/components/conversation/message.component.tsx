@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Grid,
@@ -32,6 +32,7 @@ interface MessageComponentProps {
   onReplyToMessage: () => void;
   onClickMessageRepliedTo: (messageId: string) => void;
   messageReplyingToText?: string;
+  lastMessageSeenRef: React.MutableRefObject<string>;
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
@@ -49,6 +50,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   onReplyToMessage,
   onClickMessageRepliedTo,
   messageReplyingToText,
+  lastMessageSeenRef,
 }) => {
   const [showOptionsButtons, setShowOptionsButtons] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
@@ -67,6 +69,14 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
     isGroupConversation && !isCurrentUser && islastMessageFromDiffUser;
   const isRepliedToMessageOwnerCurrentUser =
     message.isReply && message.messageReplyingToOwnerId === currentUserId;
+  const messageLastSeenBy = message.usersForWhomMessageWasLastOneSeen;
+
+  useEffect(() => {
+    if (currentUserId && messageLastSeenBy.includes(currentUserId)) {
+      lastMessageSeenRef.current = message.id;
+    }
+  }, [currentUserId, lastMessageSeenRef, message.id, messageLastSeenBy]);
+
   const moreIconButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClickMore = () => {
