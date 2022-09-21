@@ -287,18 +287,35 @@ export class MessagesAppService {
   async updateUsersForWhomMessageIsLastOneViewed(
     updateUsersMessageLastViewedDto: UpdateUsersMessageLastViewedDto
   ) {
-    const { messageId, usersForWhomMessageWasLastOneSeen } =
+    const { messageId, removeUserFromLastSeenArray, userId } =
       updateUsersMessageLastViewedDto;
 
-    const updatedMessage = await this.messageModel.findByIdAndUpdate(
-      messageId,
-      { usersForWhomMessageWasLastOneSeen },
-      { new: true }
+    const message = await this.messageModel.findById(messageId);
+
+    this.logger.log(
+      'message within updateUsersForWhomMessageIsLastOneViewed: ',
+      message
     );
 
-    this.logger.log(`Updated message with id ${messageId}: `, updatedMessage);
+    let usersWhoViewedMessageLast = message.usersForWhomMessageWasLastOneSeen;
 
-    return updatedMessage;
+    if (removeUserFromLastSeenArray) {
+      usersWhoViewedMessageLast = usersWhoViewedMessageLast.filter(
+        (user) => user !== userId
+      );
+      message.usersForWhomMessageWasLastOneSeen = usersWhoViewedMessageLast;
+
+      await message.save();
+    } else {
+      usersWhoViewedMessageLast.push(userId);
+      message.usersForWhomMessageWasLastOneSeen = usersWhoViewedMessageLast;
+
+      await message.save();
+    }
+
+    this.logger.log(`Updated message with id ${messageId}: `, message);
+
+    return message.toObject();
   }
 
   async updateLastMessageTimeForConvo(conversationId: string) {

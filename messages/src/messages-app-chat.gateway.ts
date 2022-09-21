@@ -135,7 +135,7 @@ export class MessagesAppChatGateway
 
     this.wss
       .to(conversationId)
-      .emit('userMessageLastViewedByUpdated', updateUsersMessageLastViewedDto);
+      .emit('userMessageLastViewedByUpdated', updatedMessage);
   }
 
   @SubscribeMessage('createConversation')
