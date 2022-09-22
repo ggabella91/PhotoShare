@@ -524,9 +524,6 @@ const Conversation: React.FC<ConversationProps> = ({
             alignItems: 'center',
             justifyContent: 'flex-end',
           }}
-          tabIndex={0}
-          onFocus={handleMessagesContainerFocus}
-          onClick={handleMessagesContainerFocus}
         >
           {!isInfoClicked ? (
             <InfoOutlinedIcon
@@ -556,6 +553,8 @@ const Conversation: React.FC<ConversationProps> = ({
             }}
             onScroll={handleMessagesContainerScroll}
             ref={messagesContainerRef}
+            tabIndex={0}
+            onFocus={handleMessagesContainerFocus}
           >
             {messagesArrayReversed?.map((message, idx) => {
               const renderTime =
@@ -685,6 +684,7 @@ const Conversation: React.FC<ConversationProps> = ({
               maxHeight: `${textAreaParentDivHeight}px`,
               padding: '20px 0px',
             }}
+            onFocus={handleMessagesContainerFocus}
           >
             <Box component='form' sx={{ width: '100%' }}>
               <TextField
