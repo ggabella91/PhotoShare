@@ -290,8 +290,41 @@ const Conversation: React.FC<ConversationProps> = ({
     );
 
     socket.on('userMessageLastViewedByUpdated', (message: Message) => {
-      if (message.id !== lastMessageIdSeenRef.current) {
+      if (
+        message.id !== lastMessageIdSeenRef.current &&
+        currentUser &&
+        messagesArrayReversed.length
+      ) {
+        const previousLastMesageSeenId = lastMessageIdSeenRef.current;
         lastMessageIdSeenRef.current = message.id;
+
+        const messagesReversedCopy = [...messagesArrayReversed];
+        const updatedMessagesReversed = messagesReversedCopy.map(
+          (arrayMessage) => {
+            if (arrayMessage.id === previousLastMesageSeenId) {
+              return {
+                ...arrayMessage,
+                usersForWhomMessageWasLastOneSeen:
+                  arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
+                    (userId) => userId !== currentUser?.id
+                  ),
+              };
+            } else if (arrayMessage.id === message.id) {
+              return {
+                ...arrayMessage,
+                usersForWhomMessageWasLastOneSeen: [
+                  ...arrayMessage.usersForWhomMessageWasLastOneSeen,
+                  currentUser.id,
+                ],
+              };
+            } else {
+              return message;
+            }
+          }
+        );
+
+        setMessagesArrayReversed(updatedMessagesReversed);
+
         console.log(`lastMessageIdSeenRef updated: ${message.id}`);
       }
     });
