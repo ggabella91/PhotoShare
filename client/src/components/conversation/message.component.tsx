@@ -10,10 +10,13 @@ import {
 } from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
-import { selectConversationUserNicknamesMaps } from '../../redux/message/message.selectors';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { renderTimeStamp } from './conversation.utils';
+
+import { selectConversationToUserDataMap } from '../../redux/message/message.selectors';
+
+import { selectConversationUserNicknamesMaps } from '../../redux/message/message.selectors';
 
 type CustomRef = (node: HTMLDivElement | null) => void;
 
@@ -54,6 +57,10 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
 }) => {
   const [showOptionsButtons, setShowOptionsButtons] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
+  const conversationToUserDataMap = useSelector(
+    selectConversationToUserDataMap
+  );
+  const userDataMap = conversationToUserDataMap.get(message.conversationId);
   const userNicknamesMaps = useSelector(selectConversationUserNicknamesMaps);
   const userNickname =
     userNicknamesMaps[message.conversationId][message.ownerId];
@@ -428,6 +435,14 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                   : message.text}
               </Typography>
             </Tooltip>
+          </Grid>
+          <Grid>
+            {messageLastSeenBy.length &&
+              messageLastSeenBy.map((userId) => (
+                <Typography>
+                  {userDataMap && userDataMap[userId].name}
+                </Typography>
+              ))}
           </Grid>
         </Grid>
       </Grid>
