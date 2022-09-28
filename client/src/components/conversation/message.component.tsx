@@ -437,7 +437,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
             </Tooltip>
           </Grid>
           <Grid>
-            {messageLastSeenBy.length &&
+            {!!messageLastSeenBy.length &&
               messageLastSeenBy.map((userId) => (
                 <Typography>
                   {userDataMap && userDataMap[userId].name}

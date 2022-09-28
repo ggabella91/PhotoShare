@@ -290,6 +290,8 @@ const Conversation: React.FC<ConversationProps> = ({
     );
 
     socket.on('userMessageLastViewedByUpdated', (message: Message) => {
+      // TODO Update this handler function, due to updates to
+      // backend service method
       if (
         message.id !== lastMessageIdSeenRef.current &&
         currentUser &&
@@ -382,6 +384,8 @@ const Conversation: React.FC<ConversationProps> = ({
           }),
         usersForWhomMessageWasLastOneSeen: [],
       });
+
+      setTimeout(() => handleMessagesContainerFocus(), 2000);
     }
     setMessage('');
   };
@@ -481,20 +485,10 @@ const Conversation: React.FC<ConversationProps> = ({
       latestMessage &&
       latestMessage.id !== lastMessageIdSeenRef.current
     ) {
-      // Remove user from previous last-viewed message
-      lastMessageIdSeenRef.current &&
-        socket.emit('updateUsersMessageLastViewedBy', {
-          conversationId,
-          messageId: lastMessageIdSeenRef.current,
-          removeUserFromLastSeenArray: true,
-          userId: currentUser.id,
-        });
-
       // Add user to new last-viewed message
       socket.emit('updateUsersMessageLastViewedBy', {
         conversationId,
         messageId: latestMessage.id,
-        removeUserFromLastSeenArray: false,
         userId: currentUser.id,
       });
     }
