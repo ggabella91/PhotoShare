@@ -287,35 +287,42 @@ export class MessagesAppService {
   async updateUsersForWhomMessageIsLastOneViewed(
     updateUsersMessageLastViewedDto: UpdateUsersMessageLastViewedDto
   ) {
-    const { messageId, removeUserFromLastSeenArray, userId } =
-      updateUsersMessageLastViewedDto;
+    const { messageId, userId } = updateUsersMessageLastViewedDto;
 
-    const message = await this.messageModel.findById(messageId);
-
-    this.logger.log(
-      'message within updateUsersForWhomMessageIsLastOneViewed: ',
-      message
+    const updateResult = await this.messageModel.updateMany(
+      {
+        usersForWhomMessageWasLastOneSeen: userId,
+      },
+      { $pull: { usersForWhomMessageWasLastOneSeen: userId } }
     );
 
-    let usersWhoViewedMessageLast = message.usersForWhomMessageWasLastOneSeen;
+    this.logger.log(
+      'Update result for old messages with userId in usersForWhomMessageWasLastOneSeen array: ',
+      updateResult
+    );
 
-    if (removeUserFromLastSeenArray) {
-      usersWhoViewedMessageLast = usersWhoViewedMessageLast.filter(
-        (user) => user !== userId
-      );
-      message.usersForWhomMessageWasLastOneSeen = usersWhoViewedMessageLast;
+    const newMessageToUpdate = await this.messageModel.findById(messageId);
 
-      await message.save();
-    } else {
-      usersWhoViewedMessageLast.push(userId);
-      message.usersForWhomMessageWasLastOneSeen = usersWhoViewedMessageLast;
+    this.logger.log(
+      'newMessageToUpdate within updateUsersForWhomMessageIsLastOneViewed: ',
+      newMessageToUpdate
+    );
 
-      await message.save();
-    }
+    let usersWhoViewedMessageLast =
+      newMessageToUpdate.usersForWhomMessageWasLastOneSeen;
 
-    this.logger.log(`Updated message with id ${messageId}: `, message);
+    usersWhoViewedMessageLast.push(userId);
+    newMessageToUpdate.usersForWhomMessageWasLastOneSeen =
+      usersWhoViewedMessageLast;
 
-    return message.toObject();
+    await newMessageToUpdate.save();
+
+    this.logger.log(
+      `Updated message with id ${messageId}: `,
+      newMessageToUpdate
+    );
+
+    return newMessageToUpdate.toObject();
   }
 
   async updateLastMessageTimeForConvo(conversationId: string) {
