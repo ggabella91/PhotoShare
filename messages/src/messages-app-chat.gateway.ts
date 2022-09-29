@@ -126,16 +126,17 @@ export class MessagesAppChatGateway
     @MessageBody()
     updateUsersMessageLastViewedDto: UpdateUsersMessageLastViewedDto
   ) {
-    const { conversationId } = updateUsersMessageLastViewedDto;
+    const { conversationId, userId } = updateUsersMessageLastViewedDto;
 
     const updatedMessage =
       await this.appService.updateUsersForWhomMessageIsLastOneViewed(
         updateUsersMessageLastViewedDto
       );
 
-    this.wss
-      .to(conversationId)
-      .emit('userMessageLastViewedByUpdated', updatedMessage);
+    this.wss.to(conversationId).emit('userMessageLastViewedByUpdated', {
+      message: updatedMessage,
+      viewedBy: userId,
+    });
   }
 
   @SubscribeMessage('createConversation')
