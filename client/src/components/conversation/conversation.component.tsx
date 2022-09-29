@@ -70,6 +70,11 @@ export interface OptionsDialogUser {
   nickname: string;
 }
 
+interface MessageViewedBy {
+  message: Message;
+  viewedBy: string;
+}
+
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
@@ -94,6 +99,8 @@ const Conversation: React.FC<ConversationProps> = ({
   const [messagesArrayReversed, setMessagesArrayReversed] = useState<Message[]>(
     []
   );
+  const [messageLastSeen, setMessageLastSeen] =
+    useState<MessageViewedBy | null>(null);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -131,6 +138,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const pageToFetch = useRef<Record<string, number>>({});
   const messagesRepliedTo = useRef<Record<string, Message>>({});
   const lastMessageIdSeenRef = useRef('');
+  const shouldUpdateMessagesLastSeen = useRef(false);
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
   const dispatch = useDispatch();
 
@@ -289,48 +297,66 @@ const Conversation: React.FC<ConversationProps> = ({
       (message: Message) => (messagesRepliedTo.current[message.id] = message)
     );
 
-    socket.on('userMessageLastViewedByUpdated', (message: Message) => {
+    socket.on('userMessageLastViewedByUpdated', (message: MessageViewedBy) => {
       // TODO Update this handler function, due to updates to
       // backend service method
-      if (
-        message.id !== lastMessageIdSeenRef.current &&
-        currentUser &&
-        messagesArrayReversed.length
-      ) {
-        const previousLastMesageSeenId = lastMessageIdSeenRef.current;
-        lastMessageIdSeenRef.current = message.id;
 
-        const messagesReversedCopy = [...messagesArrayReversed];
-        const updatedMessagesReversed = messagesReversedCopy.map(
-          (arrayMessage) => {
-            if (arrayMessage.id === previousLastMesageSeenId) {
-              return {
-                ...arrayMessage,
-                usersForWhomMessageWasLastOneSeen:
-                  arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
-                    (userId) => userId !== currentUser?.id
-                  ),
-              };
-            } else if (arrayMessage.id === message.id) {
-              return {
-                ...arrayMessage,
-                usersForWhomMessageWasLastOneSeen: [
-                  ...arrayMessage.usersForWhomMessageWasLastOneSeen,
-                  currentUser.id,
-                ],
-              };
-            } else {
-              return message;
-            }
-          }
-        );
+      console.log(
+        'lastMessageIdSeenRef.current: ',
+        lastMessageIdSeenRef.current
+      );
 
-        setMessagesArrayReversed(updatedMessagesReversed);
+      if (message.message.id !== lastMessageIdSeenRef.current) {
+        setMessageLastSeen(message);
+        shouldUpdateMessagesLastSeen.current = true;
 
-        console.log(`lastMessageIdSeenRef updated: ${message.id}`);
+        console.log(`messageLastSeen set to true, new message: ${message}`);
       }
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (
+      messageLastSeen &&
+      messagesArrayReversed.length &&
+      messagesArrayReversed.length !== messagesArray?.length &&
+      shouldUpdateMessagesLastSeen.current
+    ) {
+      console.log('messageLastSeen: ', messageLastSeen);
+
+      shouldUpdateMessagesLastSeen.current = false;
+      const previousLastMesageSeenId = lastMessageIdSeenRef.current;
+      lastMessageIdSeenRef.current = messageLastSeen.message.id;
+
+      const messagesReversedCopy = [...messagesArrayReversed];
+      const updatedMessagesReversed: Message[] = messagesReversedCopy.map(
+        (arrayMessage) => {
+          if (arrayMessage.id === previousLastMesageSeenId) {
+            return {
+              ...arrayMessage,
+              usersForWhomMessageWasLastOneSeen:
+                arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
+                  (userId) => userId !== messageLastSeen.viewedBy
+                ),
+            };
+          } else if (arrayMessage.id === messageLastSeen.message.id) {
+            return {
+              ...arrayMessage,
+              usersForWhomMessageWasLastOneSeen: [
+                ...arrayMessage.usersForWhomMessageWasLastOneSeen,
+                messageLastSeen.viewedBy,
+              ],
+            };
+          } else {
+            return arrayMessage;
+          }
+        }
+      );
+
+      setMessagesArrayReversed(updatedMessagesReversed);
+      setMessageLastSeen(null);
+    }
+  }, [messageLastSeen, messagesArrayReversed, messagesArray?.length]);
 
   useEffect(() => {
     if (!isInfoClicked) {
