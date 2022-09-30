@@ -308,6 +308,14 @@ export class MessagesAppService {
       newMessageToUpdate
     );
 
+    if (newMessageToUpdate.usersForWhomMessageWasLastOneSeen.includes(userId)) {
+      this.logger.log(
+        `newMessageToUpdate already includes userId ${userId} within usersForWhomMessageWasLastOneSeen array`
+      );
+
+      return newMessageToUpdate.toObject();
+    }
+
     let usersWhoViewedMessageLast =
       newMessageToUpdate.usersForWhomMessageWasLastOneSeen;
 
