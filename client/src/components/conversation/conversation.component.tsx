@@ -310,7 +310,9 @@ const Conversation: React.FC<ConversationProps> = ({
         setMessageLastSeen(message);
         shouldUpdateMessagesLastSeen.current = true;
 
-        console.log(`messageLastSeen set to true, new message: ${message}`);
+        console.log(
+          `messageLastSeen set to true, new message: ${message.message.toString()}`
+        );
       }
     });
   }, [socket]);
@@ -637,6 +639,7 @@ const Conversation: React.FC<ConversationProps> = ({
                   )}
                   <MessageComponent
                     id={message.id}
+                    key={message.id}
                     userInfo={userInfoMap[message.ownerId]}
                     message={message}
                     currentUserId={currentUser?.id}
