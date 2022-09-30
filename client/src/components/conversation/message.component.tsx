@@ -436,14 +436,23 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               </Typography>
             </Tooltip>
           </Grid>
-          <Grid>
-            {!!messageLastSeenBy.length &&
-              messageLastSeenBy.map((userId) => (
-                <Typography>
-                  {userDataMap && userDataMap[userId].name}
-                </Typography>
-              ))}
-          </Grid>
+        </Grid>
+      </Grid>
+      <Grid
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          width: '100%',
+          height: 'auto',
+        }}
+      >
+        <Grid sx={{ display: 'flex', flexDirection: 'column', width: 'auto' }}>
+          {!!messageLastSeenBy.length &&
+            messageLastSeenBy.map((userId) => (
+              <Typography sx={{ fontSize: 9 }}>
+                {userDataMap && userDataMap[userId].name}
+              </Typography>
+            ))}
         </Grid>
       </Grid>
     </Grid>
