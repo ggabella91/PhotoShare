@@ -79,7 +79,11 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   const messageLastSeenBy = message.usersForWhomMessageWasLastOneSeen;
 
   useEffect(() => {
-    if (currentUserId && messageLastSeenBy.includes(currentUserId)) {
+    if (
+      currentUserId &&
+      messageLastSeenBy.includes(currentUserId) &&
+      message.id > lastMessageSeenRef.current
+    ) {
       lastMessageSeenRef.current = message.id;
     }
   }, [currentUserId, lastMessageSeenRef, message.id, messageLastSeenBy]);
@@ -444,6 +448,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
           justifyContent: 'flex-end',
           width: '100%',
           height: 'auto',
+          marginTop: '-4px',
+          marginBottom: '8px',
         }}
       >
         <Grid sx={{ display: 'flex', flexDirection: 'column', width: 'auto' }}>

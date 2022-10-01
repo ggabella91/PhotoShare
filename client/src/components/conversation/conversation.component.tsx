@@ -306,12 +306,12 @@ const Conversation: React.FC<ConversationProps> = ({
         lastMessageIdSeenRef.current
       );
 
-      if (message.message.id !== lastMessageIdSeenRef.current) {
+      if (message.message.id > lastMessageIdSeenRef.current) {
         setMessageLastSeen(message);
         shouldUpdateMessagesLastSeen.current = true;
 
         console.log(
-          `messageLastSeen set to true, new message: ${message.message.toString()}`
+          `messageLastSeen set to true, new message: ${message.message.text}`
         );
       }
     });
@@ -321,7 +321,6 @@ const Conversation: React.FC<ConversationProps> = ({
     if (
       messageLastSeen &&
       messagesArrayReversed.length &&
-      messagesArrayReversed.length !== messagesArray?.length &&
       shouldUpdateMessagesLastSeen.current
     ) {
       console.log('messageLastSeen: ', messageLastSeen);
@@ -333,7 +332,20 @@ const Conversation: React.FC<ConversationProps> = ({
       const messagesReversedCopy = [...messagesArrayReversed];
       const updatedMessagesReversed: Message[] = messagesReversedCopy.map(
         (arrayMessage) => {
-          if (arrayMessage.id === previousLastMesageSeenId) {
+          if (
+            arrayMessage.id < messageLastSeen.message.id &&
+            arrayMessage.usersForWhomMessageWasLastOneSeen.includes(
+              messageLastSeen.viewedBy
+            )
+          ) {
+            return {
+              ...arrayMessage,
+              usersForWhomMessageWasLastOneSeen:
+                arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
+                  (userId) => userId !== messageLastSeen.viewedBy
+                ),
+            };
+          } else if (arrayMessage.id === previousLastMesageSeenId) {
             return {
               ...arrayMessage,
               usersForWhomMessageWasLastOneSeen:
@@ -511,7 +523,7 @@ const Conversation: React.FC<ConversationProps> = ({
       socket &&
       currentUser &&
       latestMessage &&
-      latestMessage.id !== lastMessageIdSeenRef.current
+      latestMessage.id > lastMessageIdSeenRef.current
     ) {
       // Add user to new last-viewed message
       socket.emit('updateUsersMessageLastViewedBy', {
