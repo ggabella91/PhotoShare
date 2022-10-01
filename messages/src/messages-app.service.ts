@@ -289,18 +289,6 @@ export class MessagesAppService {
   ) {
     const { messageId, userId } = updateUsersMessageLastViewedDto;
 
-    const updateResult = await this.messageModel.updateMany(
-      {
-        usersForWhomMessageWasLastOneSeen: userId,
-      },
-      { $pull: { usersForWhomMessageWasLastOneSeen: userId } }
-    );
-
-    this.logger.log(
-      'Update result for old messages with userId in usersForWhomMessageWasLastOneSeen array: ',
-      updateResult
-    );
-
     const newMessageToUpdate = await this.messageModel.findById(messageId);
 
     this.logger.log(
@@ -315,6 +303,18 @@ export class MessagesAppService {
 
       return newMessageToUpdate.toObject();
     }
+
+    const updateResult = await this.messageModel.updateMany(
+      {
+        usersForWhomMessageWasLastOneSeen: userId,
+      },
+      { $pull: { usersForWhomMessageWasLastOneSeen: userId } }
+    );
+
+    this.logger.log(
+      'Update result for old messages with userId in usersForWhomMessageWasLastOneSeen array: ',
+      updateResult
+    );
 
     let usersWhoViewedMessageLast =
       newMessageToUpdate.usersForWhomMessageWasLastOneSeen;
