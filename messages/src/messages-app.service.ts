@@ -296,17 +296,10 @@ export class MessagesAppService {
       newMessageToUpdate
     );
 
-    if (newMessageToUpdate.usersForWhomMessageWasLastOneSeen.includes(userId)) {
-      this.logger.log(
-        `newMessageToUpdate already includes userId ${userId} within usersForWhomMessageWasLastOneSeen array`
-      );
-
-      return newMessageToUpdate.toObject();
-    }
-
     const updateResult = await this.messageModel.updateMany(
       {
         usersForWhomMessageWasLastOneSeen: userId,
+        _id: { $ne: messageId },
       },
       { $pull: { usersForWhomMessageWasLastOneSeen: userId } }
     );
@@ -315,6 +308,14 @@ export class MessagesAppService {
       'Update result for old messages with userId in usersForWhomMessageWasLastOneSeen array: ',
       updateResult
     );
+
+    if (newMessageToUpdate.usersForWhomMessageWasLastOneSeen.includes(userId)) {
+      this.logger.log(
+        `newMessageToUpdate already includes userId ${userId} within usersForWhomMessageWasLastOneSeen array`
+      );
+
+      return null;
+    }
 
     let usersWhoViewedMessageLast =
       newMessageToUpdate.usersForWhomMessageWasLastOneSeen;

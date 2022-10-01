@@ -42,8 +42,6 @@ export class MessagesAppChatGateway
     this.logger.log(`Client disconnected: ${client.id}`);
     const userId = client.handshake.query.userId as string;
 
-    // TODO Call app service method to set user isOnline
-    // property to false
     this.appService.updateUserStatus(userId, false);
   }
 
@@ -52,8 +50,6 @@ export class MessagesAppChatGateway
     client.emit('clientId', client.id);
     const userId = client.handshake.query.userId as string;
 
-    // TODO Call app service method to set user isOnline
-    // property to true
     this.appService.updateUserStatus(userId, true);
   }
 

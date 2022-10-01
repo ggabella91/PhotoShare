@@ -5,6 +5,7 @@ import {
   MessageUser,
   MessageToRemove,
   MessageToPermanentlyRemoveForUser,
+  MessageLastSeen,
 } from './message.types';
 
 interface UpdatedConvo {
@@ -85,6 +86,51 @@ export const addMessage = (
         ...(convoMessages.queryLength && {
           queryLength: convoMessages.queryLength,
         }),
+      };
+    } else {
+      return convoMessages;
+    }
+  });
+};
+
+export const updateLastSeenForMessage = (
+  convoMessagesArray: ConvoMessages[],
+  messageLastSeen: MessageLastSeen
+) => {
+  return convoMessagesArray.map((convoMessages) => {
+    if (
+      convoMessages.conversationId === messageLastSeen.message.conversationId
+    ) {
+      const messagesCopy = [...convoMessages.messages];
+      const updatedMessages = messagesCopy.map((arrayMessage) => {
+        if (
+          arrayMessage.id < messageLastSeen.message.id &&
+          arrayMessage.usersForWhomMessageWasLastOneSeen.includes(
+            messageLastSeen.viewedBy
+          )
+        ) {
+          return {
+            ...arrayMessage,
+            usersForWhomMessageWasLastOneSeen:
+              arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
+                (userId) => userId !== messageLastSeen.viewedBy
+              ),
+          };
+        } else if (arrayMessage.id === messageLastSeen.message.id) {
+          return {
+            ...arrayMessage,
+            usersForWhomMessageWasLastOneSeen: [
+              ...messageLastSeen.message.usersForWhomMessageWasLastOneSeen,
+            ],
+          };
+        } else {
+          return arrayMessage;
+        }
+      });
+
+      return {
+        ...convoMessages,
+        messages: updatedMessages,
       };
     } else {
       return convoMessages;

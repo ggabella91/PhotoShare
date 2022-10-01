@@ -13,6 +13,7 @@ import {
   MessageToPermanentlyRemoveForUser,
   AddUserNicknameMap,
   MessageUsersResponse,
+  MessageLastSeen,
 } from './message.types';
 
 export const findOrCreateUserStart = (
@@ -90,6 +91,13 @@ export const addMessageToConversation = (
 ): MessageActionTypes => ({
   type: MessageActions.ADD_MESSAGE_TO_CONVERSATION,
   payload: message,
+});
+
+export const updateMessageLastSeenBy = (
+  messageLastSeen: MessageLastSeen
+): MessageActionTypes => ({
+  type: MessageActions.UPDATE_MESSAGE_LAST_SEEN_BY,
+  payload: messageLastSeen,
 });
 
 export const addUserToConvoUsersArray = (

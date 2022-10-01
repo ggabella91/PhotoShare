@@ -57,6 +57,8 @@ export class Message {
   @Prop()
   messageReplyingToOwnerName: string;
 
+  // TODO Add support for recording time
+  // message was seen by each user below
   @Prop()
   usersForWhomMessageWasLastOneSeen: string[];
 }

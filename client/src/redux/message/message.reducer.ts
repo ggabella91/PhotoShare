@@ -14,6 +14,7 @@ import {
   updateAndSortJoinedConversationsArray,
   markMessageRemoved,
   markMessagePermanentlyRemovedForUser,
+  updateLastSeenForMessage,
 } from './message.utils';
 
 const INITIAL_STATE: MessageState = {
@@ -86,6 +87,11 @@ const messageReducer = (
               ),
             }
           : null,
+      };
+    case MessageActions.UPDATE_MESSAGE_LAST_SEEN_BY:
+      return {
+        ...state,
+        messages: updateLastSeenForMessage(state.messages, action.payload),
       };
     case MessageActions.ADD_USER_TO_CONVO_USERS_ARRAY:
       return {

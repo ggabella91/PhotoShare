@@ -452,13 +452,28 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
           marginBottom: '8px',
         }}
       >
-        <Grid sx={{ display: 'flex', flexDirection: 'column', width: 'auto' }}>
+        <Grid sx={{ display: 'flex', width: 'auto' }}>
+          {/* TODO Filter the currentUser from seeing their own avatar here */}
           {!!messageLastSeenBy.length &&
-            messageLastSeenBy.map((userId) => (
-              <Typography sx={{ fontSize: 9 }}>
-                {userDataMap && userDataMap[userId].name}
-              </Typography>
-            ))}
+            messageLastSeenBy.map((userId, idx) => {
+              const userData = userDataMap && userDataMap[userId];
+              const avatarFileString = userData?.profilePhotoFileString;
+              const userNickname =
+                userNicknamesMaps[message.conversationId][userId];
+
+              return (
+                <Avatar
+                  src={
+                    !!avatarFileString
+                      ? `data:image/jpeg;base64,${avatarFileString}`
+                      : ''
+                  }
+                  alt={`Seen by ${userNickname}`}
+                  key={idx}
+                  sx={{ height: '14px', width: '14px', margin: '0 1px' }}
+                />
+              );
+            })}
         </Grid>
       </Grid>
     </Grid>

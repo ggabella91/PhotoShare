@@ -36,6 +36,7 @@ import {
   getConvoMessagesStart,
   addToConversationToUserDataMap,
   addConversationUserNicknamesMap,
+  updateMessageLastSeenBy,
 } from '../../redux/message/message.actions';
 
 import {
@@ -298,79 +299,11 @@ const Conversation: React.FC<ConversationProps> = ({
     );
 
     socket.on('userMessageLastViewedByUpdated', (message: MessageViewedBy) => {
-      // TODO Update this handler function, due to updates to
-      // backend service method
-
-      console.log(
-        'lastMessageIdSeenRef.current: ',
-        lastMessageIdSeenRef.current
-      );
-
-      if (message.message.id > lastMessageIdSeenRef.current) {
-        setMessageLastSeen(message);
-        shouldUpdateMessagesLastSeen.current = true;
-
-        console.log(
-          `messageLastSeen set to true, new message: ${message.message.text}`
-        );
+      if (message.message) {
+        dispatch(updateMessageLastSeenBy(message));
       }
     });
-  }, [socket]);
-
-  useEffect(() => {
-    if (
-      messageLastSeen &&
-      messagesArrayReversed.length &&
-      shouldUpdateMessagesLastSeen.current
-    ) {
-      console.log('messageLastSeen: ', messageLastSeen);
-
-      shouldUpdateMessagesLastSeen.current = false;
-      const previousLastMesageSeenId = lastMessageIdSeenRef.current;
-      lastMessageIdSeenRef.current = messageLastSeen.message.id;
-
-      const messagesReversedCopy = [...messagesArrayReversed];
-      const updatedMessagesReversed: Message[] = messagesReversedCopy.map(
-        (arrayMessage) => {
-          if (
-            arrayMessage.id < messageLastSeen.message.id &&
-            arrayMessage.usersForWhomMessageWasLastOneSeen.includes(
-              messageLastSeen.viewedBy
-            )
-          ) {
-            return {
-              ...arrayMessage,
-              usersForWhomMessageWasLastOneSeen:
-                arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
-                  (userId) => userId !== messageLastSeen.viewedBy
-                ),
-            };
-          } else if (arrayMessage.id === previousLastMesageSeenId) {
-            return {
-              ...arrayMessage,
-              usersForWhomMessageWasLastOneSeen:
-                arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
-                  (userId) => userId !== messageLastSeen.viewedBy
-                ),
-            };
-          } else if (arrayMessage.id === messageLastSeen.message.id) {
-            return {
-              ...arrayMessage,
-              usersForWhomMessageWasLastOneSeen: [
-                ...arrayMessage.usersForWhomMessageWasLastOneSeen,
-                messageLastSeen.viewedBy,
-              ],
-            };
-          } else {
-            return arrayMessage;
-          }
-        }
-      );
-
-      setMessagesArrayReversed(updatedMessagesReversed);
-      setMessageLastSeen(null);
-    }
-  }, [messageLastSeen, messagesArrayReversed, messagesArray?.length]);
+  }, [dispatch, socket]);
 
   useEffect(() => {
     if (!isInfoClicked) {
@@ -525,7 +458,9 @@ const Conversation: React.FC<ConversationProps> = ({
       latestMessage &&
       latestMessage.id > lastMessageIdSeenRef.current
     ) {
-      // Add user to new last-viewed message
+      // TODO Emit this message when a user sends a new message, such
+      // that the message should immediately be updated as the last
+      // one seen by that user
       socket.emit('updateUsersMessageLastViewedBy', {
         conversationId,
         messageId: latestMessage.id,
