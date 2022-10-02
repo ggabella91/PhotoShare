@@ -298,10 +298,10 @@ export class MessagesAppService {
 
     const updateResult = await this.messageModel.updateMany(
       {
-        usersForWhomMessageWasLastOneSeen: userId,
+        'usersForWhomMessageWasLastOneSeen.userId': userId,
         _id: { $ne: messageId },
       },
-      { $pull: { usersForWhomMessageWasLastOneSeen: userId } }
+      { $pull: { usersForWhomMessageWasLastOneSeen: { userId: { userId } } } }
     );
 
     this.logger.log(
@@ -309,7 +309,12 @@ export class MessagesAppService {
       updateResult
     );
 
-    if (newMessageToUpdate.usersForWhomMessageWasLastOneSeen.includes(userId)) {
+    const usersLastSeenBy =
+      newMessageToUpdate.usersForWhomMessageWasLastOneSeen.map(
+        (user) => user.userId
+      );
+
+    if (usersLastSeenBy.includes(userId)) {
       this.logger.log(
         `newMessageToUpdate already includes userId ${userId} within usersForWhomMessageWasLastOneSeen array`
       );
@@ -320,7 +325,7 @@ export class MessagesAppService {
     let usersWhoViewedMessageLast =
       newMessageToUpdate.usersForWhomMessageWasLastOneSeen;
 
-    usersWhoViewedMessageLast.push(userId);
+    usersWhoViewedMessageLast.push({ userId, seenTime: new Date() });
     newMessageToUpdate.usersForWhomMessageWasLastOneSeen =
       usersWhoViewedMessageLast;
 
