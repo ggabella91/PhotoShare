@@ -65,12 +65,17 @@ export interface Message {
   messageReplyingToId?: string;
   messageReplyingToOwnerId?: string;
   messageReplyingToOwnerName?: string;
-  usersForWhomMessageWasLastOneSeen: string[];
+  usersForWhomMessageWasLastOneSeen: MessageSeenBy[];
 }
 
 export interface MessageLastSeen {
   message: Message;
   viewedBy: string;
+}
+
+export interface MessageSeenBy {
+  userId: string;
+  seenTime: string;
 }
 
 export interface MessageError {

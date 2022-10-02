@@ -5,6 +5,15 @@ import { User } from './user.schema';
 
 export type MessageDocument = Message & Document;
 
+@Schema({ id: false })
+class MessageSeenBy {
+  @Prop({ required: true })
+  userId: string;
+
+  @Prop({ required: true })
+  seenTime: Date;
+}
+
 @Schema({
   toObject: {
     transform: function (doc, ret) {
@@ -57,10 +66,8 @@ export class Message {
   @Prop()
   messageReplyingToOwnerName: string;
 
-  // TODO Add support for recording time
-  // message was seen by each user below
   @Prop()
-  usersForWhomMessageWasLastOneSeen: string[];
+  usersForWhomMessageWasLastOneSeen: MessageSeenBy[];
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

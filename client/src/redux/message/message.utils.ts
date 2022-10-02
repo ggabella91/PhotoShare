@@ -103,17 +103,20 @@ export const updateLastSeenForMessage = (
     ) {
       const messagesCopy = [...convoMessages.messages];
       const updatedMessages = messagesCopy.map((arrayMessage) => {
+        const usersLastSeenBy =
+          arrayMessage.usersForWhomMessageWasLastOneSeen.map(
+            (user) => user.userId
+          );
+
         if (
           arrayMessage.id < messageLastSeen.message.id &&
-          arrayMessage.usersForWhomMessageWasLastOneSeen.includes(
-            messageLastSeen.viewedBy
-          )
+          usersLastSeenBy.includes(messageLastSeen.viewedBy)
         ) {
           return {
             ...arrayMessage,
             usersForWhomMessageWasLastOneSeen:
               arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
-                (userId) => userId !== messageLastSeen.viewedBy
+                (user) => user.userId !== messageLastSeen.viewedBy
               ),
           };
         } else if (arrayMessage.id === messageLastSeen.message.id) {
