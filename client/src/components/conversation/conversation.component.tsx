@@ -100,8 +100,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const [messagesArrayReversed, setMessagesArrayReversed] = useState<Message[]>(
     []
   );
-  const [messageLastSeen, setMessageLastSeen] =
-    useState<MessageViewedBy | null>(null);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -139,7 +137,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const pageToFetch = useRef<Record<string, number>>({});
   const messagesRepliedTo = useRef<Record<string, Message>>({});
   const lastMessageIdSeenRef = useRef('');
-  const shouldUpdateMessagesLastSeen = useRef(false);
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
   const dispatch = useDispatch();
 
@@ -458,9 +455,6 @@ const Conversation: React.FC<ConversationProps> = ({
       latestMessage &&
       latestMessage.id > lastMessageIdSeenRef.current
     ) {
-      // TODO Emit this message when a user sends a new message, such
-      // that the message should immediately be updated as the last
-      // one seen by that user
       socket.emit('updateUsersMessageLastViewedBy', {
         conversationId,
         messageId: latestMessage.id,
@@ -468,6 +462,10 @@ const Conversation: React.FC<ConversationProps> = ({
       });
     }
   };
+
+  // TODO Implement modal that shows all users for whom a message
+  // was the last one they viewed, activated by clicking any of
+  // the small avatars corresponding to those users
 
   return (
     <Grid

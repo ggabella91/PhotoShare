@@ -462,17 +462,23 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                 const userNickname =
                   userNicknamesMaps[message.conversationId][user.userId];
 
+                const title = `Seen by ${userNickname} at ${renderTimeStamp(
+                  user.seenTime
+                )}`;
+
                 return (
-                  <Avatar
-                    src={
-                      !!avatarFileString
-                        ? `data:image/jpeg;base64,${avatarFileString}`
-                        : ''
-                    }
-                    alt={`Seen by ${userNickname}`}
-                    key={idx}
-                    sx={{ height: '14px', width: '14px', margin: '0 1px' }}
-                  />
+                  <Tooltip title={title}>
+                    <Avatar
+                      src={
+                        !!avatarFileString
+                          ? `data:image/jpeg;base64,${avatarFileString}`
+                          : ''
+                      }
+                      alt={title}
+                      key={idx}
+                      sx={{ height: '14px', width: '14px', margin: '0 1px' }}
+                    />
+                  </Tooltip>
                 );
               })}
         </Grid>
