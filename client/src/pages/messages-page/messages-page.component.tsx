@@ -125,6 +125,14 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
     socket.on('chatToClient', (message) => {
       dispatch(addMessageToConversation(message));
+
+      if (currentUser && message.ownerId === currentUser.id) {
+        socket.emit('updateUsersMessageLastViewedBy', {
+          conversationId: message.conversationId,
+          messageId: message.id,
+          userId: currentUser.id,
+        });
+      }
     });
 
     socket.on('messageRemoved', (message) => {
