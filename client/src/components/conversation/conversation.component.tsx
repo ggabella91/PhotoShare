@@ -71,6 +71,12 @@ export interface OptionsDialogUser {
   nickname: string;
 }
 
+export interface MessageSeenByUser {
+  userNameOrNickname: string;
+  avatarFileString: string;
+  seenTime: string;
+}
+
 interface MessageViewedBy {
   message: Message;
   viewedBy: string;
@@ -100,6 +106,11 @@ const Conversation: React.FC<ConversationProps> = ({
   const [messagesArrayReversed, setMessagesArrayReversed] = useState<Message[]>(
     []
   );
+  const [openMessageSeenByUserDialog, setOpenMessageSeenByUserDialog] =
+    useState(false);
+  const [messageSeenByUsers, setMessageSeenByUsers] = useState<
+    MessageSeenByUser[]
+  >([]);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -467,6 +478,9 @@ const Conversation: React.FC<ConversationProps> = ({
   // was the last one they viewed, activated by clicking any of
   // the small avatars corresponding to those users
 
+  const handleClickMessageSeenByUsers = () =>
+    setOpenMessageSeenByUserDialog(true);
+
   return (
     <Grid
       sx={{
@@ -622,6 +636,8 @@ const Conversation: React.FC<ConversationProps> = ({
                         : ''
                     }
                     lastMessageSeenRef={lastMessageIdSeenRef}
+                    setMessageSeenByUsers={setMessageSeenByUsers}
+                    onClickMessageSeenByUsers={handleClickMessageSeenByUsers}
                   />
                 </Grid>
               );
