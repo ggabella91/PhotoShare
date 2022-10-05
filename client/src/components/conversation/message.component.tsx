@@ -7,6 +7,7 @@ import {
   Button,
   Popover,
   Tooltip,
+  ButtonBase,
 } from '@mui/material';
 import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
@@ -17,6 +18,7 @@ import { renderTimeStamp } from './conversation.utils';
 import { selectConversationToUserDataMap } from '../../redux/message/message.selectors';
 
 import { selectConversationUserNicknamesMaps } from '../../redux/message/message.selectors';
+import { MessageSeenByUser } from './conversation.component';
 
 type CustomRef = (node: HTMLDivElement | null) => void;
 
@@ -36,6 +38,10 @@ interface MessageComponentProps {
   onClickMessageRepliedTo: (messageId: string) => void;
   messageReplyingToText?: string;
   lastMessageSeenRef: React.MutableRefObject<string>;
+  setMessageSeenByUsers: React.Dispatch<
+    React.SetStateAction<MessageSeenByUser[]>
+  >;
+  onClickMessageSeenByUsers: () => void;
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
@@ -54,6 +60,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   onClickMessageRepliedTo,
   messageReplyingToText,
   lastMessageSeenRef,
+  setMessageSeenByUsers,
+  onClickMessageSeenByUsers,
 }) => {
   const [showOptionsButtons, setShowOptionsButtons] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
@@ -122,6 +130,26 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   const handleClickMessageRepliedTo = () => {
     message.messageReplyingToId &&
       onClickMessageRepliedTo(message.messageReplyingToId);
+  };
+
+  const handleSeenByAvatarClick = () => {
+    const messageSeenByUsers: MessageSeenByUser[] = messageLastSeenBy
+      .filter((user) => user.userId !== currentUserId)
+      .map((user, idx) => {
+        const userData = userDataMap && userDataMap[user.userId];
+        const avatarFileString = userData?.profilePhotoFileString;
+        const userNickname =
+          userNicknamesMaps[message.conversationId][user.userId];
+
+        return {
+          userNameOrNickname: userNickname || userData?.name || '',
+          avatarFileString: avatarFileString || '',
+          seenTime: user.seenTime,
+        };
+      });
+
+    setMessageSeenByUsers(messageSeenByUsers);
+    onClickMessageSeenByUsers();
   };
 
   return (
@@ -466,6 +494,10 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                   user.seenTime
                 )}`;
 
+                const seenByLength = messageLastSeenBy.filter(
+                  (user) => user.userId !== currentUserId
+                ).length;
+
                 return (
                   <Tooltip title={title}>
                     <Avatar
@@ -477,6 +509,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                       alt={title}
                       key={idx}
                       sx={{ height: '14px', width: '14px', margin: '0 1px' }}
+                      component={(seenByLength > 1 && ButtonBase) || 'div'}
+                      onClick={handleSeenByAvatarClick}
                     />
                   </Tooltip>
                 );
