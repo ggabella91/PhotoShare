@@ -301,7 +301,11 @@ export class MessagesAppService {
         'usersForWhomMessageWasLastOneSeen.userId': userId,
         _id: { $ne: messageId },
       },
-      { $pull: { usersForWhomMessageWasLastOneSeen: { userId: { userId } } } }
+      {
+        $pull: {
+          usersForWhomMessageWasLastOneSeen: { userId },
+        },
+      }
     );
 
     this.logger.log(
