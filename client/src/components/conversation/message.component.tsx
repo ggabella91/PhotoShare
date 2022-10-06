@@ -481,6 +481,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         }}
       >
         <Grid sx={{ display: 'flex', width: 'auto' }}>
+          {/* TODO Also filter users no longer active in
+            the conversation */}
           {!!messageLastSeenBy.length &&
             messageLastSeenBy
               .filter((user) => user.userId !== currentUserId)

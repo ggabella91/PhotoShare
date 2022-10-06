@@ -24,6 +24,7 @@ import CustomAvatarGroup, {
   StyleVariation,
 } from './custom-avatar-group.component';
 import ForwardMessageDialog from './forward-message-dialog.component';
+import MessageSeenByUsersDialog from './message-seen-by-dialog.component';
 import { useUserInfoData } from '../../pages/hooks';
 
 import {
@@ -474,12 +475,11 @@ const Conversation: React.FC<ConversationProps> = ({
     }
   };
 
-  // TODO Implement modal that shows all users for whom a message
-  // was the last one they viewed, activated by clicking any of
-  // the small avatars corresponding to those users
-
   const handleClickMessageSeenByUsers = () =>
     setOpenMessageSeenByUserDialog(true);
+
+  const handleCloseMessageSeenByUsersDialog = () =>
+    setOpenMessageSeenByUserDialog(false);
 
   return (
     <Grid
@@ -762,6 +762,11 @@ const Conversation: React.FC<ConversationProps> = ({
             onSendMessage={(conversationId: string) =>
               handleForwardMessage(conversationId)
             }
+          />
+          <MessageSeenByUsersDialog
+            open={openMessageSeenByUserDialog}
+            onClose={handleCloseMessageSeenByUsersDialog}
+            messageSeenByUsers={messageSeenByUsers}
           />
         </>
       ) : (

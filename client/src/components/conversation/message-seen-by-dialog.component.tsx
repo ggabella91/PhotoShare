@@ -6,17 +6,19 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  Avatar,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { MessageSeenByUser } from './conversation.component';
+import { renderTimeStamp } from './conversation.utils';
 
-interface SetConvoUserNicknameDialogProps {
+interface MessageSeenByUsersDialogProps {
   open: boolean;
   onClose: () => void;
-  messageSeenByUsers: MessageSeenByUser;
+  messageSeenByUsers: MessageSeenByUser[];
 }
 
-const SetConvoUserNicknameDialog: React.FC<SetConvoUserNicknameDialogProps> = ({
+const MessageSeenByUsersDialog: React.FC<MessageSeenByUsersDialogProps> = ({
   open,
   onClose,
   messageSeenByUsers,
@@ -39,7 +41,7 @@ const SetConvoUserNicknameDialog: React.FC<SetConvoUserNicknameDialogProps> = ({
           display: 'flex',
           justifyContent: 'center',
           padding: '10px 12px',
-          fontSize: '16px',
+          fontSize: '18px',
           fontWeight: 600,
         }}
       >
@@ -57,10 +59,36 @@ const SetConvoUserNicknameDialog: React.FC<SetConvoUserNicknameDialogProps> = ({
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ padding: '10px 12px' }}>
-        <Grid>{/* TODO Render users */}</Grid>
+        <Grid>
+          {messageSeenByUsers?.map((user, idx) => (
+            <Grid sx={{ display: 'flex', height: '64px' }} key={idx}>
+              <Grid
+                sx={{ display: 'flex', marginRight: 2, alignItems: 'center' }}
+              >
+                <Avatar
+                  src={`data:image/jpeg;base64,${user.avatarFileString}`}
+                  alt={user.userNameOrNickname}
+                  sx={{ width: 40, height: 40 }}
+                />
+              </Grid>
+              <Grid
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <Typography sx={{ fontWeight: 600 }}>
+                  {user.userNameOrNickname}
+                </Typography>
+                <Typography>{renderTimeStamp(user.seenTime)}</Typography>
+              </Grid>
+            </Grid>
+          ))}
+        </Grid>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default SetConvoUserNicknameDialog;
+export default MessageSeenByUsersDialog;
