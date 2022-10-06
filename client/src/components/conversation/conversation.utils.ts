@@ -46,7 +46,9 @@ export const shouldRenderTimeStamp = (
 export const renderTimeStamp = (dateString: string) => {
   const date = new Date(dateString);
   const dateTime = date.getTime();
-  const currentTime = Date.now();
+  const currentDate = new Date();
+  const [currentWeekDay] = currentDate.toDateString().split(' ');
+  const currentTime = currentDate.getTime();
   const elapsedTime = currentTime - dateTime;
 
   const [weekDay, month, monthDay, year] = date.toDateString().split(' ');
@@ -71,7 +73,7 @@ export const renderTimeStamp = (dateString: string) => {
   } else if (elapsedTimeDays > 1) {
     return `${weekDay} ${formattedTime}`;
   } else {
-    return `${formattedTime}`;
+    return `${currentWeekDay !== weekDay ? `${weekDay} ` : ''}${formattedTime}`;
   }
 };
 
