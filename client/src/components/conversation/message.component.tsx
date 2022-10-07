@@ -42,6 +42,7 @@ interface MessageComponentProps {
     React.SetStateAction<MessageSeenByUser[]>
   >;
   onClickMessageSeenByUsers: () => void;
+  activeConvoUsers: string[];
 }
 
 const MessageComponent: React.FC<MessageComponentProps> = ({
@@ -62,6 +63,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   lastMessageSeenRef,
   setMessageSeenByUsers,
   onClickMessageSeenByUsers,
+  activeConvoUsers,
 }) => {
   const [showOptionsButtons, setShowOptionsButtons] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
@@ -481,11 +483,13 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         }}
       >
         <Grid sx={{ display: 'flex', width: 'auto' }}>
-          {/* TODO Also filter users no longer active in
-            the conversation */}
           {!!messageLastSeenBy.length &&
             messageLastSeenBy
-              .filter((user) => user.userId !== currentUserId)
+              .filter(
+                (user) =>
+                  user.userId !== currentUserId &&
+                  activeConvoUsers.includes(user.userId)
+              )
               .map((user, idx) => {
                 const userData = userDataMap && userDataMap[user.userId];
                 const avatarFileString = userData?.profilePhotoFileString;
