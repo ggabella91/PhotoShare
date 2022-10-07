@@ -125,7 +125,7 @@ const Conversation: React.FC<ConversationProps> = ({
   );
   const conversationHistoricalMessageUsers =
     currentConversation?.historicalUsers;
-
+  const conversationActiveUsers = currentConversation?.connectedUsers;
   const usersInfoList = useUserInfoData(conversationUsers);
   const { intersectionCounter, observedElementRef } = useLazyLoading(
     isLoadingMessages,
@@ -259,7 +259,7 @@ const Conversation: React.FC<ConversationProps> = ({
         })
       );
     }
-  }, [conversationUserNicknames]);
+  }, [dispatch, conversationId, conversationUserNicknames]);
 
   useEffect(() => {
     setIsInfoClicked(false);
@@ -638,6 +638,7 @@ const Conversation: React.FC<ConversationProps> = ({
                     lastMessageSeenRef={lastMessageIdSeenRef}
                     setMessageSeenByUsers={setMessageSeenByUsers}
                     onClickMessageSeenByUsers={handleClickMessageSeenByUsers}
+                    activeConvoUsers={conversationActiveUsers || []}
                   />
                 </Grid>
               );
