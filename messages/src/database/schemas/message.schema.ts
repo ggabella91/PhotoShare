@@ -68,6 +68,10 @@ export class Message {
 
   @Prop()
   usersForWhomMessageWasLastOneSeen: MessageSeenBy[];
+
+  // For marking messages as delivered before they are seen
+  @Prop()
+  hasBeenViewedByOtherUsers: boolean;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

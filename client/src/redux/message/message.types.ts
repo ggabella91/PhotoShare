@@ -66,6 +66,7 @@ export interface Message {
   messageReplyingToOwnerId?: string;
   messageReplyingToOwnerName?: string;
   usersForWhomMessageWasLastOneSeen: MessageSeenBy[];
+  hasBeenViewedByOtherUsers: boolean;
 }
 
 export interface MessageLastSeen {

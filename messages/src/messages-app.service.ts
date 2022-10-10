@@ -287,7 +287,8 @@ export class MessagesAppService {
   async updateUsersForWhomMessageIsLastOneViewed(
     updateUsersMessageLastViewedDto: UpdateUsersMessageLastViewedDto
   ) {
-    const { messageId, userId } = updateUsersMessageLastViewedDto;
+    const { messageId, userId, isMessageOwner } =
+      updateUsersMessageLastViewedDto;
 
     const newMessageToUpdate = await this.messageModel.findById(messageId);
 
@@ -332,6 +333,10 @@ export class MessagesAppService {
     usersWhoViewedMessageLast.push({ userId, seenTime: new Date() });
     newMessageToUpdate.usersForWhomMessageWasLastOneSeen =
       usersWhoViewedMessageLast;
+
+    if (!isMessageOwner) {
+      newMessageToUpdate.hasBeenViewedByOtherUsers = true;
+    }
 
     await newMessageToUpdate.save();
 
