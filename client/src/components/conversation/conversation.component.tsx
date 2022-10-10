@@ -365,6 +365,7 @@ const Conversation: React.FC<ConversationProps> = ({
               userInfoMap[messageToReplyTo.ownerId].name.split(' ')[0],
           }),
         usersForWhomMessageWasLastOneSeen: [],
+        hasBeenViewedByOtherUsers: false,
       });
 
       setTimeout(() => handleMessagesContainerFocus(), 2000);
@@ -403,6 +404,7 @@ const Conversation: React.FC<ConversationProps> = ({
         ownerId: currentUser.id,
         conversationId,
         usersForWhomMessageWasLastOneSeen: [],
+        hasBeenViewedByOtherUsers: false,
       });
     }
   };
@@ -471,6 +473,7 @@ const Conversation: React.FC<ConversationProps> = ({
         conversationId,
         messageId: latestMessage.id,
         userId: currentUser.id,
+        isMessageOwner: false,
       });
     }
   };

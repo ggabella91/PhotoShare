@@ -131,6 +131,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
           conversationId: message.conversationId,
           messageId: message.id,
           userId: currentUser.id,
+          isMessageOwner: true,
         });
       }
     });
