@@ -65,6 +65,7 @@ export interface Message {
   messageReplyingToId?: string;
   messageReplyingToOwnerId?: string;
   messageReplyingToOwnerName?: string;
+  status: 'sending' | 'sent' | 'delivered' | 'error';
   usersForWhomMessageWasLastOneSeen: MessageSeenBy[];
   hasBeenViewedByOtherUsers: boolean;
 }

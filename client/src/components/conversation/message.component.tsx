@@ -13,6 +13,7 @@ import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ReplyIcon from '@mui/icons-material/Reply';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { renderTimeStamp } from './conversation.utils';
 
 import { selectConversationToUserDataMap } from '../../redux/message/message.selectors';
@@ -483,6 +484,17 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         }}
       >
         <Grid sx={{ display: 'flex', width: 'auto' }}>
+          {message.hasBeenViewedByOtherUsers === false && (
+            <Tooltip title='Delivered'>
+              <CheckCircleIcon
+                sx={{
+                  height: '14px',
+                  width: '14px',
+                  color: 'rgb(28, 30, 33)',
+                }}
+              />
+            </Tooltip>
+          )}
           {!!messageLastSeenBy.length &&
             messageLastSeenBy
               .filter(

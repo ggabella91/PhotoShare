@@ -38,6 +38,7 @@ import {
   addToConversationToUserDataMap,
   addConversationUserNicknamesMap,
   updateMessageLastSeenBy,
+  addMessageToConversation,
 } from '../../redux/message/message.actions';
 
 import {
@@ -347,7 +348,7 @@ const Conversation: React.FC<ConversationProps> = ({
     }
 
     if (currentUser) {
-      socket.emit('chatToServer', {
+      const messageToSend = {
         text: trimmedMessage,
         created: new Date(),
         ownerId: currentUser.id,
@@ -366,7 +367,19 @@ const Conversation: React.FC<ConversationProps> = ({
           }),
         usersForWhomMessageWasLastOneSeen: [],
         hasBeenViewedByOtherUsers: false,
-      });
+      };
+
+      socket.emit('chatToServer', messageToSend);
+      dispatch(
+        addMessageToConversation({
+          ...messageToSend,
+          status: 'sending',
+          created: messageToSend.created.toDateString(),
+          id: '',
+          messageHiddenTime: '',
+          usersMessageIsRemovedFor: [],
+        })
+      );
 
       setTimeout(() => handleMessagesContainerFocus(), 2000);
     }
