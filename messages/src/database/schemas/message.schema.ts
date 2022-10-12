@@ -69,7 +69,10 @@ export class Message {
   @Prop()
   usersForWhomMessageWasLastOneSeen: MessageSeenBy[];
 
-  // For marking messages as delivered before they are seen
+  @Prop()
+  status: 'sent' | 'delivered' | 'error';
+
+  // For displaying message status before it is seen
   @Prop()
   hasBeenViewedByOtherUsers: boolean;
 }

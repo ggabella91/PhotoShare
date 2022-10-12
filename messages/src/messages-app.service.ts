@@ -21,6 +21,7 @@ import { RemoveMessageDto } from './database/dto/remove-message.dto';
 import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
 import { PermanentlyRemoveMessageForUserDto } from './database/dto/permanently-remove-message-for-user.dto';
 import { UpdateUsersMessageLastViewedDto } from './database/dto/update-message-last-viewed.dto';
+import { UpdateMessageStatusDto } from './database/dto/update-message-status.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -249,7 +250,10 @@ export class MessagesAppService {
   }
 
   async createMessage(createMessageDto: CreateMessageDto) {
-    const createdMessage = new this.messageModel(createMessageDto);
+    const createdMessage = new this.messageModel({
+      ...createMessageDto,
+      status: 'sent',
+    });
     const savedMessage = (await createdMessage.save()).toObject();
 
     return savedMessage;
@@ -282,6 +286,20 @@ export class MessagesAppService {
     this.logger.log(
       `Permanently removed message with id ${permanentlyRemoveMessageForUserDto.messageId} ${removedMessage} for conversation with id ${permanentlyRemoveMessageForUserDto.conversationId}, for user with id ${permanentlyRemoveMessageForUserDto.userId}`
     );
+  }
+
+  async updateMessageStatus(updateMessageStatusDto: UpdateMessageStatusDto) {
+    const { messageId, status } = updateMessageStatusDto;
+
+    const updatedMessage = await this.messageModel.findByIdAndUpdate(
+      messageId,
+      { status },
+      { new: true }
+    );
+
+    this.logger.log(`Updated message with id ${messageId}: `, updatedMessage);
+
+    return updatedMessage.toObject();
   }
 
   async updateUsersForWhomMessageIsLastOneViewed(

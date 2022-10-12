@@ -36,7 +36,11 @@ import {
   generateFinalConvoUsersAndS3KeysArrays,
   getConvoName,
 } from './messages-page.utils';
-import { Conversation, MessageUser } from '../../redux/message/message.types';
+import {
+  Conversation,
+  Message,
+  MessageUser,
+} from '../../redux/message/message.types';
 
 interface MessagesPageProps {
   openNewConvoModal?: boolean;
@@ -123,8 +127,16 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
       dispatch(addToJoinedConversationsArray(conversations));
     });
 
-    socket.on('chatToClient', (message) => {
-      dispatch(addMessageToConversation(message));
+    socket.on('chatToClient', (message: Message) => {
+      if (message.ownerId !== currentUser?.id) {
+        dispatch(addMessageToConversation(message));
+
+        // TODO Emit socket message to update message
+        // status to 'delivered'
+      } else {
+        // TODO Dispatch redux action to update message
+        // status (most likely to 'sent') in redux state
+      }
 
       if (currentUser && message.ownerId === currentUser.id) {
         socket.emit('updateUsersMessageLastViewedBy', {
