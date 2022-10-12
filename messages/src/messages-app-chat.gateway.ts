@@ -22,6 +22,7 @@ import { RemoveMessageDto } from './database/dto/remove-message.dto';
 import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
 import { PermanentlyRemoveMessageForUserDto } from './database/dto/permanently-remove-message-for-user.dto';
 import { UpdateUsersMessageLastViewedDto } from './database/dto/update-message-last-viewed.dto';
+import { UpdateMessageStatusDto } from './database/dto/update-message-status.dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -115,6 +116,19 @@ export class MessagesAppChatGateway
         'messagePermanentlyRemovedForUser',
         permanentlyRemoveMessageForUserDto
       );
+  }
+
+  @SubscribeMessage('updateMessageStatus')
+  async handleUpdateMessageStatus(
+    @MessageBody() updateMessageStatusDto: UpdateMessageStatusDto
+  ) {
+    const { conversationId } = updateMessageStatusDto;
+
+    const updatedMessage = await this.appService.updateMessageStatus(
+      updateMessageStatusDto
+    );
+
+    this.wss.to(conversationId).emit('messageStatusUpdated', updatedMessage);
   }
 
   @SubscribeMessage('updateUsersMessageLastViewedBy')
