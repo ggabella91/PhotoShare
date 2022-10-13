@@ -14,6 +14,7 @@ export enum MessageActions {
   GET_CONVO_MESSAGES_FAILURE = 'GET_CONVO_MESSAGES_FAILURE',
   ADD_MESSAGE_TO_CONVERSATION = 'ADD_MESSAGE_TO_CONVERSATION',
   UPDATE_MESSAGE_LAST_SEEN_BY = 'UPDATE_MESSAGE_LAST_SEEN_BY',
+  UPDATE_MESSAGE_STATUS = 'UPDATE_MESSAGE_STATUS',
   ADD_USER_TO_CONVO_USERS_ARRAY = 'ADD_USER_TO_CONVO_USERS_ARRAY',
   REMOVE_MESSAGE_FROM_CONVERSATION = 'REMOVE_MESSAGE_FROM_CONVERSATION',
   PERMANENTLY_REMOVE_MESSAGE_FOR_USER = 'PERMANENTLY_REMOVE_MESSAGE_FOR_USER',
@@ -203,6 +204,11 @@ export interface UpdateMessageLastSeenBy {
   payload: MessageLastSeen;
 }
 
+export interface UpdateMessageStatus {
+  type: typeof MessageActions.UPDATE_MESSAGE_STATUS;
+  payload: Message;
+}
+
 export interface AddUserToConvoUsersArray {
   type: typeof MessageActions.ADD_USER_TO_CONVO_USERS_ARRAY;
   payload: Partial<MessageUser>;
@@ -273,6 +279,7 @@ export type MessageActionTypes =
   | GetConvoMessagesFailure
   | AddMessageToConversation
   | UpdateMessageLastSeenBy
+  | UpdateMessageStatus
   | AddUserToConvoUsersArray
   | RemoveMessageFromConversation
   | PermanentlyRemoveMessageForUser

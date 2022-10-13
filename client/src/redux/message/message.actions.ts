@@ -100,6 +100,11 @@ export const updateMessageLastSeenBy = (
   payload: messageLastSeen,
 });
 
+export const updateMessageStatus = (message: Message): MessageActionTypes => ({
+  type: MessageActions.UPDATE_MESSAGE_STATUS,
+  payload: message,
+});
+
 export const addUserToConvoUsersArray = (
   user: Partial<MessageUser>
 ): MessageActionTypes => ({
