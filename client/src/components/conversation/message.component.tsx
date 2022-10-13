@@ -13,6 +13,8 @@ import { UserInfoData } from '../search-bar/search-bar.component';
 import { Message } from '../../redux/message/message.types';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ReplyIcon from '@mui/icons-material/Reply';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { renderTimeStamp } from './conversation.utils';
 
@@ -88,6 +90,15 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   const isRepliedToMessageOwnerCurrentUser =
     message.isReply && message.messageReplyingToOwnerId === currentUserId;
   const messageLastSeenBy = message.usersForWhomMessageWasLastOneSeen;
+  const StatusComponent =
+    message.status === 'sending'
+      ? RadioButtonUncheckedIcon
+      : message.status === 'sent'
+      ? CheckCircleOutlinedIcon
+      : CheckCircleIcon;
+  const formattedStatus = message.status
+    ? message.status.charAt(0).toUpperCase() + message.status.slice(1)
+    : '';
 
   useEffect(() => {
     if (
@@ -484,17 +495,18 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
         }}
       >
         <Grid sx={{ display: 'flex', width: 'auto' }}>
-          {message.hasBeenViewedByOtherUsers === false && (
-            <Tooltip title='Delivered'>
-              <CheckCircleIcon
-                sx={{
-                  height: '14px',
-                  width: '14px',
-                  color: 'rgb(28, 30, 33)',
-                }}
-              />
-            </Tooltip>
-          )}
+          {message.hasBeenViewedByOtherUsers === false &&
+            currentUserId === message.ownerId && (
+              <Tooltip title={formattedStatus}>
+                <StatusComponent
+                  sx={{
+                    height: '14px',
+                    width: '14px',
+                    color: 'rgb(28, 30, 33)',
+                  }}
+                />
+              </Tooltip>
+            )}
           {!!messageLastSeenBy.length &&
             messageLastSeenBy
               .filter(

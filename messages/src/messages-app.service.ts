@@ -354,6 +354,24 @@ export class MessagesAppService {
 
     if (!isMessageOwner) {
       newMessageToUpdate.hasBeenViewedByOtherUsers = true;
+
+      // Update hasBeenViewedByOtherUsers prop for any previous
+      // messages that had also not yet been seen
+      const updatedPreviouslyNotSeenMessages =
+        await this.messageModel.updateMany(
+          {
+            _id: { $lt: messageId },
+            hasBeenViewedByOtherUsers: { $ne: true },
+          },
+          {
+            hasBeenViewedByOtherUsers: true,
+          }
+        );
+
+      this.logger.log(
+        'Update result for older messages that had also not yet been seen: ',
+        updatedPreviouslyNotSeenMessages
+      );
     }
 
     await newMessageToUpdate.save();

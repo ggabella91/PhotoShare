@@ -93,6 +93,36 @@ export const addMessage = (
   });
 };
 
+export const updateMessage = (
+  convoMessagesArray: ConvoMessages[],
+  message: Message
+) => {
+  return convoMessagesArray.map((convoMessages) => {
+    if (convoMessages.conversationId === message.conversationId) {
+      const messagesCopy = [...convoMessages.messages];
+      const updatedMessages = messagesCopy.map((arrayMessage) => {
+        if (
+          (!arrayMessage.id &&
+            arrayMessage.ownerId === message.ownerId &&
+            arrayMessage.created === message.created) ||
+          arrayMessage.id === message.id
+        ) {
+          return message;
+        } else {
+          return arrayMessage;
+        }
+      });
+
+      return {
+        ...convoMessages,
+        messages: updatedMessages,
+      };
+    } else {
+      return convoMessages;
+    }
+  });
+};
+
 export const updateLastSeenForMessage = (
   convoMessagesArray: ConvoMessages[],
   messageLastSeen: MessageLastSeen
@@ -118,14 +148,21 @@ export const updateLastSeenForMessage = (
               arrayMessage.usersForWhomMessageWasLastOneSeen.filter(
                 (user) => user.userId !== messageLastSeen.viewedBy
               ),
+            ...(messageLastSeen.viewedBy !==
+              messageLastSeen.message.ownerId && {
+              hasBeenViewedByOtherUsers: true,
+            }),
           };
-        } else if (arrayMessage.id === messageLastSeen.message.id) {
+        } else if (arrayMessage.id < messageLastSeen.message.id) {
           return {
             ...arrayMessage,
-            usersForWhomMessageWasLastOneSeen: [
-              ...messageLastSeen.message.usersForWhomMessageWasLastOneSeen,
-            ],
+            ...(messageLastSeen.viewedBy !==
+              messageLastSeen.message.ownerId && {
+              hasBeenViewedByOtherUsers: true,
+            }),
           };
+        } else if (arrayMessage.id === messageLastSeen.message.id) {
+          return { ...messageLastSeen.message, status: arrayMessage.status };
         } else {
           return arrayMessage;
         }

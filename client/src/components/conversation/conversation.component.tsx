@@ -39,6 +39,7 @@ import {
   addConversationUserNicknamesMap,
   updateMessageLastSeenBy,
   addMessageToConversation,
+  updateMessageStatus,
 } from '../../redux/message/message.actions';
 
 import {
@@ -299,6 +300,14 @@ const Conversation: React.FC<ConversationProps> = ({
           messageId: message.messageReplyingToId,
         });
       }
+
+      if (message.ownerId !== currentUser?.id && message.status === 'sent') {
+        socket.emit('updateMessageStatus', {
+          conversationId: message.conversationId,
+          messageId: message.id,
+          status: 'delivered',
+        });
+      }
     });
   }, [messagesArray, currentUser, socket]);
 
@@ -313,6 +322,13 @@ const Conversation: React.FC<ConversationProps> = ({
         dispatch(updateMessageLastSeenBy(message));
       }
     });
+
+    socket.on('messageStatusUpdated', (message: Message) => {
+      if (currentUser?.id === message.ownerId) {
+        dispatch(updateMessageStatus(message));
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, socket]);
 
   useEffect(() => {
@@ -374,7 +390,7 @@ const Conversation: React.FC<ConversationProps> = ({
         addMessageToConversation({
           ...messageToSend,
           status: 'sending',
-          created: messageToSend.created.toDateString(),
+          created: messageToSend.created.toISOString(),
           id: '',
           messageHiddenTime: '',
           usersMessageIsRemovedFor: [],
@@ -417,7 +433,6 @@ const Conversation: React.FC<ConversationProps> = ({
         ownerId: currentUser.id,
         conversationId,
         usersForWhomMessageWasLastOneSeen: [],
-        hasBeenViewedByOtherUsers: false,
       });
     }
   };

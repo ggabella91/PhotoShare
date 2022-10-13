@@ -30,6 +30,7 @@ import {
   resetConvoUsersArray,
   removeMessageFromConversation,
   permanentlyRemoveMessageForUser,
+  updateMessageStatus,
 } from '../../redux/message/message.actions';
 
 import {
@@ -129,13 +130,19 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
     socket.on('chatToClient', (message: Message) => {
       if (message.ownerId !== currentUser?.id) {
-        dispatch(addMessageToConversation(message));
+        dispatch(addMessageToConversation({ ...message, status: 'delivered' }));
 
-        // TODO Emit socket message to update message
+        // Emit socket message to update message
         // status to 'delivered'
-      } else {
-        // TODO Dispatch redux action to update message
+        socket.emit('updateMessageStatus', {
+          conversationId: message.conversationId,
+          messageId: message.id,
+          status: 'delivered',
+        });
+      } else if (message.status !== 'delivered') {
+        // Dispatch redux action to update message
         // status (most likely to 'sent') in redux state
+        dispatch(updateMessageStatus(message));
       }
 
       if (currentUser && message.ownerId === currentUser.id) {

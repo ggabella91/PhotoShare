@@ -15,6 +15,7 @@ import {
   markMessageRemoved,
   markMessagePermanentlyRemovedForUser,
   updateLastSeenForMessage,
+  updateMessage,
 } from './message.utils';
 
 const INITIAL_STATE: MessageState = {
@@ -92,6 +93,11 @@ const messageReducer = (
       return {
         ...state,
         messages: updateLastSeenForMessage(state.messages, action.payload),
+      };
+    case MessageActions.UPDATE_MESSAGE_STATUS:
+      return {
+        ...state,
+        messages: updateMessage(state.messages, action.payload),
       };
     case MessageActions.ADD_USER_TO_CONVO_USERS_ARRAY:
       return {
