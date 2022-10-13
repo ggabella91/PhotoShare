@@ -73,7 +73,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
   ) {
     const avatarFileString = convoAvatarFileStrings[0];
     const messageUser = messageUsers?.find(
-      (user) => user.photoS3Key === avatarS3Keys[0]
+      (user) => user.photoS3Key !== currentUser?.photo
     );
     const isOnline = messageUser?.isOnline;
 
