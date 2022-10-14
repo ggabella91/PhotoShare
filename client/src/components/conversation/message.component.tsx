@@ -518,7 +518,8 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                 const userData = userDataMap && userDataMap[user.userId];
                 const avatarFileString = userData?.profilePhotoFileString;
                 const userNickname =
-                  userNicknamesMaps[message.conversationId][user.userId];
+                  userNicknamesMaps[message.conversationId][user.userId] ||
+                  userData?.name;
 
                 const title = `Seen by ${userNickname} at ${renderTimeStamp(
                   user.seenTime
