@@ -399,6 +399,11 @@ const Conversation: React.FC<ConversationProps> = ({
 
       setTimeout(() => handleMessagesContainerFocus(), 2000);
     }
+
+    if (isReplyModeOn) {
+      handleTurnOffReplyMode();
+    }
+
     setMessage('');
   };
 
