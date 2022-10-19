@@ -51,13 +51,16 @@ router.get(
       );
 
       let posts: Partial<PostResponseObj>[] = [];
-      let savedPostLocationObjPromises: Promise<LocationDoc | null>[] = [];
+      let savedPostLocationObjPromises: (Promise<LocationDoc | null> | null)[] =
+        [];
 
       postsWithoutLocationObj.forEach(async (post) => {
         if (post.postLocation) {
           savedPostLocationObjPromises.push(
             getLocationObjFromId(post.postLocation)
           );
+        } else {
+          savedPostLocationObjPromises.push(null);
         }
       });
 
