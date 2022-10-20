@@ -749,6 +749,8 @@ export const PostPage: React.FC = () => {
                 justifyContent: 'center',
                 paddingTop: '10px',
                 paddingBottom: '10px',
+                marginLeft: '50%',
+                transform: 'translateX(-50%)',
               }}
             >
               <CircularProgress />
@@ -776,6 +778,8 @@ export const PostPage: React.FC = () => {
                   justifyContent: 'center',
                   paddingTop: '10px',
                   paddingBottom: '10px',
+                  marginLeft: '50%',
+                  transform: 'translateX(-50%)',
                 }}
               >
                 <CircularProgress />
