@@ -27,25 +27,20 @@ router.get(
       _id: postId,
       archived: { $ne: true },
     });
+    const postLocationId: string | null = singlePostWithoutLocationObj?.id;
     console.log('Single Post Data: ', singlePostWithoutLocationObj);
 
-    let singlePost: Partial<PostResponseObj> | null = null;
+    let singlePost: Partial<PostResponseObj> | null =
+      singlePostWithoutLocationObj?.toObject() || null;
 
-    let savedPostLocationObj: LocationDoc | null = null;
-    if (
-      singlePostWithoutLocationObj &&
-      singlePostWithoutLocationObj.postLocation
-    ) {
-      savedPostLocationObj = await getLocationObjFromId(
-        singlePostWithoutLocationObj.postLocation
-      );
+    let savedPostLocation: LocationDoc | null = null;
 
-      const postObj = singlePostWithoutLocationObj.toObject();
+    if (postLocationId) {
+      savedPostLocation = await getLocationObjFromId(postLocationId);
 
-      singlePost = {
-        ...postObj,
-        postLocation: savedPostLocationObj || undefined,
-      };
+      if (singlePost) {
+        singlePost.postLocation = savedPostLocation?.toObject();
+      }
     }
 
     console.log('Single Post Data With Location Object: ', singlePost);
