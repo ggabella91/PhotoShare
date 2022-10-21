@@ -256,6 +256,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               <Button
                 sx={{
                   width: '100%',
+                  minWidth: 'unset',
                   height: '100%',
                   textTransform: 'unset',
                   padding: 0,
