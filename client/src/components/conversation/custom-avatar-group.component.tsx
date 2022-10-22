@@ -45,31 +45,41 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
       )
     : [''];
 
-  const getStyle = () => {
+  const getStyle = (isGroupAvatar?: boolean) => {
     if (styleVariation === StyleVariation.preview) {
-      return previewStyleObj;
+      return {
+        ...previewStyleObj,
+        ...(isGroupAvatar && {
+          height: '34px',
+          width: '34px',
+          transform: 'rotate(330deg)',
+        }),
+      };
     } else if (styleVariation === StyleVariation.conversationHeader) {
-      return headerStyleObj;
+      return { ...headerStyleObj, transform: 'rotate(330deg)' };
     } else {
       return forwardStyleObj;
     }
   };
 
-  const renderAvatar = (avatarFileString: string, idx: number) => (
+  const renderAvatar = (
+    avatarFileString: string,
+    idx: number,
+    isGroupAvatar?: boolean
+  ) => (
     <Avatar
       src={
         !!avatarFileString ? `data:image/jpeg;base64,${avatarFileString}` : ''
       }
       alt={conversationName}
       key={idx}
-      sx={getStyle()}
+      sx={getStyle(isGroupAvatar)}
     />
   );
 
   if (
-    (convoAvatarFileStrings.length === 1 &&
-      styleVariation === StyleVariation.conversationHeader) ||
-    styleVariation === StyleVariation.preview
+    convoAvatarFileStrings.length === 1 &&
+    styleVariation === StyleVariation.conversationHeader
   ) {
     const avatarFileString = convoAvatarFileStrings[0];
     const messageUser = messageUsers?.find(
@@ -102,11 +112,23 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
     );
   }
 
+  const rotateGroup = convoAvatarFileStrings.length > 1;
+
   return (
     <>
-      <AvatarGroup max={3} spacing='small'>
+      <AvatarGroup
+        max={2}
+        spacing='small'
+        sx={{
+          transform: rotateGroup ? 'rotate(30deg)' : 'unset',
+        }}
+      >
         {convoAvatarFileStrings.map((avatarFileString, idx) =>
-          renderAvatar(avatarFileString, idx)
+          renderAvatar(
+            avatarFileString,
+            idx,
+            convoAvatarFileStrings.length > 1 && true
+          )
         )}
       </AvatarGroup>
     </>
