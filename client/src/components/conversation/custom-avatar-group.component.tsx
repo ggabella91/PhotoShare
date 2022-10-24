@@ -45,7 +45,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
       )
     : [''];
 
-  const getStyle = (isGroupAvatar?: boolean) => {
+  const getStyle = (isGroupAvatar?: boolean, idx?: number) => {
     if (styleVariation === StyleVariation.preview) {
       return {
         ...previewStyleObj,
@@ -56,7 +56,11 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
         }),
       };
     } else if (styleVariation === StyleVariation.conversationHeader) {
-      return { ...headerStyleObj, transform: 'rotate(330deg)' };
+      return {
+        ...headerStyleObj,
+        transform: 'rotate(330deg)',
+        marginLeft: isGroupAvatar && idx === 1 ? '-26px !important' : 'unset',
+      };
     } else {
       return forwardStyleObj;
     }
@@ -73,7 +77,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
       }
       alt={conversationName}
       key={idx}
-      sx={getStyle(isGroupAvatar)}
+      sx={getStyle(isGroupAvatar, idx)}
     />
   );
 
