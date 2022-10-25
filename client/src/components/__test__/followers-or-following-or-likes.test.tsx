@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/prefer-presence-queries */
 import { render, screen } from '../../test-utils/test-utils';
 
 import { getOtherUserStart } from '../../redux/user/user.actions';
