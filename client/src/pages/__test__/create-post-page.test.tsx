@@ -20,7 +20,6 @@ describe('create-post page component tests', () => {
         postConfirm={postConfirm}
         postError={null}
         clearPostStatuses={clearPostStatuses}
-        getUsersFollowingStart={getUsersFollowingStart}
       />
     );
 

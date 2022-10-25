@@ -7,6 +7,7 @@ describe('expect to render a PostTile component', () => {
 
     render(
       <PostTile
+        id='test'
         fileString='hello'
         custRef={null}
         dataS3Key='test-s3-key'

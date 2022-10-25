@@ -61,6 +61,7 @@ describe('update-profile-photo component tests', () => {
     userEvent.click(uploadButton);
 
     if (fileInput.files) {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(fileInput.files[0]).toStrictEqual(testPhotoFile);
     }
     expect(updateProfilePhotoStart).toBeCalled();
