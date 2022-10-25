@@ -18,6 +18,7 @@ import {
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
+import EmojiPicker from 'emoji-picker-react';
 import MessageComponent from './message.component';
 import ConversationDetails from './conversation-details.component';
 import CustomAvatarGroup, {
@@ -494,7 +495,6 @@ const Conversation: React.FC<ConversationProps> = ({
 
   const handleMessagesContainerFocus = () => {
     const latestMessage = messagesArrayReversed.at(-1);
-    console.log('latestMessage: ', latestMessage);
 
     if (
       socket &&
