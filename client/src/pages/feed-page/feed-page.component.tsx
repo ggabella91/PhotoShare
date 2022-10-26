@@ -630,33 +630,32 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   return (
     <div className='feed-page' data-testid='feed-page'>
-      {userInfoAndPostFileList && userInfoAndPostFileList.size
-        ? userInfoAndPostFileList.map((el, idx) => (
-            <FeedPostContainer
-              userInfo={{
-                profilePhotoFileString: el.profilePhotoFileString,
-                username: el.username,
-                userId: el.userId,
-                postId: el.postId,
-                location: el.location,
-                name: '',
-                comment: '',
-                isVideo: el.isVideo,
-              }}
-              s3Key={el.postS3Key}
-              fileString={el.postFileString}
-              caption={el.caption}
-              date={el.dateString}
-              key={el.postId}
-              id={el.postId}
-              custRef={
-                idx === userInfoAndPostFileList.size - 1
-                  ? observedElementRef
-                  : null
-              }
-            />
-          ))
-        : null}
+      {!!userInfoAndPostFileList?.size &&
+        userInfoAndPostFileList.map((el, idx) => (
+          <FeedPostContainer
+            userInfo={{
+              profilePhotoFileString: el.profilePhotoFileString,
+              username: el.username,
+              userId: el.userId,
+              postId: el.postId,
+              location: el.location,
+              name: '',
+              comment: '',
+              isVideo: el.isVideo,
+            }}
+            s3Key={el.postS3Key}
+            fileString={el.postFileString}
+            caption={el.caption}
+            date={el.dateString}
+            key={el.postId}
+            id={el.postId}
+            custRef={
+              idx === userInfoAndPostFileList.size - 1
+                ? observedElementRef
+                : null
+            }
+          />
+        ))}
       {isLoadingPostData ? (
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />

@@ -168,6 +168,11 @@ export const PostModal: React.FC<PostModalProps> = ({
   setPostLikingUsersArray,
   setShowPostEditForm,
   getSinglePostDataStart,
+  clearPostState,
+  postReactionError,
+  getPostReactionsConfirm,
+  getPostReactionsError,
+  deleteReactionError,
   ...props
 }) => {
   const [localPostId, setLocalPostId] = useState(postId);

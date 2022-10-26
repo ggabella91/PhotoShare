@@ -77,7 +77,7 @@ describe('post modal component tests', () => {
   it('expect to render a post modal component', () => {
     setup();
 
-    const postModal = screen.getByRole('document');
+    const postModal = screen.getByRole('dialog');
 
     expect(postModal).toBeInTheDocument();
   });
