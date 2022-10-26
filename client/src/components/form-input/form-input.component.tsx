@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import './form-input.styles.scss';
 
@@ -24,7 +24,6 @@ export interface FormFileInputType {
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
-  children,
   label,
   tall,
   ...otherProps
@@ -43,7 +42,6 @@ export const FormInput: React.FC<FormInputProps> = ({
 );
 
 export const ExpandableFormInput: React.FC<FormInputProps> = ({
-  children,
   label,
   tall,
   modal,
@@ -69,7 +67,6 @@ export const ExpandableFormInput: React.FC<FormInputProps> = ({
 );
 
 export const FormFileInput: React.FC<FormFileInputType> = ({
-  children,
   label,
   ...otherProps
 }) => (

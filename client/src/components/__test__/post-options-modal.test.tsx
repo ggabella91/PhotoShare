@@ -26,7 +26,7 @@ describe('post options modal component tests', () => {
   it('renders a post options modal', () => {
     setup();
 
-    const postOptionsModal = screen.getByRole('document');
+    const postOptionsModal = screen.getByRole('dialog');
 
     expect(postOptionsModal).toBeInTheDocument();
   });

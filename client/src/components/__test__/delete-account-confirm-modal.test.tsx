@@ -24,7 +24,7 @@ describe('custom modal component tests', () => {
   it('renders a custom modal component', () => {
     setup();
 
-    const customModal = screen.getByRole('document');
+    const customModal = screen.getByRole('dialog');
 
     expect(customModal).toBeInTheDocument();
   });

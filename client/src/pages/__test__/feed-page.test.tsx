@@ -18,8 +18,8 @@ describe('feed page component tests', () => {
     const currentUserUsersFollowing = [{}, {}] as Follower[];
     const followingInfo = [{}, {}] as User[];
     const postDataFeedArray = [
-      [{}, {}],
-      [{}, {}],
+      [{ id: '1' }, { id: '2' }],
+      [{ id: '3' }, { id: '4' }],
     ] as Post[][];
     const postFiles = [{}, {}, {}, {}] as PostFile[];
     const commentToDelete = {} as DeleteReactionReq;

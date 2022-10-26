@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, ReactNode } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { render, RenderOptions } from '@testing-library/react';
@@ -6,6 +6,7 @@ import { store } from '../redux/store';
 
 interface WrapperProps {
   wrapperProps?: { route: string; location: string };
+  children?: ReactNode;
 }
 
 type CustomRenderOptions = RenderOptions & WrapperProps;

@@ -15,8 +15,6 @@ describe('post page component tests', () => {
   it('renders a post-page component', () => {
     setup();
 
-    console.log('window.location.pathname: ', window.location.pathname);
-
     const postPage = screen.getByTestId('post-page');
 
     expect(postPage).toBeInTheDocument();
