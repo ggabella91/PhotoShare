@@ -18,6 +18,7 @@ import {
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import EmojiPicker from 'emoji-picker-react';
 import MessageComponent from './message.component';
 import ConversationDetails from './conversation-details.component';
@@ -757,6 +758,18 @@ const Conversation: React.FC<ConversationProps> = ({
                 onKeyDown={handleKeyDown}
                 ref={textAreaRef}
                 InputProps={{
+                  startAdornment: (
+                    <InputAdornment
+                      position='start'
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: '25px',
+                      }}
+                    >
+                      <InsertEmoticonIcon fontSize='medium' />
+                    </InputAdornment>
+                  ),
                   endAdornment: !!message.length && (
                     <InputAdornment
                       position='end'
