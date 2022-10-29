@@ -1,6 +1,3 @@
-import { Map } from 'immutable';
-import { UserInfoMap } from '../../components/conversation/conversation.component';
-
 export enum UserActions {
   CHECK_USER_SESSION = 'CHECK_USER_SESSION',
   SET_CURRENT_USER = 'SET_CURRENT_USER',

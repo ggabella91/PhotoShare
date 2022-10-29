@@ -1,5 +1,3 @@
-import { Map } from 'immutable';
-import { UserInfoMap } from '../../components/conversation/conversation.component';
 import { UserActions, UserActionTypes, UserState } from './user.types';
 import { addUserToUsersArray } from './user.utils';
 
