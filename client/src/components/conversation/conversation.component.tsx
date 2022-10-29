@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
   Button,
+  IconButton,
   Grid,
   InputAdornment,
   TextField,
@@ -19,7 +20,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker, { Emoji, EmojiClickData } from 'emoji-picker-react';
 import MessageComponent from './message.component';
 import ConversationDetails from './conversation-details.component';
 import CustomAvatarGroup, {
@@ -57,6 +58,8 @@ import { getConvoName } from '../../pages/messages-page/messages-page.utils';
 import { shouldRenderTimeStamp, renderTimeStamp } from './conversation.utils';
 import { useLazyLoading } from '../../pages/hooks';
 import { Message } from '../../redux/message/message.types';
+
+import './emoji-picker.scss';
 
 interface ConversationProps {
   conversationId: string;
@@ -116,6 +119,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const [messageSeenByUsers, setMessageSeenByUsers] = useState<
     MessageSeenByUser[]
   >([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -518,6 +522,15 @@ const Conversation: React.FC<ConversationProps> = ({
   const handleCloseMessageSeenByUsersDialog = () =>
     setOpenMessageSeenByUserDialog(false);
 
+  const handleClickEmojiPickerIcon = () =>
+    setShowEmojiPicker((showEmojiPicker) => !showEmojiPicker);
+
+  const handleEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
+    console.log('emojiData: ', emojiData);
+    setMessage((message) => message + '=|=|=EMOJI=|=|=' + emojiData.unified);
+    setShowEmojiPicker(false);
+  };
+
   return (
     <Grid
       sx={{
@@ -741,6 +754,7 @@ const Conversation: React.FC<ConversationProps> = ({
             }}
             onFocus={handleMessagesContainerFocus}
           >
+            {showEmojiPicker && <EmojiPicker onEmojiClick={handleEmojiClick} />}
             <Box component='form' sx={{ width: '100%' }}>
               <TextField
                 multiline
@@ -767,7 +781,13 @@ const Conversation: React.FC<ConversationProps> = ({
                         width: '25px',
                       }}
                     >
-                      <InsertEmoticonIcon fontSize='medium' />
+                      <IconButton
+                        aria-label='toggle display emoji picker'
+                        sx={{ display: 'flex' }}
+                        onClick={handleClickEmojiPickerIcon}
+                      >
+                        <InsertEmoticonIcon fontSize='medium' />
+                      </IconButton>
                     </InputAdornment>
                   ),
                   endAdornment: !!message.length && (

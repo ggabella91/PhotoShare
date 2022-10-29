@@ -531,7 +531,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                 ).length;
 
                 return (
-                  <Tooltip title={title}>
+                  <Tooltip title={title} key={idx}>
                     <Avatar
                       src={
                         !!avatarFileString
@@ -539,7 +539,6 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                           : ''
                       }
                       alt={title}
-                      key={idx}
                       sx={{ height: '14px', width: '14px', margin: '0 1px' }}
                       component={(seenByLength > 1 && ButtonBase) || 'div'}
                       onClick={handleSeenByAvatarClick}
