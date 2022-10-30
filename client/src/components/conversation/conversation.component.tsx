@@ -20,7 +20,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
-import EmojiPicker, { Emoji, EmojiClickData } from 'emoji-picker-react';
+import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import MessageComponent from './message.component';
 import ConversationDetails from './conversation-details.component';
 import CustomAvatarGroup, {
@@ -527,7 +527,8 @@ const Conversation: React.FC<ConversationProps> = ({
 
   const handleEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
     console.log('emojiData: ', emojiData);
-    setMessage((message) => message + '=|=|=EMOJI=|=|=' + emojiData.unified);
+    setMessage((message) => message + emojiData.emoji);
+
     setShowEmojiPicker(false);
   };
 
@@ -754,7 +755,12 @@ const Conversation: React.FC<ConversationProps> = ({
             }}
             onFocus={handleMessagesContainerFocus}
           >
-            {showEmojiPicker && <EmojiPicker onEmojiClick={handleEmojiClick} />}
+            {showEmojiPicker && (
+              <EmojiPicker
+                emojiStyle={EmojiStyle.NATIVE}
+                onEmojiClick={handleEmojiClick}
+              />
+            )}
             <Box component='form' sx={{ width: '100%' }}>
               <TextField
                 multiline
