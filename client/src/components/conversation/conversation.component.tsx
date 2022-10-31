@@ -525,6 +525,8 @@ const Conversation: React.FC<ConversationProps> = ({
   const handleClickEmojiPickerIcon = () =>
     setShowEmojiPicker((showEmojiPicker) => !showEmojiPicker);
 
+  const handleBlurEmojiPicker = () => setShowEmojiPicker(false);
+
   const handleEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
     console.log('emojiData: ', emojiData);
     setMessage((message) => message + emojiData.emoji);
@@ -756,10 +758,12 @@ const Conversation: React.FC<ConversationProps> = ({
             onFocus={handleMessagesContainerFocus}
           >
             {showEmojiPicker && (
-              <EmojiPicker
-                emojiStyle={EmojiStyle.NATIVE}
-                onEmojiClick={handleEmojiClick}
-              />
+              <Grid onBlur={handleBlurEmojiPicker}>
+                <EmojiPicker
+                  emojiStyle={EmojiStyle.NATIVE}
+                  onEmojiClick={handleEmojiClick}
+                />
+              </Grid>
             )}
             <Box component='form' sx={{ width: '100%' }}>
               <TextField
