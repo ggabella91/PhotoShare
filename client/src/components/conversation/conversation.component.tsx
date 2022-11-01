@@ -5,6 +5,7 @@ import React, {
   ChangeEvent,
   KeyboardEvent,
   WheelEvent,
+  FocusEvent,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -525,7 +526,11 @@ const Conversation: React.FC<ConversationProps> = ({
   const handleClickEmojiPickerIcon = () =>
     setShowEmojiPicker((showEmojiPicker) => !showEmojiPicker);
 
-  const handleBlurEmojiPicker = () => setShowEmojiPicker(false);
+  const handleBlurEmojiPicker = (event: FocusEvent) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setShowEmojiPicker(false);
+    }
+  };
 
   const handleEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
     console.log('emojiData: ', emojiData);
