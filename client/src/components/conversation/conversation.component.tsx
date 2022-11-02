@@ -159,6 +159,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const messagesRepliedTo = useRef<Record<string, Message>>({});
   const lastMessageIdSeenRef = useRef('');
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
+  const receivedMessages = useRef<Record<string, boolean>>({});
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -319,6 +320,41 @@ const Conversation: React.FC<ConversationProps> = ({
   }, [messagesArray, currentUser, socket]);
 
   useEffect(() => {
+    socket.on('chatToClient', (message: Message) => {
+      const messageAlreadyAdded = receivedMessages.current[message.id];
+
+      if (!messageAlreadyAdded) {
+        if (message.ownerId !== currentUser?.id) {
+          receivedMessages.current[message.id] = true;
+
+          dispatch(
+            addMessageToConversation({ ...message, status: 'delivered' })
+          );
+
+          // Emit socket message to update message
+          // status to 'delivered'
+          socket.emit('updateMessageStatus', {
+            conversationId: message.conversationId,
+            messageId: message.id,
+            status: 'delivered',
+          });
+        } else if (message.status !== 'delivered') {
+          // Dispatch redux action to update message
+          // status (most likely to 'sent') in redux state
+          dispatch(updateMessageStatus(message));
+        }
+
+        if (currentUser && message.ownerId === currentUser.id) {
+          socket.emit('updateUsersMessageLastViewedBy', {
+            conversationId: message.conversationId,
+            messageId: message.id,
+            userId: currentUser.id,
+            isMessageOwner: true,
+          });
+        }
+      }
+    });
+
     socket.on(
       'foundSingleMessage',
       (message: Message) => (messagesRepliedTo.current[message.id] = message)
@@ -533,7 +569,6 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
-    console.log('emojiData: ', emojiData);
     setMessage((message) => message + emojiData.emoji);
 
     setShowEmojiPicker(false);
