@@ -533,7 +533,6 @@ const Conversation: React.FC<ConversationProps> = ({
   };
 
   const handleEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
-    console.log('emojiData: ', emojiData);
     setMessage((message) => message + emojiData.emoji);
 
     setShowEmojiPicker(false);
