@@ -344,14 +344,7 @@ const Conversation: React.FC<ConversationProps> = ({
           dispatch(updateMessageStatus(message));
         }
 
-        if (currentUser && message.ownerId === currentUser.id) {
-          socket.emit('updateUsersMessageLastViewedBy', {
-            conversationId: message.conversationId,
-            messageId: message.id,
-            userId: currentUser.id,
-            isMessageOwner: true,
-          });
-        }
+        
       }
     });
 
@@ -424,7 +417,9 @@ const Conversation: React.FC<ConversationProps> = ({
             messageReplyingToOwnerName:
               userInfoMap[messageToReplyTo.ownerId].name.split(' ')[0],
           }),
-        usersForWhomMessageWasLastOneSeen: [],
+        usersForWhomMessageWasLastOneSeen: [
+          { seenTime: new Date().toISOString(), userId: currentUser.id },
+        ],
         hasBeenViewedByOtherUsers: false,
       };
 
