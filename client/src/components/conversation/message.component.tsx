@@ -451,7 +451,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
               alignItems: 'center',
               zIndex: 20,
               backgroundColor: message.hidden ? 'none' : 'rgb(238, 238, 238)',
-              border: message.hidden ? '1px solid rgb(220,220,220)' : 'unset',
+              border: message.hidden ? '1px solid rgb(224,224,224)' : 'unset',
               marginBottom: '8px',
               marginTop: addMarginTop ? '15px' : '0px',
               maxWidth: '365px',
