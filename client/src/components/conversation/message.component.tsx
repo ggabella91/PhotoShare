@@ -248,6 +248,9 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                 marginBottom: '5px',
                 maxWidth: '345px',
                 cursor: 'pointer',
+                '&:active': {
+                  outline: 'Highlight auto 1px',
+                },
                 '&:focus-visible': {
                   outline: 'Highlight 1px auto',
                 },
