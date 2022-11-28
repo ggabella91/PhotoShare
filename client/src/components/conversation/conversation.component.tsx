@@ -160,6 +160,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const lastMessageIdSeenRef = useRef('');
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
   const receivedMessages = useRef<Record<string, boolean>>({});
+  const searchingForOriginalMessage = useRef('');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -489,12 +490,22 @@ const Conversation: React.FC<ConversationProps> = ({
     console.log('originalMessage: ', originalMessage);
 
     if (originalMessage) {
+      searchingForOriginalMessage.current = '';
       originalMessage.scrollIntoView();
       messagesContainerRef.current?.scrollBy({ top: -20 });
     } else {
       // TODO Fetch messages until the original message is found,
       // and scroll up to it. May need a ref to track that messages
       // are still being fetched, to retain state between renders
+      searchingForOriginalMessage.current = messageId;
+
+      dispatch(
+        getConvoMessagesStart({
+          conversationId,
+          limit: 10,
+          pageToShow: ++pageToFetch.current[conversationId],
+        })
+      );
     }
   };
 
@@ -502,6 +513,11 @@ const Conversation: React.FC<ConversationProps> = ({
     node: HTMLDivElement | null,
     messageId: string
   ) => {
+    // When rendering messages while searching for an old message and a message with an existing ref is reached, fire click handler for message reply to attempt to scroll to message being replied to, or continue search process
+    if (allMessagesRefsMap[messageId] && searchingForOriginalMessage.current) {
+      handleClickMessageRepliedTo(searchingForOriginalMessage.current);
+    }
+
     allMessagesRefsMap[messageId] = node;
   };
 
