@@ -494,9 +494,6 @@ const Conversation: React.FC<ConversationProps> = ({
       originalMessage.scrollIntoView();
       messagesContainerRef.current?.scrollBy({ top: -20 });
     } else {
-      // TODO Fetch messages until the original message is found,
-      // and scroll up to it. May need a ref to track that messages
-      // are still being fetched, to retain state between renders
       searchingForOriginalMessage.current = messageId;
 
       dispatch(
