@@ -496,6 +496,8 @@ const Conversation: React.FC<ConversationProps> = ({
     } else {
       searchingForOriginalMessage.current = messageId;
 
+      // TODO Investigate why older messages can appear out of
+      // order when fetched in this else block
       dispatch(
         getConvoMessagesStart({
           conversationId,
@@ -510,7 +512,6 @@ const Conversation: React.FC<ConversationProps> = ({
     node: HTMLDivElement | null,
     messageId: string
   ) => {
-    // When rendering messages while searching for an old message and a message with an existing ref is reached, fire click handler for message reply to attempt to scroll to message being replied to, or continue search process
     if (allMessagesRefsMap[messageId] && searchingForOriginalMessage.current) {
       handleClickMessageRepliedTo(searchingForOriginalMessage.current);
     }
