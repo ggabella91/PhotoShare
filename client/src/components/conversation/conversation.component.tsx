@@ -496,8 +496,11 @@ const Conversation: React.FC<ConversationProps> = ({
     } else {
       searchingForOriginalMessage.current = messageId;
 
-      // TODO Investigate why older messages can appear out of
-      // order when fetched in this else block
+      // TODO Figure out a way to add new sets of older messages
+      // while maintaining chronological order, in case of longer
+      // delays with sets of messages requested first for which
+      // the responses come later than for those requested later
+
       dispatch(
         getConvoMessagesStart({
           conversationId,
@@ -512,7 +515,13 @@ const Conversation: React.FC<ConversationProps> = ({
     node: HTMLDivElement | null,
     messageId: string
   ) => {
-    if (allMessagesRefsMap[messageId] && searchingForOriginalMessage.current) {
+    if (
+      allMessagesRefsMap[messageId] &&
+      searchingForOriginalMessage.current &&
+      totalMessagesForConvo &&
+      Math.ceil(totalMessagesForConvo / 10) >
+        pageToFetch.current[conversationId]
+    ) {
       handleClickMessageRepliedTo(searchingForOriginalMessage.current);
     }
 
