@@ -51,6 +51,7 @@ export interface ConvoMessages {
   conversationId: string;
   messages: Message[];
   queryLength?: number;
+  page?: number;
 }
 
 export interface Message {
