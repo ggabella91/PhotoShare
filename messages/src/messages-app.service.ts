@@ -446,6 +446,7 @@ export class MessagesAppService {
 
     return {
       messages: messagesFromConvoObjects,
+      ...(!!parsedOffset && { page: parsedOffset }),
       ...(!!queryLength && { queryLength }),
     };
   }
