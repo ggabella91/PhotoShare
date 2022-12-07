@@ -292,7 +292,15 @@ const Conversation: React.FC<ConversationProps> = ({
 
     if (messagesArray && currentUser) {
       const messagesReversed = [...messagesArray]
-        .reverse()
+        .sort((a, b) => {
+          if (a.id > b.id) {
+            return 1;
+          } else if (a.id < b.id) {
+            return -1;
+          } else {
+            return 0;
+          }
+        })
         .filter(
           (message) =>
             !message.usersMessageIsRemovedFor.includes(currentUser.id)
