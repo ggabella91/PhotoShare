@@ -495,7 +495,6 @@ const Conversation: React.FC<ConversationProps> = ({
 
   const handleClickMessageRepliedTo = (messageId: string) => {
     const originalMessage = allMessagesRefsMap[messageId];
-    console.log('originalMessage: ', originalMessage);
 
     if (originalMessage) {
       searchingForOriginalMessage.current = '';
@@ -503,11 +502,6 @@ const Conversation: React.FC<ConversationProps> = ({
       messagesContainerRef.current?.scrollBy({ top: -20 });
     } else {
       searchingForOriginalMessage.current = messageId;
-
-      // TODO Figure out a way to add new sets of older messages
-      // while maintaining chronological order, in case of longer
-      // delays with sets of messages requested first for which
-      // the responses come later than for those requested later
 
       dispatch(
         getConvoMessagesStart({
