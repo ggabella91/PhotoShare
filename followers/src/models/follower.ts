@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
-import { version } from 'yargs';
 
 interface FollowerAttrs {
   userId: string;
