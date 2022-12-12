@@ -1,11 +1,11 @@
 import express, { Request, Response } from 'express';
-import { Follower, FollowerDoc } from '../models/follower';
+import { Notification, NotificationDoc } from '../models/notification';
 import { requireAuth, BadRequestError } from '@ggabella-photo-share/common';
 
 const router = express.Router();
 
 router.get(
-  '/api/followers/get-followers/:userId',
+  '/api/notifications/:userId',
   requireAuth,
   async (req: Request, res: Response) => {
     const { userId } = req.params;
@@ -14,12 +14,12 @@ router.get(
       throw new BadRequestError('User id must be provided');
     }
 
-    const followers: FollowerDoc[] = await Follower.find({
-      userId,
+    const notications: NotificationDoc[] = await Notification.find({
+      toUserId: userId,
     });
 
-    res.status(200).send(followers);
+    res.status(200).send(notications);
   }
 );
 
-export { router as getFollowersRouter };
+export { router as getNotificationsRouter };
