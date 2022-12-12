@@ -12,6 +12,7 @@ import { getFollowersRouter } from './routes/get-followers';
 import { getUsersFollowing } from './routes/get-users-following';
 import { unfollowUserRouter } from './routes/unfollow-user';
 import { postNotificationRouter } from './routes/post-notification';
+import { getNotificationsRouter } from './routes/get-notifications';
 
 const app = express();
 app.set('trust proxy', true);
@@ -30,6 +31,7 @@ app.use(getFollowersRouter);
 app.use(getUsersFollowing);
 app.use(unfollowUserRouter);
 app.use(postNotificationRouter);
+app.use(getNotificationsRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
