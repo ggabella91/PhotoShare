@@ -15,12 +15,26 @@ export enum FollowerActions {
   CLEAR_FOLLOW_STATE = 'CLEAR_FOLLOW_STATE',
 }
 
+export enum NotificationActions {
+  POST_NOTIFICATION_START = 'POST_NOTIFICATION_START',
+  POST_NOTIFICATION_SUCCESS = 'POST_NOTIFICATION_SUCCESS',
+  POST_NOTIFICATION_FAILURE = 'POST_NOTIFICATION_FAILURE',
+  GET_NOTIFICATIONS_START = 'GET_NOTIFICATIONS_START',
+  GET_NOTIFICATIONS_SUCCESS = 'GET_NOTIFICATIONS_SUCCESS',
+  GET_NOTIFICATIONS_FAILURE = 'GET_NOTIFICATIONS_FAILURE',
+}
+
 export interface Follower {
   userId: string;
   followerId: string;
 }
 
 export interface FollowError {
+  statusCode: number;
+  message: string;
+}
+
+export interface NotificationError {
   statusCode: number;
   message: string;
 }
@@ -49,6 +63,26 @@ export interface FollowerState {
   getUsersFollowingError: FollowError | null;
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
+}
+
+export interface PostNotificationReq {
+  fromUserId: string;
+  toUserId: string;
+  message: string;
+}
+
+export interface Notification {
+  id: string;
+  fromUserId: string;
+  toUserId: string;
+  message: string;
+  createdAt: Date;
+}
+
+export interface GetNotificationsReq {
+  userId: string;
+  pageToShow: string;
+  limit: string;
 }
 
 export interface FollowNewUserStart {
@@ -135,3 +169,41 @@ export type FollowerActionTypes =
   | UnfollowUserSuccess
   | UnfollowUserFailure
   | ClearFollowState;
+
+export interface PostNotificationStart {
+  type: typeof NotificationActions.POST_NOTIFICATION_START;
+  payload: PostNotificationReq;
+}
+
+export interface PostNotificationSuccess {
+  type: typeof NotificationActions.POST_NOTIFICATION_SUCCESS;
+  payload: Notification;
+}
+
+export interface PostNotificationFailure {
+  type: typeof NotificationActions.POST_NOTIFICATION_FAILURE;
+  payload: NotificationError;
+}
+
+export interface GetNotificationsStart {
+  type: typeof NotificationActions.GET_NOTIFICATIONS_START;
+  payload: GetNotificationsReq;
+}
+
+export interface GetNotificationsSuccess {
+  type: typeof NotificationActions.GET_NOTIFICATIONS_SUCCESS;
+  payload: Notification[];
+}
+
+export interface GetNotificationsFailure {
+  type: typeof NotificationActions.GET_NOTIFICATIONS_FAILURE;
+  payload: NotificationError;
+}
+
+export type NotificationActionTypes =
+  | PostNotificationStart
+  | PostNotificationSuccess
+  | PostNotificationFailure
+  | GetNotificationsStart
+  | GetNotificationsSuccess
+  | GetNotificationsFailure;
