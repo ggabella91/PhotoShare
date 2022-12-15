@@ -8,17 +8,35 @@ router.get(
   '/api/notifications/:userId',
   requireAuth,
   async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const userId = req.query.userId;
+    const pageToShow = parseInt(req.query.pageToShow as string) || null;
+    const limit = parseInt(req.query.limit as string) || null;
 
     if (!userId) {
       throw new BadRequestError('User id must be provided');
     }
 
-    const notications: NotificationDoc[] = await Notification.find({
-      toUserId: userId,
-    });
+    let notifications: NotificationDoc[] = [];
 
-    res.status(200).send(notications);
+    if (pageToShow && limit) {
+      notifications = await Notification.find(
+        {
+          toUserId: userId,
+        },
+        null,
+        {
+          sort: { _id: -1 },
+        }
+      )
+        .limit(limit)
+        .skip((pageToShow - 1) * limit);
+    } else {
+      notifications = await Notification.find({
+        toUserId: userId,
+      });
+    }
+
+    res.status(200).send(notifications);
   }
 );
 
