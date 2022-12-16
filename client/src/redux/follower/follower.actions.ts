@@ -4,6 +4,11 @@ import {
   UsersFollowingRequest,
   FollowerActions,
   FollowerActionTypes,
+  NotificationActions,
+  NotificationActionTypes,
+  PostNotificationReq,
+  Notification,
+  NotificationError,
 } from './follower.types';
 
 export const followNewUserStart = (
@@ -95,4 +100,25 @@ export const unfollowUserFailure = (
 
 export const clearFollowState = (): FollowerActionTypes => ({
   type: FollowerActions.CLEAR_FOLLOW_STATE,
+});
+
+export const postNotificationStart = (
+  postNotificationReq: PostNotificationReq
+): NotificationActionTypes => ({
+  type: NotificationActions.POST_NOTIFICATION_START,
+  payload: postNotificationReq,
+});
+
+export const postNotificationSuccess = (
+  notification: Notification
+): NotificationActionTypes => ({
+  type: NotificationActions.POST_NOTIFICATION_SUCCESS,
+  payload: notification,
+});
+
+export const postNotificationFailure = (
+  error: NotificationError
+): NotificationActionTypes => ({
+  type: NotificationActions.POST_NOTIFICATION_FAILURE,
+  payload: error,
 });
