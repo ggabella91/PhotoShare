@@ -29,6 +29,10 @@ spec:
             backend:
               serviceName: messages-srv
               servicePort: 3000
+          - path: /api/notifications/?(.*)
+            backend:
+              serviceName: followers-srv
+              servicePort: 3000
           - path: /api/reactions/?(.*)
             backend:
               serviceName: posts-srv
@@ -55,6 +59,10 @@ spec:
           - path: /api/messages/?(.*)
             backend:
               serviceName: messages-srv
+              servicePort: 3000
+          - path: /api/notifications/?(.*)
+            backend:
+              serviceName: followers-srv
               servicePort: 3000
           - path: /api/reactions/?(.*)
             backend:
