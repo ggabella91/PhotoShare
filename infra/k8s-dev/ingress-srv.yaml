@@ -39,6 +39,13 @@ spec:
                 port:
                   number: 3000
           - pathType: Prefix
+            path: /api/notifications/?(.*)
+            backend:
+              service:
+                name: followers-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
             path: /api/reactions/?(.*)
             backend:
               service:

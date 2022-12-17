@@ -8,6 +8,11 @@ import {
   UsersFollowingRequest,
   FollowerActions,
   FollowError,
+  NotificationActions,
+  PostNotificationReq,
+  NotificationError,
+  Notification,
+  GetNotificationsReq,
 } from './follower.types';
 
 import {
@@ -20,6 +25,10 @@ import {
   getUsersFollowingFailure,
   unfollowUserSuccess,
   unfollowUserFailure,
+  postNotificationFailure,
+  postNotificationSuccess,
+  getNotificationsFailure,
+  getNotificationsSuccess,
 } from './follower.actions';
 
 import axios from 'axios';
@@ -76,17 +85,46 @@ export function* getUsersFollowing({
   }
 }
 
-export function* unfollowUserStart({
-  payload: userId,
-}: {
-  payload: string;
-}): any {
+export function* unfollowUser({ payload: userId }: { payload: string }): any {
   try {
     const { data } = yield axios.post(`/api/followers/unfollow-user/${userId}`);
 
     yield put(unfollowUserSuccess(data));
   } catch (err) {
     yield put(unfollowUserFailure(err as FollowError));
+  }
+}
+
+export function* postNotification({
+  payload: postNotificationReq,
+}: {
+  payload: PostNotificationReq;
+}): any {
+  try {
+    const { data: notification }: { data: Notification } = yield axios.post(
+      `/api/notifications`,
+      postNotificationReq
+    );
+
+    yield put(postNotificationSuccess(notification));
+  } catch (err) {
+    yield put(postNotificationFailure(err as NotificationError));
+  }
+}
+
+export function* getNotifications({
+  payload: { userId, pageToShow, limit },
+}: {
+  payload: GetNotificationsReq;
+}): any {
+  try {
+    const { data: notifications }: { data: Notification[] } = yield axios.get(
+      `/api/notifications/${userId}?pageToShow=${pageToShow}&limit=${limit}`
+    );
+
+    yield put(getNotificationsSuccess(notifications));
+  } catch (err) {
+    yield put(getNotificationsFailure(err as NotificationError));
   }
 }
 
@@ -114,7 +152,21 @@ export function* onGetUsersFollowingStart(): SagaIterator {
 export function* onUnfollowUserStart(): SagaIterator {
   yield takeLatest<ActionPattern, Saga>(
     FollowerActions.UNFOLLOW_USER_START,
-    unfollowUserStart
+    unfollowUser
+  );
+}
+
+export function* onPostNotificationStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    NotificationActions.POST_NOTIFICATION_START,
+    postNotification
+  );
+}
+
+export function* onGetNotificationsStart(): SagaIterator {
+  yield takeLatest<ActionPattern, Saga>(
+    NotificationActions.GET_NOTIFICATIONS_START,
+    getNotifications
   );
 }
 
@@ -124,5 +176,7 @@ export function* followerSagas(): SagaIterator {
     call(onGetFollowersStart),
     call(onGetUsersFollowingStart),
     call(onUnfollowUserStart),
+    call(onPostNotificationStart),
+    call(onGetNotificationsStart),
   ]);
 }
