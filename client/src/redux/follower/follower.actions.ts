@@ -9,6 +9,7 @@ import {
   PostNotificationReq,
   Notification,
   NotificationError,
+  GetNotificationsReq,
 } from './follower.types';
 
 export const followNewUserStart = (
@@ -120,5 +121,26 @@ export const postNotificationFailure = (
   error: NotificationError
 ): NotificationActionTypes => ({
   type: NotificationActions.POST_NOTIFICATION_FAILURE,
+  payload: error,
+});
+
+export const getNotificationsStart = (
+  getNotificationsReq: GetNotificationsReq
+): NotificationActionTypes => ({
+  type: NotificationActions.GET_NOTIFICATIONS_START,
+  payload: getNotificationsReq,
+});
+
+export const getNotificationsSuccess = (
+  notifications: Notification[]
+): NotificationActionTypes => ({
+  type: NotificationActions.GET_NOTIFICATIONS_SUCCESS,
+  payload: notifications,
+});
+
+export const getNotificationsFailure = (
+  error: NotificationError
+): NotificationActionTypes => ({
+  type: NotificationActions.GET_NOTIFICATIONS_FAILURE,
   payload: error,
 });
