@@ -8,7 +8,7 @@ router.get(
   '/api/notifications/:userId',
   requireAuth,
   async (req: Request, res: Response) => {
-    const userId = req.query.userId;
+    const { userId } = req.params;
     const pageToShow = parseInt(req.query.pageToShow as string) || null;
     const limit = parseInt(req.query.limit as string) || null;
 
