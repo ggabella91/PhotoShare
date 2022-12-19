@@ -2,6 +2,8 @@ import {
   FollowerActions,
   FollowerActionTypes,
   FollowerState,
+  NotificationActions,
+  NotificationActionTypes,
 } from './follower.types';
 
 const INITIAL_STATE: FollowerState = {
@@ -16,11 +18,15 @@ const INITIAL_STATE: FollowerState = {
   getUsersFollowingError: null,
   unfollowConfirm: null,
   unfollowError: null,
+  postNotificationConfirm: null,
+  postNotificationFailure: null,
+  notifications: null,
+  getNotificationsError: null,
 };
 
 const followerReducer = (
   state = INITIAL_STATE,
-  action: FollowerActionTypes
+  action: FollowerActionTypes | NotificationActionTypes
 ): FollowerState => {
   switch (action.type) {
     case FollowerActions.FOLLOW_NEW_USER_SUCCESS:
@@ -58,6 +64,18 @@ const followerReducer = (
         unfollowConfirm: 'User unfollowed successfully',
         unfollowError: null,
       };
+    case NotificationActions.POST_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        postNotificationConfirm: action.payload,
+        postNotificationFailure: null,
+      };
+    case NotificationActions.GET_NOTIFICATIONS_SUCCESS:
+      return {
+        ...state,
+        notifications: action.payload,
+        getNotificationsError: null,
+      };
     case FollowerActions.FOLLOW_NEW_USER_FAILURE:
       return {
         ...state,
@@ -81,6 +99,18 @@ const followerReducer = (
         ...state,
         unfollowConfirm: null,
         unfollowError: action.payload,
+      };
+    case NotificationActions.POST_NOTIFICATION_FAILURE:
+      return {
+        ...state,
+        postNotificationConfirm: null,
+        postNotificationFailure: action.payload,
+      };
+    case NotificationActions.GET_NOTIFICATIONS_FAILURE:
+      return {
+        ...state,
+        notifications: null,
+        getNotificationsError: action.payload,
       };
     case FollowerActions.CLEAR_FOLLOW_STATE:
       return {

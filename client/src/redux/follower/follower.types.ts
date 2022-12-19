@@ -63,6 +63,10 @@ export interface FollowerState {
   getUsersFollowingError: FollowError | null;
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
+  postNotificationConfirm: Notification | null;
+  postNotificationFailure: NotificationError | null;
+  notifications: Notification[] | null;
+  getNotificationsError: NotificationError | null;
 }
 
 export interface PostNotificationReq {
