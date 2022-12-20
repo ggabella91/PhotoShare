@@ -19,7 +19,7 @@ const INITIAL_STATE: FollowerState = {
   unfollowConfirm: null,
   unfollowError: null,
   postNotificationConfirm: null,
-  postNotificationFailure: null,
+  postNotificationError: null,
   notifications: null,
   getNotificationsError: null,
 };
@@ -68,7 +68,7 @@ const followerReducer = (
       return {
         ...state,
         postNotificationConfirm: action.payload,
-        postNotificationFailure: null,
+        postNotificationError: null,
       };
     case NotificationActions.GET_NOTIFICATIONS_SUCCESS:
       return {
@@ -104,7 +104,7 @@ const followerReducer = (
       return {
         ...state,
         postNotificationConfirm: null,
-        postNotificationFailure: action.payload,
+        postNotificationError: action.payload,
       };
     case NotificationActions.GET_NOTIFICATIONS_FAILURE:
       return {
