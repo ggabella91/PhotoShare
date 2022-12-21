@@ -12,7 +12,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ConversationUserOptionsDialog from './conversation-user-options-dialog.component';
 import SetConvoUserNicknameDialog from './set-convo-user-nickname-dialog.component';
 import { Socket } from 'socket.io-client';
-import { User } from '../../redux/user/user.types';
 import {
   selectCurrentUser,
   selectConversationUsers,
