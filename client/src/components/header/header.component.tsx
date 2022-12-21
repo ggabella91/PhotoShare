@@ -18,10 +18,11 @@ import {
   selectProfilePhotoFile,
 } from '../../redux/post/post.selectors';
 import { getPostFileStart } from '../../redux/post/post.actions';
-
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchBar from '../search-bar/search-bar.component';
 
 import './header.styles.scss';
+import { Button } from '@mui/material';
 
 interface HeaderProps {
   currentUser: User | null;
@@ -106,6 +107,16 @@ export const Header: React.FC<HeaderProps> = ({
             ) : null}
           </NavLink>
           <nav className='header-menu'>
+            <Button
+              onClick={() => {}}
+              sx={{
+                '&:hover': {
+                  backgroundColor: 'unset',
+                },
+              }}
+            >
+              <NotificationsIcon sx={{ color: 'white', marginRight: '5px' }} />
+            </Button>
             <NavLink className='link' to='/post' data-testid='create-post-link'>
               Post Image
             </NavLink>
