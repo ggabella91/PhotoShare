@@ -41,6 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [photoFileString, setPhotoFileString] = useState<string>('');
   const [searchBarKey, setSearchBarKey] = useState(Math.random());
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const params = useParams();
 
@@ -80,6 +81,9 @@ export const Header: React.FC<HeaderProps> = ({
     }
   }, [profilePhotoFile]);
 
+  const handleClickNotificationsButton = () =>
+    setShowNotifications(!showNotifications);
+
   return (
     <div className='header' data-testid='header'>
       <NavLink className='app-name' to='/' data-testid='app-logo-link'>
@@ -108,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({
           </NavLink>
           <nav className='header-menu'>
             <Button
-              onClick={() => {}}
+              onClick={handleClickNotificationsButton}
               sx={{
                 '&:hover': {
                   backgroundColor: 'unset',
