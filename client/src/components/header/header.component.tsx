@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -22,7 +22,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchBar from '../search-bar/search-bar.component';
 
 import './header.styles.scss';
-import { Button } from '@mui/material';
+import { Button, Grid, Popover, Typography } from '@mui/material';
 
 interface HeaderProps {
   currentUser: User | null;
@@ -41,7 +41,8 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [photoFileString, setPhotoFileString] = useState<string>('');
   const [searchBarKey, setSearchBarKey] = useState(Math.random());
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [openNotifications, setOpenNotifications] = useState(false);
+  const notificationsButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const params = useParams();
 
@@ -82,7 +83,9 @@ export const Header: React.FC<HeaderProps> = ({
   }, [profilePhotoFile]);
 
   const handleClickNotificationsButton = () =>
-    setShowNotifications(!showNotifications);
+    setOpenNotifications(!openNotifications);
+
+  const handleCloseNotifications = () => setOpenNotifications(false);
 
   return (
     <div className='header' data-testid='header'>
@@ -118,9 +121,29 @@ export const Header: React.FC<HeaderProps> = ({
                   backgroundColor: 'unset',
                 },
               }}
+              ref={notificationsButtonRef}
             >
               <NotificationsIcon sx={{ color: 'white', marginRight: '5px' }} />
             </Button>
+            {notificationsButtonRef.current && (
+              <Popover
+                open={openNotifications}
+                anchorEl={notificationsButtonRef.current}
+                onClose={handleCloseNotifications}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <Grid>
+                  <Typography>Notifications Container goes here</Typography>
+                </Grid>
+              </Popover>
+            )}
             <NavLink className='link' to='/post' data-testid='create-post-link'>
               Post Image
             </NavLink>
