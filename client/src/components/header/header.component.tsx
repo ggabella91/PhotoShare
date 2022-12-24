@@ -22,7 +22,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchBar from '../search-bar/search-bar.component';
 
 import './header.styles.scss';
-import { Button, Grid, Popover, Typography } from '@mui/material';
+import { Button, Grid, Popover } from '@mui/material';
+import NotificationsContainer from './notifications-container.component';
 
 interface HeaderProps {
   currentUser: User | null;
@@ -140,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
                 }}
               >
                 <Grid>
-                  <Typography>Notifications Container goes here</Typography>
+                  <NotificationsContainer />
                 </Grid>
               </Popover>
             )}
