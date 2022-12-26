@@ -12,9 +12,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const { message, createdAt } = notification;
 
   return (
-    <Grid>
-      <Typography>{message}</Typography>
-      <Typography>{createdAt.toDateString()}</Typography>
+    <Grid sx={{ display: 'flex', flexDirection: 'row' }}>
+      <Grid>{/* Avatar will go here */}</Grid>
+      <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography>{message}</Typography>
+        <Typography>{createdAt.toDateString()}</Typography>
+      </Grid>
     </Grid>
   );
 };

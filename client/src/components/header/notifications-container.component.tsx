@@ -8,7 +8,7 @@ const NotificationsContainer: React.FC = () => {
   const notifications = useSelector(selectNotifications);
 
   return (
-    <Grid>
+    <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
       {notifications?.map((notification) => (
         <NotificationItem notification={notification} />
       ))}

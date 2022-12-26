@@ -140,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
                   horizontal: 'center',
                 }}
               >
-                <Grid>
+                <Grid sx={{ display: 'flex' }}>
                   <NotificationsContainer />
                 </Grid>
               </Popover>
