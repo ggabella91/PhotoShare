@@ -139,8 +139,11 @@ export const Header: React.FC<HeaderProps> = ({
                   vertical: 'bottom',
                   horizontal: 'center',
                 }}
+                sx={{ transform: 'translateY(60px)' }}
               >
-                <Grid sx={{ display: 'flex' }}>
+                <Grid
+                  sx={{ display: 'flex', width: '200px', minHeight: '60px' }}
+                >
                   <NotificationsContainer />
                 </Grid>
               </Popover>
