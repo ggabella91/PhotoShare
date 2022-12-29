@@ -12,7 +12,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const { message, createdAt } = notification;
 
   return (
-    <Grid sx={{ display: 'flex', flexDirection: 'row' }}>
+    <Grid sx={{ display: 'flex', flexDirection: 'row', height: '60px' }}>
       <Grid>{/* Avatar will go here */}</Grid>
       <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography>{message}</Typography>
