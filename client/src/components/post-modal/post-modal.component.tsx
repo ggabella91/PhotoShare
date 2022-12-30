@@ -71,6 +71,8 @@ import {
   setLocationCoordinates,
 } from '../../redux/post/post.actions';
 
+import { postNotificationStart } from '../../redux/follower/follower.actions';
+
 import UserInfo, {
   StyleType,
   UserInfoAndOtherData,
@@ -702,6 +704,16 @@ export const PostModal: React.FC<PostModalProps> = ({
         likedPost: false,
         comment,
       });
+
+      if (currentUser) {
+        dispatch(
+          postNotificationStart({
+            fromUserId: currentUser.id,
+            toUserId: userId,
+            message: `${currentUser.username} commented: ${comment}`,
+          })
+        );
+      }
     }
     setComment('');
   };
@@ -730,6 +742,16 @@ export const PostModal: React.FC<PostModalProps> = ({
       likedPost: true,
       comment: '',
     });
+
+    if (currentUser) {
+      dispatch(
+        postNotificationStart({
+          fromUserId: currentUser.id,
+          toUserId: userId,
+          message: `${currentUser.username} liked your post`,
+        })
+      );
+    }
   };
 
   const handleSubmitRemoveLike = () => {
