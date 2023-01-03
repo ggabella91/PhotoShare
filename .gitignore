@@ -5,4 +5,4 @@ dist/
 request-photo-share.us.csr
 photo-share.us.key
 photo-share_us.ca-bundle
-photo-share.us.crt
+photo-share_us.crt

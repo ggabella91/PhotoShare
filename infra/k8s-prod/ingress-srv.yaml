@@ -129,7 +129,7 @@ metadata:
     service.beta.kubernetes.io/do-loadbalancer-algorithm: 'round_robin'
     service.beta.kubernetes.io/do-loadbalancer-tls-ports: '443'
     service.beta.kubernetes.io/do-loadbalancer-hostname: 'photo-share.us'
-    service.beta.kubernetes.io/do-loadbalancer-certificate-id: 'eb19b3b9-317d-4a3e-b58f-30f747d4f3aa'
+    service.beta.kubernetes.io/do-loadbalancer-certificate-id: '67c0e75e-9d68-4014-bf5e-0976a57077a9'
   labels:
     helm.sh/chart: ingress-nginx-2.0.3
     app.kubernetes.io/name: ingress-nginx

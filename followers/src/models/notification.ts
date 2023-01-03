@@ -19,6 +19,10 @@ interface NotificationModel extends mongoose.Model<NotificationDoc> {
   build(attrs: NotificationAttrs): NotificationDoc;
 }
 
+// TODO: Add data property for post associated with the
+// notification, in order to link the user to that post
+// when viewing notifications
+
 const notificationSchema = new mongoose.Schema(
   {
     fromUserId: {
