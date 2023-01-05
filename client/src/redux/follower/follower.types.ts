@@ -79,6 +79,7 @@ export interface Notification {
   id: string;
   fromUserId: string;
   toUserId: string;
+  postId?: string;
   message: string;
   createdAt: Date;
 }
