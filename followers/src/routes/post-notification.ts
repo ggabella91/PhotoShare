@@ -8,7 +8,7 @@ router.post(
   '/api/notifications/new',
   requireAuth,
   async (req: Request, res: Response) => {
-    const { fromUserId, toUserId, message } = req.params;
+    const { fromUserId, toUserId, postId, message } = req.params;
 
     if (!fromUserId) {
       throw new BadRequestError('From user not found');
@@ -25,6 +25,7 @@ router.post(
     const newNotification = Notification.build({
       fromUserId,
       toUserId,
+      postId,
       message,
       createdAt: new Date(),
     });
