@@ -4,6 +4,7 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 interface NotificationAttrs {
   fromUserId: string;
   toUserId: string;
+  postId?: string;
   message: string;
   createdAt: Date;
 }
@@ -11,6 +12,7 @@ interface NotificationAttrs {
 export interface NotificationDoc extends mongoose.Document {
   fromUserId: string;
   toUserId: string;
+  postId?: string;
   message: string;
   createdAt: Date;
 }
@@ -18,10 +20,6 @@ export interface NotificationDoc extends mongoose.Document {
 interface NotificationModel extends mongoose.Model<NotificationDoc> {
   build(attrs: NotificationAttrs): NotificationDoc;
 }
-
-// TODO: Add data property for post associated with the
-// notification, in order to link the user to that post
-// when viewing notifications
 
 const notificationSchema = new mongoose.Schema(
   {
@@ -32,6 +30,9 @@ const notificationSchema = new mongoose.Schema(
     toUserId: {
       type: String,
       required: true,
+    },
+    postId: {
+      type: String,
     },
     message: {
       type: String,

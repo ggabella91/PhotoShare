@@ -6,6 +6,9 @@ interface NotificationItemProps {
   notification: Notification;
 }
 
+// TODO: Make component a button; add click handler that will,
+// if the notification involves a post, navigate user to that post
+
 const NotificationItem: React.FC<NotificationItemProps> = ({
   notification,
 }) => {
