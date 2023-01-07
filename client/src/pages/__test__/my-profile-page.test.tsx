@@ -53,7 +53,6 @@ describe('my-profile-page component tests', () => {
         archivePostError={null}
         followers={followers}
         currentUserUsersFollowing={currentUserUsersFollowing}
-        getUsersFollowingConfirm='confirm'
         commentToDelete={commentToDelete}
         showCommentOptionsModal={false}
         postLikingUsersArray={postLikingUsersArray}
