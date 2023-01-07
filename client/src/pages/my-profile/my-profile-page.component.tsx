@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -110,7 +110,6 @@ interface MyProfilePageProps {
   archivePostError: PostError | null;
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
-  getUsersFollowingConfirm: string | null;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
@@ -158,7 +157,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   currentUserUsersFollowing,
   getFollowersStart,
   getUsersFollowingStart,
-  getUsersFollowingConfirm,
   clearFollowersAndFollowing,
   clearFollowState,
   setIsCurrentUserProfilePage,
@@ -222,7 +220,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     List<UserInfoAndOtherData>
   >(List());
 
-  const [pageToFetch, setPageToFetch] = useState(1);
+  const pageToFetch = useRef(1);
 
   const postState = useSelector((state: AppState) => state.post);
 
@@ -275,18 +273,19 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           bio: currentUserMap.get('bio') || '',
         })
       );
-
-      getPostDataStart({
-        userId: currentUser.id,
-        dataReqType: DataRequestType.single,
-        pageToShow: pageToFetch,
-        limit: 9,
-      });
-      getFollowersStart(currentUser.id);
-      getUsersFollowingStart({
-        userId: currentUser.id,
-        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
-      });
+      if (pageToFetch.current === 1) {
+        getPostDataStart({
+          userId: currentUser.id,
+          dataReqType: DataRequestType.single,
+          pageToShow: pageToFetch.current++,
+          limit: 9,
+        });
+        getFollowersStart(currentUser.id);
+        getUsersFollowingStart({
+          userId: currentUser.id,
+          whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+        });
+      }
     }
   }, [currentUser]);
 
@@ -342,7 +341,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     if (
       postMetaDataForUser &&
       intersectionCounter > 1 &&
-      pageToFetch + 1 <= Math.ceil(postMetaDataForUser.queryLength / 9) &&
+      pageToFetch.current + 1 <=
+        Math.ceil(postMetaDataForUser.queryLength / 9) &&
       currentUser &&
       postData &&
       postData.length === postFiles.length
@@ -350,11 +350,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       getPostDataStart({
         userId: currentUser.id,
         dataReqType: DataRequestType.single,
-        pageToShow: pageToFetch + 1,
+        pageToShow: pageToFetch.current++,
         limit: 9,
       });
-
-      setPageToFetch(pageToFetch + 1);
     }
   }, [intersectionCounter]);
 
@@ -725,7 +723,6 @@ interface LinkStateProps {
   archivePostError: PostError | null;
   followers: Follower[] | null;
   currentUserUsersFollowing: Follower[] | null;
-  getUsersFollowingConfirm: string | null;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
@@ -747,7 +744,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   archivePostError: selectArchivePostError,
   followers: selectFollowers,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
-  getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   commentToDelete: selectCommentToDelete,
   showCommentOptionsModal: selectShowCommentOptionsModal,
   postLikingUsersArray: selectPostLikingUsersArray,
