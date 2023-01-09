@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
@@ -32,8 +32,6 @@ interface HeaderProps {
   getPostFileStart: typeof getPostFileStart;
   signOutStart: typeof signOutStart;
 }
-
-// TODO: Fetch initial batch of notifications within this component, when rendered
 
 export const Header: React.FC<HeaderProps> = ({
   currentUser,

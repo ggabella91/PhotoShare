@@ -86,8 +86,8 @@ export interface Notification {
 
 export interface GetNotificationsReq {
   userId: string;
-  pageToShow: string;
-  limit: string;
+  pageToShow: number;
+  limit: number;
 }
 
 export interface FollowNewUserStart {
