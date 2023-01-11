@@ -69,6 +69,7 @@ import {
   removePostModalDataFromCache,
   clearPostState,
   setLocationCoordinates,
+  clearSinglePostData,
 } from '../../redux/post/post.actions';
 
 import { postNotificationStart } from '../../redux/follower/follower.actions';
@@ -260,7 +261,8 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   useEffect(() => {
     setReactionsList(List());
-    clearPostState();
+    dispatch(clearSinglePostData());
+    setPlayVideo(false);
 
     if (postId !== localPostId) {
       setLocalPostId(postId);

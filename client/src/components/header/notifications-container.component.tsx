@@ -28,7 +28,7 @@ const NotificationsContainer: React.FC = () => {
   return (
     <Grid sx={{ display: 'flex', flexDirection: 'column', width: 'inherit' }}>
       {notifications?.map((notification) => (
-        <NotificationItem notification={notification} />
+        <NotificationItem notification={notification} key={notification.id} />
       ))}
     </Grid>
   );

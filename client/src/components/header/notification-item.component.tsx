@@ -20,7 +20,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   };
 
   return (
-    <Grid sx={{ display: 'flex', flexDirection: 'row', height: '60px' }}>
+    <Grid sx={{ display: 'flex', flexDirection: 'row', height: '75px' }}>
       <Grid>{/* Avatar will go here */}</Grid>
       <Button
         sx={{
@@ -30,7 +30,11 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           minWidth: 'unset',
           height: '100%',
           textTransform: 'unset',
-          padding: 0,
+          padding: 1,
+          color: 'black',
+          borderBottom: '1px solid rgb(219,219,219)',
+          borderRadius: 0,
+          textAlign: 'start',
           '&:hover': {
             backgroundColor: 'unset',
           },
@@ -38,8 +42,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         disableRipple
         onClick={handleClickNotificationItem}
       >
-        <Typography>{message}</Typography>
-        <Typography>{createdAt.toDateString()}</Typography>
+        <Typography sx={{ width: 'inherit', fontSize: '14px ' }}>
+          {message}
+        </Typography>
+        <Typography sx={{ width: 'inherit', fontSize: '12px ' }}>
+          {new Date(createdAt).toDateString()}
+        </Typography>
       </Button>
     </Grid>
   );

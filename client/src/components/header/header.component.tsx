@@ -139,10 +139,16 @@ export const Header: React.FC<HeaderProps> = ({
                   vertical: 'bottom',
                   horizontal: 'center',
                 }}
-                sx={{ transform: 'translateY(60px)' }}
+                sx={{ transform: 'translateY(75px)' }}
               >
                 <Grid
-                  sx={{ display: 'flex', width: '200px', minHeight: '60px' }}
+                  sx={{
+                    display: 'flex',
+                    width: '250px',
+                    minHeight: '75px',
+                    maxHeight: '250px',
+                    overflowY: 'scroll',
+                  }}
                 >
                   <NotificationsContainer />
                 </Grid>

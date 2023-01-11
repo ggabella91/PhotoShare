@@ -368,6 +368,11 @@ export const getSinglePostDataFailure = (
   payload: error,
 });
 
+export const clearSinglePostData = (): PostActionTypes => ({
+  type: PostActions.CLEAR_SINGLE_POST_DATA,
+  payload: null,
+});
+
 // Actions for feed-post-container
 
 export const getFeedPostFileSuccess = (file: PostFile): PostActionTypes => ({

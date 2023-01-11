@@ -58,6 +58,7 @@ export enum PostActions {
   GET_SINGLE_POST_DATA_START = 'GET_SINGLE_POST_DATA_START',
   GET_SINGLE_POST_DATA_SUCCESS = 'GET_SINGLE_POST_DATA_SUCCESS',
   GET_SINGLE_POST_DATA_FAILURE = 'GET_SINGLE_POST_DATA_FAILURE',
+  CLEAR_SINGLE_POST_DATA = 'CLEAR_SINGLE_POST_DATA',
 
   // Actions specific to data for feed-post-containers
   GET_FEED_POST_FILE_SUCCESS = 'GET_FEED_POST_FILE_SUCCESS',
@@ -690,6 +691,11 @@ export interface GetSinglePostDataFailure {
   payload: PostError;
 }
 
+export interface ClearSinglePostData {
+  type: typeof PostActions.CLEAR_SINGLE_POST_DATA;
+  payload: null;
+}
+
 // Interfaces related exclusively to feed-post-container data
 
 export interface GetFeedPostFileSuccess {
@@ -890,6 +896,7 @@ export type PostActionTypes =
   | GetSinglePostDataStart
   | GetSinglePostDataSuccess
   | GetSinglePostDataFailure
+  | ClearSinglePostData
   | GetFeedPostFileSuccess
   | GetFeedPostReactionsSuccess
   | GetUserPhotoForFeedReactorArraySuccess
