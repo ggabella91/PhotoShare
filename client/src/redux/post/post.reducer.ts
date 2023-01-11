@@ -444,6 +444,12 @@ const postReducer = (
         ...state,
         locationsSuggestions: [],
       };
+    case PostActions.CLEAR_SINGLE_POST_DATA:
+      return {
+        ...state,
+        getSinglePostDataConfirm: null,
+        getSinglePostDataError: null,
+      };
     case PostActions.CLEAR_POST_STATE:
       return {
         ...INITIAL_STATE,

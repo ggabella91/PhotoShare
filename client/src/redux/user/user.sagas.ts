@@ -48,6 +48,10 @@ import { clearPostState } from '../post/post.actions';
 
 import axios from 'axios';
 
+// TODO: Update saga for fetching 'other' users with routing
+// for notification users, to store a map of these as a
+// separate prop in redux user state
+
 export function* signUp({
   payload: { username, name, email, password, passwordConfirm },
 }: {
