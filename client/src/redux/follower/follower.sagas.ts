@@ -102,7 +102,7 @@ export function* postNotification({
 }): any {
   try {
     const { data: notification }: { data: Notification } = yield axios.post(
-      `/api/notifications`,
+      `/api/notifications/new`,
       postNotificationReq
     );
 
