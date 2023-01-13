@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Button, Typography } from '@mui/material';
+import { Grid, Button, Typography, Avatar } from '@mui/material';
 import { Notification } from '../../redux/follower/follower.types';
 
 interface NotificationItemProps {
@@ -21,7 +21,20 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
 
   return (
     <Grid sx={{ display: 'flex', flexDirection: 'row', height: '75px' }}>
-      <Grid>{/* Avatar will go here */}</Grid>
+      <Grid>
+        <Avatar
+          src={''
+            // userInfo?.profilePhotoFileString
+            //   ?
+            // `data:image/jpeg;base64,${
+              // '' /**user profile photo's file string */
+            // }`
+            // : ''
+          }
+          alt={''}
+          sx={{ height: '56px', width: '56px' }}
+        />
+      </Grid>
       <Button
         sx={{
           display: 'flex',
