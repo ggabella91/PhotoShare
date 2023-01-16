@@ -42,6 +42,7 @@ import {
   getUserSuggestionsFailure,
   getFeedPostReactorsSuccess,
   getConversationUserSuccess,
+  getNotificationUserSuccess,
 } from './user.actions';
 
 import { clearPostState } from '../post/post.actions';
@@ -154,6 +155,12 @@ export function* getOtherUser({
       );
 
       yield put(getConversationUserSuccess(convoUser));
+    } else if (type === OtherUserType.NOTIFICATION_USER) {
+      const { data: notificationUser }: { data: User } = yield axios.get(
+        `/api/users/id/${usernameOrId}`
+      );
+
+      yield put(getNotificationUserSuccess(notificationUser));
     }
   } catch (err) {
     yield put(getOtherUserFailure(err as Error));

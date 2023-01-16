@@ -115,4 +115,7 @@ export const selectConversationUsers = createSelector(
   (user: UserState) => user.conversationUsers
 );
 
-
+export const selectNotificationUsers = createSelector(
+  [selectUser],
+  (user: UserState) => user.notificationUsers
+);
