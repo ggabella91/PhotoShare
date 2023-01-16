@@ -247,6 +247,11 @@ export const getConversationUserSuccess = (user: User): UserActionTypes => ({
   payload: user,
 });
 
+export const getNotificationUserSuccess = (user: User): UserActionTypes => ({
+  type: UserActions.GET_NOTIFICATION_USER_SUCCESS,
+  payload: user,
+});
+
 export const clearConversationUsers = (): UserActionTypes => ({
   type: UserActions.CLEAR_CONVERSATION_USERS,
 });

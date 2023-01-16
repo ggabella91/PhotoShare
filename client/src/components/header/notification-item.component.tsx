@@ -2,16 +2,21 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Button, Typography, Avatar } from '@mui/material';
 import { Notification } from '../../redux/follower/follower.types';
+import { useUserInfoData } from '../../pages/hooks';
+import { User } from '../../redux/user/user.types';
 
 interface NotificationItemProps {
   notification: Notification;
+  user: User;
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({
   notification,
+  user,
 }) => {
   const { message, createdAt, postId } = notification;
   const navigate = useNavigate();
+  const userInfo = useUserInfoData([user]).get(1);
 
   const handleClickNotificationItem = () => {
     if (postId) {
@@ -23,13 +28,10 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
     <Grid sx={{ display: 'flex', flexDirection: 'row', height: '75px' }}>
       <Grid>
         <Avatar
-          src={''
-            // userInfo?.profilePhotoFileString
-            //   ?
-            // `data:image/jpeg;base64,${
-              // '' /**user profile photo's file string */
-            // }`
-            // : ''
+          src={
+            userInfo?.profilePhotoFileString
+              ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
+              : ''
           }
           alt={''}
           sx={{ height: '56px', width: '56px' }}

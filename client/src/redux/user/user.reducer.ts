@@ -25,6 +25,7 @@ const INITIAL_STATE: UserState = {
   deleteAccountError: null,
   feedPostReactingUsers: null,
   conversationUsers: null,
+  notificationUsers: {},
 };
 
 const userReducer = (
@@ -90,6 +91,14 @@ const userReducer = (
           action.payload
         ),
         otherUserError: null,
+      };
+    case UserActions.GET_NOTIFICATION_USER_SUCCESS:
+      return {
+        ...state,
+        notificationUsers: {
+          ...state.notificationUsers,
+          [action.payload.id]: action.payload,
+        },
       };
     case UserActions.SIGN_UP_SUCCESS:
       return {

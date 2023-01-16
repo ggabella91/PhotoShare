@@ -41,6 +41,7 @@ export enum UserActions {
   SET_IS_CURRENT_USER_PROFILE_PAGE = 'SET_IS_CURRENT_USER_PROFILE_PAGE',
   GET_FEED_POST_REACTOR_SUCCESS = 'GET_FEED_POST_REACTOR_SUCCESS',
   GET_CONVERSATION_USER_SUCCESS = 'GET_CONVERSATION_USER_SUCCESS',
+  GET_NOTIFICATION_USER_SUCCESS = 'GET_NOTIFICATION_USER_SUCCESS',
   CLEAR_CONVERSATION_USERS = 'CLEAR_CONVERSATION_USERS',
 }
 
@@ -100,6 +101,7 @@ export enum OtherUserType {
   FEED_POST_REACTOR = 'FEED_POST_REACTOR',
   EXPLORE_POST_MODAL = 'EXPLORE_POST_MODAL',
   CONVERSATION_USER = 'CONVERSATION_USER',
+  NOTIFICATION_USER = 'NOTIFICATION_USER',
 }
 
 export interface OtherUserRequest {
@@ -140,6 +142,7 @@ export interface UserState {
   deleteAccountError: null | Error;
   feedPostReactingUsers: User[] | null;
   conversationUsers: User[] | null;
+  notificationUsers: Record<string, User>;
 }
 
 export interface SignUpStart {
@@ -352,6 +355,11 @@ export interface GetConversationUserSuccess {
   payload: User;
 }
 
+export interface GetNotificationUserSuccess {
+  type: typeof UserActions.GET_NOTIFICATION_USER_SUCCESS;
+  payload: User;
+}
+
 export interface ClearConversationUsers {
   type: typeof UserActions.CLEAR_CONVERSATION_USERS;
 }
@@ -400,4 +408,5 @@ export type UserActionTypes =
   | SetIsCurrentUserProfilePage
   | GetFeedPostReactorsSuccess
   | GetConversationUserSuccess
+  | GetNotificationUserSuccess
   | ClearConversationUsers;
