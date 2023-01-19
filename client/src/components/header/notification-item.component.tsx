@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Button, Typography, Avatar } from '@mui/material';
 import { Notification } from '../../redux/follower/follower.types';
-import { useUserInfoData } from '../../pages/hooks';
 import { User } from '../../redux/user/user.types';
 
 interface NotificationItemProps {
@@ -10,13 +9,15 @@ interface NotificationItemProps {
   user: User;
 }
 
+// TODO Fetch user photo file and set is as avatar source,
+// without using useUserInfo custom hook
+
 const NotificationItem: React.FC<NotificationItemProps> = ({
   notification,
   user,
 }) => {
   const { message, createdAt, postId } = notification;
   const navigate = useNavigate();
-  const userInfo = useUserInfoData([user]).get(1);
 
   const handleClickNotificationItem = () => {
     if (postId) {
@@ -29,9 +30,10 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       <Grid>
         <Avatar
           src={
-            userInfo?.profilePhotoFileString
-              ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
-              : ''
+            ''
+            // userInfo?.profilePhotoFileString
+            //   ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
+            //   : ''
           }
           alt={''}
           sx={{ height: '56px', width: '56px' }}
