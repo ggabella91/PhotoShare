@@ -99,6 +99,9 @@ const INITIAL_STATE: PostState = {
   // Used for uploading conversation photos
   uploadConversationPhotoSuccess: null,
   uploadConversationPhotoFailure: null,
+
+  // Used for notification user avatars
+  notificationUserMap: Map<string, PostFile>(),
 };
 
 const postReducer = (
@@ -297,6 +300,14 @@ const postReducer = (
       return {
         ...state,
         convoAvatarMap: state.convoAvatarMap.set(
+          action.payload.s3Key,
+          action.payload
+        ),
+      };
+    case PostActions.GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS:
+      return {
+        ...state,
+        notificationUserMap: state.notificationUserMap.set(
           action.payload.s3Key,
           action.payload
         ),

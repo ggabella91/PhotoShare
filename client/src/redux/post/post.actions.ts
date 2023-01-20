@@ -528,6 +528,13 @@ export const getConversationAvatarPhotoSuccess = (
   payload: avatarInfo,
 });
 
+export const getNotificationUserAvatarPhotoSuccess = (
+  avatarInfo: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS,
+  payload: avatarInfo,
+});
+
 export const uploadConversationPhotoStart = (
   formData: FormData
 ): PostActionTypes => ({

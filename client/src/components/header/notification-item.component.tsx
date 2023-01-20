@@ -9,7 +9,7 @@ interface NotificationItemProps {
   user: User;
 }
 
-// TODO Fetch user photo file and set is as avatar source,
+// TODO Fetch user photo file and set it as avatar source,
 // without using useUserInfo custom hook
 
 const NotificationItem: React.FC<NotificationItemProps> = ({

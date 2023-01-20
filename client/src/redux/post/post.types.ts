@@ -108,6 +108,9 @@ export enum PostActions {
   UPLOAD_CONVERSATION_PHOTO_START = 'UPLOAD_CONVERSATION_PHOTO_START',
   UPLOAD_CONVERSATION_PHOTO_SUCCESS = 'UPLOAD_CONVERSATION_PHOTO_SUCCESS',
   UPLOAD_CONVERSATION_PHOTO_FAILURE = 'UPLOAD_CONVERSATION_PHOTO_FAILURE',
+
+  // Actions specific for conversation avatars
+  GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS = 'GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS',
 }
 
 export interface PostError {
@@ -180,6 +183,7 @@ export enum UserType {
   postReactorsArray = 'postReactorsArray',
   feedPostReactorsArray = 'feedPostReactorsArray',
   conversationAvatar = 'conversationAvatar',
+  notificationUser = 'notificationUser',
 }
 
 export enum DataRequestType {
@@ -412,8 +416,12 @@ export interface PostState {
   // Used for conversation avatars
   convoAvatarMap: Map<string, PostFile>;
 
+  // Used for uploading conversation photos
   uploadConversationPhotoSuccess: ConversationPhoto | null;
   uploadConversationPhotoFailure: PostError | null;
+
+  // Used for notification user avatars
+  notificationUserMap: Map<string, PostFile>;
 }
 
 export interface CreatePostStart {
@@ -840,6 +848,14 @@ export interface UploadConversationPhotoFailure {
   payload: PostError;
 }
 
+// Interfaces specific to actions involving notification
+//  user avatars
+
+export interface GetNotificationUserAvatarPhotoSuccess {
+  type: typeof PostActions.GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS;
+  payload: PostFile;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -922,4 +938,5 @@ export type PostActionTypes =
   | GetConversationAvatarPhotoSuccess
   | UploadConversationPhotoStart
   | UploadConversationPhotoSuccess
-  | UploadConversationPhotoFailure;
+  | UploadConversationPhotoFailure
+  | GetNotificationUserAvatarPhotoSuccess;
