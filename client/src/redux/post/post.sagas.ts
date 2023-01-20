@@ -79,6 +79,7 @@ import {
   getConversationAvatarPhotoSuccess,
   uploadConversationPhotoSuccess,
   uploadConversationPhotoFailure,
+  getNotificationUserAvatarPhotoSuccess,
 } from './post.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -320,6 +321,10 @@ export function* getPostFile({
       } else if (user === UserType.conversationAvatar) {
         yield put(
           getConversationAvatarPhotoSuccess({ s3Key, fileString: data })
+        );
+      } else if (user === UserType.notificationUser) {
+        yield put(
+          getNotificationUserAvatarPhotoSuccess({ s3Key, fileString: data })
         );
       }
     }
