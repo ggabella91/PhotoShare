@@ -27,6 +27,17 @@
         position: relative;
       }
 
+      .play-arrow-icon {
+        position: absolute;
+        font-size: 60px;
+        left: 198.5px;
+        color: white;
+        background-color: #a7a7a7;
+        border-radius: 4px;
+        width: 85px;
+        cursor: pointer;
+      }
+
       .post-video {
         height: auto;
         width: 480px;
