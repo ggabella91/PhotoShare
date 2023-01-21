@@ -18,6 +18,9 @@ import { selectNotificationUserMap } from '../../redux/post/post.selectors';
 import { getPostFileStart } from '../../redux/post/post.actions';
 import { FileRequestType, UserType } from '../../redux/post/post.types';
 
+// TODO Add logic to fetch post data and post files for notifications
+// associated with posts
+
 const NotificationsContainer: React.FC = () => {
   const [readyToRender, setReadyToRender] = useState(false);
   const [readyToFetchPhotos, setReadyToFetchPhotos] = useState(false);

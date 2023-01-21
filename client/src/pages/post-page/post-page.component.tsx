@@ -7,6 +7,7 @@ import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import slugify from 'slugify';
 
 import { AppState } from '../../redux/root-reducer';
@@ -39,6 +40,7 @@ import {
   setShowCommentOptionsModal,
   setIsPostPage,
   setLocationCoordinates,
+  clearPostFilesAndData,
 } from '../../redux/post/post.actions';
 
 import UserInfo, {
@@ -148,6 +150,8 @@ export const PostPage: React.FC = () => {
 
   const [slugifiedLocationLabel, setSlugifiedLocationLabel] = useState('');
 
+  const [playVideo, setPlayVideo] = useState(false);
+
   let postsBucket: string, profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -169,12 +173,17 @@ export const PostPage: React.FC = () => {
         dispatch(setIsPostPage(false));
       };
     },
-    []
+    [dispatch]
   );
 
   useEffect(() => {
-    postId && dispatch(getSinglePostDataStart({ postId }));
-  }, [postId]);
+    if (postId) {
+      setPlayVideo(false);
+      setAreReactionsReadyForRendering(false);
+      dispatch(clearPostFilesAndData());
+      dispatch(getSinglePostDataStart({ postId }));
+    }
+  }, [dispatch, postId]);
 
   useEffect(() => {
     if (getSinglePostDataConfirm) {
@@ -202,7 +211,7 @@ export const PostPage: React.FC = () => {
         })
       );
     }
-  }, [getSinglePostDataConfirm]);
+  }, [dispatch, getSinglePostDataConfirm]);
 
   useEffect(() => {
     if (otherUser && otherUser.photo) {
@@ -215,7 +224,7 @@ export const PostPage: React.FC = () => {
         })
       );
     }
-  }, [otherUser]);
+  }, [dispatch, otherUser, profileBucket]);
 
   useEffect(() => {
     if (postData) {
@@ -240,7 +249,8 @@ export const PostPage: React.FC = () => {
         })
       );
     }
-  }, [postData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, postData]);
 
   useEffect(() => {
     if (postData && otherUser && otherUserProfilePhotoFile) {
@@ -308,7 +318,13 @@ export const PostPage: React.FC = () => {
 
       getSinglePostDataStart({ postId: editPostDetailsConfirm.id });
     }
-  }, [postData, otherUser, otherUserProfilePhotoFile, editPostDetailsConfirm]);
+  }, [
+    dispatch,
+    postData,
+    otherUser,
+    otherUserProfilePhotoFile,
+    editPostDetailsConfirm,
+  ]);
 
   useEffect(() => {
     if (!areReactionsReadyForRendering && postId) {
@@ -319,7 +335,7 @@ export const PostPage: React.FC = () => {
         })
       );
     }
-  }, []);
+  }, [dispatch, areReactionsReadyForRendering, postId]);
 
   useEffect(() => {
     if (
@@ -349,7 +365,12 @@ export const PostPage: React.FC = () => {
       setLikingUsersList(List());
       setCommentingUserList(List());
     }
-  }, [postReactionsArray]);
+  }, [
+    areReactionsReadyForRendering,
+    postId,
+    postReactionsArray,
+    reactionsList,
+  ]);
 
   useEffect(() => {
     if (currentUser && reactionsList.size && !areReactionsReadyForRendering) {
@@ -369,7 +390,7 @@ export const PostPage: React.FC = () => {
         });
       }
     }
-  }, [reactionsList]);
+  }, [areReactionsReadyForRendering, currentUser, reactionsList]);
 
   useEffect(() => {
     if (
@@ -394,7 +415,7 @@ export const PostPage: React.FC = () => {
         })
       );
     }
-  }, [postReactionConfirm]);
+  }, [dispatch, postId, postReactionConfirm]);
 
   useEffect(() => {
     if (
@@ -419,7 +440,7 @@ export const PostPage: React.FC = () => {
         })
       );
     }
-  }, [deleteReactionConfirm]);
+  }, [deleteReactionConfirm, dispatch, postId]);
 
   useEffect(() => {
     if (
@@ -438,7 +459,7 @@ export const PostPage: React.FC = () => {
         })
       );
     }
-  }, [postReactionConfirm]);
+  }, [dispatch, postId, postReactionConfirm]);
 
   useEffect(() => {
     if (
@@ -457,7 +478,7 @@ export const PostPage: React.FC = () => {
         })
       );
     }
-  }, [deleteReactionConfirm]);
+  }, [deleteReactionConfirm, dispatch, postId]);
 
   useEffect(() => {
     if (reactionsList.size && !areReactionsReadyForRendering) {
@@ -472,7 +493,8 @@ export const PostPage: React.FC = () => {
         setUniqueReactingUsers(uniqueReactingUsers.add(el.reactingUserId));
       });
     }
-  }, [reactionsList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, areReactionsReadyForRendering, reactionsList]);
 
   useEffect(() => {
     if (postReactingUsers && postReactingUsers.length) {
@@ -499,7 +521,12 @@ export const PostPage: React.FC = () => {
         }
       });
     }
-  }, [reactingUserInfoList]);
+  }, [
+    dispatch,
+    areReactionsReadyForRendering,
+    profileBucket,
+    reactingUserInfoList,
+  ]);
 
   useEffect(() => {
     if (reactorPhotoFileArray) {
@@ -604,18 +631,18 @@ export const PostPage: React.FC = () => {
   };
 
   useEffect(() => {
-    handleSetIsCurrentUserComment();
-  }, [showCommentOptionsModal]);
-
-  const handleSetIsCurrentUserComment = () => {
-    if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
-      if (commentToDelete.reactingUserId === currentUser.id) {
-        setIsCurrentUserComment(true);
-      } else {
-        setIsCurrentUserComment(false);
+    const handleSetIsCurrentUserComment = () => {
+      if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
+        if (commentToDelete.reactingUserId === currentUser.id) {
+          setIsCurrentUserComment(true);
+        } else {
+          setIsCurrentUserComment(false);
+        }
       }
-    }
-  };
+    };
+
+    handleSetIsCurrentUserComment();
+  }, [commentToDelete, currentUser, showCommentOptionsModal]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -731,16 +758,26 @@ export const PostPage: React.FC = () => {
   const handleHideCommentOptionsModal = () =>
     dispatch(setShowCommentOptionsModal(false));
 
+  const handleClickPlayArrowIcon = () => setPlayVideo(true);
+
   return (
     <div className='post-page' data-testid='post-page'>
       <div className='post-container'>
         <div className='post-media-container'>
-          {postFiles.length && !postData?.isVideo ? (
-            <img
-              className='post-image'
-              src={`data:image/jpeg;base64,${postFiles[0].fileString}`}
-              alt='post-pic'
-            />
+          {!playVideo && postFiles.length ? (
+            <>
+              <img
+                className='post-image'
+                src={`data:image/jpeg;base64,${postFiles[0].fileString}`}
+                alt='post-pic'
+              />
+              {postData?.isVideo && (
+                <PlayArrowIcon
+                  className='play-arrow-icon'
+                  onClick={handleClickPlayArrowIcon}
+                />
+              )}
+            </>
           ) : null}
           {!postFiles.length && !postData?.isVideo && (
             <Box
@@ -756,9 +793,9 @@ export const PostPage: React.FC = () => {
               <CircularProgress />
             </Box>
           )}
-          {postData?.isVideo && (
+          {postData && playVideo && (
             <video className='post-video' controls muted>
-              <source src={`/api/video?s3Key=${postData.s3Key}`} />
+              <source src={`/api/posts/video?s3Key=${postData.s3Key}`} />
             </video>
           )}
         </div>

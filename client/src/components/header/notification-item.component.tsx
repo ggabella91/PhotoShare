@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { Grid, Button, Typography, Avatar } from '@mui/material';
 import { Notification } from '../../redux/follower/follower.types';
 import { User } from '../../redux/user/user.types';
-import { selectNotificationUserMap } from '../../redux/post/post.selectors';
 import { PostFile } from '../../redux/post/post.types';
 
 interface NotificationItemProps {

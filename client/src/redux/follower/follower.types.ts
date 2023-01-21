@@ -73,6 +73,7 @@ export interface PostNotificationReq {
   fromUserId: string;
   toUserId: string;
   message: string;
+  postId?: string;
 }
 
 export interface Notification {
