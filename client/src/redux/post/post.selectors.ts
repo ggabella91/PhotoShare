@@ -301,3 +301,8 @@ export const selectUploadConversationPhotoSuccess = createSelector(
   [selectPostState],
   (postState: PostState) => postState.uploadConversationPhotoSuccess
 );
+
+export const selectNotificationUserMap = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.notificationUserMap
+);

@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Button, Typography, Avatar } from '@mui/material';
 import { Notification } from '../../redux/follower/follower.types';
 import { User } from '../../redux/user/user.types';
+import { selectNotificationUserMap } from '../../redux/post/post.selectors';
+import { PostFile } from '../../redux/post/post.types';
 
 interface NotificationItemProps {
   notification: Notification;
   user: User;
+  photoInfo: PostFile | null;
 }
 
-// TODO Fetch user photo file and set it as avatar source,
-// without using useUserInfo custom hook
+// TODO Update layout styling of this component
 
 const NotificationItem: React.FC<NotificationItemProps> = ({
   notification,
   user,
+  photoInfo,
 }) => {
   const { message, createdAt, postId } = notification;
   const navigate = useNavigate();
@@ -30,10 +34,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       <Grid>
         <Avatar
           src={
-            ''
-            // userInfo?.profilePhotoFileString
-            //   ? `data:image/jpeg;base64,${userInfo.profilePhotoFileString}`
-            //   : ''
+            photoInfo?.fileString
+              ? `data:image/jpeg;base64,${photoInfo.fileString}`
+              : ''
           }
           alt={''}
           sx={{ height: '56px', width: '56px' }}
