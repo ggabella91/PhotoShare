@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Button, Typography, Avatar } from '@mui/material';
 import { Notification } from '../../redux/follower/follower.types';
@@ -14,7 +13,7 @@ interface NotificationItemProps {
 
 // TODO Update layout styling of this component
 
-const NotificationItem: React.FC<NotificationItemProps> = ({
+const NotificationItem: FC<NotificationItemProps> = ({
   notification,
   user,
   photoInfo,
@@ -29,8 +28,17 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   };
 
   return (
-    <Grid sx={{ display: 'flex', flexDirection: 'row', height: '75px' }}>
-      <Grid>
+    <Grid
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        height: '75px',
+        borderBottom: '1px solid rgb(219,219,219)',
+      }}
+    >
+      <Grid
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
         <Avatar
           src={
             photoInfo?.fileString
@@ -51,7 +59,6 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
           textTransform: 'unset',
           padding: 1,
           color: 'black',
-          borderBottom: '1px solid rgb(219,219,219)',
           borderRadius: 0,
           textAlign: 'start',
           '&:hover': {
