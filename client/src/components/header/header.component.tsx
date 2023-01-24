@@ -145,8 +145,8 @@ export const Header: React.FC<HeaderProps> = ({
                   sx={{
                     display: 'flex',
                     width: '250px',
-                    minHeight: '75px',
-                    maxHeight: '250px',
+                    minHeight: '85px',
+                    maxHeight: '350px',
                     overflowY: 'scroll',
                   }}
                 >

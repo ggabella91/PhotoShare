@@ -32,7 +32,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
       sx={{
         display: 'flex',
         flexDirection: 'row',
-        height: '75px',
+        height: '85px',
         borderBottom: '1px solid rgb(219,219,219)',
       }}
     >
