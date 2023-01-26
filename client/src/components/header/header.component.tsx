@@ -139,12 +139,12 @@ export const Header: React.FC<HeaderProps> = ({
                   vertical: 'bottom',
                   horizontal: 'center',
                 }}
-                sx={{ transform: 'translateY(75px)' }}
+                sx={{ transform: 'translateY(85px)' }}
               >
                 <Grid
                   sx={{
                     display: 'flex',
-                    width: '250px',
+                    width: '350px',
                     minHeight: '85px',
                     maxHeight: '350px',
                     overflowY: 'scroll',
