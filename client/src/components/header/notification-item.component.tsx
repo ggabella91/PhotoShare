@@ -11,7 +11,8 @@ interface NotificationItemProps {
   photoInfo: PostFile | null;
 }
 
-// TODO Update layout styling of this component
+// TODO Add logic to show previews of comments that are
+// above a certain lenght, with an ellipsis
 
 const NotificationItem: FC<NotificationItemProps> = ({
   notification,
@@ -32,7 +33,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
       sx={{
         display: 'flex',
         flexDirection: 'row',
-        height: '85px',
+        minHeight: '85px',
         borderBottom: '1px solid rgb(219,219,219)',
       }}
     >
@@ -46,7 +47,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
               : ''
           }
           alt={''}
-          sx={{ height: '56px', width: '56px' }}
+          sx={{ height: '56px', width: '56px', marginLeft: '10px' }}
         />
       </Grid>
       <Button
@@ -75,6 +76,16 @@ const NotificationItem: FC<NotificationItemProps> = ({
           {new Date(createdAt).toDateString()}
         </Typography>
       </Button>
+      <Grid
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Avatar
+          src={''}
+          alt={''}
+          sx={{ height: '56px', width: '56px', marginRight: '10px' }}
+          variant='square'
+        />
+      </Grid>
     </Grid>
   );
 };
