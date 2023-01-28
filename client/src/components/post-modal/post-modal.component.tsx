@@ -751,7 +751,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         postNotificationStart({
           fromUserId: currentUser.id,
           toUserId: userId,
-          message: `${currentUser.username} liked your post`,
+          message: `${currentUser.username} liked your post.`,
           postId,
         })
       );

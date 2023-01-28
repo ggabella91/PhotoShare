@@ -12,8 +12,9 @@ import slugify from 'slugify';
 
 import { AppState } from '../../redux/root-reducer';
 
-import { User, OtherUserType } from '../../redux/user/user.types';
+import { postNotificationStart } from '../../redux/follower/follower.actions';
 
+import { User, OtherUserType } from '../../redux/user/user.types';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
@@ -662,6 +663,17 @@ export const PostPage: React.FC = () => {
           comment,
         })
       );
+
+      if (otherUser) {
+        dispatch(
+          postNotificationStart({
+            fromUserId: currentUser.id,
+            toUserId: otherUser.id,
+            message: `${currentUser.username} commented: ${comment}`,
+            postId,
+          })
+        );
+      }
     }
     setComment('');
   };
@@ -693,6 +705,17 @@ export const PostPage: React.FC = () => {
           comment: '',
         })
       );
+
+      if (otherUser) {
+        dispatch(
+          postNotificationStart({
+            fromUserId: currentUser.id,
+            toUserId: otherUser.id,
+            message: `${currentUser.username} liked your post.`,
+            postId,
+          })
+        );
+      }
     }
   };
 
