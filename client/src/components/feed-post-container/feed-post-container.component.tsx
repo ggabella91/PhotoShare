@@ -9,6 +9,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import { AppState } from '../../redux/root-reducer';
 
+import { postNotificationStart } from '../../redux/follower/follower.actions';
+
 import {
   User,
   OtherUserType,
@@ -503,6 +505,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         likedPost: false,
         comment,
       });
+
+      dispatch(
+        postNotificationStart({
+          fromUserId: currentUser.id,
+          toUserId: userInfo.userId,
+          message: `${currentUser.username} commented: ${comment}`,
+          postId,
+        })
+      );
     }
     setComment('');
   };
@@ -531,6 +542,17 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       likedPost: true,
       comment: '',
     });
+
+    if (currentUser) {
+      dispatch(
+        postNotificationStart({
+          fromUserId: currentUser.id,
+          toUserId: userInfo.userId,
+          message: `${currentUser.username} liked your post.`,
+          postId,
+        })
+      );
+    }
   };
 
   const handleSubmitRemoveLike = () => {
