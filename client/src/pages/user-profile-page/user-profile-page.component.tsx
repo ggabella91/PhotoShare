@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List, Map } from 'immutable';
@@ -87,6 +87,7 @@ import {
   getUsersFollowingStart,
   unfollowUserStart,
   clearFollowState,
+  postNotificationStart,
 } from '../../redux/follower/follower.actions';
 
 import PostTile from '../../components/post-tile/post-tile.component';
@@ -263,6 +264,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
+
+  const dispatch = useDispatch();
 
   let navigate = useNavigate();
 
@@ -490,6 +493,24 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const handlePostLikingUsersClick = () => setShowPostLikingUsersModal(true);
 
+  const handleClickFollowOrFollowingButton = () => {
+    if (isFollowing) {
+      setUnfollowModalShow(true);
+    } else {
+      followNewUserStart(user.get('id'));
+
+      if (currentUser) {
+        dispatch(
+          postNotificationStart({
+            fromUserId: user.get('id'),
+            toUserId: currentUser.id,
+            message: `${currentUser?.username} started following you.`,
+          })
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     handleDetermineIfFollowing();
   }, [getUsersFollowingConfirm]);
@@ -523,11 +544,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       >
         <span
           className={narrow ? 'follow-narrow-text' : 'follow-text'}
-          onClick={
-            isFollowing!
-              ? () => setUnfollowModalShow(true)
-              : () => followNewUserStart(user.get('id'))
-          }
+          onClick={handleClickFollowOrFollowingButton}
         >
           {isFollowing! ? 'Following' : 'Follow'}
         </span>
