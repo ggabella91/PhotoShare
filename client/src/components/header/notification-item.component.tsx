@@ -12,7 +12,7 @@ interface NotificationItemProps {
 }
 
 // TODO Add logic to show previews of comments that are
-// above a certain lenght, with an ellipsis
+// above a certain length, with an ellipsis
 
 const NotificationItem: FC<NotificationItemProps> = ({
   notification,

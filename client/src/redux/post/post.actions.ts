@@ -555,3 +555,19 @@ export const uploadConversationPhotoFailure = (
   type: PostActions.UPLOAD_CONVERSATION_PHOTO_FAILURE,
   payload: error,
 });
+
+// Actions specific to notification post data and files
+
+export const getNotificationPostDataSuccess = (
+  postData: Post
+): PostActionTypes => ({
+  type: PostActions.GET_NOTIFICATION_POST_DATA_SUCCESS,
+  payload: postData,
+});
+
+export const getNotificationPostFileSuccess = (
+  postFile: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_NOTIFICATION_POST_FILE_SUCCESS,
+  payload: postFile,
+});
