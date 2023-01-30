@@ -109,8 +109,12 @@ export enum PostActions {
   UPLOAD_CONVERSATION_PHOTO_SUCCESS = 'UPLOAD_CONVERSATION_PHOTO_SUCCESS',
   UPLOAD_CONVERSATION_PHOTO_FAILURE = 'UPLOAD_CONVERSATION_PHOTO_FAILURE',
 
-  // Actions specific for conversation avatars
+  // Actions specific to conversation avatars
   GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS = 'GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS',
+
+  // Actions specific to notification post data and files
+  GET_NOTIFICATION_POST_DATA_SUCCESS = 'GET_NOTIFICATION_POST_DATA_SUCCESS',
+  GET_NOTIFICATION_POST_FILE_SUCCESS = 'GET_NOTIFICATION_POST_FILE_SUCCESS',
 }
 
 export interface PostError {
@@ -194,6 +198,7 @@ export enum DataRequestType {
 export enum FileRequestType {
   singlePost = 'singlePost',
   feedPost = 'feedPost',
+  notificationPost = 'notificationPost',
 }
 
 export interface PostDataReq {
@@ -205,6 +210,7 @@ export interface PostDataReq {
 
 export interface SinglePostDataReq {
   postId: string;
+  notificationPost?: boolean;
 }
 
 export interface PostsWithHashtagReq {
@@ -422,6 +428,10 @@ export interface PostState {
 
   // Used for notification user avatars
   notificationUserMap: Map<string, PostFile>;
+
+  // Used for notification post data and files
+  notificationPostData: Map<string, Post>;
+  notificationPostFiles: Map<string, PostFile>;
 }
 
 export interface CreatePostStart {
@@ -856,6 +866,18 @@ export interface GetNotificationUserAvatarPhotoSuccess {
   payload: PostFile;
 }
 
+// Interfaces specific to notification post data and files
+
+export interface GetNotificationPostDataSuccess {
+  type: typeof PostActions.GET_NOTIFICATION_POST_DATA_SUCCESS;
+  payload: Post;
+}
+
+export interface GetNotificationPostFileSuccess {
+  type: typeof PostActions.GET_NOTIFICATION_POST_FILE_SUCCESS;
+  payload: PostFile;
+}
+
 export type PostActionTypes =
   | CreatePostStart
   | CreatePostSuccess
@@ -939,4 +961,6 @@ export type PostActionTypes =
   | UploadConversationPhotoStart
   | UploadConversationPhotoSuccess
   | UploadConversationPhotoFailure
-  | GetNotificationUserAvatarPhotoSuccess;
+  | GetNotificationUserAvatarPhotoSuccess
+  | GetNotificationPostDataSuccess
+  | GetNotificationPostFileSuccess;

@@ -80,6 +80,8 @@ import {
   uploadConversationPhotoSuccess,
   uploadConversationPhotoFailure,
   getNotificationUserAvatarPhotoSuccess,
+  getNotificationPostDataSuccess,
+  getNotificationPostFileSuccess,
 } from './post.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -283,6 +285,8 @@ export function* getPostFile({
         yield put(getPostFileSuccess({ s3Key, fileString: data }));
       } else if (fileRequestType === FileRequestType.feedPost) {
         yield put(getFeedPostFileSuccess({ s3Key, fileString: data }));
+      } else if (fileRequestType === FileRequestType.notificationPost) {
+        yield put(getNotificationPostFileSuccess({ s3Key, fileString: data }));
       }
     } else if (
       bucket === 'photo-share-app-profile-photos' ||
@@ -407,7 +411,7 @@ export function* editPostDetails({
 }
 
 export function* getSinglePostData({
-  payload: { postId },
+  payload: { postId, notificationPost },
 }: {
   payload: SinglePostDataReq;
 }) {
@@ -416,7 +420,11 @@ export function* getSinglePostData({
       `/api/posts/data/${postId}`
     );
 
-    yield put(getSinglePostDataSuccess(data));
+    if (notificationPost) {
+      yield put(getNotificationPostDataSuccess(data));
+    } else {
+      yield put(getSinglePostDataSuccess(data));
+    }
   } catch (err) {
     yield put(getSinglePostDataFailure(err as PostError));
   }
