@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid } from '@mui/material';
 import NotificationItem from './notification-item.component';
@@ -14,8 +14,15 @@ import { Notification } from '../../redux/follower/follower.types';
 import { selectNotifications } from '../../redux/follower/follower.selectors';
 import { getNotificationsStart } from '../../redux/follower/follower.actions';
 
-import { selectNotificationUserMap } from '../../redux/post/post.selectors';
-import { getPostFileStart } from '../../redux/post/post.actions';
+import {
+  selectNotificationUserMap,
+  selectNotificationPostData,
+  selectNotificationPostFiles,
+} from '../../redux/post/post.selectors';
+import {
+  getSinglePostDataStart,
+  getPostFileStart,
+} from '../../redux/post/post.actions';
 import { FileRequestType, UserType } from '../../redux/post/post.types';
 
 // TODO Add logic to fetch post data and post files for notifications
@@ -28,6 +35,8 @@ const NotificationsContainer: React.FC = () => {
   const notifications = useSelector(selectNotifications);
   const notificationUsers = useSelector(selectNotificationUsers);
   const notificationUserMap = useSelector(selectNotificationUserMap);
+  const notificationPostData = useSelector(selectNotificationPostData);
+  const postDataFetchCount = useRef(0);
   const dispatch = useDispatch();
 
   let bucket: string;
@@ -52,7 +61,7 @@ const NotificationsContainer: React.FC = () => {
 
   useEffect(() => {
     if (notifications?.length) {
-      notifications.forEach(({ fromUserId }) => {
+      notifications.forEach(({ fromUserId, postId }) => {
         if (!(notificationUsers && fromUserId in notificationUsers)) {
           dispatch(
             getOtherUserStart({
@@ -61,12 +70,17 @@ const NotificationsContainer: React.FC = () => {
             })
           );
         }
+
+        if (postId) {
+          postDataFetchCount.current++;
+          dispatch(getSinglePostDataStart({ postId, notificationPost: true }));
+        }
       });
     }
   }, [dispatch, notifications, notificationUsers]);
 
   useEffect(() => {
-    if (notificationUsers) {
+    if (!!notificationUsers) {
       const ready = notifications?.every(
         (notification: Notification) =>
           notificationUsers?.[notification.fromUserId]
@@ -75,6 +89,25 @@ const NotificationsContainer: React.FC = () => {
       setReadyToFetchPhotos(ready || false);
     }
   }, [notifications, notificationUsers]);
+
+  useEffect(() => {
+    if (notificationPostData.size === postDataFetchCount.current) {
+      notificationPostData.toList().forEach((post) => {
+        dispatch(
+          getPostFileStart({
+            s3Key: post.s3Key,
+            bucket,
+            user: UserType.notificationUser,
+            fileRequestType: FileRequestType.notificationPost,
+          })
+        );
+      });
+    }
+  }, [dispatch, bucket, notificationPostData]);
+
+  // TODO Check that all post files are fetched and that the
+  // notifications are ready to render (update conditions that
+  // determine whether readyToRender should be set to true)
 
   useEffect(() => {
     if (readyToFetchPhotos) {

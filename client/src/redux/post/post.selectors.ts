@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 import { AppState } from '../root-reducer';
-import { PostState } from './post.types';
+import { Post, PostState } from './post.types';
 
 const selectPostState = (state: AppState): PostState => state.post;
 
@@ -305,4 +305,14 @@ export const selectUploadConversationPhotoSuccess = createSelector(
 export const selectNotificationUserMap = createSelector(
   [selectPostState],
   (postState: PostState) => postState.notificationUserMap
+);
+
+export const selectNotificationPostData = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.notificationPostData
+);
+
+export const selectNotificationPostFiles = createSelector(
+  [selectPostState],
+  (postState: PostState) => postState.notificationPostFiles
 );
