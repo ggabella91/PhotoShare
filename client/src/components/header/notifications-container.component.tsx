@@ -25,17 +25,17 @@ import {
 } from '../../redux/post/post.actions';
 import { FileRequestType, UserType } from '../../redux/post/post.types';
 
-// TODO Add logic to fetch post data and post files for notifications
-// associated with posts
-
 const NotificationsContainer: React.FC = () => {
   const [readyToRender, setReadyToRender] = useState(false);
+  const [usersReady, setUsersReady] = useState(false);
+  const [postFilesReady, setPostFilesReady] = useState(false);
   const [readyToFetchPhotos, setReadyToFetchPhotos] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
   const notifications = useSelector(selectNotifications);
   const notificationUsers = useSelector(selectNotificationUsers);
   const notificationUserMap = useSelector(selectNotificationUserMap);
   const notificationPostData = useSelector(selectNotificationPostData);
+  const notificationPostFiles = useSelector(selectNotificationPostFiles);
   const postDataFetchCount = useRef(0);
   const dispatch = useDispatch();
 
@@ -105,10 +105,6 @@ const NotificationsContainer: React.FC = () => {
     }
   }, [dispatch, bucket, notificationPostData]);
 
-  // TODO Check that all post files are fetched and that the
-  // notifications are ready to render (update conditions that
-  // determine whether readyToRender should be set to true)
-
   useEffect(() => {
     if (readyToFetchPhotos) {
       Object.values(notificationUsers).forEach((user) => {
@@ -124,7 +120,7 @@ const NotificationsContainer: React.FC = () => {
         }
       });
 
-      setReadyToRender(true);
+      setUsersReady(true);
     }
   }, [
     dispatch,
@@ -133,6 +129,18 @@ const NotificationsContainer: React.FC = () => {
     notificationUsers,
     notificationUserMap,
   ]);
+
+  useEffect(() => {
+    if (notificationPostFiles.size === postDataFetchCount.current) {
+      setPostFilesReady(true);
+    }
+  }, [notificationPostFiles]);
+
+  useEffect(() => {
+    if (usersReady && postFilesReady) {
+      setReadyToRender(true);
+    }
+  }, [usersReady, postFilesReady]);
 
   return (
     <Grid sx={{ display: 'flex', flexDirection: 'column', width: 'inherit' }}>
