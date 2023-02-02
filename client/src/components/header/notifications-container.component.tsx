@@ -39,12 +39,15 @@ const NotificationsContainer: React.FC = () => {
   const postDataFetchCount = useRef(0);
   const dispatch = useDispatch();
 
-  let bucket: string;
+  let postsBucket: string;
+  let profileBucket: string;
 
   if (process.env.NODE_ENV === 'production') {
-    bucket = 'photo-share-app-profile-photos';
+    postsBucket = 'photo-share-app';
+    profileBucket = 'photo-share-app-profile-photos';
   } else {
-    bucket = 'photo-share-app-profile-photos-dev';
+    postsBucket = 'photo-share-app-dev';
+    profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
   useEffect(() => {
@@ -96,14 +99,18 @@ const NotificationsContainer: React.FC = () => {
         dispatch(
           getPostFileStart({
             s3Key: post.s3Key,
-            bucket,
+            bucket: postsBucket,
             user: UserType.notificationUser,
             fileRequestType: FileRequestType.notificationPost,
+            isVideo: !!post.isVideo,
+            ...(post.videoThumbnailS3Key && {
+              videoThumbnailS3Key: post.videoThumbnailS3Key,
+            }),
           })
         );
       });
     }
-  }, [dispatch, bucket, notificationPostData]);
+  }, [dispatch, postsBucket, notificationPostData]);
 
   useEffect(() => {
     if (readyToFetchPhotos) {
@@ -112,7 +119,7 @@ const NotificationsContainer: React.FC = () => {
           dispatch(
             getPostFileStart({
               fileRequestType: FileRequestType.singlePost,
-              bucket,
+              bucket: profileBucket,
               s3Key: user.photo,
               user: UserType.notificationUser,
             })
@@ -124,7 +131,7 @@ const NotificationsContainer: React.FC = () => {
     }
   }, [
     dispatch,
-    bucket,
+    profileBucket,
     readyToFetchPhotos,
     notificationUsers,
     notificationUserMap,
@@ -147,16 +154,22 @@ const NotificationsContainer: React.FC = () => {
       {readyToRender &&
         notifications?.map((notification) => {
           const user = notificationUsers?.[notification.fromUserId];
-          const photoInfo =
+          const userPhotoInfo =
             (!!user.photo?.length && notificationUserMap.get(user.photo)) ||
             null;
+          const postPhotoS3Key =
+            notification.postId &&
+            notificationPostData.get(notification.postId)?.s3Key;
+          const postPhotoInfo =
+            postPhotoS3Key && notificationPostFiles.get(postPhotoS3Key);
 
           return (
             <NotificationItem
               notification={notification}
               key={notification.id}
               user={user}
-              photoInfo={photoInfo}
+              userPhotoInfo={userPhotoInfo}
+              postPhotoInfo={postPhotoInfo || null}
             />
           );
         })}

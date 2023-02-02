@@ -8,7 +8,8 @@ import { PostFile } from '../../redux/post/post.types';
 interface NotificationItemProps {
   notification: Notification;
   user: User;
-  photoInfo: PostFile | null;
+  userPhotoInfo: PostFile | null;
+  postPhotoInfo?: PostFile | null;
 }
 
 // TODO Add logic to show previews of comments that are
@@ -17,7 +18,8 @@ interface NotificationItemProps {
 const NotificationItem: FC<NotificationItemProps> = ({
   notification,
   user,
-  photoInfo,
+  userPhotoInfo,
+  postPhotoInfo,
 }) => {
   const { message, createdAt, postId } = notification;
   const navigate = useNavigate();
@@ -42,11 +44,11 @@ const NotificationItem: FC<NotificationItemProps> = ({
       >
         <Avatar
           src={
-            photoInfo?.fileString
-              ? `data:image/jpeg;base64,${photoInfo.fileString}`
+            userPhotoInfo?.fileString
+              ? `data:image/jpeg;base64,${userPhotoInfo.fileString}`
               : ''
           }
-          alt={''}
+          alt={user.username}
           sx={{ height: '56px', width: '56px', marginLeft: '10px' }}
         />
       </Grid>
@@ -76,16 +78,22 @@ const NotificationItem: FC<NotificationItemProps> = ({
           {new Date(createdAt).toDateString()}
         </Typography>
       </Button>
-      <Grid
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <Avatar
-          src={''}
-          alt={''}
-          sx={{ height: '56px', width: '56px', marginRight: '10px' }}
-          variant='square'
-        />
-      </Grid>
+      {!!postPhotoInfo && (
+        <Grid
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar
+            src={`data:image/jpeg;base64,${postPhotoInfo.fileString}`}
+            alt={`Post ${notification.postId || ''}`}
+            sx={{ height: '56px', width: '56px', marginRight: '10px' }}
+            variant='square'
+          />
+        </Grid>
+      )}
     </Grid>
   );
 };

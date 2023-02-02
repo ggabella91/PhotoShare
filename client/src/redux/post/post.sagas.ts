@@ -594,7 +594,7 @@ export function* onEditPostDetailsStart(): SagaIterator {
 }
 
 export function* onGetSinglePostDataStart(): SagaIterator {
-  yield takeLatest<ActionPattern, PostSaga>(
+  yield takeEvery<ActionPattern, PostSaga>(
     PostActions.GET_SINGLE_POST_DATA_START,
     getSinglePostData
   );
