@@ -752,7 +752,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           fromUserId: currentUser.id,
           toUserId: userId,
           message: `${currentUser.username} liked your post.`,
-          postId,
+          postId: localPostId,
         })
       );
     }

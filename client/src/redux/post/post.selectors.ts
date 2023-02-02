@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 import { AppState } from '../root-reducer';
-import { Post, PostState } from './post.types';
+import { PostState } from './post.types';
 
 const selectPostState = (state: AppState): PostState => state.post;
 
