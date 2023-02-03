@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { List, Map } from 'immutable';
@@ -71,6 +71,7 @@ const ExploreLocationPage: React.FC = () => {
   >(List());
 
   const [pageToFetch, setPageToFetch] = useState(1);
+  const fetchedFirstPage = useRef(false);
 
   const { locationId, location } = useParams();
 
@@ -109,10 +110,12 @@ const ExploreLocationPage: React.FC = () => {
   }
 
   useEffect(() => {
-    locationId &&
+    if (locationId && !fetchedFirstPage.current) {
+      fetchedFirstPage.current = true;
       dispatch(
         getPostsWithLocationStart({ locationId, pageToShow: 1, limit: 9 })
       );
+    }
     setPostModalShow(false);
     setPostOptionsModalShow(false);
     setShowPostLikingUsersModal(false);
@@ -122,7 +125,7 @@ const ExploreLocationPage: React.FC = () => {
     return () => {
       dispatch(clearPostState());
     };
-  }, [locationId]);
+  }, [dispatch, locationId]);
 
   useEffect(() => {
     if (postData && postData.length) {
@@ -137,7 +140,7 @@ const ExploreLocationPage: React.FC = () => {
         }
       }
     }
-  }, [postData]);
+  }, [dispatch, postData]);
 
   useEffect(() => {
     if (
@@ -174,7 +177,7 @@ const ExploreLocationPage: React.FC = () => {
         );
       });
     }
-  }, [postDataList]);
+  }, [dispatch, postDataList]);
 
   let postFileList = useMemo(() => {
     if (postData && postFiles.length === postData.length) {
@@ -261,7 +264,7 @@ const ExploreLocationPage: React.FC = () => {
         })
       );
     }
-  }, [otherUser]);
+  }, [dispatch, otherUser, profileBucket]);
 
   const handleHidePostModal = () => {
     setPostModalProps(
@@ -286,6 +289,7 @@ const ExploreLocationPage: React.FC = () => {
 
   useEffect(() => {
     handleSetIsCurrentUserComment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCommentOptionsModal]);
 
   const handleSetIsCurrentUserComment = () => {

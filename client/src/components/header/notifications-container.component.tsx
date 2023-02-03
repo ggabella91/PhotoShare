@@ -36,7 +36,7 @@ const NotificationsContainer: React.FC = () => {
   const notificationUserMap = useSelector(selectNotificationUserMap);
   const notificationPostData = useSelector(selectNotificationPostData);
   const notificationPostFiles = useSelector(selectNotificationPostFiles);
-  const postDataFetchCount = useRef(0);
+  const postDataFetchCount = useRef<Record<string, boolean>>({});
   const dispatch = useDispatch();
 
   let postsBucket: string;
@@ -51,7 +51,7 @@ const NotificationsContainer: React.FC = () => {
   }
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && !notifications) {
       dispatch(
         getNotificationsStart({
           userId: currentUser.id,
@@ -60,7 +60,7 @@ const NotificationsContainer: React.FC = () => {
         })
       );
     }
-  }, [dispatch, currentUser]);
+  }, [dispatch, currentUser, notifications]);
 
   useEffect(() => {
     if (notifications?.length) {
@@ -74,12 +74,13 @@ const NotificationsContainer: React.FC = () => {
           );
         }
 
-        if (postId) {
-          postDataFetchCount.current++;
+        if (postId && !(postId in postDataFetchCount.current)) {
+          postDataFetchCount.current[postId] = true;
           dispatch(getSinglePostDataStart({ postId, notificationPost: true }));
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, notifications, notificationUsers]);
 
   useEffect(() => {
@@ -94,7 +95,10 @@ const NotificationsContainer: React.FC = () => {
   }, [notifications, notificationUsers]);
 
   useEffect(() => {
-    if (notificationPostData.size === postDataFetchCount.current) {
+    if (
+      notificationPostData.size ===
+      Object.values(postDataFetchCount.current).length
+    ) {
       notificationPostData.toList().forEach((post) => {
         dispatch(
           getPostFileStart({
@@ -138,7 +142,10 @@ const NotificationsContainer: React.FC = () => {
   ]);
 
   useEffect(() => {
-    if (notificationPostFiles.size === postDataFetchCount.current) {
+    if (
+      notificationPostFiles.size ===
+      Object.values(postDataFetchCount.current).length
+    ) {
       setPostFilesReady(true);
     }
   }, [notificationPostFiles]);
