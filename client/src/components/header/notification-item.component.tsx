@@ -35,7 +35,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
       sx={{
         display: 'flex',
         flexDirection: 'row',
-        minHeight: '85px',
+        minHeight: '95px',
         borderBottom: '1px solid rgb(219,219,219)',
       }}
     >
@@ -71,7 +71,9 @@ const NotificationItem: FC<NotificationItemProps> = ({
         disableRipple
         onClick={handleClickNotificationItem}
       >
-        <Typography sx={{ width: 'inherit', fontSize: '14px ' }}>
+        <Typography
+          sx={{ width: 'inherit', fontSize: '14px ', padding: '5px 2px 2px' }}
+        >
           {message}
         </Typography>
         <Typography sx={{ width: 'inherit', fontSize: '12px ' }}>
