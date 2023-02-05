@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { List, Map } from 'immutable';
@@ -68,6 +68,7 @@ const ExploreTagPage: React.FC = () => {
   >(List());
 
   const [pageToFetch, setPageToFetch] = useState(1);
+  const fetchedFirstPage = useRef(false);
 
   const dispatch = useDispatch();
 
@@ -105,8 +106,10 @@ const ExploreTagPage: React.FC = () => {
   }
 
   useEffect(() => {
-    hashtag &&
+    if (hashtag && !fetchedFirstPage.current) {
+      fetchedFirstPage.current = true;
       dispatch(getPostsWithHashtagStart({ hashtag, pageToShow: 1, limit: 9 }));
+    }
 
     setPostModalShow(false);
     setPostOptionsModalShow(false);
