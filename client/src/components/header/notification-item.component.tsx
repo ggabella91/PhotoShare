@@ -25,6 +25,10 @@ const NotificationItem: FC<NotificationItemProps> = ({
   const navigate = useNavigate();
 
   const handleClickNotificationItem = () => {
+    navigate(`/${user.username}`);
+  };
+
+  const handleClickNotificationPost = () => {
     if (postId) {
       navigate(`/p/${postId}`);
     }
@@ -39,28 +43,13 @@ const NotificationItem: FC<NotificationItemProps> = ({
         borderBottom: '1px solid rgb(219,219,219)',
       }}
     >
-      <Grid
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <Avatar
-          src={
-            userPhotoInfo?.fileString
-              ? `data:image/jpeg;base64,${userPhotoInfo.fileString}`
-              : ''
-          }
-          alt={user.username}
-          sx={{ height: '56px', width: '56px', marginLeft: '10px' }}
-        />
-      </Grid>
       <Button
         sx={{
           display: 'flex',
-          flexDirection: 'column',
           width: '100%',
           minWidth: 'unset',
           height: '100%',
           textTransform: 'unset',
-          padding: 1,
           color: 'black',
           borderRadius: 0,
           textAlign: 'start',
@@ -71,16 +60,6 @@ const NotificationItem: FC<NotificationItemProps> = ({
         disableRipple
         onClick={handleClickNotificationItem}
       >
-        <Typography
-          sx={{ width: 'inherit', fontSize: '14px ', padding: '5px 2px 2px' }}
-        >
-          {message}
-        </Typography>
-        <Typography sx={{ width: 'inherit', fontSize: '12px ' }}>
-          {new Date(createdAt).toDateString()}
-        </Typography>
-      </Button>
-      {!!postPhotoInfo && (
         <Grid
           sx={{
             display: 'flex',
@@ -89,12 +68,54 @@ const NotificationItem: FC<NotificationItemProps> = ({
           }}
         >
           <Avatar
+            src={
+              userPhotoInfo?.fileString
+                ? `data:image/jpeg;base64,${userPhotoInfo.fileString}`
+                : ''
+            }
+            alt={user.username}
+            sx={{ height: '56px', width: '56px', marginRight: '10px' }}
+          />
+        </Grid>
+        <Grid sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
+          <Typography
+            sx={{ width: 'inherit', fontSize: '14px ', padding: '5px 2px 2px' }}
+          >
+            {message}
+          </Typography>
+          <Typography sx={{ width: 'inherit', fontSize: '12px ' }}>
+            {new Date(createdAt).toDateString()}
+          </Typography>
+        </Grid>
+      </Button>
+      {!!postPhotoInfo && (
+        <Button
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 'fit-content',
+            minWidth: 'unset',
+            height: '100%',
+            textTransform: 'unset',
+            padding: 1,
+            color: 'black',
+            borderRadius: 0,
+            textAlign: 'start',
+            '&:hover': {
+              backgroundColor: 'unset',
+            },
+          }}
+          disableRipple
+          onClick={handleClickNotificationPost}
+        >
+          <Avatar
             src={`data:image/jpeg;base64,${postPhotoInfo.fileString}`}
             alt={`Post ${notification.postId || ''}`}
             sx={{ height: '56px', width: '56px', marginRight: '10px' }}
             variant='square'
           />
-        </Grid>
+        </Button>
       )}
     </Grid>
   );

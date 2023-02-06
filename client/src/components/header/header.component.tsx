@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -46,6 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
   const notificationsButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const params = useParams();
+  const location = useLocation();
 
   let bucket: string;
 
@@ -82,6 +83,10 @@ export const Header: React.FC<HeaderProps> = ({
       setPhotoFileString(profilePhotoFile.fileString);
     }
   }, [profilePhotoFile]);
+
+  useEffect(() => {
+    setOpenNotifications(false);
+  }, [location.pathname]);
 
   const handleClickNotificationsButton = () =>
     setOpenNotifications(!openNotifications);
