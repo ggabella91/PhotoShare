@@ -149,9 +149,9 @@ export const Header: React.FC<HeaderProps> = ({
                 <Grid
                   sx={{
                     display: 'flex',
-                    width: '350px',
+                    width: '360px',
                     minHeight: '95px',
-                    maxHeight: '350px',
+                    maxHeight: '380px',
                     overflowY: 'scroll',
                   }}
                 >
