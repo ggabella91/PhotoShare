@@ -40,6 +40,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
         display: 'flex',
         flexDirection: 'row',
         minHeight: '95px',
+        width: '100%',
         borderBottom: '1px solid rgb(219,219,219)',
       }}
     >
@@ -47,7 +48,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
         sx={{
           display: 'flex',
           width: '100%',
-          minWidth: 'unset',
+          maxWidth: '270px',
           height: '100%',
           textTransform: 'unset',
           color: 'black',
@@ -112,7 +113,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
           <Avatar
             src={`data:image/jpeg;base64,${postPhotoInfo.fileString}`}
             alt={`Post ${notification.postId || ''}`}
-            sx={{ height: '56px', width: '56px', marginRight: '10px' }}
+            sx={{ height: '56px', width: '56px' }}
             variant='square'
           />
         </Button>

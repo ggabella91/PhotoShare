@@ -157,7 +157,7 @@ const NotificationsContainer: React.FC = () => {
   }, [usersReady, postFilesReady]);
 
   return (
-    <Grid sx={{ display: 'flex', flexDirection: 'column', width: 'inherit' }}>
+    <Grid sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       {readyToRender &&
         notifications?.map((notification) => {
           const user = notificationUsers?.[notification.fromUserId];
