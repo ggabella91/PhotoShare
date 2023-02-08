@@ -27,7 +27,8 @@ router.get(
       _id: postId,
       archived: { $ne: true },
     });
-    const postLocationId: string | null = singlePostWithoutLocationObj?.id;
+    const postLocationId: string | undefined =
+      singlePostWithoutLocationObj?.postLocation;
     console.log('Single Post Data: ', singlePostWithoutLocationObj);
 
     let singlePost: Partial<PostResponseObj> | null =
