@@ -242,11 +242,6 @@ export const PostModal: React.FC<PostModalProps> = ({
     ? (bucket = 'photo-share-app-profile-photos')
     : (bucket = 'photo-share-app-profile-photos-dev');
 
-  let shiftRight: boolean;
-  process.env.NODE_ENV === 'development'
-    ? (shiftRight = true)
-    : (shiftRight = false);
-
   useEffect(() => {
     if (props.show && postId) {
       window.history.pushState({}, '', `/p/${postId}`);
@@ -791,7 +786,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   return (
     <Modal
       {...props}
-      dialogClassName={`${shiftRight ? 'shift-right ' : ''}post-modal`}
+      dialogClassName={'shift-right post-modal'}
       animation={false}
       centered
     >
