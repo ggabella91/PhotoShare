@@ -12,9 +12,6 @@ interface NotificationItemProps {
   postPhotoInfo?: PostFile | null;
 }
 
-// TODO Add logic to show previews of comments that are
-// above a certain length, with an ellipsis
-
 const NotificationItem: FC<NotificationItemProps> = ({
   notification,
   user,
@@ -32,6 +29,15 @@ const NotificationItem: FC<NotificationItemProps> = ({
     if (postId) {
       navigate(`/p/${postId}`);
     }
+  };
+
+  const handleSetMessagePreviewForDisplay = (message: string) => {
+    if (message.length >= 80) {
+      const messagePreview = `${message.slice(0, 80)}...`;
+      return messagePreview;
+    }
+
+    return message;
   };
 
   return (
@@ -82,7 +88,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
           <Typography
             sx={{ width: 'inherit', fontSize: '14px ', padding: '5px 2px 2px' }}
           >
-            {message}
+            {handleSetMessagePreviewForDisplay(message)}
           </Typography>
           <Typography sx={{ width: 'inherit', fontSize: '12px ' }}>
             {new Date(createdAt).toDateString()}
