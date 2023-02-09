@@ -35,7 +35,6 @@ router.patch(
     let savedPostLocation: LocationDoc | null = null;
     if (postLocation) {
       savedPostLocation = await saveNewOrGetExistingLocation(postLocation);
-      console.log('savedPostLocation.id: ', savedPostLocation?.id);
     }
 
     let hashtagEntriesToUpdate: string[] = [];
@@ -45,7 +44,7 @@ router.patch(
 
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
-      { caption, location: savedPostLocation?.id || undefined, hashtags },
+      { caption, postLocation: savedPostLocation?.id || undefined, hashtags },
       {
         new: true,
         runValidators: true,
