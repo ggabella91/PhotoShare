@@ -24,6 +24,7 @@ import { getPostsWithLocationRouter } from './routes/get-posts-with-location';
 import { createVideoPostRouter } from './routes/new-video';
 import { getVideoStreamRouter } from './routes/get-video-stream';
 import { conversationPhotoRouter } from './routes/conversation-photo';
+import nocache from 'nocache';
 
 const app = express();
 app.set('trust proxy', true);
@@ -35,6 +36,7 @@ app.use(
     secure: false,
   })
 );
+app.use(nocache());
 
 app.use(currentUser);
 

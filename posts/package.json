@@ -49,6 +49,7 @@
     "mongoose": "^6.4.0",
     "mongoose-update-if-current": "^1.4.0",
     "multer": "^1.4.2",
+    "nocache": "^3.0.4",
     "node-nats-streaming": "^0.3.2",
     "redis": "^4.0.1",
     "sharp": "^0.26.3",
