@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import mapboxgl, { Map } from 'mapbox-gl';
+//@ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import mapboxgl, { Map } from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import {
