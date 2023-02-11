@@ -91,6 +91,9 @@ interface MessageViewedBy {
   viewedBy: string;
 }
 
+// TODO Investigate issue with multiple "seen by" avatars
+// appearing in certain cases
+
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
