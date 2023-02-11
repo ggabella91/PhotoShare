@@ -58,7 +58,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
     } else if (styleVariation === StyleVariation.conversationHeader) {
       return {
         ...headerStyleObj,
-        transform: 'rotate(330deg)',
+        ...(isGroupAvatar && { transform: 'rotate(330deg)' }),
         marginLeft: isGroupAvatar && idx === 1 ? '-26px !important' : 'unset',
       };
     } else {
