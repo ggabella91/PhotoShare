@@ -185,8 +185,8 @@ const NotificationsContainer: React.FC = () => {
             />
           );
         })}
-      {!!notifications?.length && (
-        <Grid sx={{ display: 'flex', padding: 2 }}>
+      {!notifications?.length && (
+        <Grid sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
           <Typography>No notifications</Typography>
         </Grid>
       )}

@@ -32,8 +32,8 @@ const NotificationItem: FC<NotificationItemProps> = ({
   };
 
   const handleSetMessagePreviewForDisplay = (message: string) => {
-    if (message.length >= 80) {
-      const messagePreview = `${message.slice(0, 80)}...`;
+    if (message.length >= 65) {
+      const messagePreview = `${message.slice(0, 65)}...`;
       return messagePreview;
     }
 
@@ -56,7 +56,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
           width: '100%',
           maxWidth: '270px',
           height: '100%',
-          maxHeight: '85px',
+          maxHeight: '95px',
           textTransform: 'unset',
           color: 'black',
           borderRadius: 0,
@@ -86,9 +86,15 @@ const NotificationItem: FC<NotificationItemProps> = ({
           />
         </Grid>
         <Grid
-          sx={{ display: 'flex', flexDirection: 'column', padding: '0 8px' }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '5px 8px',
+          }}
         >
-          <Typography sx={{ width: 'inherit', fontSize: '14px ' }}>
+          <Typography
+            sx={{ width: 'inherit', fontSize: '14px ', maxHeight: '67px' }}
+          >
             {handleSetMessagePreviewForDisplay(message)}
           </Typography>
           <Typography sx={{ width: 'inherit', fontSize: '12px ' }}>
