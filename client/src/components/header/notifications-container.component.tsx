@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import NotificationItem from './notification-item.component';
 
 import { OtherUserType } from '../../redux/user/user.types';
@@ -74,7 +74,11 @@ const NotificationsContainer: React.FC = () => {
           );
         }
 
-        if (postId && !(postId in postDataFetchCount.current)) {
+        if (
+          postId &&
+          !(postId in postDataFetchCount.current) &&
+          !notificationPostData.has(postId)
+        ) {
           postDataFetchCount.current[postId] = true;
           dispatch(getSinglePostDataStart({ postId, notificationPost: true }));
         }
@@ -97,7 +101,8 @@ const NotificationsContainer: React.FC = () => {
   useEffect(() => {
     if (
       notificationPostData.size ===
-      Object.values(postDataFetchCount.current).length
+        Object.values(postDataFetchCount.current).length &&
+      notificationPostData.size !== notificationPostFiles.size
     ) {
       notificationPostData.toList().forEach((post) => {
         dispatch(
@@ -180,6 +185,11 @@ const NotificationsContainer: React.FC = () => {
             />
           );
         })}
+      {!!notifications?.length && (
+        <Grid sx={{ display: 'flex', padding: 2 }}>
+          <Typography>No notifications</Typography>
+        </Grid>
+      )}
     </Grid>
   );
 };

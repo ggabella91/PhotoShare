@@ -56,6 +56,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
           width: '100%',
           maxWidth: '270px',
           height: '100%',
+          maxHeight: '85px',
           textTransform: 'unset',
           color: 'black',
           borderRadius: 0,
@@ -84,10 +85,10 @@ const NotificationItem: FC<NotificationItemProps> = ({
             sx={{ height: '56px', width: '56px', marginRight: '10px' }}
           />
         </Grid>
-        <Grid sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
-          <Typography
-            sx={{ width: 'inherit', fontSize: '14px ', padding: '5px 2px 2px' }}
-          >
+        <Grid
+          sx={{ display: 'flex', flexDirection: 'column', padding: '0 8px' }}
+        >
+          <Typography sx={{ width: 'inherit', fontSize: '14px ' }}>
             {handleSetMessagePreviewForDisplay(message)}
           </Typography>
           <Typography sx={{ width: 'inherit', fontSize: '12px ' }}>
