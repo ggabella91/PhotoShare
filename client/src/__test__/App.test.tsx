@@ -3,6 +3,9 @@ import { App } from '../App';
 
 import { checkUserSession } from '../redux/user/user.actions';
 
+// TODO Find a way to mock '!mapbox-gl' module -- issue to ! operator,
+// used to avoid mapbox transpilation issue with babel
+
 describe('Main app component tests', () => {
   const setup = () => {
     render(
