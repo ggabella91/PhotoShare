@@ -58,6 +58,9 @@
       "**/__test__/**/*.[t]s?(x)",
       "**/?(*.)+(spec|test).[t]s?(x)"
     ],
+    "moduleNameMapper": {
+      "\\.(css|scss)$": "<rootDir>/src/styleMock.ts"
+    },
     "transform": {
       "^.+\\.jsx?$": "babel-jest",
       "^.+\\.tsx?$": "ts-jest"

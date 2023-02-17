@@ -22,6 +22,7 @@ router.get(
       notifications = await Notification.find(
         {
           toUserId: userId,
+          fromUserId: { $ne: userId },
         },
         null,
         {

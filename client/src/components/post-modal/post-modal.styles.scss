@@ -109,6 +109,7 @@ $image-height: 62.5vw;
   .large-media-adjustments {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
     background-color: black;
     width: 480px;
@@ -126,8 +127,8 @@ $image-height: 62.5vw;
     }
 
     .post-modal-image-large {
-      height: auto;
-      width: 480px;
+      max-height: 600px;
+      width: auto;
       position: relative;
 
       @include respond-medium-wide() {
