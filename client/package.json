@@ -68,6 +68,9 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.ts"
+    ],
     "testEnvironment": "jsdom"
   },
   "eslintConfig": {
