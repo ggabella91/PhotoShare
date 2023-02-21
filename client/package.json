@@ -67,8 +67,7 @@
     },
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
-    ],
-    "testEnvironment": "jsdom"
+    ]
   },
   "eslintConfig": {
     "extends": [
