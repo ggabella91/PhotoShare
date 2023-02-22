@@ -48,26 +48,30 @@ describe('update-info component tests', () => {
     expect(changeInfoStart).toBeCalled();
   });
 
-  it('clicking delete account button calls causes delete account confirmation modal to be rendered', () => {
+  it('clicking delete account button calls causes delete account confirmation modal to be rendered', async () => {
     setup();
 
     const deleteAccountButton = screen.getByTestId('delete-account-button');
 
     userEvent.click(deleteAccountButton);
 
-    const deleteAccountConfirmModal = screen.getByText(
-      /Confirm Account Deletion/i
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const deleteAccountConfirmModal = screen.getByTestId(
+      'confirm-delete-modal'
     );
 
     expect(deleteAccountConfirmModal).toBeInTheDocument();
   });
 
-  it('clicking delete account button in delete account confirmation modal calls delete-account handler', () => {
+  it('clicking delete account button in delete account confirmation modal calls delete-account handler', async () => {
     const { deleteAccountStart } = setup();
 
     const deleteAccountButton = screen.getByTestId('delete-account-button');
 
     userEvent.click(deleteAccountButton);
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     const deleteAccountConfirmButton = screen.getByTestId(
       'delete-account-confirm-button'
