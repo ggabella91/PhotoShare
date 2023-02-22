@@ -15,6 +15,7 @@ describe('custom modal component tests', () => {
         onHide={handleHide}
         onSubmit={handleSubmit}
         actionlabel='action-label'
+        dataTestId='confirm-delete-modal'
       />
     );
 
