@@ -49,12 +49,14 @@ describe('renders a search-bar component', () => {
     expect(searchBar).toBeInTheDocument();
   });
 
-  it('typing three or more characters in the search bar results in the user suggestion container component being rendered with no matches found', () => {
+  it('typing three or more characters in the search bar results in the user suggestion container component being rendered with no matches found', async () => {
     setup();
 
     const searchBarInput = screen.getByRole('textbox');
 
     userEvent.type(searchBarInput, 'test');
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     const noMatchesSpan = screen.getByText(/No matches found/i);
 

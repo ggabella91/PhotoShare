@@ -189,6 +189,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
         bodytext='This action cannot be undone.'
         actionlabel='Delete Account'
         onSubmit={handleDeleteAccount}
+        dataTestId='confirm-delete-modal'
       />
     </div>
   );

@@ -11,11 +11,13 @@ interface Props {
   onHide: () => void;
   onSubmit: () => void;
   actionlabel: string;
+  dataTestId: string;
 }
 
 const DeleteAccountConfirmModal: React.FC<Props> = ({
   onHide,
   onSubmit,
+  dataTestId,
   ...props
 }) => (
   <Modal {...props} dialogClassName='custom-modal' centered>
@@ -24,7 +26,7 @@ const DeleteAccountConfirmModal: React.FC<Props> = ({
         {props.header}
       </Modal.Title>
     </Modal.Header>
-    <Modal.Body className='body-text'>
+    <Modal.Body className='body-text' data-testid={dataTestId}>
       <h4>{props.subheader}</h4>
       <p>{props.bodytext}</p>
     </Modal.Body>
