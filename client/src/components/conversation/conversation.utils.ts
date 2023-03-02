@@ -65,7 +65,7 @@ export const renderTimeStamp = (dateString: string) => {
     const year = date.getFullYear();
     const displayYear = year < 2000 ? year : year % 2000;
 
-    return `${date.getDate()}/${date.getMonth()}/${displayYear}, ${formattedTime}`;
+    return `${date.getMonth()}/${date.getDate()}/${displayYear}, ${formattedTime}`;
   } else if (elapsedTimeDays > 6) {
     return `${month} ${
       monthDay.startsWith('0') ? monthDay.slice(1) : monthDay
