@@ -207,11 +207,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     if (event.target.files?.length) {
       const file = videoFileInputRef.current?.files?.[0];
 
-      console.log(
-        'videoFileInputRef.current?.files: ',
-        videoFileInputRef.current?.files
-      );
-
       if (file?.size && file.size >= 2097152000) {
         setFileInputKey(Date.now());
         setShowAlert(true);
