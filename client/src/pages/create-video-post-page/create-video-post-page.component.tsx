@@ -51,7 +51,7 @@ interface ChunkIndex {
 interface VideoPostPageProps {}
 
 const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState('');
   const [caption, setCaption] = useState('');
   const [locationSearchString, setLocationSearchString] = useState('');
@@ -72,6 +72,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  const videoFileInputRef = useRef<HTMLInputElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -81,7 +82,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   const postConfirm = useSelector(selectPostConfirm);
   const postError = useSelector(selectPostError);
 
-  const CHUNK_SIZE = 5 * 1024 * 1024;
+  const CHUNK_SIZE = 10 * 1024 * 1024;
 
   const locationSelection = useSelector(selectLocationSelection);
 
@@ -131,8 +132,13 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   };
 
   useEffect(() => {
-    if (videoPostFileChunkMetaData && file && chunkIndex) {
+    if (
+      videoPostFileChunkMetaData &&
+      videoFileInputRef.current?.files?.[0] &&
+      chunkIndex
+    ) {
       const { eTag, partNumber } = videoPostFileChunkMetaData;
+      const file = videoFileInputRef.current?.files?.[0];
 
       const newUploadPart: UploadPart = { ETag: eTag, PartNumber: partNumber };
 
@@ -146,8 +152,13 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   }, [videoPostFileChunkMetaData]);
 
   useEffect(() => {
-    if (chunkIndex && file && totalChunkCount) {
+    if (
+      chunkIndex &&
+      videoFileInputRef.current?.files?.[0] &&
+      totalChunkCount
+    ) {
       setUploadProgress((chunkIndex.idx / totalChunkCount) * 100);
+      const file = videoFileInputRef.current?.files?.[0];
       const reader = new FileReader();
 
       const fileChunk = getCurrentChunkToUpload(file);
@@ -194,9 +205,14 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
-      const file = event.target.files[0];
+      const file = videoFileInputRef.current?.files?.[0];
 
-      if (file.size >= 104857600) {
+      console.log(
+        'videoFileInputRef.current?.files: ',
+        videoFileInputRef.current?.files
+      );
+
+      if (file?.size && file.size >= 2097152000) {
         setFileInputKey(Date.now());
         setShowAlert(true);
         setTimeout(() => setShowAlert(false), 5000);
@@ -214,20 +230,20 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
           error: {
             error: true,
             message:
-              'File size too large. Select a file of maximum 100 MB in size.',
+              'File size too large. Select a file of maximum 2 GB in size.',
           },
         });
-      } else {
+      } else if (file?.size) {
         setVideoPreview({
           src: URL.createObjectURL(file),
           type: file.type,
         });
 
-        setFile(file);
+        // setFile(file);
         setTotalChunkCount(Math.ceil(file.size / CHUNK_SIZE));
       }
     } else {
-      setFile(null);
+      // setFile(null);
       setVideoPreview(null);
       setCaption('');
     }
@@ -237,7 +253,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     event.preventDefault();
     setPostStatus({ success: false, error: { error: false, message: '' } });
 
-    if (file) {
+    if (videoFileInputRef.current?.files?.[0]) {
       setShowAlert(true);
 
       setChunkIndex({ idx: 1, completed: false });
@@ -247,7 +263,8 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   const prepareAndSendFileChunkRequest = (e: ProgressEvent<FileReader>) => {
     const fileChunk = e.target?.result;
 
-    if (fileChunk) {
+    if (fileChunk && videoFileInputRef.current?.files?.[0]) {
+      const file = videoFileInputRef.current?.files?.[0];
       const uploadReq: UploadVideoPostFileChunkReq = {};
 
       if (chunkIndex!.idx === 1) {
@@ -280,7 +297,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
 
-        setFile(null);
+        // setFile(null);
         setCaption('');
         setLocationSearchString('');
         setLocation(null);
@@ -392,6 +409,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             accept='video/mp4'
             onChange={handleFileChange}
             key={fileInputKey}
+            inputRef={videoFileInputRef}
           />
           <FormInput
             name='caption'

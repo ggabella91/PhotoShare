@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { MutableRefObject } from 'react';
 
 import './form-input.styles.scss';
 
@@ -21,6 +21,7 @@ export interface FormFileInputType {
   label: string;
   accept: string;
   key: number;
+  inputRef?: MutableRefObject<HTMLInputElement | null>;
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
@@ -68,12 +69,18 @@ export const ExpandableFormInput: React.FC<FormInputProps> = ({
 
 export const FormFileInput: React.FC<FormFileInputType> = ({
   label,
+  inputRef,
   ...otherProps
 }) => (
   <div className='group'>
     <label className='form-file-input-label' htmlFor='file-input'>
       {label}
     </label>
-    <input id='file-input' className='form-file-input' {...otherProps} />
+    <input
+      id='file-input'
+      className='form-file-input'
+      {...otherProps}
+      ref={inputRef}
+    />
   </div>
 );
