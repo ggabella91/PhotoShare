@@ -1,3 +1,4 @@
+import { Button, Grid, Typography } from '@mui/material';
 import React, { MutableRefObject } from 'react';
 
 import './form-input.styles.scss';
@@ -22,6 +23,7 @@ export interface FormFileInputType {
   accept: string;
   key: number;
   inputRef?: MutableRefObject<HTMLInputElement | null>;
+  fileName: string;
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
@@ -70,17 +72,35 @@ export const ExpandableFormInput: React.FC<FormInputProps> = ({
 export const FormFileInput: React.FC<FormFileInputType> = ({
   label,
   inputRef,
+  fileName,
   ...otherProps
 }) => (
   <div className='group'>
-    <label className='form-file-input-label' htmlFor='file-input'>
-      {label}
-    </label>
-    <input
-      id='file-input'
-      className='form-file-input'
-      {...otherProps}
-      ref={inputRef}
-    />
+    <Grid sx={{ display: 'flex' }}>
+      <Button
+        variant='contained'
+        sx={{
+          // width: '100%',
+          // minWidth: 'unset',
+          height: '100%',
+          textTransform: 'capitalize',
+          padding: 0,
+          '&:hover': {
+            backgroundColor: 'unset',
+          },
+        }}
+        disableRipple
+      >
+        <Typography>{label}</Typography>
+        <input
+          id='file-input'
+          className='form-file-input'
+          {...otherProps}
+          style={{ display: 'none' }}
+          ref={inputRef}
+        />
+      </Button>
+      <Typography>{fileName}</Typography>
+    </Grid>
   </div>
 );

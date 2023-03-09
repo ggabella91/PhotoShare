@@ -206,7 +206,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     if (event.target.files?.length) {
       const file = videoFileInputRef.current?.files?.[0];
 
-      if (file?.size && file.size >= 2097152000) {
+      if (file?.size && file.size >= 10485760) {
         setFileInputKey(Date.now());
         setShowAlert(true);
         setTimeout(() => setShowAlert(false), 5000);
@@ -224,7 +224,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
           error: {
             error: true,
             message:
-              'File size too large. Select a file of maximum 2 GB in size.',
+              'File size too large. Select a file of maximum 100 MB in size.',
           },
         });
       } else if (file?.size) {
@@ -403,6 +403,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             onChange={handleFileChange}
             key={fileInputKey}
             inputRef={videoFileInputRef}
+            fileName={videoFileInputRef.current?.files?.[0].name || ''}
           />
           <FormInput
             name='caption'
