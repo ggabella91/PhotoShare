@@ -51,7 +51,6 @@ interface ChunkIndex {
 interface VideoPostPageProps {}
 
 const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
-  // const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState('');
   const [caption, setCaption] = useState('');
   const [locationSearchString, setLocationSearchString] = useState('');
@@ -82,7 +81,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   const postConfirm = useSelector(selectPostConfirm);
   const postError = useSelector(selectPostError);
 
-  const CHUNK_SIZE = 10 * 1024 * 1024;
+  const CHUNK_SIZE = 5 * 1024 * 1024;
 
   const locationSelection = useSelector(selectLocationSelection);
 
@@ -230,15 +229,15 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
         });
       } else if (file?.size) {
         setVideoPreview({
-          src: URL.createObjectURL(file),
+          src: URL.createObjectURL(
+            file.slice(0, Math.min(file.size, CHUNK_SIZE))
+          ),
           type: file.type,
         });
 
-        // setFile(file);
         setTotalChunkCount(Math.ceil(file.size / CHUNK_SIZE));
       }
     } else {
-      // setFile(null);
       setVideoPreview(null);
       setCaption('');
     }
@@ -292,7 +291,6 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
 
-        // setFile(null);
         setCaption('');
         setLocationSearchString('');
         setLocation(null);
