@@ -87,7 +87,7 @@ export const FormFileInput: React.FC<FormFileInputType> = ({
             height: '100%',
             textTransform: 'capitalize',
             backgroundColor: '#074aaf',
-            padding: 0,
+            padding: '5px',
             marginBottom: '10px',
             '&:hover': {
               backgroundColor: '#074aaf',
@@ -103,9 +103,12 @@ export const FormFileInput: React.FC<FormFileInputType> = ({
           className='form-file-input'
           style={{ display: 'none' }}
           ref={inputRef}
+          data-testid='file-input'
           {...otherProps}
         />
-        <Typography>{fileName}</Typography>
+        <Typography sx={{ padding: '5px' }}>
+          {fileName || 'No File Selected'}
+        </Typography>
       </Grid>
     </div>
   );

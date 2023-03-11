@@ -60,7 +60,7 @@ describe('form file input component tests', () => {
   it('renders a form file input component', () => {
     setup();
 
-    const formFileInput = screen.getByLabelText('test-form-file-input');
+    const formFileInput = screen.getByTestId('file-input');
 
     expect(formFileInput).toBeInTheDocument();
   });
@@ -68,7 +68,7 @@ describe('form file input component tests', () => {
   it('changing input file fires change handler', () => {
     setup();
 
-    const formFileInput = screen.getByLabelText('test-form-file-input');
+    const formFileInput = screen.getByTestId('file-input');
 
     fireEvent.change(formFileInput);
 
