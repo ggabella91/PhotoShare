@@ -187,7 +187,6 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
             fileName={fileInputRef.current?.files?.[0].name || ''}
             inputRef={fileInputRef}
           />
-
           <div className='button'>
             <Button
               className='submit-button'

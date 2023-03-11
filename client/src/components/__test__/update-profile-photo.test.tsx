@@ -52,7 +52,7 @@ describe('update-profile-photo component tests', () => {
       type: 'img/jpeg',
     });
 
-    const fileInput: HTMLInputElement = screen.getByLabelText('Select photo');
+    const fileInput: HTMLInputElement = screen.getByTestId('file-input');
 
     const uploadButton = screen.getByText(/Upload photo/i);
 

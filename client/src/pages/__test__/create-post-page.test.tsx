@@ -46,11 +46,10 @@ describe('create-post page component tests', () => {
     const testPostFile = new File(['test-post-file'], 'test-post', {
       type: 'img/jpeg',
     });
-    const testCaption = 'This is my test post boiii';
+    const testCaption = 'This is my test post';
     const testLocation = 'That one chill place';
 
-    const postFileInput: HTMLInputElement =
-      screen.getByLabelText('Select photo');
+    const postFileInput: HTMLInputElement = screen.getByTestId('file-input');
     const captionInput = screen.getByLabelText('Add a caption');
     const locationInput = screen.getByLabelText('Where was this taken?');
     const uploadButton = screen.getByText('Upload photo');
