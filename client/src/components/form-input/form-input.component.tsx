@@ -74,33 +74,39 @@ export const FormFileInput: React.FC<FormFileInputType> = ({
   inputRef,
   fileName,
   ...otherProps
-}) => (
-  <div className='group'>
-    <Grid sx={{ display: 'flex' }}>
-      <Button
-        variant='contained'
-        sx={{
-          // width: '100%',
-          // minWidth: 'unset',
-          height: '100%',
-          textTransform: 'capitalize',
-          padding: 0,
-          '&:hover': {
-            backgroundColor: 'unset',
-          },
-        }}
-        disableRipple
-      >
-        <Typography>{label}</Typography>
+}) => {
+  const handleButtonClick = () => inputRef?.current?.click();
+
+  return (
+    <div className='group'>
+      <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Button
+          variant='contained'
+          sx={{
+            width: '100%',
+            height: '100%',
+            textTransform: 'capitalize',
+            backgroundColor: '#074aaf',
+            padding: 0,
+            marginBottom: '10px',
+            '&:hover': {
+              backgroundColor: '#074aaf',
+            },
+          }}
+          onClick={handleButtonClick}
+          disableRipple
+        >
+          <Typography>{label}</Typography>
+        </Button>
         <input
           id='file-input'
           className='form-file-input'
-          {...otherProps}
           style={{ display: 'none' }}
           ref={inputRef}
+          {...otherProps}
         />
-      </Button>
-      <Typography>{fileName}</Typography>
-    </Grid>
-  </div>
-);
+        <Typography>{fileName}</Typography>
+      </Grid>
+    </div>
+  );
+};

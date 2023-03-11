@@ -206,7 +206,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     if (event.target.files?.length) {
       const file = videoFileInputRef.current?.files?.[0];
 
-      if (file?.size && file.size >= 10485760) {
+      if (file?.size && file.size >= 104857600) {
         setFileInputKey(Date.now());
         setShowAlert(true);
         setTimeout(() => setShowAlert(false), 5000);
@@ -403,7 +403,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             onChange={handleFileChange}
             key={fileInputKey}
             inputRef={videoFileInputRef}
-            fileName={videoFileInputRef.current?.files?.[0].name || ''}
+            fileName={videoFileInputRef.current?.files?.[0]?.name || ''}
           />
           <FormInput
             name='caption'

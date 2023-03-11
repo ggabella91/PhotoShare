@@ -53,6 +53,7 @@ describe('form file input component tests', () => {
         label='test-form-file-input'
         key={Date.now()}
         accept='images'
+        fileName='test-file.jpg'
       />
     );
 

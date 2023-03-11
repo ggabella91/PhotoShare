@@ -225,7 +225,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
             onChange={handleFileChange}
             key={fileInputKey}
             inputRef={fileRef}
-            fileName={fileRef?.current?.files?.[0].name || ''}
+            fileName={fileRef?.current?.files?.[0]?.name || ''}
           />
           <FormInput
             name='caption'
