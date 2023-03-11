@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -67,6 +67,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     error: false,
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const dispatch = useDispatch();
   const locationSelection = useSelector(selectLocationSelection);
@@ -223,6 +224,8 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
             accept='image/*'
             onChange={handleFileChange}
             key={fileInputKey}
+            inputRef={fileRef}
+            fileName={fileRef?.current?.files?.[0]?.name || ''}
           />
           <FormInput
             name='caption'

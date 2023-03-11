@@ -1,3 +1,4 @@
+import { Button, Grid, Typography } from '@mui/material';
 import React, { MutableRefObject } from 'react';
 
 import './form-input.styles.scss';
@@ -22,6 +23,7 @@ export interface FormFileInputType {
   accept: string;
   key: number;
   inputRef?: MutableRefObject<HTMLInputElement | null>;
+  fileName: string;
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
@@ -70,17 +72,41 @@ export const ExpandableFormInput: React.FC<FormInputProps> = ({
 export const FormFileInput: React.FC<FormFileInputType> = ({
   label,
   inputRef,
+  fileName,
   ...otherProps
-}) => (
-  <div className='group'>
-    <label className='form-file-input-label' htmlFor='file-input'>
-      {label}
-    </label>
-    <input
-      id='file-input'
-      className='form-file-input'
-      {...otherProps}
-      ref={inputRef}
-    />
-  </div>
-);
+}) => {
+  const handleButtonClick = () => inputRef?.current?.click();
+
+  return (
+    <div className='group'>
+      <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Button
+          variant='contained'
+          sx={{
+            width: '100%',
+            height: '100%',
+            textTransform: 'capitalize',
+            backgroundColor: '#074aaf',
+            padding: 0,
+            marginBottom: '10px',
+            '&:hover': {
+              backgroundColor: '#074aaf',
+            },
+          }}
+          onClick={handleButtonClick}
+          disableRipple
+        >
+          <Typography>{label}</Typography>
+        </Button>
+        <input
+          id='file-input'
+          className='form-file-input'
+          style={{ display: 'none' }}
+          ref={inputRef}
+          {...otherProps}
+        />
+        <Typography>{fileName}</Typography>
+      </Grid>
+    </div>
+  );
+};

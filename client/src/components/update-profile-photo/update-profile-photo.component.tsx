@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -59,6 +59,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
     error: false,
   });
   const [showProfilePhotoAlert, setShowProfilePhotoAlert] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
@@ -183,6 +184,8 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
             accept='image/*'
             onChange={handleFileChange}
             key={fileInputKey}
+            fileName={fileInputRef.current?.files?.[0].name || ''}
+            inputRef={fileInputRef}
           />
 
           <div className='button'>
