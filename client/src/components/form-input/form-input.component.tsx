@@ -106,7 +106,15 @@ export const FormFileInput: React.FC<FormFileInputType> = ({
           data-testid='file-input'
           {...otherProps}
         />
-        <Typography sx={{ padding: '5px' }}>
+        <Typography
+          sx={{
+            display: 'flex',
+            maxWidth: '250px',
+            padding: '5px 0px',
+            wordBreak: 'normal',
+            textAlign: 'start',
+          }}
+        >
           {fileName || 'No File Selected'}
         </Typography>
       </Grid>
