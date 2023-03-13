@@ -19,7 +19,6 @@ import {
   clearPostStatuses,
 } from '../../redux/post/post.actions';
 
-import Button from '../../components/button/button.component';
 import {
   FormInput,
   FormFileInput,
@@ -29,6 +28,7 @@ import LocationsSuggestionsContainer, {
 } from '../../components/locations-suggestions-container/locations-suggestions-container.component';
 import { useDebounce } from '../hooks';
 import Alert from 'react-bootstrap/Alert';
+import { Button } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import './create-video-post-page.styles.scss';
@@ -243,8 +243,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const markReadyToUpload = () => {
     setPostStatus({ success: false, error: { error: false, message: '' } });
 
     if (videoFileInputRef.current?.files?.[0]) {
@@ -252,6 +251,18 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
       setChunkIndex({ idx: 1, completed: false });
     }
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    markReadyToUpload();
+  };
+
+  const handleClickSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    markReadyToUpload();
   };
 
   const prepareAndSendFileChunkRequest = (e: ProgressEvent<FileReader>) => {
@@ -424,8 +435,29 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
           {showSuggestions ? (
             <LocationsSuggestionsContainer styleType={StyleType.createPost} />
           ) : null}
-          <div className='button'>
-            <Button className='submit-button' onClick={handleSubmit}>
+          <div
+            className='button'
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <Button
+              sx={{
+                display: 'flex',
+                width: 'auto',
+                minWidth: '180px',
+                height: '60px',
+                padding: '0 35px 0 35px',
+                fontWeight: 420,
+                justifyContent: 'center',
+                backgroundColor: '#074aaf',
+                color: 'white',
+                textTransform: 'capitalize',
+                fontSize: '20px',
+                '&:hover': {
+                  backgroundColor: '#074aaf',
+                },
+              }}
+              onClick={handleClickSubmit}
+            >
               Upload video
             </Button>
           </div>

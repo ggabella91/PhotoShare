@@ -109,10 +109,10 @@ export const FormFileInput: React.FC<FormFileInputType> = ({
         <Typography
           sx={{
             display: 'flex',
+            justifyContent: 'center',
             maxWidth: '250px',
             padding: '5px 0px',
             wordBreak: 'normal',
-            textAlign: 'start',
           }}
         >
           {fileName || 'No File Selected'}
