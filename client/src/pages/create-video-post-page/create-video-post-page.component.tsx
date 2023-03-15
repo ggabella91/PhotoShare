@@ -27,11 +27,12 @@ import LocationsSuggestionsContainer, {
   StyleType,
 } from '../../components/locations-suggestions-container/locations-suggestions-container.component';
 import { useDebounce } from '../hooks';
-import Alert from 'react-bootstrap/Alert';
 import { Button } from '@mui/material';
+import Alert from 'react-bootstrap/Alert';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import './create-video-post-page.styles.scss';
+import { submitButtonStyles } from '../common-styles';
 
 interface PostStatus {
   success: boolean;
@@ -202,8 +203,8 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     return blob;
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.length) {
+  const handleFileChange = () => {
+    if (videoFileInputRef.current?.files?.length) {
       const file = videoFileInputRef.current?.files?.[0];
 
       if (file?.size && file.size >= 104857600) {
@@ -272,7 +273,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
       const file = videoFileInputRef.current?.files?.[0];
       const uploadReq: UploadVideoPostFileChunkReq = {};
 
-      if (chunkIndex!.idx === 1) {
+      if (chunkIndex?.idx === 1 && !chunkIndex?.completed) {
         uploadReq.fileChunk = fileChunk as string;
         uploadReq.fileName = file!.name;
         uploadReq.contentType = file!.type;
@@ -281,7 +282,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
 
         dispatch(uploadVideoPostFileChunkStart(uploadReq));
         setIsUploading(true);
-      } else if (chunkIndex!.completed) {
+      } else if (chunkIndex?.completed) {
         const { uploadId, key } = videoPostFileChunkMetaData!;
         uploadReq.fileName = file!.name;
         uploadReq.uploadId = uploadId;
@@ -440,23 +441,11 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
             style={{ display: 'flex', justifyContent: 'center' }}
           >
             <Button
-              sx={{
-                display: 'flex',
-                width: 'auto',
-                minWidth: '180px',
-                height: '60px',
-                padding: '0 35px 0 35px',
-                fontWeight: 420,
-                justifyContent: 'center',
-                backgroundColor: '#074aaf',
-                color: 'white',
-                textTransform: 'capitalize',
-                fontSize: '20px',
-                '&:hover': {
-                  backgroundColor: '#074aaf',
-                },
-              }}
+              variant='contained'
+              type='submit'
+              sx={submitButtonStyles}
               onClick={handleClickSubmit}
+              disableRipple
             >
               Upload video
             </Button>
