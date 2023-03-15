@@ -23,13 +23,14 @@ import {
   FormInput,
   FormFileInput,
 } from '../../components/form-input/form-input.component';
-import Button from '../../components/button/button.component';
+import { Button } from '@mui/material';
 import Alert from 'react-bootstrap/Alert';
 import LocationsSuggestionsContainer, {
   StyleType,
 } from '../../components/locations-suggestions-container/locations-suggestions-container.component';
 
 import './create-post-page.styles.scss';
+import { submitButtonStyles } from '../common-styles';
 
 interface PostStatus {
   success: boolean;
@@ -67,7 +68,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     error: false,
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const fileRef = useRef<HTMLInputElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const dispatch = useDispatch();
   const locationSelection = useSelector(selectLocationSelection);
@@ -96,9 +97,9 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     }
   }, [locationSelection]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.length) {
-      const file = event.target.files[0];
+  const handleFileChange = () => {
+    if (fileInputRef.current?.files?.length) {
+      const file = fileInputRef.current?.files?.[0];
 
       const formData = new FormData();
 
@@ -125,8 +126,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     setLocationSearchString(value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const prepareAndSubmitUpload = () => {
     setPostStatus({ success: false, error: false });
 
     if (post) {
@@ -153,6 +153,17 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     setCaption('');
     setLocationSearchString('');
     setLocation(null);
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    console.log('Form submit event called');
+    event.preventDefault();
+    prepareAndSubmitUpload();
+  };
+
+  const handleClickSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    prepareAndSubmitUpload();
   };
 
   const handleRenderAlert = (type: string, message: string) => {
@@ -224,8 +235,8 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
             accept='image/*'
             onChange={handleFileChange}
             key={fileInputKey}
-            inputRef={fileRef}
-            fileName={fileRef?.current?.files?.[0]?.name || ''}
+            inputRef={fileInputRef}
+            fileName={fileInputRef?.current?.files?.[0]?.name || ''}
           />
           <FormInput
             name='caption'
@@ -246,8 +257,17 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
           {showSuggestions ? (
             <LocationsSuggestionsContainer styleType={StyleType.createPost} />
           ) : null}
-          <div className='button'>
-            <Button className='submit-button' onClick={handleSubmit}>
+          <div
+            className='button'
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <Button
+              variant='contained'
+              type='submit'
+              sx={submitButtonStyles}
+              onClick={handleClickSubmit}
+              disableRipple
+            >
               Upload photo
             </Button>
           </div>
