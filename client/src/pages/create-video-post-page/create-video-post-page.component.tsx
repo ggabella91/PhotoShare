@@ -27,7 +27,7 @@ import LocationsSuggestionsContainer, {
   StyleType,
 } from '../../components/locations-suggestions-container/locations-suggestions-container.component';
 import { useDebounce } from '../hooks';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Alert from 'react-bootstrap/Alert';
 import LinearProgress from '@mui/material/LinearProgress';
 
@@ -360,7 +360,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   return (
     <div className='create-video-post-page'>
       <div>
-        <h2>Create a New Video Post</h2>
+        <Typography variant='h2'>Create a New Video Post</Typography>
       </div>
       <div className='upload-video'>
         <div className='video-preview-container'>

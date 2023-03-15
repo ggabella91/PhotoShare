@@ -23,7 +23,7 @@ import {
   FormInput,
   FormFileInput,
 } from '../../components/form-input/form-input.component';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Alert from 'react-bootstrap/Alert';
 import LocationsSuggestionsContainer, {
   StyleType,
@@ -195,7 +195,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   return (
     <div className='create-post-page'>
       <div>
-        <h2>Create a New Image Post</h2>
+        <Typography variant='h2'>Create a New Image Post</Typography>
       </div>
       <div className='upload'>
         <div className='img-preview-container'>
