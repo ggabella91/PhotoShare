@@ -204,7 +204,9 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
           {imgPreview || showAlert ? null : (
             <div className='img-preview-placeholder'>
               <div className='placeholder-text-container'>
-                <span className='placeholder-text'>Upload an image</span>
+                <Typography sx={{ fontWeight: 420 }}>
+                  Upload an image
+                </Typography>
               </div>
             </div>
           )}

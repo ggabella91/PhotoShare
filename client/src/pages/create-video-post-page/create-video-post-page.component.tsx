@@ -369,7 +369,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
           {videoPreview || showAlert ? null : (
             <div className='video-preview-placeholder'>
               <div className='placeholder-text-container'>
-                <span className='placeholder-text'>Upload a video</span>
+                <Typography sx={{ fontWeight: 420 }}>Upload a video</Typography>
               </div>
             </div>
           )}
