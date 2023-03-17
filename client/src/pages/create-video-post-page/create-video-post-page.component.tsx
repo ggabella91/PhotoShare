@@ -360,7 +360,9 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
   return (
     <div className='create-video-post-page'>
       <div>
-        <Typography variant='h2'>Create a New Video Post</Typography>
+        <Typography variant='h2' sx={{ fontSize: 32, fontWeight: 400 }}>
+          Create a New Video Post
+        </Typography>
       </div>
       <div className='upload-video'>
         <div className='video-preview-container'>
