@@ -195,7 +195,9 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   return (
     <div className='create-post-page'>
       <div>
-        <Typography variant='h2'>Create a New Image Post</Typography>
+        <Typography variant='h2' sx={{ fontSize: 32, fontWeight: 400 }}>
+          Create a New Image Post
+        </Typography>
       </div>
       <div className='upload'>
         <div className='img-preview-container'>
