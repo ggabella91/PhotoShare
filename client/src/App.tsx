@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -35,22 +35,32 @@ interface AppProps {
   currentUser: User | null;
 }
 
+const defaultState = {
+  loading: true,
+};
+
 export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
+  const [loading, setLoading] = useState(defaultState.loading);
   const mapBoxAccessToken = useSelector(selectMapBoxAccessToken);
   const dispatch = useDispatch();
 
   useEffect(() => {
     checkUserSession();
-  }, []);
+    setLoading(false);
+  }, [checkUserSession]);
 
   useEffect(() => {
     if (currentUser && !mapBoxAccessToken) {
       dispatch(getMapBoxAccessTokenStart());
     }
-  }, [currentUser]);
+  }, [dispatch, currentUser, mapBoxAccessToken]);
 
   return (
-    <div className='App' data-testid='main-app-component'>
+    <div
+      className='App'
+      data-testid='main-app-component'
+      style={{ visibility: loading ? 'hidden' : 'visible' }}
+    >
       <Routes>
         <Route
           path='/'
