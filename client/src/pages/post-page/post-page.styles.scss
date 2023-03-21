@@ -5,7 +5,6 @@
   margin-top: 40px;
 
   .post-container {
-    font-family: 'Lato', sans-serif;
     display: flex;
     flex-direction: row;
     height: 600px;
@@ -174,7 +173,6 @@
           display: table-cell;
           vertical-align: middle;
           margin: auto;
-          font-family: 'Lato', sans-serif;
         }
       }
 
@@ -208,7 +206,6 @@
             display: table-cell;
             vertical-align: middle;
             margin: auto;
-            font-family: 'Lato', sans-serif;
           }
 
           &.greyed-out {

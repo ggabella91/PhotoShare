@@ -71,7 +71,6 @@ $image-height: 62.5vw;
 }
 
 .post-modal {
-  font-family: 'Lato', sans-serif;
   display: flex;
   flex-direction: row;
   width: 335px;
@@ -345,7 +344,6 @@ $image-height: 62.5vw;
           display: table-cell;
           vertical-align: middle;
           margin: auto;
-          font-family: 'Lato', sans-serif;
         }
       }
 
@@ -402,7 +400,6 @@ $image-height: 62.5vw;
             display: table-cell;
             vertical-align: middle;
             margin: auto;
-            font-family: 'Lato', sans-serif;
           }
 
           &.greyed-out {
