@@ -70,9 +70,19 @@ export const selectPostNotificationError = createSelector(
   (followerState: FollowerState) => followerState.postNotificationError
 );
 
+export const selectIsNotificationsDataLoading = createSelector(
+  [selectFollowerState],
+  (followerState: FollowerState) => followerState.isNotificationsDataLoading
+);
+
 export const selectNotifications = createSelector(
   [selectFollowerState],
   (followerState: FollowerState) => followerState.notifications
+);
+
+export const selectNotificationsQueryLength = createSelector(
+  [selectFollowerState],
+  (followerState: FollowerState) => followerState.notificationsQueryLength
 );
 
 export const selectGetNotificationsError = createSelector(

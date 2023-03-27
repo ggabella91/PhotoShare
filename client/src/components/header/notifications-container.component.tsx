@@ -11,7 +11,11 @@ import {
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import { Notification } from '../../redux/follower/follower.types';
-import { selectNotifications } from '../../redux/follower/follower.selectors';
+import {
+  selectIsNotificationsDataLoading,
+  selectNotifications,
+  selectNotificationsQueryLength,
+} from '../../redux/follower/follower.selectors';
 import { getNotificationsStart } from '../../redux/follower/follower.actions';
 
 import {
@@ -37,14 +41,19 @@ const NotificationsContainer: React.FC = () => {
   const notificationUserMap = useSelector(selectNotificationUserMap);
   const notificationPostData = useSelector(selectNotificationPostData);
   const notificationPostFiles = useSelector(selectNotificationPostFiles);
+  const isNotificationsDataLoading = useSelector(
+    selectIsNotificationsDataLoading
+  );
+  const notificationsQueryLength = useSelector(selectNotificationsQueryLength);
   const postDataFetchCount = useRef<Record<string, boolean>>({});
+  const pageToFetch = useRef<number>(1);
   const dispatch = useDispatch();
 
-  // TODO Add redux state property and logic for telling whether notifications are loading or not
-
-  // const { intersectionCounter, observedElementRef } = useLazyLoading();
-
-  const observedElementRef = (node: HTMLDivElement | null) => {};
+  const { intersectionCounter, observedElementRef } = useLazyLoading(
+    isNotificationsDataLoading,
+    true,
+    1000
+  );
 
   let postsBucket: string;
   let profileBucket: string;
@@ -68,6 +77,31 @@ const NotificationsContainer: React.FC = () => {
       );
     }
   }, [dispatch, currentUser, notifications]);
+
+  useEffect(() => {
+    const shouldFetchMoreNotifications = () =>
+      notifications?.length &&
+      notificationsQueryLength &&
+      intersectionCounter !== pageToFetch.current &&
+      notifications.length < notificationsQueryLength &&
+      pageToFetch.current + 1 <= Math.ceil(notificationsQueryLength / 10);
+
+    if (currentUser && shouldFetchMoreNotifications()) {
+      dispatch(
+        getNotificationsStart({
+          userId: currentUser.id,
+          limit: 10,
+          pageToShow: ++pageToFetch.current,
+        })
+      );
+    }
+  }, [
+    dispatch,
+    currentUser,
+    intersectionCounter,
+    notifications,
+    notificationsQueryLength,
+  ]);
 
   useEffect(() => {
     if (notifications?.length) {

@@ -29,6 +29,7 @@ import {
   postNotificationSuccess,
   getNotificationsFailure,
   getNotificationsSuccess,
+  setNotificationsQueryLength,
 } from './follower.actions';
 
 import axios from 'axios';
@@ -118,11 +119,21 @@ export function* getNotifications({
   payload: GetNotificationsReq;
 }): any {
   try {
-    const { data: notifications }: { data: Notification[] } = yield axios.get(
-      `/api/notifications/${userId}?pageToShow=${pageToShow}&limit=${limit}`
-    );
+    const {
+      data: { notifications, queryLength },
+    }: { data: { notifications: Notification[]; queryLength: number | null } } =
+      yield axios.get(
+        `/api/notifications/${userId}?pageToShow=${pageToShow}&limit=${limit}`
+      );
 
-    yield put(getNotificationsSuccess(notifications));
+    if (queryLength) {
+      yield all([
+        put(getNotificationsSuccess(notifications)),
+        put(setNotificationsQueryLength(queryLength)),
+      ]);
+    } else {
+      yield put(getNotificationsSuccess(notifications));
+    }
   } catch (err) {
     yield put(getNotificationsFailure(err as NotificationError));
   }
