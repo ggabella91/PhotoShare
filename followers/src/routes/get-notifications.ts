@@ -17,8 +17,24 @@ router.get(
     }
 
     let notifications: NotificationDoc[] = [];
+    let queryLength: number | null = null;
 
     if (pageToShow && limit) {
+      if (pageToShow === 1) {
+        queryLength = (
+          await Notification.find(
+            {
+              toUserId: userId,
+              fromUserId: { $ne: userId },
+            },
+            null,
+            {
+              sort: { _id: -1 },
+            }
+          )
+        ).length;
+      }
+
       notifications = await Notification.find(
         {
           toUserId: userId,
@@ -37,7 +53,11 @@ router.get(
       });
     }
 
-    res.status(200).send(notifications);
+    if (queryLength) {
+      res.status(200).send({ notifications, queryLength });
+    } else {
+      res.status(200).send({ notifications });
+    }
   }
 );
 
