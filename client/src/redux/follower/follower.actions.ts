@@ -131,6 +131,13 @@ export const getNotificationsStart = (
   payload: getNotificationsReq,
 });
 
+export const setNotificationsQueryLength = (
+  queryLength: number
+): NotificationActionTypes => ({
+  type: NotificationActions.SET_NOTIFICATIONS_QUERY_LENGTH,
+  payload: queryLength,
+});
+
 export const getNotificationsSuccess = (
   notifications: Notification[]
 ): NotificationActionTypes => ({

@@ -22,6 +22,7 @@ export enum NotificationActions {
   GET_NOTIFICATIONS_START = 'GET_NOTIFICATIONS_START',
   GET_NOTIFICATIONS_SUCCESS = 'GET_NOTIFICATIONS_SUCCESS',
   GET_NOTIFICATIONS_FAILURE = 'GET_NOTIFICATIONS_FAILURE',
+  SET_NOTIFICATIONS_QUERY_LENGTH = 'SET_NOTIFICATIONS_QUERY_LENGTH',
 }
 
 export interface Follower {
@@ -65,6 +66,8 @@ export interface FollowerState {
   unfollowError: FollowError | null;
   postNotificationConfirm: Notification | null;
   postNotificationError: NotificationError | null;
+  isNotificationsDataLoading: boolean;
+  notificationsQueryLength: number;
   notifications: Notification[] | null;
   getNotificationsError: NotificationError | null;
 }
@@ -201,6 +204,11 @@ export interface GetNotificationsSuccess {
   payload: Notification[];
 }
 
+export interface SetNotificationsQueryLength {
+  type: typeof NotificationActions.SET_NOTIFICATIONS_QUERY_LENGTH;
+  payload: number;
+}
+
 export interface GetNotificationsFailure {
   type: typeof NotificationActions.GET_NOTIFICATIONS_FAILURE;
   payload: NotificationError;
@@ -212,4 +220,5 @@ export type NotificationActionTypes =
   | PostNotificationFailure
   | GetNotificationsStart
   | GetNotificationsSuccess
+  | SetNotificationsQueryLength
   | GetNotificationsFailure;

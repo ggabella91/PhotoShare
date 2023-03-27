@@ -29,7 +29,7 @@ import CustomAvatarGroup, {
 } from './custom-avatar-group.component';
 import ForwardMessageDialog from './forward-message-dialog.component';
 import MessageSeenByUsersDialog from './message-seen-by-dialog.component';
-import { useUserInfoData } from '../../pages/hooks';
+import { useUserInfoData, useLazyLoading } from '../../pages/hooks';
 
 import {
   selectJoinedConversations,
@@ -57,7 +57,6 @@ import { UserInfoData } from '../search-bar/search-bar.component';
 import { Socket } from 'socket.io-client';
 import { getConvoName } from '../../pages/messages-page/messages-page.utils';
 import { shouldRenderTimeStamp, renderTimeStamp } from './conversation.utils';
-import { useLazyLoading } from '../../pages/hooks';
 import { Message } from '../../redux/message/message.types';
 
 import './emoji-picker.scss';

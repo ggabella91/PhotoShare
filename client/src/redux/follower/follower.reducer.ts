@@ -20,6 +20,8 @@ const INITIAL_STATE: FollowerState = {
   unfollowError: null,
   postNotificationConfirm: null,
   postNotificationError: null,
+  isNotificationsDataLoading: false,
+  notificationsQueryLength: 0,
   notifications: null,
   getNotificationsError: null,
 };
@@ -29,6 +31,11 @@ const followerReducer = (
   action: FollowerActionTypes | NotificationActionTypes
 ): FollowerState => {
   switch (action.type) {
+    case NotificationActions.GET_NOTIFICATIONS_START:
+      return {
+        ...state,
+        isNotificationsDataLoading: true,
+      };
     case FollowerActions.FOLLOW_NEW_USER_SUCCESS:
       return {
         ...state,
@@ -75,6 +82,12 @@ const followerReducer = (
         ...state,
         notifications: action.payload,
         getNotificationsError: null,
+        isNotificationsDataLoading: false,
+      };
+    case NotificationActions.SET_NOTIFICATIONS_QUERY_LENGTH:
+      return {
+        ...state,
+        notificationsQueryLength: action.payload,
       };
     case FollowerActions.FOLLOW_NEW_USER_FAILURE:
       return {
@@ -111,6 +124,7 @@ const followerReducer = (
         ...state,
         notifications: null,
         getNotificationsError: action.payload,
+        isNotificationsDataLoading: false,
       };
     case FollowerActions.CLEAR_FOLLOW_STATE:
       return {
