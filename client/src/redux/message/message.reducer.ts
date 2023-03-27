@@ -18,6 +18,8 @@ import {
   updateMessage,
 } from './message.utils';
 
+// TODO Change immmutable Map to regular object
+
 const INITIAL_STATE: MessageState = {
   user: null,
   messages: [],

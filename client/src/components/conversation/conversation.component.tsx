@@ -94,6 +94,8 @@ interface MessageViewedBy {
 // TODO Investigate issue with multiple "seen by" avatars
 // appearing in certain cases
 
+// TODO Change lazy loading logic to fetch previous set of messages that were created before the current old messages in client state (us id of message or createdAt timestamp)
+
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,

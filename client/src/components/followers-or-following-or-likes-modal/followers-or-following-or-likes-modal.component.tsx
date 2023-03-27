@@ -42,6 +42,8 @@ import UserInfo, {
 import './followers-or-following-or-likes-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
 
+// TODO Change immmutable List to regular array
+
 interface FollowersOrFollowingOrLikesModalProps {
   users: Follower[] | null;
   show: boolean;

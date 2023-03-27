@@ -18,6 +18,8 @@ import {
 
 import { POST_MODAL_DATA_INITIAL_STATE } from '../../components/feed-post-container/feed-post-container.component';
 
+// TODO Change immmutable Maps to regular objects
+
 const INITIAL_STATE: PostState = {
   postData: null,
   postDataFeedArray: [],

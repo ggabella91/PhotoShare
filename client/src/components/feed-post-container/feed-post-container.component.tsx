@@ -77,6 +77,8 @@ import { ExpandableFormInput } from '../form-input/form-input.component';
 
 import './feed-post-container.styles.scss';
 
+// TODO Change immmutable Lists to regular arrays
+
 type CustomRef = (node: HTMLDivElement | null) => void;
 
 interface FeedPostContainerProps {
