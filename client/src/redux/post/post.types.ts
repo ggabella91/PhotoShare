@@ -3,6 +3,8 @@ import { AlreadyLikedAndReactionId } from '../../components/post-modal/post-moda
 import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 import { List, Map } from 'immutable';
 
+// TODO Change immmutable Maps and Lists to regular objects and arrays
+
 export enum PostActions {
   CREATE_POST_START = 'CREATE_POST_START',
   CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS',

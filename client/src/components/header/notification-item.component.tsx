@@ -5,11 +5,14 @@ import { Notification } from '../../redux/follower/follower.types';
 import { User } from '../../redux/user/user.types';
 import { PostFile } from '../../redux/post/post.types';
 
+type CustomRef = (node: HTMLDivElement | null) => void;
+
 interface NotificationItemProps {
   notification: Notification;
   user: User;
   userPhotoInfo: PostFile | null;
   postPhotoInfo?: PostFile | null;
+  custRef: CustomRef | null;
 }
 
 const NotificationItem: FC<NotificationItemProps> = ({

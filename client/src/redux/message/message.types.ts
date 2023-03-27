@@ -28,6 +28,8 @@ export enum MessageActions {
   GET_CONVERSATION_USERS_FAILURE = 'GET_CONVERSATION_USERS_FAILURE',
 }
 
+// TODO Change immmutable Map to regular object
+
 export interface MessageState {
   user: MessageUser | null;
   messages: ConvoMessages[];

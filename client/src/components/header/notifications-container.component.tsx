@@ -24,6 +24,7 @@ import {
   getPostFileStart,
 } from '../../redux/post/post.actions';
 import { FileRequestType, UserType } from '../../redux/post/post.types';
+import { useLazyLoading } from '../../pages/hooks';
 
 const NotificationsContainer: React.FC = () => {
   const [readyToRender, setReadyToRender] = useState(false);
@@ -38,6 +39,12 @@ const NotificationsContainer: React.FC = () => {
   const notificationPostFiles = useSelector(selectNotificationPostFiles);
   const postDataFetchCount = useRef<Record<string, boolean>>({});
   const dispatch = useDispatch();
+
+  // TODO Add redux state property and logic for telling whether notifications are loading or not
+
+  // const { intersectionCounter, observedElementRef } = useLazyLoading();
+
+  const observedElementRef = (node: HTMLDivElement | null) => {};
 
   let postsBucket: string;
   let profileBucket: string;
@@ -119,7 +126,7 @@ const NotificationsContainer: React.FC = () => {
         );
       });
     }
-  }, [dispatch, postsBucket, notificationPostData]);
+  }, [dispatch, postsBucket, notificationPostData, notificationPostFiles.size]);
 
   useEffect(() => {
     if (readyToFetchPhotos) {
@@ -164,7 +171,7 @@ const NotificationsContainer: React.FC = () => {
   return (
     <Grid sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       {readyToRender &&
-        notifications?.map((notification) => {
+        notifications?.map((notification, idx) => {
           const user = notificationUsers?.[notification.fromUserId];
           const userPhotoInfo =
             (!!user.photo?.length && notificationUserMap.get(user.photo)) ||
@@ -182,6 +189,9 @@ const NotificationsContainer: React.FC = () => {
               user={user}
               userPhotoInfo={userPhotoInfo}
               postPhotoInfo={postPhotoInfo || null}
+              custRef={
+                idx === notifications.length - 1 ? observedElementRef : null
+              }
             />
           );
         })}

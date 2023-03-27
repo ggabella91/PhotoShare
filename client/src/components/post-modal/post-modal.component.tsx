@@ -91,6 +91,8 @@ import {
 
 import './post-modal.styles.scss';
 
+// TODO Change immmutable Lists to regular arrays
+
 export interface AlreadyLikedAndReactionId {
   alreadyLikedPost: boolean;
   reactionId: string;

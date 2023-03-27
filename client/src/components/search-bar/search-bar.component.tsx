@@ -37,6 +37,8 @@ import UserInfo, { StyleType } from '../user-info/user-info.component';
 
 import './search-bar.styles.scss';
 
+// TODO Change immmutable List to regular array
+
 export interface SearchBarProps {
   key: number;
   currentUser: User | null;
