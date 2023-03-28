@@ -61,6 +61,12 @@ class NatsWrapper extends ClientProxy {
     return new Promise((resolve, reject) => {
       this.client.on('connect', () => {
         this.logger.log('Connected to NATS');
+
+        // TODO Create new listener that listens to
+        // ProfilePhotoUpdatedEvent, to update avatar S3 key
+        // for a user in messages database, when they update
+        // their profile photo
+
         new ConversationPhotoUpdatedListener(
           this.client,
           this.conversationModel,
