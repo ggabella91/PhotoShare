@@ -199,7 +199,7 @@ const Conversation: React.FC<ConversationProps> = ({
 
   useEffect(() => {
     if (
-      !conversationToUserDataMap?.has(conversationId) &&
+      !conversationToUserDataMap?.[conversationId] &&
       conversationHistoricalMessageUsers?.length
     ) {
       conversationHistoricalMessageUsers.forEach((userId) =>
@@ -219,7 +219,7 @@ const Conversation: React.FC<ConversationProps> = ({
   ]);
 
   useEffect(() => {
-    const cachedUserData = conversationToUserDataMap?.get(conversationId);
+    const cachedUserData = conversationToUserDataMap?.[conversationId];
 
     if (cachedUserData) {
       setUserInfoMap(cachedUserData);
@@ -237,7 +237,7 @@ const Conversation: React.FC<ConversationProps> = ({
     const userInfoMapKeys = Object.keys(userInfoMap);
 
     if (
-      !conversationToUserDataMap?.get(conversationId) &&
+      !conversationToUserDataMap?.[conversationId] &&
       conversationHistoricalMessageUsers &&
       conversationHistoricalMessageUsers.every((key) =>
         userInfoMapKeys.includes(key)

@@ -73,7 +73,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
   const conversationToUserDataMap = useSelector(
     selectConversationToUserDataMap
   );
-  const userDataMap = conversationToUserDataMap.get(message.conversationId);
+  const userDataMap = conversationToUserDataMap[message.conversationId];
   const userNicknamesMaps = useSelector(selectConversationUserNicknamesMaps);
   const userNickname =
     userNicknamesMaps[message.conversationId][message.ownerId];

@@ -1,4 +1,3 @@
-import { Map } from 'immutable';
 import { UserInfoMap } from '../../components/conversation/conversation.component';
 
 export enum MessageActions {
@@ -28,8 +27,6 @@ export enum MessageActions {
   GET_CONVERSATION_USERS_FAILURE = 'GET_CONVERSATION_USERS_FAILURE',
 }
 
-// TODO Change immmutable Map to regular object
-
 export interface MessageState {
   user: MessageUser | null;
   messages: ConvoMessages[];
@@ -38,7 +35,7 @@ export interface MessageState {
   removeUserSessionCookieConfirm: string | null;
   removeUserSessionCookieError: MessageError | null;
   usersArrayForNewConvoReq: Partial<MessageUser>[];
-  conversationToUserDataMap: Map<string, UserInfoMap>;
+  conversationToUserDataMap: Record<string, UserInfoMap>;
   conversationUserNicknamesMaps: Record<string, Record<string, string>>;
   conversationMessageUsersMap: Record<string, MessageUser[]>;
 }
