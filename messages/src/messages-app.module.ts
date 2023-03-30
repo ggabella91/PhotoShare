@@ -40,11 +40,16 @@ import { Model } from 'mongoose';
     MessagesAppChatGateway,
     {
       provide: NatsWrapper,
-      inject: [getModelToken(Conversation.name), MessagesAppChatGateway],
+      inject: [
+        getModelToken(Conversation.name),
+        getModelToken(User.name),
+        MessagesAppChatGateway,
+      ],
       useFactory: (
-        model: Model<Conversation>,
+        conversationModel: Model<Conversation>,
+        userModel: Model<User>,
         chatGateway: MessagesAppChatGateway
-      ) => new NatsWrapper(model, chatGateway),
+      ) => new NatsWrapper(conversationModel, userModel, chatGateway),
     },
   ],
 })
