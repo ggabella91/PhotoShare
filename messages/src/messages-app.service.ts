@@ -68,7 +68,7 @@ export class MessagesAppService {
     if (existingConvoMatch) {
       this.logger.log('Found existing conversation with the same users...');
 
-      const updatedExistingConvoMatch = await (
+      const updatedExistingConvoMatch = (
         await this.updateLastMessageTimeForConvo(existingConvoMatch.id)
       ).toObject();
 
