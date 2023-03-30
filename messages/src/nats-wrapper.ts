@@ -2,10 +2,12 @@ import nats, { Stan } from 'node-nats-streaming';
 import { ClientProxy, ReadPacket, WritePacket } from '@nestjs/microservices';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConversationPhotoUpdatedListener } from './events/listeners/conversation-photo-updated-listener';
+import { ProfilePhotoUpdatedListener } from './events/listeners/user-profile-photo-updated-listener';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Conversation } from './database/schemas/conversation.schema';
 import { MessagesAppChatGateway } from './messages-app-chat.gateway';
+import { User } from './database/schemas/user.schema';
 
 @Injectable()
 class NatsWrapper extends ClientProxy {
@@ -15,6 +17,7 @@ class NatsWrapper extends ClientProxy {
   constructor(
     @InjectModel(Conversation.name)
     private conversationModel: Model<Conversation>,
+    private userModel: Model<User>,
     private chatGateway: MessagesAppChatGateway
   ) {
     super();
@@ -62,16 +65,18 @@ class NatsWrapper extends ClientProxy {
       this.client.on('connect', () => {
         this.logger.log('Connected to NATS');
 
-        // TODO Create new listener that listens to
-        // ProfilePhotoUpdatedEvent, to update avatar S3 key
-        // for a user in messages database, when they update
-        // their profile photo
-
         new ConversationPhotoUpdatedListener(
           this.client,
           this.conversationModel,
           this.chatGateway
         ).listen();
+
+        new ProfilePhotoUpdatedListener(
+          this.client,
+          this.userModel,
+          this.chatGateway
+        );
+
         resolve('');
       });
 
