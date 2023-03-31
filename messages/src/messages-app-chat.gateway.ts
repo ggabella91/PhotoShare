@@ -23,6 +23,7 @@ import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
 import { PermanentlyRemoveMessageForUserDto } from './database/dto/permanently-remove-message-for-user.dto';
 import { UpdateUsersMessageLastViewedDto } from './database/dto/update-message-last-viewed.dto';
 import { UpdateMessageStatusDto } from './database/dto/update-message-status.dto';
+import { RemoveConversationForUserDto } from './database/dto/remove-conversation-for-user.dto';
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({ path: '/api/messages/chat', cors: true })
@@ -223,5 +224,23 @@ export class MessagesAppChatGateway
 
     client.join(conversationIdString);
     client.emit('joinedConversation', message.conversationId);
+  }
+
+  @SubscribeMessage('removeConversationForUser')
+  handleRemoveConversationForUser(
+    client: Socket,
+    removeConversationForUserDto: RemoveConversationForUserDto
+  ) {
+    const updatedConversation = this.appService.removeConversationForUser(
+      removeConversationForUserDto
+    );
+
+    if (!updatedConversation) {
+      throw new WsException(
+        'Conversation does not exist or user is already not in conversation'
+      );
+    }
+
+    client.emit('userRemovedFromConversation', updatedConversation);
   }
 }

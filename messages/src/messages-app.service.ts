@@ -89,8 +89,6 @@ export class MessagesAppService {
     }
   }
 
-  // TODO Implement chat gateway method that calls on this service method
-
   async removeConversationForUser(
     removeConversationForUserDto: RemoveConversationForUserDto
   ) {
@@ -99,6 +97,13 @@ export class MessagesAppService {
     const conversation = await this.conversationModel
       .findById(conversationId)
       .exec();
+
+    if (
+      !conversation ||
+      !conversation?.connectedUsers.map((user) => user.userId).includes(userId)
+    ) {
+      return null;
+    }
 
     const newConversationUsers = conversation.connectedUsers.filter(
       (user) => user.userId !== userId
@@ -201,7 +206,7 @@ export class MessagesAppService {
 
     if (
       !conversation ||
-      conversation?.connectedUsers.map((user) => user.userId).includes(userId)
+      !conversation?.connectedUsers.map((user) => user.userId).includes(userId)
     ) {
       return null;
     }
