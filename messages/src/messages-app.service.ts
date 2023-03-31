@@ -22,6 +22,7 @@ import { FindSingleMessageDto } from './database/dto/find-single-message.dto';
 import { PermanentlyRemoveMessageForUserDto } from './database/dto/permanently-remove-message-for-user.dto';
 import { UpdateUsersMessageLastViewedDto } from './database/dto/update-message-last-viewed.dto';
 import { UpdateMessageStatusDto } from './database/dto/update-message-status.dto';
+import { RemoveConversationForUserDto } from './database/dto/remove-conversation-for-user.dto';
 
 @Injectable()
 export class MessagesAppService {
@@ -70,7 +71,7 @@ export class MessagesAppService {
 
       const updatedExistingConvoMatch = (
         await this.updateLastMessageTimeForConvo(existingConvoMatch.id)
-      ).toObject();
+      ).toObject<LeanDocument<ConversationDocument>>();
 
       return updatedExistingConvoMatch;
     } else {
@@ -80,10 +81,34 @@ export class MessagesAppService {
         historicalUsers: userIdArray,
         adminUsers: [creator],
       });
-      const savedConvo = (await createdConvo.save()).toObject();
+      const savedConvo = (await createdConvo.save()).toObject<
+        LeanDocument<ConversationDocument>
+      >();
 
       return savedConvo;
     }
+  }
+
+  // TODO Implement chat gateway method that calls on this service method
+
+  async removeConversationForUser(
+    removeConversationForUserDto: RemoveConversationForUserDto
+  ) {
+    const { userId, conversationId } = removeConversationForUserDto;
+
+    const conversation = await this.conversationModel
+      .findById(conversationId)
+      .exec();
+
+    const newConversationUsers = conversation.connectedUsers.filter(
+      (user) => user.userId !== userId
+    );
+
+    conversation.connectedUsers = newConversationUsers;
+    const updated = (await conversation.save()).toObject<
+      LeanDocument<ConversationDocument>
+    >();
+    return updated;
   }
 
   async findOrCreateUser(createUserDto: CreateUserDto) {
@@ -120,7 +145,9 @@ export class MessagesAppService {
       return existingUserObj;
     } else {
       const createdUser = new this.userModel(createUserDto);
-      const savedUser = (await createdUser.save()).toObject();
+      const savedUser = (await createdUser.save()).toObject<
+        LeanDocument<UserDocument>
+      >();
 
       this.logger.log('Created new messages user: ', savedUser);
 
@@ -154,7 +181,7 @@ export class MessagesAppService {
 
     if (connectedMessageUsers.length) {
       const connectedMessageUserObjects = connectedMessageUsers.map((user) => {
-        const userObj = user.toObject();
+        const userObj = user.toObject<LeanDocument<UserDocument>>();
         delete userObj.sessionCookie;
         return userObj;
       });
@@ -243,7 +270,7 @@ export class MessagesAppService {
       .exec();
 
     const conversationsForUserObjects = conversationsForUser.map((convo) =>
-      convo.toObject()
+      convo.toObject<LeanDocument<ConversationDocument>>()
     );
 
     return conversationsForUserObjects;
@@ -254,7 +281,9 @@ export class MessagesAppService {
       ...createMessageDto,
       status: 'sent',
     });
-    const savedMessage = (await createdMessage.save()).toObject();
+    const savedMessage = (await createdMessage.save()).toObject<
+      LeanDocument<MessageDocument>
+    >();
 
     return savedMessage;
   }
@@ -299,7 +328,7 @@ export class MessagesAppService {
 
     this.logger.log(`Updated message with id ${messageId}: `, updatedMessage);
 
-    return updatedMessage.toObject();
+    return updatedMessage.toObject<LeanDocument<MessageDocument>>();
   }
 
   async updateUsersForWhomMessageIsLastOneViewed(
@@ -381,7 +410,7 @@ export class MessagesAppService {
       newMessageToUpdate
     );
 
-    return newMessageToUpdate.toObject();
+    return newMessageToUpdate.toObject<LeanDocument<MessageDocument>>();
   }
 
   async updateLastMessageTimeForConvo(conversationId: string) {
@@ -452,7 +481,9 @@ export class MessagesAppService {
 
   async findSingleMessage(findSingleMessageDto: FindSingleMessageDto) {
     const { messageId } = findSingleMessageDto;
-    const message = (await this.messageModel.findById(messageId)).toObject();
+    const message: LeanDocument<MessageDocument> = (
+      await this.messageModel.findById(messageId)
+    ).toObject();
 
     return message;
   }
