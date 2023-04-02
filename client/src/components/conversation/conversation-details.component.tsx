@@ -38,6 +38,8 @@ interface ConversationDetailsProps {
   setIsExistingConvo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// TODO Add button and logic to allow user to leave a conversation
+
 const ConversationDetails: React.FC<ConversationDetailsProps> = ({
   currentConversation,
   socket,
