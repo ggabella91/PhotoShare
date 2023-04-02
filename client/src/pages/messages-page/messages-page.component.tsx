@@ -142,6 +142,13 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
         userId: currentUser?.id,
       });
     });
+
+    socket.on('userRemovedFromConversation', () => {
+      socket.emit('joinAllExistingConversations', {
+        userId: currentUser?.id,
+      });
+      navigate('/direct/inbox');
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, socket]);
 
