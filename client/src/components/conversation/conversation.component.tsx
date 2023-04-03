@@ -202,6 +202,11 @@ const Conversation: React.FC<ConversationProps> = ({
       !conversationToUserDataMap?.[conversationId] &&
       conversationHistoricalMessageUsers?.length
     ) {
+      // REVIEW - Investigate why users in conversation details
+      //  show old pictures (or no pictures) even after they
+      // change their profile pictures, in conversation details
+      // component
+
       conversationHistoricalMessageUsers.forEach((userId) =>
         dispatch(
           getOtherUserStart({
