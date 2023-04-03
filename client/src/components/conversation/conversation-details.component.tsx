@@ -38,8 +38,6 @@ interface ConversationDetailsProps {
   setIsExistingConvo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// TODO Add button and logic to allow user to leave a conversation
-
 const ConversationDetails: React.FC<ConversationDetailsProps> = ({
   currentConversation,
   socket,
@@ -236,6 +234,13 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
         nickname,
       });
     }
+  };
+
+  const handleClickLeaveConversation = () => {
+    // TODO Add confirmation modal for leaving a conversation,
+    // which when confirmed (by pressing "Leave"), will send
+    // websocket message to remove user from conversation.
+    // This handler function should toggle the modal to visible
   };
 
   return (
@@ -446,6 +451,28 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
               </Grid>
             );
           })}
+        </Grid>
+        <Grid
+          sx={{
+            display: 'flex',
+            borderTop: '1px solid rgb(219,219,219)',
+            borderBottom: '1px solid rgb(219,219,219)',
+          }}
+        >
+          <Button
+            variant='text'
+            size='small'
+            onClick={handleClickLeaveConversation}
+            sx={{
+              '&:hover': {
+                backgroundColor: 'unset',
+              },
+            }}
+          >
+            <Typography sx={{ fontSize: 14, color: 'red' }}>
+              Leave Conversation
+            </Typography>
+          </Button>
         </Grid>
       </Grid>
       <ConversationUserOptionsDialog
