@@ -37,7 +37,7 @@ const ConversationUserOptionsDialog: React.FC<
       }}
       onClose={onBlur}
     >
-      {isNotCurrentUser && (
+      {isNotCurrentUser && isAdmin && (
         <Grid>
           <Button
             sx={{
