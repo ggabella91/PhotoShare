@@ -7,24 +7,26 @@ import {
 import { queueGroupName } from './queue-group-name';
 import { User } from '../../database/schemas/user.schema';
 import { Logger } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Condition, Model } from 'mongoose';
 import { MessagesAppChatGateway } from 'src/messages-app-chat.gateway';
+import { Conversation } from 'src/database/schemas/conversation.schema';
 
 export class ProfilePhotoUpdatedListener extends Listener<ProfilePhotoUpdatedEvent> {
-  private logger: Logger = new Logger(
-    'Messages ConversationPhotoUpdatedListener'
-  );
+  private logger: Logger = new Logger('Messages ProfilePhotoUpdatedListener');
   private userModel: Model<User, {}, {}, {}, any>;
+  private conversationModel: Model<Conversation, {}, {}, {}, any>;
   private chatGateway: MessagesAppChatGateway;
 
   constructor(
     client: Stan,
     userModel: Model<User, {}, {}, {}, any>,
+    conversationModel: Model<Conversation, {}, {}, {}, any>,
     chatGateway: MessagesAppChatGateway
   ) {
     super(client);
-    this.logger.log('Listening for conversation photo update events');
+    this.logger.log('Listening for user profile photo update events');
     this.userModel = userModel;
+    this.conversationModel = conversationModel;
     this.chatGateway = chatGateway;
   }
 
@@ -41,12 +43,29 @@ export class ProfilePhotoUpdatedListener extends Listener<ProfilePhotoUpdatedEve
       throw new Error('User not found');
     }
 
+    const oldS3Key = user.photoS3Key;
     user.photoS3Key = s3Key;
     await user.save();
 
     this.logger.log('Updated user: ', user);
 
-    // REVIEW Consider adding event handler for chat gateway to notify a conversation
+    const conversations = await this.conversationModel
+      .find({
+        connectedUsers: userId as Condition<User[]>,
+      })
+      .exec();
+
+    const updatedConvos = conversations.map((convo) => {
+      convo.avatarS3Keys = convo.avatarS3Keys.filter(
+        (s3Key) => s3Key !== oldS3Key
+      );
+      convo.avatarS3Keys.push(s3Key);
+      return convo.save();
+    });
+
+    await Promise.all(updatedConvos);
+
+    // TODO Add event handler for chat gateway to notify any conversation
     // and its users when another user in the conversation updates their profile,
     // photo, and call here as with below example from
     // conversation-photo-updated-listener

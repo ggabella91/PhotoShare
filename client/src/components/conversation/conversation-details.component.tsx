@@ -455,6 +455,7 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
         <Grid
           sx={{
             display: 'flex',
+            justifyContent: 'center',
             borderTop: '1px solid rgb(219,219,219)',
             borderBottom: '1px solid rgb(219,219,219)',
           }}
@@ -469,7 +470,14 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
               },
             }}
           >
-            <Typography sx={{ fontSize: 14, color: 'red' }}>
+            <Typography
+              sx={{
+                textTransform: 'capitalize',
+                fontSize: 14,
+                fontWeight: '500',
+                color: 'red',
+              }}
+            >
               Leave Conversation
             </Typography>
           </Button>
