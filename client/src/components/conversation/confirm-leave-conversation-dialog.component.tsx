@@ -32,8 +32,26 @@ const ConfirmLeaveConversationDialog: React.FC<
     >
       <DialogTitle></DialogTitle>
       <DialogActions>
-        <Button onClick={handleCancel}>Cancel</Button>
-        <Button onClick={handleLeaveConversation}>Leave</Button>
+        <Button
+          onClick={handleCancel}
+          sx={{
+            '&:hover': {
+              backgroundColor: 'unset',
+            },
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleLeaveConversation}
+          sx={{
+            '&:hover': {
+              backgroundColor: 'unset',
+            },
+          }}
+        >
+          Leave
+        </Button>
       </DialogActions>
     </Dialog>
   );

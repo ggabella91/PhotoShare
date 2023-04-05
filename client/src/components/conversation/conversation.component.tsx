@@ -241,6 +241,11 @@ const Conversation: React.FC<ConversationProps> = ({
   useEffect(() => {
     const userInfoMapKeys = Object.keys(userInfoMap);
 
+    // TODO Add logic for handling when to delete a
+    // conversationToUserDataMap entry, such as when
+    // a user updates their profile photo, since this
+    // entry data gets cached
+
     if (
       !conversationToUserDataMap?.[conversationId] &&
       conversationHistoricalMessageUsers &&
