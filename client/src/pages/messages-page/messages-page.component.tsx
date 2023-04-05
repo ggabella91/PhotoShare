@@ -31,6 +31,7 @@ import {
   removeMessageFromConversation,
   permanentlyRemoveMessageForUser,
   updateMessageStatus,
+  removeFromConversationToUserDataMap,
 } from '../../redux/message/message.actions';
 
 import {
@@ -138,6 +139,13 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
     socket.on('conversationUpdated', () => {
       setShowConvoDialog(false);
+      socket.emit('joinAllExistingConversations', {
+        userId: currentUser?.id,
+      });
+    });
+
+    socket.on('updatedPhotoForUserInConversation', (conversationId: string) => {
+      dispatch(removeFromConversationToUserDataMap(conversationId));
       socket.emit('joinAllExistingConversations', {
         userId: currentUser?.id,
       });
