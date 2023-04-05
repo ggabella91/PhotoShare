@@ -74,6 +74,7 @@ class NatsWrapper extends ClientProxy {
         new ProfilePhotoUpdatedListener(
           this.client,
           this.userModel,
+          this.conversationModel,
           this.chatGateway
         );
 
