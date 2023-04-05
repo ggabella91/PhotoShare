@@ -59,6 +59,12 @@ export class MessagesAppChatGateway
     this.wss.to(conversation.id).emit('conversationUpdated', conversation);
   }
 
+  handleUserProfilePhotoUpdated(conversationId: string) {
+    this.wss
+      .to(conversationId)
+      .emit('updatedPhotoForUserInConversation', conversationId);
+  }
+
   @SubscribeMessage('forceDisconnectClient')
   async handleForceDisconnectClient(client: Socket) {
     client.disconnect();

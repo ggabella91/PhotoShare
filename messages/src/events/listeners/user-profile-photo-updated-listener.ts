@@ -10,6 +10,7 @@ import { Logger } from '@nestjs/common';
 import { Condition, Model } from 'mongoose';
 import { MessagesAppChatGateway } from 'src/messages-app-chat.gateway';
 import { Conversation } from 'src/database/schemas/conversation.schema';
+import { ConversationDocument } from 'src/database/schemas/conversation.schema';
 
 export class ProfilePhotoUpdatedListener extends Listener<ProfilePhotoUpdatedEvent> {
   private logger: Logger = new Logger('Messages ProfilePhotoUpdatedListener');
@@ -63,14 +64,13 @@ export class ProfilePhotoUpdatedListener extends Listener<ProfilePhotoUpdatedEve
       return convo.save();
     });
 
-    await Promise.all(updatedConvos);
+    const savedUpdatedConvoIds: string[] = (
+      await Promise.all(updatedConvos)
+    ).map((convo) => convo.toObject<ConversationDocument>().id);
 
-    // TODO Add event handler for chat gateway to notify any conversation
-    // and its users when another user in the conversation updates their profile,
-    // photo, and call here as with below example from
-    // conversation-photo-updated-listener
-    // this.chatGateway.handleNotifyUpdateFromEventListener(conversation);
-
+    savedUpdatedConvoIds.forEach((convoId) => {
+      this.chatGateway.handleUserProfilePhotoUpdated(convoId);
+    });
     msg.ack();
   }
 }

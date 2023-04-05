@@ -21,6 +21,7 @@ export enum MessageActions {
   RESET_CONVO_USERS_ARRAY = 'RESET_CONVO_USERS_ARRAY',
   CLEAR_JOINED_CONVOS_ARRAY = 'CLEAR_JOINED_CONVOS_ARRAY',
   ADD_TO_CONVERSATION_TO_USER_DATA_MAP = 'ADD_TO_CONVERSATION_TO_USER_DATA_MAP',
+  REMOVE_FROM_CONVERSATION_TO_USER_DATA_MAP = 'REMOVE_FROM_CONVERSATION_TO_USER_DATA_MAP',
   ADD_CONVERSATION_USER_NICKNAMES_MAP = 'ADD_CONVERSATION_USER_NICKNAMES_MAP',
   GET_CONVERSATION_USERS_START = 'GET_CONVERSATION_USERS_START',
   GET_CONVERSATION_USERS_SUCCESS = 'GET_CONVERSATION_USERS_SUCCESS',
@@ -245,6 +246,11 @@ export interface AddToConversationToUserDataMap {
   payload: ConvoIdAndUserData;
 }
 
+export interface RemoveFromConversationToUserDataMap {
+  type: typeof MessageActions.REMOVE_FROM_CONVERSATION_TO_USER_DATA_MAP;
+  payload: string;
+}
+
 export interface AddConversationUserNicknamesMap {
   type: typeof MessageActions.ADD_CONVERSATION_USER_NICKNAMES_MAP;
   payload: AddUserNicknameMap;
@@ -286,6 +292,7 @@ export type MessageActionTypes =
   | ResetConvoUsersArray
   | ClearJoinedConvosArray
   | AddToConversationToUserDataMap
+  | RemoveFromConversationToUserDataMap
   | AddConversationUserNicknamesMap
   | GetConversationUsersStart
   | GetConversationUsersSuccess

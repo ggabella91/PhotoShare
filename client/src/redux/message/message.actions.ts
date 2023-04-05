@@ -148,6 +148,13 @@ export const addToConversationToUserDataMap = (
   payload: convoIdAndUserData,
 });
 
+export const removeFromConversationToUserDataMap = (
+  conversationId: string
+): MessageActionTypes => ({
+  type: MessageActions.REMOVE_FROM_CONVERSATION_TO_USER_DATA_MAP,
+  payload: conversationId,
+});
+
 export const addConversationUserNicknamesMap = (
   addUserNicknameMap: AddUserNicknameMap
 ): MessageActionTypes => ({
