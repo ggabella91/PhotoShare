@@ -38,7 +38,7 @@ export class ProfilePhotoUpdatedListener extends Listener<ProfilePhotoUpdatedEve
   async onMessage(data: ProfilePhotoUpdatedEvent['data'], msg: Message) {
     const { userId, s3Key } = data;
 
-    const user = await this.userModel.findById(userId);
+    const user = await this.userModel.findOne({ userId });
 
     if (!user) {
       throw new Error('User not found');

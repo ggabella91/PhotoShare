@@ -76,7 +76,7 @@ class NatsWrapper extends ClientProxy {
           this.userModel,
           this.conversationModel,
           this.chatGateway
-        );
+        ).listen();
 
         resolve('');
       });
