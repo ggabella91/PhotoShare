@@ -246,12 +246,14 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
     setOpenConfirmLeaveConvoDialog(false);
 
   const handleConfirmLeaveConversation = () => {
-    const userId = optionsDialogUser.userId;
+    const userId = currentUser?.id;
 
-    socket.emit('removeConversationForUser', {
-      userId,
-      conversationId,
-    });
+    if (userId) {
+      socket.emit('removeConversationForUser', {
+        userId,
+        conversationId,
+      });
+    }
   };
 
   return (
