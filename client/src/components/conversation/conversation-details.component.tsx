@@ -11,6 +11,7 @@ import {
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ConversationUserOptionsDialog from './conversation-user-options-dialog.component';
 import SetConvoUserNicknameDialog from './set-convo-user-nickname-dialog.component';
+import ConfirmLeaveConversationDialog from './confirm-leave-conversation-dialog.component';
 import { Socket } from 'socket.io-client';
 import {
   selectCurrentUser,
@@ -49,6 +50,8 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
   const [convoName, setConvoName] = useState('');
   const [showConvoNameDone, setShowConvoNameDone] = useState(false);
   const [openOptionsDialog, setOpenOptionsDialog] = useState(false);
+  const [openConfirmLeaveConvoDialog, setOpenConfirmLeaveConvoDialog] =
+    useState(false);
   const [optionsDialogUser, setOptionsDialogUser] = useState<OptionsDialogUser>(
     {
       userId: '',
@@ -236,11 +239,19 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
     }
   };
 
-  const handleClickLeaveConversation = () => {
-    // TODO Add confirmation modal for leaving a conversation,
-    // which when confirmed (by pressing "Leave"), will send
-    // websocket message to remove user from conversation.
-    // This handler function should toggle the modal to visible
+  const handleClickLeaveConversation = () =>
+    setOpenConfirmLeaveConvoDialog(true);
+
+  const handleBlurConfirmLeaveConvoModal = () =>
+    setOpenConfirmLeaveConvoDialog(false);
+
+  const handleConfirmLeaveConversation = () => {
+    const userId = optionsDialogUser.userId;
+
+    socket.emit('removeConversationForUser', {
+      userId,
+      conversationId,
+    });
   };
 
   return (
@@ -500,6 +511,12 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
         setOptionsDialogUser={setOptionsDialogUser}
         handleSubmitNewNickname={handleUpdateNicknameForConvoUser}
         convoUserNicknameMap={convoUserNicknameMap}
+      />
+      <ConfirmLeaveConversationDialog
+        open={openConfirmLeaveConvoDialog}
+        setOpen={setOpenConfirmLeaveConvoDialog}
+        onBlur={handleBlurConfirmLeaveConvoModal}
+        handleLeaveConversation={handleConfirmLeaveConversation}
       />
     </Grid>
   );

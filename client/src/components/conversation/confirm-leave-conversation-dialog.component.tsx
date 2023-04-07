@@ -1,10 +1,9 @@
 import {
-  Grid,
-  Typography,
   Button,
   Dialog,
   DialogTitle,
   DialogActions,
+  Typography,
 } from '@mui/material';
 
 interface ConfirmLeaveConversationDialogProps {
@@ -23,14 +22,20 @@ const ConfirmLeaveConversationDialog: React.FC<
       open={open}
       sx={{
         display: 'flex',
-        transform: 'translateX(calc(50vw - 50%))',
       }}
       PaperProps={{
-        sx: { width: '40vw', maxWidth: '400px', borderRadius: '12px' },
+        sx: {
+          width: '40vw',
+          maxWidth: '400px',
+          borderRadius: '12px',
+          transform: 'translateX(calc(50vw - 50%))',
+        },
       }}
       onClose={onBlur}
     >
-      <DialogTitle></DialogTitle>
+      <DialogTitle>
+        Are you sure you want to leave this conversation?
+      </DialogTitle>
       <DialogActions>
         <Button
           onClick={handleCancel}
@@ -40,7 +45,9 @@ const ConfirmLeaveConversationDialog: React.FC<
             },
           }}
         >
-          Cancel
+          <Typography sx={{ textTransform: 'capitalize', fontWeight: 500 }}>
+            Cancel
+          </Typography>
         </Button>
         <Button
           onClick={handleLeaveConversation}
@@ -50,7 +57,11 @@ const ConfirmLeaveConversationDialog: React.FC<
             },
           }}
         >
-          Leave
+          <Typography
+            sx={{ textTransform: 'capitalize', color: 'red', fontWeight: 500 }}
+          >
+            Leave
+          </Typography>
         </Button>
       </DialogActions>
     </Dialog>
