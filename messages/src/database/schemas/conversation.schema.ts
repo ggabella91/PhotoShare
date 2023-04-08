@@ -45,6 +45,9 @@ export class Conversation {
   avatarS3Keys: string[];
 
   @Prop()
+  conversationImageS3Key: string;
+
+  @Prop()
   connectedUserNames: string[];
 
   @Prop()

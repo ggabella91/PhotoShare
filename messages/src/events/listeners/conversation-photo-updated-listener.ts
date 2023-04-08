@@ -41,7 +41,7 @@ export class ConversationPhotoUpdatedListener extends Listener<ConversationPhoto
       throw new Error('Conversation not found');
     }
 
-    conversation.avatarS3Keys = [s3Key];
+    conversation.conversationImageS3Key = s3Key;
     await conversation.save();
 
     this.logger.log('Updated conversation: ', conversation);
