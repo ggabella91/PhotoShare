@@ -181,6 +181,8 @@ export interface GetPostReactionsReq {
   reactionReqType: ReactionRequestType;
 }
 
+// TODO Write types, action, saga, and reducer logic for storing a conversation image (as opposed to user avatar photos)
+
 export enum UserType {
   self = 'self',
   other = 'other',
@@ -189,6 +191,7 @@ export enum UserType {
   postReactorsArray = 'postReactorsArray',
   feedPostReactorsArray = 'feedPostReactorsArray',
   conversationAvatar = 'conversationAvatar',
+  conversationImage = 'conversationImage',
   notificationUser = 'notificationUser',
 }
 

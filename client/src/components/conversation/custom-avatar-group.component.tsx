@@ -17,6 +17,7 @@ export enum StyleVariation {
 
 interface CustomAvatarGroupProps {
   avatarS3Keys: string[];
+  conversationImageS3Key?: string;
   conversationName: string;
   styleVariation: StyleVariation;
   messageUsers?: MessageUser[];
@@ -33,6 +34,7 @@ const headerStyleObj = {
 
 const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
   avatarS3Keys,
+  conversationImageS3Key,
   conversationName,
   styleVariation,
   messageUsers,

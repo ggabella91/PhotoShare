@@ -64,6 +64,7 @@ import './emoji-picker.scss';
 interface ConversationProps {
   conversationId: string;
   avatarS3Keys: string[];
+  conversationImageS3Key?: string;
   socket: Socket;
   isInfoClicked: boolean;
   setIsInfoClicked: React.Dispatch<React.SetStateAction<boolean>>;
@@ -98,6 +99,7 @@ interface MessageViewedBy {
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
+  conversationImageS3Key,
   socket,
   isInfoClicked,
   setIsInfoClicked,

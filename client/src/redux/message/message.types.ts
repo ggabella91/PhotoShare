@@ -109,6 +109,7 @@ export interface Conversation {
   name: string;
   connectedUsers: string[];
   avatarS3Keys: string[];
+  conversationImageS3Key: string;
   connectedUserNames: string[];
   lastMessageTime: number;
   adminUsers: string[];
