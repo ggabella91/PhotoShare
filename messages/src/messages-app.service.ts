@@ -94,25 +94,55 @@ export class MessagesAppService {
   ) {
     const { userId, conversationId } = removeConversationForUserDto;
 
+    const user = await this.userModel.findOne({ userId });
+
+    if (!user) {
+      this.logger.log('User not found');
+
+      return null;
+    }
+
     const conversation = await this.conversationModel
       .findById(conversationId)
       .exec();
 
     if (
       !conversation ||
-      !conversation?.connectedUsers.map((user) => user.userId).includes(userId)
+      !conversation?.connectedUsers
+        .map((connectedUserId) => connectedUserId.toString())
+        .includes(userId)
     ) {
+      this.logger.log(
+        'Conversation not found or user not found in conversation'
+      );
+
       return null;
     }
 
     const newConversationUsers = conversation.connectedUsers.filter(
-      (user) => user.userId !== userId
+      (connectedUserId) => connectedUserId.toString() !== userId
+    );
+    const newConnectedUserNames = conversation.connectedUserNames.filter(
+      (connectedUserName) => connectedUserName !== user.name
     );
 
     conversation.connectedUsers = newConversationUsers;
+    conversation.connectedUserNames = newConnectedUserNames;
+
+    this.logger.log(
+      'Conversation after removing user and before saving: ',
+      conversation
+    );
+
     const updated = (await conversation.save()).toObject<
       LeanDocument<ConversationDocument>
     >();
+
+    this.logger.log(
+      'Conversation object after saving and before returning: ',
+      updated
+    );
+
     return updated;
   }
 
@@ -206,7 +236,9 @@ export class MessagesAppService {
 
     if (
       !conversation ||
-      !conversation?.connectedUsers.map((user) => user.userId).includes(userId)
+      !conversation?.connectedUsers
+        .map((connectedUserId) => connectedUserId.toString())
+        .includes(userId)
     ) {
       return null;
     }
