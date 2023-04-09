@@ -103,15 +103,18 @@ export enum PostActions {
   UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS = 'UPLOAD_VIDEO_POST_FILE_CHUNK_SUCCESS',
   UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE = 'UPLOAD_VIDEO_POST_FILE_CHUNK_FAILURE',
 
-  // Actions specific to getting conversation avatars
+  // Actions specific to getting conversation user avatars
   GET_CONVERSATION_AVATAR_PHOTO_SUCCESS = 'GET_CONVERSATION_AVATAR_PHOTO_SUCCESS',
+
+  // Action specific to getting a conversation image
+  GET_CONVERSATION_IMAGE_SUCCESS = 'GET_CONVERSATION_IMAGE_SUCCESS',
 
   // Actions specific to uploading a conversation photo
   UPLOAD_CONVERSATION_PHOTO_START = 'UPLOAD_CONVERSATION_PHOTO_START',
   UPLOAD_CONVERSATION_PHOTO_SUCCESS = 'UPLOAD_CONVERSATION_PHOTO_SUCCESS',
   UPLOAD_CONVERSATION_PHOTO_FAILURE = 'UPLOAD_CONVERSATION_PHOTO_FAILURE',
 
-  // Actions specific to conversation avatars
+  // Actions specific to notification user avatars
   GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS = 'GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS',
 
   // Actions specific to notification post data and files
@@ -424,8 +427,11 @@ export interface PostState {
   // Used for multipart video file chunk uploads
   videoPostFileChunkMetaData: UploadVideoPostFileChunkResponse | null;
 
-  // Used for conversation avatars
+  // Used for conversation user avatars
   convoAvatarMap: Map<string, PostFile>;
+
+  // Used for conversation images
+  convoImageMap: Record<string, PostFile>;
 
   // Used for uploading conversation photos
   uploadConversationPhotoSuccess: ConversationPhoto | null;
@@ -846,6 +852,11 @@ export interface GetConversationAvatarPhotoSuccess {
   payload: PostFile;
 }
 
+export interface GetConversationImageSuccess {
+  type: typeof PostActions.GET_CONVERSATION_IMAGE_SUCCESS;
+  payload: PostFile;
+}
+
 // Interfaces specific to actions involving conversation photos
 // (different from conversation user avatars)
 export interface UploadConversationPhotoStart {
@@ -963,6 +974,7 @@ export type PostActionTypes =
   | UploadVideoPostFileChunkSuccess
   | UploadVideoPostFileChunkFailure
   | GetConversationAvatarPhotoSuccess
+  | GetConversationImageSuccess
   | UploadConversationPhotoStart
   | UploadConversationPhotoSuccess
   | UploadConversationPhotoFailure

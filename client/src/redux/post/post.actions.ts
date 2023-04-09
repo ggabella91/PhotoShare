@@ -528,6 +528,13 @@ export const getConversationAvatarPhotoSuccess = (
   payload: avatarInfo,
 });
 
+export const getConversationImageSuccess = (
+  convoImage: PostFile
+): PostActionTypes => ({
+  type: PostActions.GET_CONVERSATION_IMAGE_SUCCESS,
+  payload: convoImage,
+});
+
 export const getNotificationUserAvatarPhotoSuccess = (
   avatarInfo: PostFile
 ): PostActionTypes => ({

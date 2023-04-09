@@ -635,6 +635,9 @@ const Conversation: React.FC<ConversationProps> = ({
               conversationName={currentConversation?.name || ''}
               avatarS3Keys={avatarS3Keys}
               styleVariation={StyleVariation.conversationHeader}
+              conversationImageS3Key={
+                currentConversation?.conversationImageS3Key
+              }
             />
             <Typography>
               {currentConversation
