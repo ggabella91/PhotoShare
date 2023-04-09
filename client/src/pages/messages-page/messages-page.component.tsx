@@ -401,6 +401,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
                         conversationName={getConvoName(convo, currentUser)}
                         avatarS3Keys={convo.avatarS3Keys}
                         setIsInfoClicked={setIsInfoClicked}
+                        conversationImageS3Key={convo.conversationImageS3Key}
                       />
                     );
                   })

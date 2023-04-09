@@ -82,6 +82,7 @@ import {
   getNotificationUserAvatarPhotoSuccess,
   getNotificationPostDataSuccess,
   getNotificationPostFileSuccess,
+  getConversationImageSuccess,
 } from './post.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -276,17 +277,17 @@ export function* getPostFile({
       params.append('videoThumbnailS3Key', videoThumbnailS3Key);
     }
 
-    const { data }: { data: string } = yield axios.get(
+    const { data: fileString }: { data: string } = yield axios.get(
       `/api/posts/files?${params.toString()}`
     );
 
     if (bucket === 'photo-share-app' || bucket === 'photo-share-app-dev') {
       if (fileRequestType === FileRequestType.singlePost) {
-        yield put(getPostFileSuccess({ s3Key, fileString: data }));
+        yield put(getPostFileSuccess({ s3Key, fileString }));
       } else if (fileRequestType === FileRequestType.feedPost) {
-        yield put(getFeedPostFileSuccess({ s3Key, fileString: data }));
+        yield put(getFeedPostFileSuccess({ s3Key, fileString }));
       } else if (fileRequestType === FileRequestType.notificationPost) {
-        yield put(getNotificationPostFileSuccess({ s3Key, fileString: data }));
+        yield put(getNotificationPostFileSuccess({ s3Key, fileString }));
       }
     } else if (
       bucket === 'photo-share-app-profile-photos' ||
@@ -295,41 +296,31 @@ export function* getPostFile({
       bucket === 'photo-share-app-conversation-photos-dev'
     ) {
       if (user === UserType.self) {
-        yield put(getProfilePhotoFileSuccess({ s3Key, fileString: data }));
+        yield put(getProfilePhotoFileSuccess({ s3Key, fileString }));
       } else if (user === UserType.other) {
-        yield put(
-          getOtherUserProfilePhotoFileSuccess({ s3Key, fileString: data })
-        );
+        yield put(getOtherUserProfilePhotoFileSuccess({ s3Key, fileString }));
       } else if (user === UserType.followArray) {
-        yield put(
-          getUserPhotoForFollowArraySuccess({ s3Key, fileString: data })
-        );
+        yield put(getUserPhotoForFollowArraySuccess({ s3Key, fileString }));
       } else if (user === UserType.suggestionArray) {
-        yield put(
-          getUserPhotoForSuggestionArraySuccess({ s3Key, fileString: data })
-        );
+        yield put(getUserPhotoForSuggestionArraySuccess({ s3Key, fileString }));
       } else if (
         fileRequestType === FileRequestType.singlePost &&
         user === UserType.postReactorsArray
       ) {
-        yield put(
-          getUserPhotoForReactorArraySuccess({ s3Key, fileString: data })
-        );
+        yield put(getUserPhotoForReactorArraySuccess({ s3Key, fileString }));
       } else if (
         fileRequestType === FileRequestType.feedPost &&
         user === UserType.postReactorsArray
       ) {
         yield put(
-          getUserPhotoForFeedReactorArraySuccess({ s3Key, fileString: data })
+          getUserPhotoForFeedReactorArraySuccess({ s3Key, fileString })
         );
       } else if (user === UserType.conversationAvatar) {
-        yield put(
-          getConversationAvatarPhotoSuccess({ s3Key, fileString: data })
-        );
+        yield put(getConversationAvatarPhotoSuccess({ s3Key, fileString }));
+      } else if (user === UserType.conversationImage) {
+        yield put(getConversationImageSuccess({ s3Key, fileString }));
       } else if (user === UserType.notificationUser) {
-        yield put(
-          getNotificationUserAvatarPhotoSuccess({ s3Key, fileString: data })
-        );
+        yield put(getNotificationUserAvatarPhotoSuccess({ s3Key, fileString }));
       }
     }
   } catch (err) {

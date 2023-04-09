@@ -297,6 +297,11 @@ export const selectConvoAvatarMap = createSelector(
   (postState: PostState) => postState.convoAvatarMap
 );
 
+export const selectConvoImageMap = createSelector(
+  [selectPostState],
+  (state: PostState) => state.convoImageMap
+);
+
 export const selectUploadConversationPhotoSuccess = createSelector(
   [selectPostState],
   (postState: PostState) => postState.uploadConversationPhotoSuccess

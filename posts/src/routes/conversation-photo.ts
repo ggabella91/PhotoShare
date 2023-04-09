@@ -38,8 +38,8 @@ router.post(
     const conversationId: string = req.body.conversationId;
     const existingPhotoKey: string = req.body.existingConvoPhoto;
 
-    console.log('req.file!.originalname: ', req.file!.originalname);
-    console.log('req.file!.filename: ', req.file!.filename);
+    console.log('req.file.originalname: ', req.file!.originalname);
+    console.log('req.file.filename: ', req.file!.filename);
 
     const s3 = new AWS.S3();
 

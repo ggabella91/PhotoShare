@@ -6,7 +6,10 @@ import { getConvoAvatars } from '../../pages/messages-page/messages-page.utils';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
-import { selectConvoAvatarMap } from '../../redux/post/post.selectors';
+import {
+  selectConvoAvatarMap,
+  selectConvoImageMap,
+} from '../../redux/post/post.selectors';
 import { MessageUser } from '../../redux/message/message.types';
 
 export enum StyleVariation {
@@ -41,11 +44,14 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
 }) => {
   const currentUser = useSelector(selectCurrentUser);
   const convoAvatarMap = useSelector(selectConvoAvatarMap);
+  const convoImageMap = useSelector(selectConvoImageMap);
   const convoAvatarFileStrings = avatarS3Keys?.length
     ? getConvoAvatars(avatarS3Keys, currentUser)?.map(
         (s3Key) => convoAvatarMap.get(s3Key)?.fileString || ''
       )
     : [''];
+  const convoImageFileString =
+    conversationImageS3Key && convoImageMap[conversationImageS3Key]?.fileString;
 
   const getStyle = (isGroupAvatar?: boolean, idx?: number) => {
     if (styleVariation === StyleVariation.preview) {
@@ -82,6 +88,10 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
       sx={getStyle(isGroupAvatar, idx)}
     />
   );
+
+  if (convoImageFileString) {
+    return renderAvatar(convoImageFileString, 0);
+  }
 
   if (
     convoAvatarFileStrings.length === 1 &&
@@ -130,11 +140,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
         }}
       >
         {convoAvatarFileStrings.map((avatarFileString, idx) =>
-          renderAvatar(
-            avatarFileString,
-            idx,
-            convoAvatarFileStrings.length > 1 && true
-          )
+          renderAvatar(avatarFileString, idx, convoAvatarFileStrings.length > 1)
         )}
       </AvatarGroup>
     </>

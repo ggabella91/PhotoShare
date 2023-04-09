@@ -24,6 +24,7 @@ interface ConversationPreviewProps {
   conversationId: string;
   avatarS3Keys: string[];
   setIsInfoClicked: React.Dispatch<React.SetStateAction<boolean>>;
+  conversationImageS3Key?: string;
 }
 
 const ConversationPreview: React.FC<ConversationPreviewProps> = ({
@@ -31,6 +32,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   conversationId,
   avatarS3Keys,
   setIsInfoClicked,
+  conversationImageS3Key,
 }) => {
   const conversationMessages = useSelector(selectConversationMessages);
   const currentUser = useSelector(selectCurrentUser);
@@ -64,28 +66,34 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
   }, [dispatch, conversationId]);
 
   useEffect(() => {
-    if (avatarS3Keys?.length > 1) {
-      avatarS3Keys.forEach((s3Key) => {
-        dispatch(
-          getPostFileStart({
-            s3Key,
-            bucket,
-            fileRequestType: FileRequestType.singlePost,
-            user: UserType.conversationAvatar,
-          })
-        );
-      });
-    } else {
+    avatarS3Keys.forEach((s3Key) => {
       dispatch(
         getPostFileStart({
-          s3Key: avatarS3Keys[0],
-          bucket: conversationBucket,
+          s3Key,
+          bucket,
           fileRequestType: FileRequestType.singlePost,
           user: UserType.conversationAvatar,
         })
       );
+    });
+
+    if (conversationImageS3Key) {
+      dispatch(
+        getPostFileStart({
+          s3Key: conversationImageS3Key,
+          bucket: conversationBucket,
+          fileRequestType: FileRequestType.singlePost,
+          user: UserType.conversationImage,
+        })
+      );
     }
-  }, [dispatch, bucket, avatarS3Keys]);
+  }, [
+    dispatch,
+    bucket,
+    conversationBucket,
+    avatarS3Keys,
+    conversationImageS3Key,
+  ]);
 
   const handleClick = () => {
     setIsInfoClicked(false);
@@ -111,6 +119,7 @@ const ConversationPreview: React.FC<ConversationPreviewProps> = ({
         avatarS3Keys={avatarS3Keys}
         styleVariation={StyleVariation.preview}
         messageUsers={conversationMessageUsers}
+        conversationImageS3Key={conversationImageS3Key}
       />
       <Grid
         sx={{

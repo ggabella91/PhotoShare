@@ -96,8 +96,11 @@ const INITIAL_STATE: PostState = {
   // Used for multipart video file chunk uploads
   videoPostFileChunkMetaData: null,
 
-  // Used for conversation avatars
+  // Used for conversation user avatars
   convoAvatarMap: Map<string, PostFile>(),
+
+  // Used for conversation images
+  convoImageMap: {},
 
   // Used for uploading conversation photos
   uploadConversationPhotoSuccess: null,
@@ -310,6 +313,14 @@ const postReducer = (
           action.payload.s3Key,
           action.payload
         ),
+      };
+    case PostActions.GET_CONVERSATION_IMAGE_SUCCESS:
+      return {
+        ...state,
+        convoImageMap: {
+          ...state.convoImageMap,
+          [action.payload.s3Key]: action.payload,
+        },
       };
     case PostActions.GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS:
       return {
