@@ -335,26 +335,28 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
             <Typography sx={{ fontWeight: 600, lineHeight: 2 }}>
               Members
             </Typography>
-            <Button
-              variant='text'
-              size='small'
-              onClick={handleShowAddPeopleModal}
-              sx={{
-                '&:hover': {
-                  backgroundColor: 'unset',
-                },
-              }}
-            >
-              <Typography
+            {optionsDialogUser?.isAdmin && (
+              <Button
+                variant='text'
+                size='small'
+                onClick={handleShowAddPeopleModal}
                 sx={{
-                  color: '#0095F6',
-                  textTransform: 'capitalize',
-                  fontWeight: 600,
+                  '&:hover': {
+                    backgroundColor: 'unset',
+                  },
                 }}
               >
-                Add People
-              </Typography>
-            </Button>
+                <Typography
+                  sx={{
+                    color: '#0095F6',
+                    textTransform: 'capitalize',
+                    fontWeight: 600,
+                  }}
+                >
+                  Add People
+                </Typography>
+              </Button>
+            )}
           </Grid>
           <Grid
             sx={{
