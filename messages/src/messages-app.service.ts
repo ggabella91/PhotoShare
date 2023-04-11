@@ -122,6 +122,17 @@ export class MessagesAppService {
     const newConversationUsers = conversation.connectedUsers.filter(
       (connectedUserId) => connectedUserId.toString() !== userId
     );
+
+    if (
+      newConversationUsers.length === 1 &&
+      !conversation.adminUsers.includes(
+        newConversationUsers[0].userId.toString()
+      )
+    ) {
+      // If only remaining user in conversation is not and admin, make them an admin
+      conversation.adminUsers.push(newConversationUsers[0].userId.toString());
+    }
+
     const newConnectedUserNames = conversation.connectedUserNames.filter(
       (connectedUserName) => connectedUserName !== user.name
     );
