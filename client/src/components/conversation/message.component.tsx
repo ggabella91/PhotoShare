@@ -150,7 +150,7 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
     const messageSeenByUsers: MessageSeenByUser[] = messageLastSeenBy
       .filter((user) => user.userId !== currentUserId)
       .map((user, idx) => {
-        const userData = userDataMap && userDataMap[user.userId];
+        const userData = userDataMap?.[user.userId];
         const avatarFileString = userData?.profilePhotoFileString;
         const userNickname =
           userNicknamesMaps[message.conversationId][user.userId];
@@ -542,7 +542,12 @@ const MessageComponent: React.FC<MessageComponentProps> = ({
                           : ''
                       }
                       alt={title}
-                      sx={{ height: '14px', width: '14px', margin: '0 1px' }}
+                      sx={{
+                        height: '14px',
+                        width: '14px',
+                        margin: '0 1px',
+                        '&:hover': { cursor: 'pointer' },
+                      }}
                       component={(seenByLength > 1 && ButtonBase) || 'div'}
                       onClick={handleSeenByAvatarClick}
                     />
