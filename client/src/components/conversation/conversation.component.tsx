@@ -360,6 +360,10 @@ const Conversation: React.FC<ConversationProps> = ({
           dispatch(updateMessageStatus(message));
         }
       }
+
+      if (currentUser?.id === message.ownerId) {
+        handleMessagesContainerFocus(true, message.id);
+      }
     });
 
     socket.on(
@@ -448,8 +452,6 @@ const Conversation: React.FC<ConversationProps> = ({
           usersMessageIsRemovedFor: [],
         })
       );
-
-      setTimeout(() => handleMessagesContainerFocus(), 2000);
     }
 
     if (isReplyModeOn) {
@@ -560,20 +562,23 @@ const Conversation: React.FC<ConversationProps> = ({
     setIsInfoClicked(!isInfoClicked);
   };
 
-  const handleMessagesContainerFocus = () => {
+  const handleMessagesContainerFocus = (
+    isMessageOwner: boolean = false,
+    messageId: string = ''
+  ) => {
     const latestMessage = messagesArrayReversed.at(-1);
 
     if (
       socket &&
       currentUser &&
-      latestMessage &&
-      latestMessage.id > lastMessageIdSeenRef.current
+      ((latestMessage && latestMessage.id >= lastMessageIdSeenRef.current) ||
+        (isMessageOwner && messageId))
     ) {
       socket.emit('updateUsersMessageLastViewedBy', {
         conversationId,
-        messageId: latestMessage.id,
+        messageId: latestMessage?.id || messageId,
         userId: currentUser.id,
-        isMessageOwner: false,
+        isMessageOwner: isMessageOwner || false,
       });
     }
   };
@@ -689,7 +694,7 @@ const Conversation: React.FC<ConversationProps> = ({
             onScroll={handleMessagesContainerScroll}
             ref={messagesContainerRef}
             tabIndex={0}
-            onFocus={handleMessagesContainerFocus}
+            onFocus={() => handleMessagesContainerFocus()}
           >
             {messagesArrayReversed?.map((message, idx) => {
               const renderTime =
@@ -823,7 +828,7 @@ const Conversation: React.FC<ConversationProps> = ({
               maxHeight: `${textAreaParentDivHeight}px`,
               padding: '20px 0px',
             }}
-            onFocus={handleMessagesContainerFocus}
+            onFocus={() => handleMessagesContainerFocus()}
           >
             {showEmojiPicker && (
               <Grid onBlur={handleBlurEmojiPicker}>

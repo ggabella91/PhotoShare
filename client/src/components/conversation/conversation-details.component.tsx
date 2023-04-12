@@ -399,7 +399,6 @@ const ConversationDetails: React.FC<ConversationDetailsProps> = ({
             const isAdmin = !!conversationAdminUsers?.find(
               (admin) => admin === user
             );
-            const isNotCurrentUser = userInfo?.id !== currentUser?.id;
             const nickname =
               (userInfo && convoUserNicknameMap[userInfo.id!]) || '';
 
