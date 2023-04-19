@@ -1,5 +1,3 @@
-import { Map } from 'immutable';
-import { UserInfoMap } from '../../components/conversation/conversation.component';
 import {
   MessageState,
   MessageActions,
@@ -17,8 +15,6 @@ import {
   updateLastSeenForMessage,
   updateMessage,
 } from './message.utils';
-
-// TODO Change immmutable Map to regular object
 
 const INITIAL_STATE: MessageState = {
   user: null,
