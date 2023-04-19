@@ -439,8 +439,8 @@ export interface PostState {
   notificationUserMap: Map<string, PostFile>;
 
   // Used for notification post data and files
-  notificationPostData: Map<string, Post>;
-  notificationPostFiles: Map<string, PostFile>;
+  notificationPostData: Record<string, Post>;
+  notificationPostFiles: Record<string, PostFile>;
 }
 
 export interface CreatePostStart {
