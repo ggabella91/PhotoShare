@@ -91,9 +91,6 @@ interface MessageViewedBy {
   viewedBy: string;
 }
 
-// TODO Investigate issue with multiple "seen by" avatars
-// appearing in certain cases
-
 // TODO Change lazy loading logic to fetch previous set of messages that were created before the current old messages in client state (us id of message or createdAt timestamp)
 
 const Conversation: React.FC<ConversationProps> = ({
@@ -236,8 +233,6 @@ const Conversation: React.FC<ConversationProps> = ({
   }, [usersInfoList, conversationToUserDataMap, conversationId]);
 
   useEffect(() => {
-    const userInfoMapKeys = Object.keys(userInfoMap);
-
     // TODO Add logic for handling when to delete a
     // conversationToUserDataMap entry, such as when
     // a user updates their profile photo, since this
@@ -247,7 +242,7 @@ const Conversation: React.FC<ConversationProps> = ({
       !conversationToUserDataMap?.[conversationId] &&
       conversationHistoricalMessageUsers &&
       conversationHistoricalMessageUsers.every((key) =>
-        userInfoMapKeys.includes(key)
+        userInfoMap.hasOwnProperty(key)
       )
     ) {
       dispatch(
