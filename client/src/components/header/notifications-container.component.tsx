@@ -118,7 +118,7 @@ const NotificationsContainer: React.FC = () => {
         if (
           postId &&
           !(postId in postDataFetchCount.current) &&
-          !notificationPostData.has(postId)
+          !notificationPostData.hasOwnProperty(postId)
         ) {
           postDataFetchCount.current[postId] = true;
           dispatch(getSinglePostDataStart({ postId, notificationPost: true }));
@@ -141,11 +141,12 @@ const NotificationsContainer: React.FC = () => {
 
   useEffect(() => {
     if (
-      notificationPostData.size ===
+      Object.values(notificationPostData).length ===
         Object.values(postDataFetchCount.current).length &&
-      notificationPostData.size !== notificationPostFiles.size
+      Object.values(notificationPostData).length !==
+        Object.values(notificationPostFiles).length
     ) {
-      notificationPostData.toList().forEach((post) => {
+      Object.values(notificationPostData).forEach((post) => {
         dispatch(
           getPostFileStart({
             s3Key: post.s3Key,
@@ -189,7 +190,7 @@ const NotificationsContainer: React.FC = () => {
 
   useEffect(() => {
     if (
-      notificationPostFiles.size ===
+      Object.values(notificationPostFiles).length ===
       Object.values(postDataFetchCount.current).length
     ) {
       setPostFilesReady(true);
@@ -212,9 +213,9 @@ const NotificationsContainer: React.FC = () => {
             null;
           const postPhotoS3Key =
             notification.postId &&
-            notificationPostData.get(notification.postId)?.s3Key;
+            notificationPostData?.[notification.postId].s3Key;
           const postPhotoInfo =
-            postPhotoS3Key && notificationPostFiles.get(postPhotoS3Key);
+            postPhotoS3Key && notificationPostFiles[postPhotoS3Key];
 
           return (
             <NotificationItem

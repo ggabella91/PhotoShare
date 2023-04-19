@@ -110,8 +110,8 @@ const INITIAL_STATE: PostState = {
   notificationUserMap: Map<string, PostFile>(),
 
   // Used for notification post data and files
-  notificationPostData: Map<string, Post>(),
-  notificationPostFiles: Map<string, PostFile>(),
+  notificationPostData: {},
+  notificationPostFiles: {},
 };
 
 const postReducer = (
@@ -339,18 +339,18 @@ const postReducer = (
     case PostActions.GET_NOTIFICATION_POST_DATA_SUCCESS:
       return {
         ...state,
-        notificationPostData: state.notificationPostData.set(
-          action.payload.id,
-          action.payload
-        ),
+        notificationPostData: {
+          ...state.notificationPostData,
+          [action.payload.id]: action.payload,
+        },
       };
     case PostActions.GET_NOTIFICATION_POST_FILE_SUCCESS:
       return {
         ...state,
-        notificationPostFiles: state.notificationPostFiles.set(
-          action.payload.s3Key,
-          action.payload
-        ),
+        notificationPostFiles: {
+          ...state.notificationPostFiles,
+          [action.payload.s3Key]: action.payload,
+        },
       };
     case PostActions.UPDATE_PROFILE_PHOTO_FAILURE:
       return {
