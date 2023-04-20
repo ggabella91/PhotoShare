@@ -419,7 +419,7 @@ export class MessagesAppService {
         `newMessageToUpdate already includes userId ${userId} within usersForWhomMessageWasLastOneSeen array`
       );
 
-      return newMessageToUpdate;
+      return newMessageToUpdate.toObject<LeanDocument<MessageDocument>>();
     }
 
     let usersWhoViewedMessageLast =
