@@ -64,7 +64,6 @@ import './emoji-picker.scss';
 interface ConversationProps {
   conversationId: string;
   avatarS3Keys: string[];
-  conversationImageS3Key?: string;
   socket: Socket;
   isInfoClicked: boolean;
   setIsInfoClicked: React.Dispatch<React.SetStateAction<boolean>>;
@@ -93,10 +92,14 @@ interface MessageViewedBy {
 
 // TODO Change lazy loading logic to fetch previous set of messages that were created before the current old messages in client state (us id of message or createdAt timestamp)
 
+// REVIEW Investigate why messages are fetched multiple times when
+// a user leaves the messages feature and comes back, resulting in
+// mulitple copies of each message for each time the user navigates
+// away from and back into the feature
+
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
-  conversationImageS3Key,
   socket,
   isInfoClicked,
   setIsInfoClicked,
