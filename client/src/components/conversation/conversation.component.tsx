@@ -90,6 +90,10 @@ interface MessageViewedBy {
   viewedBy: string;
 }
 
+// TODO Use new redux property (with selector) and action to set
+// conversation pages to fetch and replace pageToFetch ref and all
+// instances where it is used in this component
+
 // TODO Change lazy loading logic to fetch previous set of messages that were created before the current old messages in client state (us id of message or createdAt timestamp)
 
 // REVIEW Investigate why messages are fetched multiple times when

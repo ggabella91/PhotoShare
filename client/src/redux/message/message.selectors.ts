@@ -49,3 +49,8 @@ export const selectConversationMessageUsersMap = createSelector(
   [selectMessageState],
   (messageState: MessageState) => messageState.conversationMessageUsersMap
 );
+
+export const selectConversationPagesToFetch = createSelector(
+  [selectMessageState],
+  (messageState: MessageState) => messageState.conversationPagesToFetch
+);
