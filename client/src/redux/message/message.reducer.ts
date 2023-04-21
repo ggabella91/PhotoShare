@@ -27,6 +27,7 @@ const INITIAL_STATE: MessageState = {
   conversationToUserDataMap: {},
   conversationUserNicknamesMaps: {},
   conversationMessageUsersMap: {},
+  conversationPagesToFetch: {},
 };
 
 const messageReducer = (
@@ -148,6 +149,14 @@ const messageReducer = (
         conversationMessageUsersMap: {
           ...state.conversationMessageUsersMap,
           [action.payload.conversationId]: action.payload.messageUsers,
+        },
+      };
+    case MessageActions.SET_PAGE_TO_FETCH_FOR_CONVERSATION:
+      return {
+        ...state,
+        conversationPagesToFetch: {
+          ...state.conversationPagesToFetch,
+          [action.payload.conversationId]: action.payload.pageToFetch,
         },
       };
     case MessageActions.RESET_CONVO_USERS_ARRAY:

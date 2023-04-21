@@ -26,6 +26,10 @@ export enum MessageActions {
   GET_CONVERSATION_USERS_START = 'GET_CONVERSATION_USERS_START',
   GET_CONVERSATION_USERS_SUCCESS = 'GET_CONVERSATION_USERS_SUCCESS',
   GET_CONVERSATION_USERS_FAILURE = 'GET_CONVERSATION_USERS_FAILURE',
+
+  // Add / update which page should be fetched next for a given
+  // conversation
+  SET_PAGE_TO_FETCH_FOR_CONVERSATION = 'SET_PAGE_TO_FETCH_FOR_CONVERSATION',
 }
 
 export interface MessageState {
@@ -39,6 +43,7 @@ export interface MessageState {
   conversationToUserDataMap: Record<string, UserInfoMap>;
   conversationUserNicknamesMaps: Record<string, Record<string, string>>;
   conversationMessageUsersMap: Record<string, MessageUser[]>;
+  conversationPagesToFetch: Record<string, number>;
 }
 
 export interface GetConvoMessagesReq {
@@ -143,6 +148,11 @@ export interface MessageUsersResponse {
 export interface AddUserNicknameMap {
   conversationId: string;
   userNicknameMap: Record<string, string>;
+}
+
+export interface ConvoPageToFetch {
+  conversationId: string;
+  pageToFetch: number;
 }
 
 export interface FindOrCreateUserStart {
@@ -272,6 +282,11 @@ export interface GetConversationUsersFailure {
   payload: MessageError;
 }
 
+export interface SetPageToFetchForConversation {
+  type: typeof MessageActions.SET_PAGE_TO_FETCH_FOR_CONVERSATION;
+  payload: ConvoPageToFetch;
+}
+
 export type MessageActionTypes =
   | FindOrCreateUserStart
   | FindOrCreateUserSuccess
@@ -297,4 +312,5 @@ export type MessageActionTypes =
   | AddConversationUserNicknamesMap
   | GetConversationUsersStart
   | GetConversationUsersSuccess
-  | GetConversationUsersFailure;
+  | GetConversationUsersFailure
+  | SetPageToFetchForConversation;

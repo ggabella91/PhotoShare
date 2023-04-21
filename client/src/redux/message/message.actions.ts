@@ -14,6 +14,7 @@ import {
   AddUserNicknameMap,
   MessageUsersResponse,
   MessageLastSeen,
+  ConvoPageToFetch,
 } from './message.types';
 
 export const findOrCreateUserStart = (
@@ -181,4 +182,11 @@ export const getConversationUsersFailure = (
 ): MessageActionTypes => ({
   type: MessageActions.GET_CONVERSATION_USERS_FAILURE,
   payload: error,
+});
+
+export const setPageToFetchForConversation = (
+  convoPageToFetch: ConvoPageToFetch
+): MessageActionTypes => ({
+  type: MessageActions.SET_PAGE_TO_FETCH_FOR_CONVERSATION,
+  payload: convoPageToFetch,
 });
