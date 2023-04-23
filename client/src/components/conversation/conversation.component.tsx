@@ -36,6 +36,7 @@ import {
   selectConversationMessages,
   selectIsLoadingMessages,
   selectConversationToUserDataMap,
+  selectConversationPagesToFetch,
 } from '../../redux/message/message.selectors';
 import {
   getConvoMessagesStart,
@@ -44,6 +45,7 @@ import {
   updateMessageLastSeenBy,
   addMessageToConversation,
   updateMessageStatus,
+  setPageToFetchForConversation,
 } from '../../redux/message/message.actions';
 
 import {
@@ -90,10 +92,6 @@ interface MessageViewedBy {
   viewedBy: string;
 }
 
-// TODO Use new redux property (with selector) and action to set
-// conversation pages to fetch and replace pageToFetch ref and all
-// instances where it is used in this component
-
 // TODO Change lazy loading logic to fetch previous set of messages that were created before the current old messages in client state (us id of message or createdAt timestamp)
 
 // REVIEW Investigate why messages are fetched multiple times when
@@ -139,6 +137,8 @@ const Conversation: React.FC<ConversationProps> = ({
     selectConversationToUserDataMap
   );
   const isLoadingMessages = useSelector(selectIsLoadingMessages);
+  const conversationPagesToFetch = useSelector(selectConversationPagesToFetch);
+  const messagesPageToFetch = conversationPagesToFetch?.[conversationId];
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
   );
@@ -165,7 +165,6 @@ const Conversation: React.FC<ConversationProps> = ({
   const scrolledToBottomRef = useRef(false);
   const scrollingInMessagesContainerRef = useRef(false);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
-  const pageToFetch = useRef<Record<string, number>>({});
   const messagesRepliedTo = useRef<Record<string, Message>>({});
   const lastMessageIdSeenRef = useRef('');
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
@@ -174,24 +173,32 @@ const Conversation: React.FC<ConversationProps> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!(conversationId in pageToFetch.current)) {
-      pageToFetch.current[conversationId] = 1;
+    if (!messagesPageToFetch) {
+      dispatch(
+        setPageToFetchForConversation({ conversationId, pageToFetch: 1 })
+      );
     }
 
     const shouldFetchMoreMessages = () =>
       messagesArrayLength &&
       totalMessagesForConvo &&
-      intersectionCounter !== pageToFetch.current[conversationId] &&
+      intersectionCounter !== messagesPageToFetch &&
       messagesArrayLength < totalMessagesForConvo &&
-      pageToFetch.current[conversationId] + 1 <=
-        Math.ceil(totalMessagesForConvo / 10);
+      messagesPageToFetch + 1 <= Math.ceil(totalMessagesForConvo / 10);
 
     if (shouldFetchMoreMessages()) {
       dispatch(
         getConvoMessagesStart({
           conversationId,
           limit: 10,
-          pageToShow: ++pageToFetch.current[conversationId],
+          pageToShow: messagesPageToFetch,
+        })
+      );
+
+      dispatch(
+        setPageToFetchForConversation({
+          conversationId,
+          pageToFetch: messagesPageToFetch + 1,
         })
       );
     }
@@ -201,6 +208,7 @@ const Conversation: React.FC<ConversationProps> = ({
     intersectionCounter,
     messagesArrayLength,
     totalMessagesForConvo,
+    messagesPageToFetch,
   ]);
 
   useEffect(() => {
@@ -522,7 +530,14 @@ const Conversation: React.FC<ConversationProps> = ({
         getConvoMessagesStart({
           conversationId,
           limit: 10,
-          pageToShow: ++pageToFetch.current[conversationId],
+          pageToShow: messagesPageToFetch,
+        })
+      );
+
+      dispatch(
+        setPageToFetchForConversation({
+          conversationId,
+          pageToFetch: messagesPageToFetch + 1,
         })
       );
     }
@@ -536,8 +551,7 @@ const Conversation: React.FC<ConversationProps> = ({
       allMessagesRefsMap[messageId] &&
       searchingForOriginalMessage.current &&
       totalMessagesForConvo &&
-      Math.ceil(totalMessagesForConvo / 10) >
-        pageToFetch.current[conversationId]
+      Math.ceil(totalMessagesForConvo / 10) > messagesPageToFetch
     ) {
       handleClickMessageRepliedTo(searchingForOriginalMessage.current);
     }
