@@ -173,16 +173,10 @@ const Conversation: React.FC<ConversationProps> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!messagesPageToFetch) {
-      dispatch(
-        setPageToFetchForConversation({ conversationId, pageToFetch: 1 })
-      );
-    }
-
     const shouldFetchMoreMessages = () =>
       messagesArrayLength &&
       totalMessagesForConvo &&
-      intersectionCounter !== messagesPageToFetch &&
+      intersectionCounter !== messagesPageToFetch - 1 &&
       messagesArrayLength < totalMessagesForConvo &&
       messagesPageToFetch + 1 <= Math.ceil(totalMessagesForConvo / 10);
 

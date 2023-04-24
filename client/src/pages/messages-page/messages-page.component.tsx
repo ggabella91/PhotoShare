@@ -19,6 +19,7 @@ import {
   selectMessageUser,
   selectJoinedConversations,
   selectUsersArrayForNewConvoReq,
+  selectConversationPagesToFetch,
 } from '../../redux/message/message.selectors';
 
 import {
@@ -32,6 +33,7 @@ import {
   permanentlyRemoveMessageForUser,
   updateMessageStatus,
   removeFromConversationToUserDataMap,
+  setPageToFetchForConversation,
 } from '../../redux/message/message.actions';
 
 import {
@@ -62,6 +64,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const joinedConversations = useSelector(selectJoinedConversations);
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
   const conversationUsers = useSelector(selectConversationUsers);
+  const conversationPagesToFetch = useSelector(selectConversationPagesToFetch);
   const navigate = useNavigate();
   const { conversationId } = useParams();
   const currentConversation = joinedConversations?.find(
@@ -173,19 +176,28 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
           )
       );
 
-      newConvos.forEach((convo) =>
-        dispatch(
-          getConvoMessagesStart({
-            conversationId: convo.id,
-            limit: 10,
-            pageToShow: 1,
-          })
-        )
-      );
+      newConvos.forEach((convo) => {
+        if (!conversationPagesToFetch[convo.id]) {
+          dispatch(
+            getConvoMessagesStart({
+              conversationId: convo.id,
+              limit: 10,
+              pageToShow: 1,
+            })
+          );
+
+          dispatch(
+            setPageToFetchForConversation({
+              conversationId: convo.id,
+              pageToFetch: 2,
+            })
+          );
+        }
+      });
 
       previouslyJoinedConversations.current = [...joinedConversations];
     }
-  }, [dispatch, joinedConversations]);
+  }, [dispatch, conversationPagesToFetch, joinedConversations]);
 
   useEffect(() => {
     if (!currentUser && messageUser && isSocketConnectionActive) {
