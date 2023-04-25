@@ -176,9 +176,8 @@ const Conversation: React.FC<ConversationProps> = ({
     const shouldFetchMoreMessages = () =>
       messagesArrayLength &&
       totalMessagesForConvo &&
-      intersectionCounter !== messagesPageToFetch &&
       messagesArrayLength < totalMessagesForConvo &&
-      messagesPageToFetch + 1 <= Math.ceil(totalMessagesForConvo / 10);
+      messagesPageToFetch <= Math.ceil(totalMessagesForConvo / 10);
 
     if (shouldFetchMoreMessages()) {
       dispatch(
@@ -196,14 +195,8 @@ const Conversation: React.FC<ConversationProps> = ({
         })
       );
     }
-  }, [
-    dispatch,
-    conversationId,
-    intersectionCounter,
-    messagesArrayLength,
-    totalMessagesForConvo,
-    messagesPageToFetch,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, conversationId, intersectionCounter]);
 
   useEffect(() => {
     if (
