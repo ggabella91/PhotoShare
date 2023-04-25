@@ -176,7 +176,7 @@ const Conversation: React.FC<ConversationProps> = ({
     const shouldFetchMoreMessages = () =>
       messagesArrayLength &&
       totalMessagesForConvo &&
-      intersectionCounter !== messagesPageToFetch - 1 &&
+      intersectionCounter !== messagesPageToFetch &&
       messagesArrayLength < totalMessagesForConvo &&
       messagesPageToFetch + 1 <= Math.ceil(totalMessagesForConvo / 10);
 
