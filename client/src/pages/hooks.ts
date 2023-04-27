@@ -19,6 +19,7 @@ export const useLazyLoading = (
   const [intersectionMap, setIntersectionMap] = useState<
     Record<string, IntersectionObserverEntry>
   >({});
+  const [elementId, setElementId] = useState('');
 
   const observer = useRef<IntersectionObserver>();
 
@@ -39,6 +40,7 @@ export const useLazyLoading = (
               ...intersectionMap,
               [entries[0].target.id]: entries[0],
             });
+            setElementId(entries[0].target.id);
 
             setIntersectionCounter(
               (intersectionCounter) => intersectionCounter + 1
@@ -57,7 +59,7 @@ export const useLazyLoading = (
     [isLoadingData, intersectionMap, debounce, debounceDelay]
   );
 
-  return { intersectionCounter, observedElementRef };
+  return { intersectionCounter, observedElementRef, elementId };
 };
 
 export const useDebounce = (value: string, delay: number) => {

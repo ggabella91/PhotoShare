@@ -96,10 +96,10 @@ interface MessageViewedBy {
 // that were created before the current old messages in client state
 // (us id of message or createdAt timestamp)
 
-// TODO Figure out a way to maintain the scroll position when
-// scrolling up to view older messages. Currently, when more, older
-// messages are fetched, the scroll position moves to the bottom due
-// to an effect that does this when the messages array size changes
+// REVIEW Figure out how to make it so that the conditional returns
+// true for fetching new messages upon first loading the page and
+// fetching the first two pages worth of messages. Look at the
+// behavior of intersectionCounter and intersectionCounterRef
 
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
@@ -148,11 +148,11 @@ const Conversation: React.FC<ConversationProps> = ({
     currentConversation?.historicalUsers;
   const conversationActiveUsers = currentConversation?.connectedUsers;
   const usersInfoList = useUserInfoData(conversationUsers);
-  const { intersectionCounter, observedElementRef } = useLazyLoading(
-    isLoadingMessages,
-    true,
-    1000
-  );
+  const {
+    intersectionCounter,
+    observedElementRef,
+    elementId: previousOldestMessageId,
+  } = useLazyLoading(isLoadingMessages, true, 1000);
 
   const conversationUserNicknames = currentConversation?.userNicknames;
   const currentConversationMessages = conversationMessages.find(
@@ -173,6 +173,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const receivedMessages = useRef<Record<string, boolean>>({});
   const intersectionCounterRef = useRef<number | null>(null);
   const searchingForOriginalMessage = useRef('');
+  const previousOldestVisibleMessage = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -185,6 +186,8 @@ const Conversation: React.FC<ConversationProps> = ({
 
     if (shouldFetchMoreMessages()) {
       intersectionCounterRef.current = intersectionCounter;
+      previousOldestVisibleMessage.current =
+        allMessagesRefsMap[previousOldestMessageId];
 
       dispatch(
         getConvoMessagesStart({
@@ -290,18 +293,20 @@ const Conversation: React.FC<ConversationProps> = ({
     setIsInfoClicked(false);
   }, [conversationId, setIsInfoClicked]);
 
-  const messagesEndRef = (node: HTMLDivElement) => {
-    messagesRef.current = node;
-
+  useEffect(() => {
     if (!scrolledToBottomRef.current) {
       messagesRef.current?.scrollIntoView();
       scrolledToBottomRef.current = true;
     }
+  }, [conversationId]);
+
+  const messagesEndRef = (node: HTMLDivElement) => {
+    messagesRef.current = node;
   };
 
   useEffect(() => {
     if (!scrollingInMessagesContainerRef.current) {
-      messagesRef.current?.scrollIntoView();
+      previousOldestVisibleMessage.current?.scrollIntoView();
     }
 
     if (messagesArray && currentUser) {
