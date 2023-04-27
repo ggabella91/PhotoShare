@@ -26,12 +26,10 @@ import {
   findOrCreateUserStart,
   removeUserSessionCookieStart,
   addToJoinedConversationsArray,
-  addMessageToConversation,
   getConvoMessagesStart,
   resetConvoUsersArray,
   removeMessageFromConversation,
   permanentlyRemoveMessageForUser,
-  updateMessageStatus,
   removeFromConversationToUserDataMap,
   setPageToFetchForConversation,
 } from '../../redux/message/message.actions';
@@ -40,15 +38,15 @@ import {
   generateFinalConvoUsersAndS3KeysArrays,
   getConvoName,
 } from './messages-page.utils';
-import {
-  Conversation,
-  Message,
-  MessageUser,
-} from '../../redux/message/message.types';
+import { Conversation, MessageUser } from '../../redux/message/message.types';
 
 interface MessagesPageProps {
   openNewConvoModal?: boolean;
 }
+
+// REVIEW - Determine what optimizations can be made so that users
+// and other data aren't fetched every time the user leaves the
+// messages page and returns to it without reloading the browser page
 
 const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
   const [showConvoDialog, setShowConvoDialog] = useState(!!openNewConvoModal);
