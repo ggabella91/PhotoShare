@@ -92,12 +92,14 @@ interface MessageViewedBy {
   viewedBy: string;
 }
 
-// TODO Change lazy loading logic to fetch previous set of messages that were created before the current old messages in client state (us id of message or createdAt timestamp)
+// TODO Change lazy loading logic to fetch previous set of messages
+// that were created before the current old messages in client state
+// (us id of message or createdAt timestamp)
 
-// REVIEW Investigate why messages are fetched multiple times when
-// a user leaves the messages feature and comes back, resulting in
-// mulitple copies of each message for each time the user navigates
-// away from and back into the feature
+// TODO Figure out a way to maintain the scroll position when
+// scrolling up to view older messages. Currently, when more, older
+// messages are fetched, the scroll position moves to the bottom due
+// to an effect that does this when the messages array size changes
 
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
@@ -169,17 +171,21 @@ const Conversation: React.FC<ConversationProps> = ({
   const lastMessageIdSeenRef = useRef('');
   const allMessagesRefsMap: Record<string, HTMLDivElement | null> = {};
   const receivedMessages = useRef<Record<string, boolean>>({});
+  const intersectionCounterRef = useRef<number | null>(null);
   const searchingForOriginalMessage = useRef('');
   const dispatch = useDispatch();
 
   useEffect(() => {
     const shouldFetchMoreMessages = () =>
+      intersectionCounter !== intersectionCounterRef.current &&
       messagesArrayLength &&
       totalMessagesForConvo &&
       messagesArrayLength < totalMessagesForConvo &&
       messagesPageToFetch <= Math.ceil(totalMessagesForConvo / 10);
 
     if (shouldFetchMoreMessages()) {
+      intersectionCounterRef.current = intersectionCounter;
+
       dispatch(
         getConvoMessagesStart({
           conversationId,
