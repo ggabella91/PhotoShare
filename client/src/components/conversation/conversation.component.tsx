@@ -131,6 +131,7 @@ const Conversation: React.FC<ConversationProps> = ({
     MessageSeenByUser[]
   >([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [areFirstMessagesLoaded, setAreFirstMessagesLoaded] = useState(false);
   const currentUser = useSelector(selectCurrentUser);
   const joinedConversations = useSelector(selectJoinedConversations);
   const conversationMessages = useSelector(selectConversationMessages);
@@ -298,7 +299,7 @@ const Conversation: React.FC<ConversationProps> = ({
       messagesRef.current?.scrollIntoView();
       scrolledToBottomRef.current = true;
     }
-  }, [conversationId]);
+  }, [conversationId, areFirstMessagesLoaded]);
 
   const messagesEndRef = (node: HTMLDivElement) => {
     messagesRef.current = node;
@@ -307,6 +308,10 @@ const Conversation: React.FC<ConversationProps> = ({
   useEffect(() => {
     if (!scrollingInMessagesContainerRef.current) {
       previousOldestVisibleMessage.current?.scrollIntoView();
+    }
+
+    if (messagesArray?.length && !areFirstMessagesLoaded) {
+      setAreFirstMessagesLoaded(true);
     }
 
     if (messagesArray && currentUser) {
@@ -345,6 +350,7 @@ const Conversation: React.FC<ConversationProps> = ({
         });
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messagesArray, currentUser, socket]);
 
   useEffect(() => {
