@@ -295,7 +295,7 @@ const Conversation: React.FC<ConversationProps> = ({
   }, [conversationId, setIsInfoClicked]);
 
   useEffect(() => {
-    if (!scrolledToBottomRef.current) {
+    if (!scrolledToBottomRef.current || areFirstMessagesLoaded) {
       messagesRef.current?.scrollIntoView();
       scrolledToBottomRef.current = true;
     }
