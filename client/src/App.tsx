@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -29,6 +29,8 @@ import ExploreTagPage from './pages/explore-tag-page/explore-tag-page.component'
 import ExploreLocationPage from './pages/explore-location-page/explore-location-page.component';
 import CreateVideoPostPage from './pages/create-video-post-page/create-video-post-page.component';
 import MessagesPage from './pages/messages-page/messages-page.component';
+import { io } from 'socket.io-client';
+import { findOrCreateUserStart } from './redux/message/message.actions';
 
 interface AppProps {
   checkUserSession: typeof checkUserSession;
@@ -41,8 +43,55 @@ const defaultState = {
 
 export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
   const [loading, setLoading] = useState(defaultState.loading);
+  const [isSocketConnectionActive, setIsSocketConnectionActive] =
+    useState(false);
   const mapBoxAccessToken = useSelector(selectMapBoxAccessToken);
   const dispatch = useDispatch();
+
+  const socket = useMemo(
+    () =>
+      io(`wss://${window.location.host}`, {
+        path: '/api/messages/chat',
+        port: 443,
+        query: { userId: currentUser?.id || '' },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      setIsSocketConnectionActive(true);
+
+      if (currentUser) {
+        dispatch(
+          findOrCreateUserStart({
+            userId: currentUser.id,
+            name: currentUser.name,
+            username: currentUser.username,
+            photoS3Key: currentUser.photo,
+          })
+        );
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected from messages server');
+
+      setIsSocketConnectionActive(false);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, socket]);
+
+  useEffect(() => {
+    // When component unmounts, such as when the user
+    // signs out
+    return () => {
+      if (isSocketConnectionActive) {
+        socket.emit('forceDisconnectClient');
+      }
+    };
+  }, [socket, isSocketConnectionActive]);
 
   useEffect(() => {
     checkUserSession();
@@ -87,9 +136,34 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
           >
             <Route path='/direct'>
               <Route index element={<Navigate to='/direct/inbox' replace />} />
-              <Route path='inbox' element={<MessagesPage />} />
-              <Route path='t/:conversationId' element={<MessagesPage />} />
-              <Route path='new' element={<MessagesPage openNewConvoModal />} />
+              <Route
+                path='inbox'
+                element={
+                  <MessagesPage
+                    socket={socket}
+                    isSocketConnectionActive={isSocketConnectionActive}
+                  />
+                }
+              />
+              <Route
+                path='t/:conversationId'
+                element={
+                  <MessagesPage
+                    socket={socket}
+                    isSocketConnectionActive={isSocketConnectionActive}
+                  />
+                }
+              />
+              <Route
+                path='new'
+                element={
+                  <MessagesPage
+                    socket={socket}
+                    isSocketConnectionActive={isSocketConnectionActive}
+                    openNewConvoModal
+                  />
+                }
+              />
             </Route>
             <Route path='/post' element={<CreatePostPage />} />
             <Route path='/video-post' element={<CreateVideoPostPage />} />
