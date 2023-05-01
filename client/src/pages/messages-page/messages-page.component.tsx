@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import io from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 import { Grid, Typography, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import RateReviewIcon from '@mui/icons-material/RateReview';
@@ -23,7 +23,6 @@ import {
 } from '../../redux/message/message.selectors';
 
 import {
-  findOrCreateUserStart,
   removeUserSessionCookieStart,
   addToJoinedConversationsArray,
   getConvoMessagesStart,
@@ -42,17 +41,21 @@ import { Conversation, MessageUser } from '../../redux/message/message.types';
 
 interface MessagesPageProps {
   openNewConvoModal?: boolean;
+  socket: Socket;
+  isSocketConnectionActive: boolean;
 }
 
 // REVIEW - Determine what optimizations can be made so that users
 // and other data aren't fetched every time the user leaves the
 // messages page and returns to it without reloading the browser page
 
-const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
+const MessagesPage: React.FC<MessagesPageProps> = ({
+  socket,
+  openNewConvoModal,
+  isSocketConnectionActive,
+}) => {
   const [showConvoDialog, setShowConvoDialog] = useState(!!openNewConvoModal);
   const [isExistingConvo, setIsExistingConvo] = useState(false);
-  const [isSocketConnectionActive, setIsSocketConnectionActive] =
-    useState(false);
   const [joinedExistingConversations, setJoinedExistingConversations] =
     useState(false);
   const [isInfoClicked, setIsInfoClicked] = useState(false);
@@ -76,49 +79,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({ openNewConvoModal }) => {
 
   const dispatch = useDispatch();
 
-  const socket = useMemo(
-    () =>
-      io(`wss://${window.location.host}`, {
-        path: '/api/messages/chat',
-        port: 443,
-        query: { userId: currentUser?.id || '' },
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
   useEffect(() => {
-    // When component unmounts, such as when the user
-    // signs out
-    return () => {
-      if (isSocketConnectionActive) {
-        socket.emit('forceDisconnectClient');
-      }
-    };
-  }, [socket, isSocketConnectionActive]);
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      setIsSocketConnectionActive(true);
-
-      if (currentUser) {
-        dispatch(
-          findOrCreateUserStart({
-            userId: currentUser.id,
-            name: currentUser.name,
-            username: currentUser.username,
-            photoS3Key: currentUser.photo,
-          })
-        );
-      }
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Socket disconnected from messages server');
-
-      setIsSocketConnectionActive(false);
-    });
-
     socket.on('joinedConversation', (conversation) => {
       dispatch(addToJoinedConversationsArray(conversation));
       setShowConvoDialog(false);
