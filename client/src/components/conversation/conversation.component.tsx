@@ -96,11 +96,6 @@ interface MessageViewedBy {
 // that were created before the current old messages in client state
 // (us id of message or createdAt timestamp)
 
-// REVIEW Figure out how to make it so that the conditional returns
-// true for fetching new messages upon first loading the page and
-// fetching the first two pages worth of messages. Look at the
-// behavior of intersectionCounter and intersectionCounterRef
-
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
