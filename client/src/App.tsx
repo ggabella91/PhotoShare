@@ -45,6 +45,9 @@ const defaultState = {
   loading: true,
 };
 
+// TODO Move websocket connection and initial fetching of data
+// from messages service to a custom hook
+
 export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
   const [loading, setLoading] = useState(defaultState.loading);
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
