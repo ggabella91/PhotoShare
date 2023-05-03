@@ -30,7 +30,11 @@ import ExploreLocationPage from './pages/explore-location-page/explore-location-
 import CreateVideoPostPage from './pages/create-video-post-page/create-video-post-page.component';
 import MessagesPage from './pages/messages-page/messages-page.component';
 import { io } from 'socket.io-client';
-import { findOrCreateUserStart } from './redux/message/message.actions';
+import {
+  addToJoinedConversationsArray,
+  findOrCreateUserStart,
+} from './redux/message/message.actions';
+import { selectMessageUser } from './redux/message/message.selectors';
 
 interface AppProps {
   checkUserSession: typeof checkUserSession;
@@ -45,6 +49,9 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
   const [loading, setLoading] = useState(defaultState.loading);
   const [isSocketConnectionActive, setIsSocketConnectionActive] =
     useState(false);
+  const [joinedExistingConversations, setJoinedExistingConversations] =
+    useState(false);
+  const messageUser = useSelector(selectMessageUser);
   const mapBoxAccessToken = useSelector(selectMapBoxAccessToken);
   const dispatch = useDispatch();
 
@@ -75,6 +82,10 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
       }
     });
 
+    socket.on('joinedConversations', (conversations) => {
+      dispatch(addToJoinedConversationsArray(conversations));
+    });
+
     socket.on('disconnect', () => {
       console.log('Socket disconnected from messages server');
 
@@ -82,6 +93,26 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, socket]);
+
+  useEffect(() => {
+    if (
+      isSocketConnectionActive &&
+      messageUser &&
+      !joinedExistingConversations
+    ) {
+      socket.emit('joinAllExistingConversations', {
+        userId: currentUser?.id,
+      });
+
+      setJoinedExistingConversations(true);
+    }
+  }, [
+    socket,
+    currentUser?.id,
+    messageUser,
+    isSocketConnectionActive,
+    joinedExistingConversations,
+  ]);
 
   useEffect(() => {
     // When component unmounts, such as when the user
