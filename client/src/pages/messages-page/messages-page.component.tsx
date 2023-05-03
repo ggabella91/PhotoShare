@@ -56,8 +56,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
 }) => {
   const [showConvoDialog, setShowConvoDialog] = useState(!!openNewConvoModal);
   const [isExistingConvo, setIsExistingConvo] = useState(false);
-  const [joinedExistingConversations, setJoinedExistingConversations] =
-    useState(false);
   const [isInfoClicked, setIsInfoClicked] = useState(false);
 
   const currentUser = useSelector(selectCurrentUser);
@@ -66,6 +64,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
   const conversationUsers = useSelector(selectConversationUsers);
   const conversationPagesToFetch = useSelector(selectConversationPagesToFetch);
+
   const navigate = useNavigate();
   const { conversationId } = useParams();
   const currentConversation = joinedConversations?.find(
@@ -85,10 +84,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
       setShowConvoDialog(false);
       dispatch(resetConvoUsersArray());
       navigate(`/direct/t/${conversation.id}`, { replace: true });
-    });
-
-    socket.on('joinedConversations', (conversations) => {
-      dispatch(addToJoinedConversationsArray(conversations));
     });
 
     socket.on('messageRemoved', (message) => {
@@ -165,26 +160,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
       dispatch(removeUserSessionCookieStart(userId));
     }
   }, [dispatch, currentUser, messageUser, isSocketConnectionActive]);
-
-  useEffect(() => {
-    if (
-      isSocketConnectionActive &&
-      messageUser &&
-      !joinedExistingConversations
-    ) {
-      socket.emit('joinAllExistingConversations', {
-        userId: currentUser?.id,
-      });
-
-      setJoinedExistingConversations(true);
-    }
-  }, [
-    socket,
-    currentUser?.id,
-    messageUser,
-    isSocketConnectionActive,
-    joinedExistingConversations,
-  ]);
 
   const handleSendMessage = () => {
     window.history.pushState({}, '', '/direct/new');
