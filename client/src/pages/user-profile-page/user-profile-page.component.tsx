@@ -9,7 +9,7 @@ import { Box } from '@mui/material';
 
 import { AppState } from '../../redux/root-reducer';
 
-import { useLazyLoading } from '../hooks';
+import { useLazyLoading } from '../../hooks';
 
 import {
   User,

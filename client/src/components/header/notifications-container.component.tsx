@@ -28,7 +28,7 @@ import {
   getPostFileStart,
 } from '../../redux/post/post.actions';
 import { FileRequestType, UserType } from '../../redux/post/post.types';
-import { useLazyLoading } from '../../pages/hooks';
+import { useLazyLoading } from '../../hooks';
 
 const NotificationsContainer: React.FC = () => {
   const [readyToRender, setReadyToRender] = useState(false);

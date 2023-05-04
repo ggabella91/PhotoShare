@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
-import { useLazyLoading } from '../hooks';
+import { useLazyLoading } from '../../hooks';
 
 import { OtherUserType } from '../../redux/user/user.types';
 import { getOtherUserStart } from '../../redux/user/user.actions';

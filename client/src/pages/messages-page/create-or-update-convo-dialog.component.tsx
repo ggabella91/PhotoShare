@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useDebounce, useUserInfoData } from '../hooks';
+import { useDebounce, useUserInfoData } from '../../hooks';
 
 import UserDetailsContainer from '../../components/user-details/UserDetailsContainer.component';
 

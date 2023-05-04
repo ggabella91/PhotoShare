@@ -13,7 +13,7 @@ import {
   getLocationsSuggestionsStart,
   clearLocationsSuggestions,
 } from '../../redux/post/post.actions';
-import { useDebounce } from '../../pages/hooks';
+import { useDebounce } from '../../hooks';
 import LocationsSuggestionsContainer, {
   StyleType,
 } from '../locations-suggestions-container/locations-suggestions-container.component';

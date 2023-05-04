@@ -1,14 +1,20 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { UserInfoData } from '../components/search-bar/search-bar.component';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { UserInfoData } from './components/search-bar/search-bar.component';
 
 import { List } from 'immutable';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { User } from '../redux/user/user.types';
+import { User } from './redux/user/user.types';
 
-import { FileRequestType, UserType, Location } from '../redux/post/post.types';
-import { selectSuggestionPhotoFileArray } from '../redux/post/post.selectors';
-import { getPostFileStart } from '../redux/post/post.actions';
+import { FileRequestType, UserType, Location } from './redux/post/post.types';
+import { selectSuggestionPhotoFileArray } from './redux/post/post.selectors';
+import { getPostFileStart } from './redux/post/post.actions';
+import { selectMessageUser } from './redux/message/message.selectors';
+import { io } from 'socket.io-client';
+import {
+  addToJoinedConversationsArray,
+  findOrCreateUserStart,
+} from './redux/message/message.actions';
 
 export const useLazyLoading = (
   isLoadingData: boolean,
@@ -170,4 +176,84 @@ export const useUserInfoData = (usersList: User[] | null) => {
   }, [usersList, userSuggestionProfilePhotoFiles, noProfilePhotosToFetch]);
 
   return userSuggestionsList;
+};
+
+export const useInitializeWebsocketConnection = (currentUser: User | null) => {
+  const [isSocketConnectionActive, setIsSocketConnectionActive] =
+    useState(false);
+  const [joinedExistingConversations, setJoinedExistingConversations] =
+    useState(false);
+  const messageUser = useSelector(selectMessageUser);
+  const dispatch = useDispatch();
+
+  const socket = useMemo(
+    () =>
+      io(`wss://${window.location.host}`, {
+        path: '/api/messages/chat',
+        port: 443,
+        query: { userId: currentUser?.id || '' },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      setIsSocketConnectionActive(true);
+
+      if (currentUser) {
+        dispatch(
+          findOrCreateUserStart({
+            userId: currentUser.id,
+            name: currentUser.name,
+            username: currentUser.username,
+            photoS3Key: currentUser.photo,
+          })
+        );
+      }
+    });
+
+    socket.on('joinedConversations', (conversations) => {
+      dispatch(addToJoinedConversationsArray(conversations));
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected from messages server');
+
+      setIsSocketConnectionActive(false);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, socket]);
+
+  useEffect(() => {
+    if (
+      isSocketConnectionActive &&
+      messageUser &&
+      !joinedExistingConversations
+    ) {
+      socket.emit('joinAllExistingConversations', {
+        userId: currentUser?.id,
+      });
+
+      setJoinedExistingConversations(true);
+    }
+  }, [
+    socket,
+    currentUser?.id,
+    messageUser,
+    isSocketConnectionActive,
+    joinedExistingConversations,
+  ]);
+
+  useEffect(() => {
+    // When component unmounts, such as when the user
+    // signs out
+    return () => {
+      if (isSocketConnectionActive) {
+        socket.emit('forceDisconnectClient');
+      }
+    };
+  }, [socket, isSocketConnectionActive]);
+
+  return { socket, isSocketConnectionActive };
 };

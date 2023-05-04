@@ -17,7 +17,7 @@ import {
   clearLocationsSuggestions,
 } from '../../redux/post/post.actions';
 
-import { useDebounce } from '../hooks';
+import { useDebounce } from '../../hooks';
 
 import {
   FormInput,
