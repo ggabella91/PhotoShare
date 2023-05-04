@@ -26,7 +26,7 @@ import {
 import LocationsSuggestionsContainer, {
   StyleType,
 } from '../../components/locations-suggestions-container/locations-suggestions-container.component';
-import { useDebounce } from '../hooks';
+import { useDebounce } from '../../hooks';
 import { Button, Typography } from '@mui/material';
 import Alert from 'react-bootstrap/Alert';
 import LinearProgress from '@mui/material/LinearProgress';

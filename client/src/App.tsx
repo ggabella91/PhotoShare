@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -29,12 +29,7 @@ import ExploreTagPage from './pages/explore-tag-page/explore-tag-page.component'
 import ExploreLocationPage from './pages/explore-location-page/explore-location-page.component';
 import CreateVideoPostPage from './pages/create-video-post-page/create-video-post-page.component';
 import MessagesPage from './pages/messages-page/messages-page.component';
-import { io } from 'socket.io-client';
-import {
-  addToJoinedConversationsArray,
-  findOrCreateUserStart,
-} from './redux/message/message.actions';
-import { selectMessageUser } from './redux/message/message.selectors';
+import { useInitializeWebsocketConnection } from './hooks';
 
 interface AppProps {
   checkUserSession: typeof checkUserSession;
@@ -45,87 +40,12 @@ const defaultState = {
   loading: true,
 };
 
-// TODO Move websocket connection and initial fetching of data
-// from messages service to a custom hook
-
 export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
   const [loading, setLoading] = useState(defaultState.loading);
-  const [isSocketConnectionActive, setIsSocketConnectionActive] =
-    useState(false);
-  const [joinedExistingConversations, setJoinedExistingConversations] =
-    useState(false);
-  const messageUser = useSelector(selectMessageUser);
   const mapBoxAccessToken = useSelector(selectMapBoxAccessToken);
+  const { socket, isSocketConnectionActive } =
+    useInitializeWebsocketConnection(currentUser);
   const dispatch = useDispatch();
-
-  const socket = useMemo(
-    () =>
-      io(`wss://${window.location.host}`, {
-        path: '/api/messages/chat',
-        port: 443,
-        query: { userId: currentUser?.id || '' },
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      setIsSocketConnectionActive(true);
-
-      if (currentUser) {
-        dispatch(
-          findOrCreateUserStart({
-            userId: currentUser.id,
-            name: currentUser.name,
-            username: currentUser.username,
-            photoS3Key: currentUser.photo,
-          })
-        );
-      }
-    });
-
-    socket.on('joinedConversations', (conversations) => {
-      dispatch(addToJoinedConversationsArray(conversations));
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Socket disconnected from messages server');
-
-      setIsSocketConnectionActive(false);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, socket]);
-
-  useEffect(() => {
-    if (
-      isSocketConnectionActive &&
-      messageUser &&
-      !joinedExistingConversations
-    ) {
-      socket.emit('joinAllExistingConversations', {
-        userId: currentUser?.id,
-      });
-
-      setJoinedExistingConversations(true);
-    }
-  }, [
-    socket,
-    currentUser?.id,
-    messageUser,
-    isSocketConnectionActive,
-    joinedExistingConversations,
-  ]);
-
-  useEffect(() => {
-    // When component unmounts, such as when the user
-    // signs out
-    return () => {
-      if (isSocketConnectionActive) {
-        socket.emit('forceDisconnectClient');
-      }
-    };
-  }, [socket, isSocketConnectionActive]);
 
   useEffect(() => {
     checkUserSession();
