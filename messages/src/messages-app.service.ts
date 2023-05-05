@@ -35,10 +35,6 @@ export class MessagesAppService {
     @InjectModel(Message.name) private messageModel: Model<MessageDocument>
   ) {}
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   async createConversation(createConvoPreDto: CreateConvoPreDto) {
     // Call findOrCreateUser for each user in connectedUsers array
     await Promise.all(
@@ -479,15 +475,15 @@ export class MessagesAppService {
   async findMessagesFromConvo({
     conversationId,
     limit,
-    offset,
+    beforeMessageId,
+    getTotal,
   }: FindMessagesFromConvo) {
     let messagesFromConvo: MessageDocument[];
     let queryLength: number;
     const parsedLimit = parseInt(limit);
-    const parsedOffset = parseInt(offset);
 
     if (parsedLimit) {
-      if (parsedOffset === 1) {
+      if (Boolean(getTotal)) {
         queryLength = (await this.messageModel.find({ conversationId })).length;
       }
 
@@ -495,12 +491,12 @@ export class MessagesAppService {
         .find(
           {
             conversationId,
+            _id: { $lt: beforeMessageId },
           },
           null,
           { sort: { _id: -1 } }
         )
-        .limit(parsedLimit)
-        .skip((parsedOffset - 1) * parsedLimit);
+        .limit(parsedLimit);
     } else {
       messagesFromConvo = await this.messageModel.find(
         {

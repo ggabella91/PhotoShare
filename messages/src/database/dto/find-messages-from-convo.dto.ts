@@ -1,5 +1,6 @@
 export class FindMessagesFromConvo {
   conversationId: string;
   limit: string;
-  offset: string;
+  beforeMessageId: string;
+  getTotal?: boolean;
 }
