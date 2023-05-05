@@ -491,7 +491,7 @@ export class MessagesAppService {
         .find(
           {
             conversationId,
-            _id: { $lt: beforeMessageId },
+            ...(beforeMessageId && { _id: { $lt: beforeMessageId } }),
           },
           null,
           { sort: { _id: -1 } }
