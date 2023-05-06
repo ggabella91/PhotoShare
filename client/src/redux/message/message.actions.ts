@@ -14,7 +14,7 @@ import {
   AddUserNicknameMap,
   MessageUsersResponse,
   MessageLastSeen,
-  ConvoPageToFetch,
+  OldestMessageForConvo,
 } from './message.types';
 
 export const findOrCreateUserStart = (
@@ -184,9 +184,16 @@ export const getConversationUsersFailure = (
   payload: error,
 });
 
-export const setPageToFetchForConversation = (
-  convoPageToFetch: ConvoPageToFetch
+export const setOldestMessageForConversation = (
+  oldestMessageForConvo: OldestMessageForConvo
 ): MessageActionTypes => ({
-  type: MessageActions.SET_PAGE_TO_FETCH_FOR_CONVERSATION,
-  payload: convoPageToFetch,
+  type: MessageActions.SET_OLDEST_MESSAGE_FOR_CONVERSATION,
+  payload: oldestMessageForConvo,
+});
+
+export const setStopFetchingMessagesForConversation = (
+  conversationId: string
+): MessageActionTypes => ({
+  type: MessageActions.SET_STOP_FETCHING_MESSAGES_FOR_CONVERSATION,
+  payload: conversationId,
 });

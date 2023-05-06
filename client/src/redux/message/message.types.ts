@@ -29,7 +29,8 @@ export enum MessageActions {
 
   // Add / update which page should be fetched next for a given
   // conversation
-  SET_PAGE_TO_FETCH_FOR_CONVERSATION = 'SET_PAGE_TO_FETCH_FOR_CONVERSATION',
+  SET_OLDEST_MESSAGE_FOR_CONVERSATION = 'SET_OLDEST_MESSAGE_FOR_CONVERSATION',
+  SET_STOP_FETCHING_MESSAGES_FOR_CONVERSATION = 'SET_STOP_FETCHING_MESSAGES_FOR_CONVERSATION',
 }
 
 export interface MessageState {
@@ -43,13 +44,15 @@ export interface MessageState {
   conversationToUserDataMap: Record<string, UserInfoMap>;
   conversationUserNicknamesMaps: Record<string, Record<string, string>>;
   conversationMessageUsersMap: Record<string, MessageUser[]>;
-  conversationPagesToFetch: Record<string, number>;
+  oldestMessageToConvoMap: Record<string, string>;
+  stopFetchingMessagesForConvoMap: Record<string, boolean>;
 }
 
 export interface GetConvoMessagesReq {
   conversationId: string;
   limit?: number;
-  pageToShow?: number;
+  beforeMessageId: string;
+  getTotal?: boolean;
 }
 
 export interface ConvoMessages {
@@ -150,9 +153,9 @@ export interface AddUserNicknameMap {
   userNicknameMap: Record<string, string>;
 }
 
-export interface ConvoPageToFetch {
+export interface OldestMessageForConvo {
   conversationId: string;
-  pageToFetch: number;
+  oldestMessageId: string;
 }
 
 export interface FindOrCreateUserStart {
@@ -282,9 +285,14 @@ export interface GetConversationUsersFailure {
   payload: MessageError;
 }
 
-export interface SetPageToFetchForConversation {
-  type: typeof MessageActions.SET_PAGE_TO_FETCH_FOR_CONVERSATION;
-  payload: ConvoPageToFetch;
+export interface SetOldestMessageForConversation {
+  type: typeof MessageActions.SET_OLDEST_MESSAGE_FOR_CONVERSATION;
+  payload: OldestMessageForConvo;
+}
+
+export interface SetStopFetchingMessagesForConversation {
+  type: typeof MessageActions.SET_STOP_FETCHING_MESSAGES_FOR_CONVERSATION;
+  payload: string;
 }
 
 export type MessageActionTypes =
@@ -313,4 +321,5 @@ export type MessageActionTypes =
   | GetConversationUsersStart
   | GetConversationUsersSuccess
   | GetConversationUsersFailure
-  | SetPageToFetchForConversation;
+  | SetOldestMessageForConversation
+  | SetStopFetchingMessagesForConversation;

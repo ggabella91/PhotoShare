@@ -28,6 +28,8 @@ import {
   getConvoMessagesFailure,
   getConversationUsersFailure,
   getConversationUsersSuccess,
+  setStopFetchingMessagesForConversation,
+  setOldestMessageForConversation,
 } from './message.actions';
 
 import axios, { AxiosResponse } from 'axios';
@@ -77,7 +79,7 @@ export function* removeUserSessionCookie({
 }
 
 export function* getConvoMessages({
-  payload: { conversationId, limit, pageToShow },
+  payload: { conversationId, beforeMessageId, limit, getTotal },
 }: {
   payload: GetConvoMessagesReq;
 }) {
@@ -86,17 +88,33 @@ export function* getConvoMessages({
       data: { messages, queryLength },
     }: { data: { messages: Message[]; queryLength: number } } = yield axios.get(
       `/api/messages/conversation/${conversationId}${
-        limit ? `?limit=${limit}&offset=${pageToShow}` : ''
+        limit
+          ? `?beforeMessageId=${beforeMessageId}&limit=${limit}${
+              getTotal ? `&getTotal=${getTotal}` : ''
+            }`
+          : ''
       }`
     );
 
-    yield put(
-      getConvoMessagesSuccess({
-        conversationId,
-        messages,
-        ...(queryLength && { queryLength }),
-      })
-    );
+    if (!messages.length) {
+      yield put(setStopFetchingMessagesForConversation(conversationId));
+    } else {
+      yield all([
+        put(
+          getConvoMessagesSuccess({
+            conversationId,
+            messages,
+            ...(queryLength && { queryLength }),
+          })
+        ),
+        put(
+          setOldestMessageForConversation({
+            conversationId,
+            oldestMessageId: messages[messages.length - 1].id,
+          })
+        ),
+      ]);
+    }
   } catch (err) {
     yield put(getConvoMessagesFailure(err as MessageError));
   }

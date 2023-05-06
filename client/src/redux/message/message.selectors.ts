@@ -50,7 +50,12 @@ export const selectConversationMessageUsersMap = createSelector(
   (messageState: MessageState) => messageState.conversationMessageUsersMap
 );
 
-export const selectConversationPagesToFetch = createSelector(
+export const selectOldestMessageToConvoMap = createSelector(
   [selectMessageState],
-  (messageState: MessageState) => messageState.conversationPagesToFetch
+  (messageState: MessageState) => messageState.oldestMessageToConvoMap
+);
+
+export const selectStopFetchingMessageForConvoMap = createSelector(
+  [selectMessageState],
+  (messageState: MessageState) => messageState.stopFetchingMessagesForConvoMap
 );

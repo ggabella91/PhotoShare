@@ -18,11 +18,6 @@ export class MessagesAppController {
 
   constructor(private readonly appService: MessagesAppService) {}
 
-  @Get('/hello')
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
   @Post('/users')
   findOrCreateUser(@Request() req) {
     const { headers, body } = req;
@@ -56,12 +51,14 @@ export class MessagesAppController {
   findMessagesFromConvo(
     @Param('conversationId') conversationId: string,
     @Query('limit') limit: string,
-    @Query('offset') offset: string
+    @Query('beforeMessageId') beforeMessageId: string,
+    @Query('getTotal') getTotal: boolean
   ) {
     return this.appService.findMessagesFromConvo({
       conversationId,
       limit,
-      offset,
+      beforeMessageId,
+      getTotal,
     });
   }
 

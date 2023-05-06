@@ -36,7 +36,8 @@ import {
   selectConversationMessages,
   selectIsLoadingMessages,
   selectConversationToUserDataMap,
-  selectConversationPagesToFetch,
+  selectOldestMessageToConvoMap,
+  selectStopFetchingMessageForConvoMap,
 } from '../../redux/message/message.selectors';
 import {
   getConvoMessagesStart,
@@ -45,7 +46,7 @@ import {
   updateMessageLastSeenBy,
   addMessageToConversation,
   updateMessageStatus,
-  setPageToFetchForConversation,
+  setOldestMessageForConversation,
 } from '../../redux/message/message.actions';
 
 import {
@@ -92,10 +93,6 @@ interface MessageViewedBy {
   viewedBy: string;
 }
 
-// TODO Change lazy loading logic to fetch previous set of messages
-// that were created before the current old messages in client state
-// (us id of message or createdAt timestamp)
-
 const Conversation: React.FC<ConversationProps> = ({
   conversationId,
   avatarS3Keys,
@@ -135,11 +132,15 @@ const Conversation: React.FC<ConversationProps> = ({
     selectConversationToUserDataMap
   );
   const isLoadingMessages = useSelector(selectIsLoadingMessages);
-  const conversationPagesToFetch = useSelector(selectConversationPagesToFetch);
-  const messagesPageToFetch = conversationPagesToFetch?.[conversationId];
+  const oldestMessageToConvoMap = useSelector(selectOldestMessageToConvoMap);
+  const oldestMessageId = oldestMessageToConvoMap?.[conversationId];
   const currentConversation = joinedConversations?.find(
     (conversation) => conversation.id === conversationId
   );
+  const stopFetchingMessageForConvoMap = useSelector(
+    selectStopFetchingMessageForConvoMap
+  );
+  const stopFetchingMessages = stopFetchingMessageForConvoMap[conversationId];
   const conversationHistoricalMessageUsers =
     currentConversation?.historicalUsers;
   const conversationActiveUsers = currentConversation?.connectedUsers;
@@ -155,8 +156,6 @@ const Conversation: React.FC<ConversationProps> = ({
     (convoMessage) => convoMessage.conversationId === conversationId
   );
   const messagesArray = currentConversationMessages?.messages;
-  const messagesArrayLength = messagesArray?.length;
-  const totalMessagesForConvo = currentConversationMessages?.queryLength;
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const messageJustSent = useRef(false);
   const messagesRef = useRef<HTMLDivElement | null>(null);
@@ -175,10 +174,7 @@ const Conversation: React.FC<ConversationProps> = ({
   useEffect(() => {
     const shouldFetchMoreMessages = () =>
       intersectionCounter !== intersectionCounterRef.current &&
-      messagesArrayLength &&
-      totalMessagesForConvo &&
-      messagesArrayLength < totalMessagesForConvo &&
-      messagesPageToFetch <= Math.ceil(totalMessagesForConvo / 10);
+      !stopFetchingMessages;
 
     if (shouldFetchMoreMessages()) {
       intersectionCounterRef.current = intersectionCounter;
@@ -189,14 +185,7 @@ const Conversation: React.FC<ConversationProps> = ({
         getConvoMessagesStart({
           conversationId,
           limit: 10,
-          pageToShow: messagesPageToFetch,
-        })
-      );
-
-      dispatch(
-        setPageToFetchForConversation({
-          conversationId,
-          pageToFetch: messagesPageToFetch + 1,
+          beforeMessageId: oldestMessageId,
         })
       );
     }
@@ -529,29 +518,19 @@ const Conversation: React.FC<ConversationProps> = ({
         getConvoMessagesStart({
           conversationId,
           limit: 10,
-          pageToShow: messagesPageToFetch,
-        })
-      );
-
-      dispatch(
-        setPageToFetchForConversation({
-          conversationId,
-          pageToFetch: messagesPageToFetch + 1,
+          beforeMessageId: oldestMessageId,
         })
       );
     }
   };
 
+  // REVIEW May need to add check for whether stopFetchingMessagesForConvo is true for this conditional
+
   const handleStoreMessageRef = (
     node: HTMLDivElement | null,
     messageId: string
   ) => {
-    if (
-      allMessagesRefsMap[messageId] &&
-      searchingForOriginalMessage.current &&
-      totalMessagesForConvo &&
-      Math.ceil(totalMessagesForConvo / 10) > messagesPageToFetch
-    ) {
+    if (allMessagesRefsMap[messageId] && searchingForOriginalMessage.current) {
       handleClickMessageRepliedTo(searchingForOriginalMessage.current);
     }
 
