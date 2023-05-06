@@ -19,7 +19,6 @@ import {
   selectMessageUser,
   selectJoinedConversations,
   selectUsersArrayForNewConvoReq,
-  selectConversationPagesToFetch,
 } from '../../redux/message/message.selectors';
 
 import {
@@ -30,7 +29,6 @@ import {
   removeMessageFromConversation,
   permanentlyRemoveMessageForUser,
   removeFromConversationToUserDataMap,
-  setPageToFetchForConversation,
 } from '../../redux/message/message.actions';
 
 import {
@@ -63,7 +61,6 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
   const joinedConversations = useSelector(selectJoinedConversations);
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
   const conversationUsers = useSelector(selectConversationUsers);
-  const conversationPagesToFetch = useSelector(selectConversationPagesToFetch);
 
   const navigate = useNavigate();
   const { conversationId } = useParams();
@@ -131,27 +128,19 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
       );
 
       newConvos.forEach((convo) => {
-        if (!conversationPagesToFetch[convo.id]) {
-          dispatch(
-            getConvoMessagesStart({
-              conversationId: convo.id,
-              limit: 10,
-              pageToShow: 1,
-            })
-          );
-
-          dispatch(
-            setPageToFetchForConversation({
-              conversationId: convo.id,
-              pageToFetch: 2,
-            })
-          );
-        }
+        dispatch(
+          getConvoMessagesStart({
+            conversationId: convo.id,
+            limit: 10,
+            beforeMessageId: 'start',
+            getTotal: true,
+          })
+        );
       });
 
       previouslyJoinedConversations.current = [...joinedConversations];
     }
-  }, [dispatch, conversationPagesToFetch, joinedConversations]);
+  }, [dispatch, joinedConversations]);
 
   useEffect(() => {
     if (!currentUser && messageUser && isSocketConnectionActive) {

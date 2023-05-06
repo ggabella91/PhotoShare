@@ -27,7 +27,8 @@ const INITIAL_STATE: MessageState = {
   conversationToUserDataMap: {},
   conversationUserNicknamesMaps: {},
   conversationMessageUsersMap: {},
-  conversationPagesToFetch: {},
+  oldestMessageToConvoMap: {},
+  stopFetchingMessagesForConvoMap: {},
 };
 
 const messageReducer = (
@@ -151,12 +152,20 @@ const messageReducer = (
           [action.payload.conversationId]: action.payload.messageUsers,
         },
       };
-    case MessageActions.SET_PAGE_TO_FETCH_FOR_CONVERSATION:
+    case MessageActions.SET_OLDEST_MESSAGE_FOR_CONVERSATION:
       return {
         ...state,
-        conversationPagesToFetch: {
-          ...state.conversationPagesToFetch,
-          [action.payload.conversationId]: action.payload.pageToFetch,
+        oldestMessageToConvoMap: {
+          ...state.oldestMessageToConvoMap,
+          [action.payload.conversationId]: action.payload.oldestMessageId,
+        },
+      };
+    case MessageActions.SET_STOP_FETCHING_MESSAGES_FOR_CONVERSATION:
+      return {
+        ...state,
+        stopFetchingMessagesForConvoMap: {
+          ...state.stopFetchingMessagesForConvoMap,
+          [action.payload]: true,
         },
       };
     case MessageActions.RESET_CONVO_USERS_ARRAY:
