@@ -487,16 +487,28 @@ export class MessagesAppService {
         queryLength = (await this.messageModel.find({ conversationId })).length;
       }
 
-      messagesFromConvo = await this.messageModel
-        .find(
-          {
-            conversationId,
-            ...(beforeMessageId && { _id: { $lt: beforeMessageId } }),
-          },
-          null,
-          { sort: { _id: -1 } }
-        )
-        .limit(parsedLimit);
+      if (beforeMessageId === 'start') {
+        messagesFromConvo = await this.messageModel
+          .find(
+            {
+              conversationId,
+            },
+            null,
+            { sort: { _id: -1 } }
+          )
+          .limit(parsedLimit);
+      } else {
+        messagesFromConvo = await this.messageModel
+          .find(
+            {
+              conversationId,
+              _id: { $lt: beforeMessageId },
+            },
+            null,
+            { sort: { _id: -1 } }
+          )
+          .limit(parsedLimit);
+      }
     } else {
       messagesFromConvo = await this.messageModel.find(
         {
