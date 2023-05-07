@@ -8,7 +8,6 @@ import { PostFile } from '../../redux/post/post.types';
 
 describe('renders a search-bar component', () => {
   const setup = () => {
-    const testUser = {} as User;
     const testUserArray = [] as User[];
     const testPostFileArray = [] as PostFile[];
 
@@ -20,7 +19,6 @@ describe('renders a search-bar component', () => {
     render(
       <SearchBar
         key={0}
-        currentUser={testUser}
         getUserSuggestionsStart={getUserSuggestionsStart}
         userSuggestions={testUserArray}
         userSuggestionsError={null}
