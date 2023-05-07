@@ -7,7 +7,6 @@ import { List } from 'immutable';
 
 import { User, Error } from '../../redux/user/user.types';
 import {
-  selectCurrentUser,
   selectUserSuggestions,
   selectUserSuggestionsConfirm,
   selectUserSuggestionsError,
@@ -37,11 +36,8 @@ import UserInfo, { StyleType } from '../user-info/user-info.component';
 
 import './search-bar.styles.scss';
 
-// TODO Change immmutable List to regular array
-
 export interface SearchBarProps {
   key: number;
-  currentUser: User | null;
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
@@ -66,7 +62,6 @@ export interface UserInfoData {
 export const SearchBar: React.FC<SearchBarProps> = ({
   getUserSuggestionsStart,
   getPostFileStart,
-  currentUser,
   userSuggestions,
   userSuggestionsConfirm,
   userSuggestionProfilePhotoFiles,
@@ -74,9 +69,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   clearSuggestionPhotoFileArray,
 }) => {
   const [searchString, setSearchString] = useState('');
-  const [userSuggestionsList, setUserSuggestionsList] = useState<
-    List<UserInfoData>
-  >(List());
+  const [userSuggestionsArray, setUserSuggestionsArray] = useState<
+    UserInfoData[]
+  >([]);
 
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
   const [hideSuggestionsOnBlur, setHideSuggestionsOnBlur] = useState(false);
@@ -96,11 +91,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   useCallback(() => {
     clearUserSuggestions();
-    setUserSuggestionsList(List());
+    setUserSuggestionsArray([]);
     clearSuggestionPhotoFileArray();
   }, [
     clearUserSuggestions,
-    setUserSuggestionsList,
+    setUserSuggestionsArray,
     clearSuggestionPhotoFileArray,
   ]);
 
@@ -136,9 +131,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     if (userSuggestions && userSuggestionProfilePhotoFiles?.length) {
-      const userSuggestionsAsList = List(userSuggestions);
+      const userSuggestionsArray = [...userSuggestions];
 
-      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
+      const suggestedUsers: UserInfoData[] = userSuggestionsArray.map(
         (el: User) => {
           let photoFileString: string;
 
@@ -159,11 +154,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         }
       );
 
-      setUserSuggestionsList(suggestedUser);
+      setUserSuggestionsArray(suggestedUsers);
     } else if (userSuggestions && noProfilePhotosToFetch) {
-      const userSuggestionsAsList = List(userSuggestions);
+      const userSuggestionsArray = [...userSuggestions];
 
-      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
+      const suggestedUsers: UserInfoData[] = userSuggestionsArray.map(
         (el: User) => ({
           name: el.name,
           username: el.username,
@@ -174,7 +169,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         })
       );
 
-      setUserSuggestionsList(suggestedUser);
+      setUserSuggestionsArray(suggestedUsers);
     }
   }, [
     userSuggestions,
@@ -195,7 +190,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   ) => {
     const { value } = event.target;
 
-    setUserSuggestionsList(List());
+    setUserSuggestionsArray([]);
     setSearchString(value);
   };
 
@@ -209,10 +204,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (userSuggestionsList.size) {
+    if (userSuggestionsArray.length) {
       if (event.key === 'ArrowUp') {
         if (selectedSuggestion === null) {
-          setSelectedSuggestion(userSuggestionsList.size - 1);
+          setSelectedSuggestion(userSuggestionsArray.length - 1);
         } else {
           selectedSuggestion === 0
             ? setSelectedSuggestion(null)
@@ -224,7 +219,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         if (selectedSuggestion === null) {
           setSelectedSuggestion(0);
         } else {
-          selectedSuggestion === userSuggestionsList.size - 1
+          selectedSuggestion === userSuggestionsArray.length - 1
             ? setSelectedSuggestion(null)
             : setSelectedSuggestion(
                 (selectedSuggestion) => selectedSuggestion! + 1
@@ -256,14 +251,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         />
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
           <UserInfo
-            userInfoList={userSuggestionsList}
+            userInfoList={List(userSuggestionsArray)}
             styleType={StyleType.suggestion}
             selectedSuggestion={selectedSuggestion}
             shouldNavigate={shouldNavigate}
           />
         )}
         {showUserSuggestions &&
-        !userSuggestionsList.size &&
+        !userSuggestionsArray.length &&
         userSuggestionsConfirm ? (
           <div className='no-matches'>
             <span className='no-matches-text'>No matches found</span>
@@ -275,7 +270,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 };
 
 interface LinkStateProps {
-  currentUser: User | null;
   userSuggestions: User[] | null;
   userSuggestionsConfirm: string | null;
   userSuggestionsError: Error | null;
@@ -284,7 +278,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
   userSuggestions: selectUserSuggestions,
   userSuggestionsConfirm: selectUserSuggestionsConfirm,
   userSuggestionsError: selectUserSuggestionsError,
