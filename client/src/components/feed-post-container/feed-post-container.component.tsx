@@ -67,17 +67,15 @@ import UserInfo, {
 } from '../user-info/user-info.component';
 
 import {
-  comparePostFileLists,
-  compareUserOrPostOrReactionLists,
-  compareUserInfoAndDataObjLists,
+  compareUserOrPostOrReactionArrays,
+  comparePostFileArrays,
+  compareUserInfoAndDataObjArrays,
 } from '../../pages/feed-page/feed-page.utils';
 
 import Button from '../button/button.component';
 import { ExpandableFormInput } from '../form-input/form-input.component';
 
 import './feed-post-container.styles.scss';
-
-// TODO Change immmutable Lists to regular arrays
 
 type CustomRef = (node: HTMLDivElement | null) => void;
 
@@ -182,23 +180,23 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   const [comment, setComment] = useState('');
 
-  const [reactionsList, setReactionsList] = useState<List<Reaction>>(List());
+  const [reactionsArray, setReactionsArray] = useState<Reaction[]>([]);
 
-  const [reactingUserInfoList, setReactingUsersInfoList] = useState<List<User>>(
-    List()
+  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<User[]>(
+    []
   );
 
-  const [userProfilePhotoList, setUserProfilePhotoList] = useState<
-    List<PostFile>
-  >(List());
+  const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
+    PostFile[]
+  >([]);
 
-  const [commentingUserList, setCommentingUserList] = useState<
-    List<UserInfoAndOtherData>
-  >(List());
+  const [commentingUserArray, setCommentingUserArray] = useState<
+    UserInfoAndOtherData[]
+  >([]);
 
-  const [likingUsersList, setLikingUsersList] = useState<
-    List<UserInfoAndOtherData>
-  >(List());
+  const [likingUsersArray, setLikingUsersArray] = useState<
+    UserInfoAndOtherData[]
+  >([]);
 
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
@@ -247,17 +245,13 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (feedPostReactionsArray && feedPostReactionsArray.length) {
-      let innerArrayAsList;
-
       feedPostReactionsArray.forEach((innerArray) => {
-        innerArrayAsList = List(innerArray);
-
         if (innerArray.length && innerArray[0].postId === postId) {
           if (
-            reactionsList &&
-            !compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
+            reactionsArray &&
+            !compareUserOrPostOrReactionArrays(reactionsArray, innerArray)
           ) {
-            setReactionsList(innerArrayAsList);
+            setReactionsArray(innerArray);
           }
         }
       });
@@ -265,8 +259,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [feedPostReactionsArray]);
 
   useEffect(() => {
-    if (reactionsList.size) {
-      reactionsList.forEach((el) => {
+    if (reactionsArray.length) {
+      reactionsArray.forEach((el) => {
         if (
           currentUser &&
           el.reactingUserId === currentUser.id &&
@@ -279,7 +273,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
     }
-  }, [reactionsList]);
+  }, [reactionsArray]);
 
   useEffect(() => {
     if (
@@ -294,7 +288,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         alreadyLikedPost: true,
         reactionId: postReactionConfirm.reactionId,
       });
-      setLikingUsersList(List());
+      setLikingUsersArray([]);
       dispatch(removePostModalDataFromCache(postId));
       getPostReactionsStart({
         postId,
@@ -316,7 +310,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         alreadyLikedPost: false,
         reactionId: '',
       });
-      setLikingUsersList(List());
+      setLikingUsersArray([]);
       dispatch(removePostModalDataFromCache(postId));
       getPostReactionsStart({
         postId,
@@ -360,39 +354,39 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
-    if (reactionsList.size) {
-      reactionsList.forEach((el) => {
+    if (reactionsArray.length) {
+      reactionsArray.forEach((el) => {
         getOtherUserStart({
           type: OtherUserType.FEED_POST_REACTOR,
           usernameOrId: el.reactingUserId,
         });
       });
     }
-  }, [reactionsList]);
+  }, [reactionsArray]);
 
   useEffect(() => {
     let feedPostReactingUsersList;
 
     if (feedPostReactingUsers) {
-      feedPostReactingUsersList = List(feedPostReactingUsers);
+      feedPostReactingUsersList = [...feedPostReactingUsers];
     } else {
       return;
     }
 
     if (
-      feedPostReactingUsersList.size &&
-      !compareUserOrPostOrReactionLists(
-        reactingUserInfoList,
+      feedPostReactingUsersList.length &&
+      !compareUserOrPostOrReactionArrays(
+        reactingUserInfoArray,
         feedPostReactingUsersList
       )
     ) {
-      setReactingUsersInfoList(feedPostReactingUsersList);
+      setReactingUsersInfoArray(feedPostReactingUsersList);
     }
   }, [feedPostReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoList.size) {
-      reactingUserInfoList.forEach((el) => {
+    if (reactingUserInfoArray.length) {
+      reactingUserInfoArray.forEach((el) => {
         if (el.photo) {
           getPostFileStart({
             s3Key: el.photo,
@@ -403,36 +397,32 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
     }
-  }, [reactingUserInfoList]);
+  }, [reactingUserInfoArray]);
 
   useEffect(() => {
-    let reactorPhotoFileList;
-
-    if (reactorPhotoFileArray) {
-      reactorPhotoFileList = List(reactorPhotoFileArray);
-    } else {
+    if (!reactorPhotoFileArray) {
       return;
     }
 
     if (
-      userProfilePhotoList &&
-      !comparePostFileLists(userProfilePhotoList, reactorPhotoFileList)
+      userProfilePhotoArray &&
+      !comparePostFileArrays(userProfilePhotoArray, reactorPhotoFileArray)
     ) {
-      setUserProfilePhotoList(reactorPhotoFileList);
+      setUserProfilePhotoArray(reactorPhotoFileArray);
     }
   }, [reactorPhotoFileArray]);
 
   useEffect(() => {
     if (
-      reactionsList.size &&
-      reactingUserInfoList.size &&
-      userProfilePhotoList.size &&
-      reactingUserInfoList.size === userProfilePhotoList.size
+      reactionsArray.length &&
+      reactingUserInfoArray.length &&
+      userProfilePhotoArray.length &&
+      reactingUserInfoArray.length === userProfilePhotoArray.length
     ) {
-      let commentsList: List<UserInfoAndOtherData> = List();
-      let likesList: List<UserInfoAndOtherData> = List();
+      let commentsArray: UserInfoAndOtherData[] = [];
+      let likesArray: UserInfoAndOtherData[] = [];
 
-      reactionsList.forEach((reactionEl) => {
+      reactionsArray.forEach((reactionEl) => {
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
@@ -440,7 +430,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         let photoKey: string = '';
         let profilePhotoFileString: string = '';
 
-        reactingUserInfoList.forEach((infoEl) => {
+        reactingUserInfoArray.forEach((infoEl) => {
           if (infoEl.id === userId) {
             username = infoEl.username;
             name = infoEl.name;
@@ -448,14 +438,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
           }
         });
 
-        userProfilePhotoList.forEach((photoEl) => {
+        userProfilePhotoArray.forEach((photoEl) => {
           if (photoEl.s3Key === photoKey) {
             profilePhotoFileString = photoEl.fileString;
           }
         });
 
         if (reactionEl.likedPost) {
-          likesList = likesList.push({
+          likesArray.push({
             username: username!,
             name: name!,
             comment: '',
@@ -463,7 +453,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             location: {} as Location,
           });
         } else {
-          commentsList = commentsList.push({
+          commentsArray.push({
             username: username!,
             name: '',
             comment,
@@ -475,19 +465,21 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
 
-      if (!compareUserInfoAndDataObjLists(commentingUserList, commentsList)) {
-        setCommentingUserList(commentsList);
+      if (
+        !compareUserInfoAndDataObjArrays(commentingUserArray, commentsArray)
+      ) {
+        setCommentingUserArray(commentsArray);
       }
 
-      if (!compareUserInfoAndDataObjLists(likingUsersList, likesList)) {
-        setLikingUsersList(likesList);
-        setPostLikingUsersArray(likesList.toArray());
+      if (!compareUserInfoAndDataObjArrays(likingUsersArray, likesArray)) {
+        setLikingUsersArray(likesArray);
+        setPostLikingUsersArray(likesArray);
       }
     }
   }, [
-    reactionsList,
-    reactingUserInfoList,
-    userProfilePhotoList,
+    reactionsArray,
+    reactingUserInfoArray,
+    userProfilePhotoArray,
     usersProfilePhotoConfirm,
   ]);
 
@@ -569,8 +561,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const handlePostLikingUsersClick = () => {
     setShowPostLikingUsersModal(true);
 
-    if (likingUsersList) {
-      setPostLikingUsersArray(likingUsersList.toArray());
+    if (likingUsersArray) {
+      setPostLikingUsersArray(likingUsersArray);
     }
   };
 
@@ -617,9 +609,9 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       </div>
       <div className='caption-and-reactions'>
         {handleRenderLikeOrLikedButton()}
-        {likingUsersList && likingUsersList.size ? (
+        {likingUsersArray && likingUsersArray.length ? (
           <Button className='likes' onClick={handlePostLikingUsersClick}>
-            <span>{`${likingUsersList.size} likes`}</span>
+            <span>{`${likingUsersArray.length} likes`}</span>
           </Button>
         ) : null}
         {caption ? (
@@ -628,15 +620,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
             {caption}
           </div>
         ) : null}
-        {commentingUserList.size > 2 ? (
+        {commentingUserArray.length > 2 ? (
           <span
             className='view-all-comments'
             onClick={handleClickViewAllComments}
-          >{`View all ${commentingUserList.size} comments`}</span>
+          >{`View all ${commentingUserArray.length} comments`}</span>
         ) : null}
-        {commentingUserList.size
-          ? commentingUserList.map((el, idx) =>
-              idx >= commentingUserList.size - 2 ? (
+        {commentingUserArray.length
+          ? commentingUserArray.map((el, idx) =>
+              idx >= commentingUserArray.length - 2 ? (
                 <div className='caption-or-reaction'>
                   <span className='username'>{el.username}</span> {el.comment}
                 </div>
