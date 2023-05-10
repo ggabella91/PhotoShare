@@ -174,6 +174,7 @@ const Conversation: React.FC<ConversationProps> = ({
   useEffect(() => {
     const shouldFetchMoreMessages = () =>
       intersectionCounter !== intersectionCounterRef.current &&
+      oldestMessageId &&
       !stopFetchingMessages;
 
     if (shouldFetchMoreMessages()) {

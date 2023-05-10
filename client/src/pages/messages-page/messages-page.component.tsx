@@ -19,6 +19,7 @@ import {
   selectMessageUser,
   selectJoinedConversations,
   selectUsersArrayForNewConvoReq,
+  selectOldestMessageToConvoMap,
 } from '../../redux/message/message.selectors';
 
 import {
@@ -61,6 +62,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
   const joinedConversations = useSelector(selectJoinedConversations);
   const usersArrayForNewConvoReq = useSelector(selectUsersArrayForNewConvoReq);
   const conversationUsers = useSelector(selectConversationUsers);
+  const oldestMessageToConvoMap = useSelector(selectOldestMessageToConvoMap);
 
   const navigate = useNavigate();
   const { conversationId } = useParams();
@@ -128,14 +130,18 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
       );
 
       newConvos.forEach((convo) => {
-        dispatch(
-          getConvoMessagesStart({
-            conversationId: convo.id,
-            limit: 10,
-            beforeMessageId: 'start',
-            getTotal: true,
-          })
-        );
+        const oldestMessageId = oldestMessageToConvoMap?.[convo.id];
+
+        if (!oldestMessageId) {
+          dispatch(
+            getConvoMessagesStart({
+              conversationId: convo.id,
+              limit: 10,
+              beforeMessageId: 'start',
+              getTotal: true,
+            })
+          );
+        }
       });
 
       previouslyJoinedConversations.current = [...joinedConversations];

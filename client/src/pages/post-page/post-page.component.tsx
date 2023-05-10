@@ -57,7 +57,7 @@ import EditPostForm from '../../components/edit-post-form/edit-post-form.compone
 
 import {
   compareUserOrPostOrReactionLists,
-  compareUserInfoAndDataObjLists,
+  compareUserInfoAndDataObjArrays,
 } from '../../pages/feed-page/feed-page.utils';
 
 import './post-page.styles.scss';
@@ -122,13 +122,13 @@ export const PostPage: React.FC = () => {
     List<PostFile>
   >(List());
 
-  const [commentingUserList, setCommentingUserList] = useState<
-    List<UserInfoAndOtherData>
-  >(List());
+  const [commentingUserArray, setCommentingUserArray] = useState<
+    UserInfoAndOtherData[]
+  >([]);
 
-  const [likingUsersList, setLikingUsersList] = useState<
-    List<UserInfoAndOtherData>
-  >(List());
+  const [likingUsersArray, setLikingUsersArray] = useState<
+    UserInfoAndOtherData[]
+  >([]);
 
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState<AlreadyLikedAndReactionId>({
@@ -363,8 +363,8 @@ export const PostPage: React.FC = () => {
       setUniqueReactingUsers(new Set());
       setReactingUsersInfoList(List());
       setUserProfilePhotoList(List());
-      setLikingUsersList(List());
-      setCommentingUserList(List());
+      setLikingUsersArray([]);
+      setCommentingUserArray([]);
     }
   }, [
     areReactionsReadyForRendering,
@@ -407,7 +407,7 @@ export const PostPage: React.FC = () => {
         reactionId: postReactionConfirm.reactionId,
       });
 
-      setLikingUsersList(List());
+      setLikingUsersArray([]);
       setAreReactionsReadyForRendering(false);
       dispatch(
         getPostReactionsStart({
@@ -432,7 +432,7 @@ export const PostPage: React.FC = () => {
         reactionId: '',
       });
 
-      setLikingUsersList(List());
+      setLikingUsersArray([]);
       setAreReactionsReadyForRendering(false);
       dispatch(
         getPostReactionsStart({
@@ -545,8 +545,8 @@ export const PostPage: React.FC = () => {
       reactingUserInfoList.size === userProfilePhotoList.size &&
       !areReactionsReadyForRendering
     ) {
-      let commentsList: List<UserInfoAndOtherData> = List();
-      let likesList: List<UserInfoAndOtherData> = List();
+      let commentsArray: UserInfoAndOtherData[] = [];
+      let likesArray: UserInfoAndOtherData[] = [];
 
       reactionsList.forEach((reactionEl) => {
         const userId = reactionEl.reactingUserId;
@@ -579,7 +579,7 @@ export const PostPage: React.FC = () => {
         }
 
         if (reactionEl.likedPost) {
-          likesList = likesList.push({
+          likesArray.push({
             username: username!,
             name: name!,
             profilePhotoFileString: fileString!,
@@ -589,7 +589,7 @@ export const PostPage: React.FC = () => {
             postId: postId,
           });
         } else {
-          commentsList = commentsList.push({
+          commentsArray.push({
             username: username!,
             name: name!,
             profilePhotoFileString: fileString!,
@@ -603,13 +603,15 @@ export const PostPage: React.FC = () => {
         }
       });
 
-      if (!compareUserInfoAndDataObjLists(commentingUserList, commentsList)) {
-        setCommentingUserList(commentsList);
+      if (
+        !compareUserInfoAndDataObjArrays(commentingUserArray, commentsArray)
+      ) {
+        setCommentingUserArray(commentsArray);
       }
 
-      if (!compareUserInfoAndDataObjLists(likingUsersList, likesList)) {
-        setLikingUsersList(likesList);
-        setPostLikingUsersArray(likesList.toArray());
+      if (!compareUserInfoAndDataObjArrays(likingUsersArray, likesArray)) {
+        setLikingUsersArray(likesArray);
+        setPostLikingUsersArray(likesArray);
       }
 
       setAreReactionsReadyForRendering(true);
@@ -895,17 +897,17 @@ export const PostPage: React.FC = () => {
                 <CircularProgress />
               </Box>
             ) : null}
-            {commentingUserList.size ? (
+            {commentingUserArray.length ? (
               <UserInfo
                 styleType={StyleType.postPage}
-                userInfoList={commentingUserList}
+                userInfoList={List(commentingUserArray)}
               />
             ) : null}
           </div>
           {handleRenderLikeOrLikedButton()}
-          {likingUsersList.size ? (
+          {likingUsersArray.length ? (
             <Button className='likes' onClick={handleShowPostLikingUsersModal}>
-              <span>{`${likingUsersList.size} likes`}</span>
+              <span>{`${likingUsersArray.length} likes`}</span>
             </Button>
           ) : null}
           {postData ? (
@@ -937,14 +939,14 @@ export const PostPage: React.FC = () => {
           </form>
         </div>
       </div>
-      {likingUsersList.size ? (
+      {likingUsersArray.length ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showPostLikingUsersModal}
           onHide={handleHidePostLikingUsersModal}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
-          postLikingUsersList={likingUsersList}
+          postLikingUsersArray={likingUsersArray}
         />
       ) : null}
       <PostOrCommentOptionsModal

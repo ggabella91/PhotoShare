@@ -50,7 +50,7 @@ interface FollowersOrFollowingOrLikesModalProps {
   onHide: () => void;
   isFollowersModal: boolean;
   isPostLikingUsersModal?: boolean;
-  postLikingUsersList?: List<UserInfoAndOtherData>;
+  postLikingUsersArray?: UserInfoAndOtherData[];
   followers: User[] | null;
   following: User[] | null;
   followPhotoFileArray: PostFile[] | null;
@@ -75,7 +75,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   users,
   isFollowersModal,
   isPostLikingUsersModal,
-  postLikingUsersList,
+  postLikingUsersArray,
   onHide,
   followers,
   following,
@@ -86,9 +86,9 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   clearFollowPhotoFileArray,
   ...props
 }) => {
-  const [userInfoAndPhotoList, setUserInfoAndPhotoList] = useState<
-    List<UserInfoData>
-  >(List());
+  const [userInfoAndPhotoArray, setUserInfoAndPhotoArray] = useState<
+    UserInfoData[]
+  >([]);
   const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
 
   let usersLoaded = useRef(false);
@@ -137,17 +137,9 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   const handleRenderFollowersOrFollowingInfoArray = (
     followersOrFollowing: User[]
   ) => {
-    let followersOrFollowingList: List<User>;
-
-    if (followersOrFollowing.length) {
-      followersOrFollowingList = List(followersOrFollowing);
-    } else {
-      followersOrFollowingList = List();
-    }
-
     if (
       users &&
-      followersOrFollowingList.size === users.length &&
+      followersOrFollowing.length === users.length &&
       !followPhotoFileArray &&
       !noProfilePhotosToFetch
     ) {
@@ -169,8 +161,8 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
         setNoProfilePhotosToFetch(true);
       }
     } else if (followPhotoFileArray && followPhotoFileArray.length) {
-      const followerOrFollowing: List<UserInfoData> =
-        followersOrFollowingList.map((el: User) => {
+      const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
+        (el: User) => {
           let photoFileString: string;
 
           followPhotoFileArray.forEach((file) => {
@@ -187,12 +179,13 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
             location: {} as Location,
             comment: '',
           };
-        });
+        }
+      );
 
-      setUserInfoAndPhotoList(followerOrFollowing);
+      setUserInfoAndPhotoArray(followerOrFollowing);
     } else if (!followPhotoFileArray && noProfilePhotosToFetch) {
-      const followerOrFollowing: List<UserInfoData> =
-        followersOrFollowingList.map((el: User) => {
+      const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
+        (el: User) => {
           return {
             name: el.name,
             username: el.username,
@@ -201,17 +194,18 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
             location: {} as Location,
             comment: '',
           };
-        });
+        }
+      );
 
-      setUserInfoAndPhotoList(followerOrFollowing);
+      setUserInfoAndPhotoArray(followerOrFollowing);
     }
   };
 
   useEffect(() => {
-    if (isPostLikingUsersModal && postLikingUsersList) {
-      let postLikerArray: List<UserInfoData>;
+    if (isPostLikingUsersModal && postLikingUsersArray) {
+      let postLikerArray: UserInfoData[];
 
-      postLikerArray = postLikingUsersList.map((el) => {
+      postLikerArray = postLikingUsersArray.map((el) => {
         return {
           profilePhotoFileString: el.profilePhotoFileString,
           username: el.username,
@@ -222,9 +216,9 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
         };
       });
 
-      setUserInfoAndPhotoList(postLikerArray);
+      setUserInfoAndPhotoArray(postLikerArray);
     }
-  }, [postLikingUsersList]);
+  }, [postLikingUsersArray]);
 
   return (
     <Modal
@@ -246,7 +240,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
       </Modal.Header>
       <Modal.Body className='followers-following-modal-body'>
         <UserInfo
-          userInfoList={userInfoAndPhotoList}
+          userInfoList={List(userInfoAndPhotoArray)}
           styleType={StyleType.modal}
         />
       </Modal.Body>
