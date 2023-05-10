@@ -68,7 +68,6 @@ import {
 import {
   selectFollowers,
   selectCurrentUserUsersFollowing,
-  selectGetUsersFollowingConfirm,
 } from '../../redux/follower/follower.selectors';
 import {
   getFollowersStart,
@@ -215,10 +214,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
-
-  const [postLikersList, setPostLikersList] = useState<
-    List<UserInfoAndOtherData>
-  >(List());
 
   const pageToFetch = useRef(1);
 
@@ -500,12 +495,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (postLikingUsersArray) {
-      setPostLikersList(List(postLikingUsersArray));
-    }
-  }, [postLikingUsersArray]);
-
   const handleHidePostOptionsModal = () => setPostOptionsModalShow(false);
 
   const handleArchivePost = () =>
@@ -694,14 +683,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         onHide={handleHideFollowersOrFollowingModal}
         isFollowersModal={isFollowersModal}
       />
-      {postLikersList.size ? (
+      {postLikingUsersArray?.length ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showPostLikingUsersModal}
           onHide={handleHideLikesModal}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
-          postLikingUsersList={postLikersList}
+          postLikingUsersArray={postLikingUsersArray}
         />
       ) : null}
     </div>

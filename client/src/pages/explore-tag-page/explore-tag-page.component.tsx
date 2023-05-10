@@ -31,7 +31,6 @@ import PostOrCommentOptionsModal from '../../components/post-or-comment-options-
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 
 import { PostModalMapProps } from '../my-profile/my-profile-page.component';
-import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 import { AppState } from '../../redux/root-reducer';
 
 import './explore-tag-page.styles.scss';
@@ -62,10 +61,6 @@ const ExploreTagPage: React.FC = () => {
 
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
-
-  const [postLikersList, setPostLikersList] = useState<
-    List<UserInfoAndOtherData>
-  >(List());
 
   const [pageToFetch, setPageToFetch] = useState(1);
   const fetchedFirstPage = useRef(false);
@@ -287,12 +282,6 @@ const ExploreTagPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (postLikingUsersArray) {
-      setPostLikersList(List(postLikingUsersArray));
-    }
-  }, [postLikingUsersArray]);
-
   const handleHidePostOptionsModal = () => setPostOptionsModalShow(false);
 
   const handleArchivePost = () =>
@@ -415,14 +404,14 @@ const ExploreTagPage: React.FC = () => {
         isCurrentUserPostOrComment={currentUserPostOrComment}
         postOptionsModal={false}
       />
-      {postLikersList.size ? (
+      {postLikingUsersArray?.length ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showPostLikingUsersModal}
           onHide={handleHideLikesModal}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
-          postLikingUsersList={postLikersList}
+          postLikingUsersArray={postLikingUsersArray}
         />
       ) : null}
     </div>

@@ -250,10 +250,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const [showPostLikingUsersModal, setShowPostLikingUsersModal] =
     useState(false);
 
-  const [postLikersList, setPostLikersList] = useState<
-    List<UserInfoAndOtherData>
-  >(List());
-
   const [pageToFetch, setPageToFetch] = useState(1);
 
   let isInitialPostDataFetched = useRef(false);
@@ -590,12 +586,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (postLikingUsersArray) {
-      setPostLikersList(List(postLikingUsersArray));
-    }
-  }, [postLikingUsersArray]);
-
   const handleHidePostOptionsModal = () => setPostOptionsModalShow(false);
 
   const handleArchivePost = () =>
@@ -797,14 +787,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         onHide={handleHideFollowersOrFollowingModal}
         isFollowersModal={isFollowersModal}
       />
-      {postLikersList.size ? (
+      {postLikingUsersArray?.length ? (
         <FollowersOrFollowingOrLikesModal
           users={null}
           show={showPostLikingUsersModal}
           onHide={handleHideLikesModal}
           isFollowersModal={false}
           isPostLikingUsersModal={true}
-          postLikingUsersList={postLikersList}
+          postLikingUsersArray={postLikingUsersArray}
         />
       ) : null}
     </div>
