@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
-import { List } from 'immutable';
 
 import {
   User,
@@ -41,8 +40,6 @@ import UserInfo, {
 
 import './followers-or-following-or-likes-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
-
-// TODO Change immmutable List to regular array
 
 interface FollowersOrFollowingOrLikesModalProps {
   users: Follower[] | null;
@@ -240,7 +237,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
       </Modal.Header>
       <Modal.Body className='followers-following-modal-body'>
         <UserInfo
-          userInfoList={List(userInfoAndPhotoArray)}
+          userInfoArray={userInfoAndPhotoArray}
           styleType={StyleType.modal}
         />
       </Modal.Body>

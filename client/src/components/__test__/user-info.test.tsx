@@ -18,20 +18,16 @@ describe('user info component tests', () => {
       reactingUserId: '12345',
       reactionId: 'jgt3u4t34ut',
     } as UserInfoAndOtherData;
-    const userCommentList = List([
-      userInfoEl,
-      {},
-      {},
-    ]) as List<UserInfoAndOtherData>;
+    const userCommentList = [userInfoEl, {}, {}] as UserInfoAndOtherData[];
     const testLocation = { label: 'test location' } as Location;
-    const userCaption = List([
+    const userCaption = [
       {
         comment: 'test caption',
         location: testLocation,
       },
-    ]) as List<UserInfoAndOtherData>;
-    const userInfoList = List([{}, {}, {}]) as List<UserInfoAndOtherData>;
-    const userInfoListFeed = List([{}]) as List<UserInfoAndOtherData>;
+    ] as UserInfoAndOtherData[];
+    const userInfoList = [{}, {}, {}] as UserInfoAndOtherData[];
+    const userInfoListFeed = [{}] as UserInfoAndOtherData[];
 
     const setCommentToDelete = jest.fn();
     const setShowCommentOptionsModal = jest.fn();
@@ -40,7 +36,7 @@ describe('user info component tests', () => {
 
     render(
       <UserInfo
-        userInfoList={
+        userInfoArray={
           type === 'comment'
             ? caption
               ? userCaption

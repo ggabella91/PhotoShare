@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
-import { List } from 'immutable';
 
 import { User, Error } from '../../redux/user/user.types';
 import {
@@ -251,7 +250,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         />
         {!showUserSuggestions || hideSuggestionsOnBlur ? null : (
           <UserInfo
-            userInfoList={List(userSuggestionsArray)}
+            userInfoArray={userSuggestionsArray}
             styleType={StyleType.suggestion}
             selectedSuggestion={selectedSuggestion}
             shouldNavigate={shouldNavigate}
