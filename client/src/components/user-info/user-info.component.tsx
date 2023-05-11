@@ -3,7 +3,6 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { List } from 'immutable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { AppState } from '../../redux/root-reducer';
@@ -44,7 +43,7 @@ export interface UserInfoAndOtherData {
 
 interface UserInfoProps {
   styleType: StyleType;
-  userInfoList: List<UserInfoAndOtherData>;
+  userInfoArray: UserInfoAndOtherData[];
   isCaption?: boolean;
   isCaptionOwner?: boolean;
   setCommentToDelete: typeof setCommentToDelete;
@@ -56,7 +55,7 @@ interface UserInfoProps {
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({
-  userInfoList,
+  userInfoArray,
   styleType,
   isCaption,
   isCaptionOwner,
@@ -111,7 +110,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       idx = -1;
     }
 
-    const commentToDelete: UserInfoAndOtherData = userInfoList.get(idx)!;
+    const commentToDelete: UserInfoAndOtherData = userInfoArray[idx]!;
 
     if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
       setCommentToDelete({
@@ -133,8 +132,8 @@ export const UserInfo: React.FC<UserInfoProps> = ({
 
   const handleSetFeedPagePostOptionsModalShow = () => {
     setFeedPagePostOptionsModalShow(true);
-    if (userInfoList.get(0) && userInfoList.get(0)!.postId) {
-      dispatch(setFeedPagePostIdForNavigation(userInfoList.get(0)!.postId!));
+    if (userInfoArray[0] && userInfoArray[0]!.postId) {
+      dispatch(setFeedPagePostIdForNavigation(userInfoArray[0]!.postId!));
     }
   };
 
@@ -177,8 +176,8 @@ export const UserInfo: React.FC<UserInfoProps> = ({
       typeof selectedSuggestion === 'number' &&
       shouldNavigate
     ) {
-      const userProfile = userInfoList.find(
-        (user, idx) => idx === selectedSuggestion
+      const userProfile = userInfoArray.find(
+        (_, idx) => idx === selectedSuggestion
       );
 
       if (userProfile) {
@@ -188,111 +187,115 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     }
   }, [selectedSuggestion, shouldNavigate]);
 
-  const userInfo = userInfoList.map((el: UserInfoAndOtherData, idx: number) => (
-    <div
-      className='user-and-options'
-      key={idx}
-      data-idx={idx}
-      data-username={el.username}
-      data-testid={`user-${styleType}-element-${idx}`}
-      onClick={handleClickComponent}
-      onMouseEnter={handleOnMouseEnter}
-      onMouseLeave={handleOnMouseLeave}
-      onMouseDown={handleMouseDown}
-    >
+  const userInfo = userInfoArray.map(
+    (el: UserInfoAndOtherData, idx: number) => (
       <div
-        className={`user-${styleType}-element${
-          selectedSuggestion === idx ? ' selected' : ''
-        }`}
+        className='user-and-options'
+        key={idx}
+        data-idx={idx}
+        data-username={el.username}
+        data-testid={`user-${styleType}-element-${idx}`}
+        onClick={handleClickComponent}
+        onMouseEnter={handleOnMouseEnter}
+        onMouseLeave={handleOnMouseLeave}
+        onMouseDown={handleMouseDown}
       >
-        <div className={`${styleType}-avatar`}>
-          {el.profilePhotoFileString ? (
-            <img
-              className={`${styleType}-profile-photo`}
-              src={`data:image/jpeg;base64,${el.profilePhotoFileString}`}
-              alt='profile-pic'
-            />
-          ) : null}
-          {!el.profilePhotoFileString ? (
-            <div className={`${styleType}-photo-placeholder`}>
-              <p className={`${styleType}-photo-placeholder-text`}>No photo</p>
-            </div>
-          ) : null}
-        </div>
-        <div className='user-data-and-date'>
-          <div className={`${styleType}-username-and-other-data`}>
-            {styleType !== StyleType.suggestion ? (
-              <NavLink
-                to={`/${el.username}`}
-                className={`${styleType}-username`}
-              >
-                {el.username}
-              </NavLink>
-            ) : (
-              <span className={`${styleType}-username`}>{el.username}</span>
-            )}
-            <span className={`${styleType}-name`}>{el.name}</span>
-            <span className={`${styleType}-location`}>
-              {el.location?.label || ''}
-            </span>
-            <span>
-              {el.comment
-                ? isCaption
-                  ? handleRenderCaptionWithHashtagLinks(el.comment)
-                  : el.comment
-                : null}
-            </span>
-          </div>
-          {el.commentDate ? (
-            <span className={`${styleType}-date`}>
-              {new Date(el.commentDate).toDateString()}
-            </span>
-          ) : null}
-        </div>
         <div
-          className={`${
-            showCommentOptionsButtonForIdx.show &&
-            showCommentOptionsButtonForIdx.idx === idx
-              ? ''
-              : 'hide'
-          } ${styleType}-options`}
+          className={`user-${styleType}-element${
+            selectedSuggestion === idx ? ' selected' : ''
+          }`}
         >
-          {(styleType === StyleType.comment ||
-            styleType === StyleType.postPage) &&
-          !isCaption ? (
-            <button
-              className={`${styleType}-ellipsis-button`}
-              data-idx={idx}
-              onClick={handleSetCommentToDelete}
-              data-testid='comment-ellipsis-button'
-            >
-              <MoreHorizIcon />
-            </button>
-          ) : null}
-          {(styleType === StyleType.comment ||
-            styleType === StyleType.postPage) &&
-          isCaption ? (
-            <button
-              className={`${styleType}-ellipsis-button`}
-              onClick={handleClickCaptionOptions}
-              data-testid='caption-ellipsis-button'
-            >
-              <MoreHorizIcon />
-            </button>
-          ) : null}
+          <div className={`${styleType}-avatar`}>
+            {el.profilePhotoFileString ? (
+              <img
+                className={`${styleType}-profile-photo`}
+                src={`data:image/jpeg;base64,${el.profilePhotoFileString}`}
+                alt='profile-pic'
+              />
+            ) : null}
+            {!el.profilePhotoFileString ? (
+              <div className={`${styleType}-photo-placeholder`}>
+                <p className={`${styleType}-photo-placeholder-text`}>
+                  No photo
+                </p>
+              </div>
+            ) : null}
+          </div>
+          <div className='user-data-and-date'>
+            <div className={`${styleType}-username-and-other-data`}>
+              {styleType !== StyleType.suggestion ? (
+                <NavLink
+                  to={`/${el.username}`}
+                  className={`${styleType}-username`}
+                >
+                  {el.username}
+                </NavLink>
+              ) : (
+                <span className={`${styleType}-username`}>{el.username}</span>
+              )}
+              <span className={`${styleType}-name`}>{el.name}</span>
+              <span className={`${styleType}-location`}>
+                {el.location?.label || ''}
+              </span>
+              <span>
+                {el.comment
+                  ? isCaption
+                    ? handleRenderCaptionWithHashtagLinks(el.comment)
+                    : el.comment
+                  : null}
+              </span>
+            </div>
+            {el.commentDate ? (
+              <span className={`${styleType}-date`}>
+                {new Date(el.commentDate).toDateString()}
+              </span>
+            ) : null}
+          </div>
+          <div
+            className={`${
+              showCommentOptionsButtonForIdx.show &&
+              showCommentOptionsButtonForIdx.idx === idx
+                ? ''
+                : 'hide'
+            } ${styleType}-options`}
+          >
+            {(styleType === StyleType.comment ||
+              styleType === StyleType.postPage) &&
+            !isCaption ? (
+              <button
+                className={`${styleType}-ellipsis-button`}
+                data-idx={idx}
+                onClick={handleSetCommentToDelete}
+                data-testid='comment-ellipsis-button'
+              >
+                <MoreHorizIcon />
+              </button>
+            ) : null}
+            {(styleType === StyleType.comment ||
+              styleType === StyleType.postPage) &&
+            isCaption ? (
+              <button
+                className={`${styleType}-ellipsis-button`}
+                onClick={handleClickCaptionOptions}
+                data-testid='caption-ellipsis-button'
+              >
+                <MoreHorizIcon />
+              </button>
+            ) : null}
+          </div>
         </div>
+        {styleType === StyleType.feed ? (
+          <button
+            className='post-options'
+            onClick={handleSetFeedPagePostOptionsModalShow}
+            data-testid='post-ellipsis-button'
+          >
+            <MoreHorizIcon className='ellipsis' />
+          </button>
+        ) : null}
       </div>
-      {styleType === StyleType.feed ? (
-        <button
-          className='post-options'
-          onClick={handleSetFeedPagePostOptionsModalShow}
-          data-testid='post-ellipsis-button'
-        >
-          <MoreHorizIcon className='ellipsis' />
-        </button>
-      ) : null}
-    </div>
-  ));
+    )
+  );
 
   return (
     <div

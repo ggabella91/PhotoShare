@@ -295,8 +295,8 @@ export interface PostModalDataToCache {
 }
 
 export interface PostModalCacheObj {
-  commentingUserList: List<UserInfoAndOtherData>;
-  likingUsersList: List<UserInfoAndOtherData>;
+  commentingUserArray: UserInfoAndOtherData[];
+  likingUsersArray: UserInfoAndOtherData[];
   alreadyLikedPostAndReactionId: AlreadyLikedAndReactionId;
 }
 

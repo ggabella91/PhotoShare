@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, useParams } from 'react-router-dom';
-import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -21,7 +20,6 @@ import {
   Reaction,
   Post,
   FileRequestType,
-  PostFile,
   ReactionRequestType,
   UserType,
   Location,
@@ -56,15 +54,11 @@ import { ExpandableFormInput } from '../../components/form-input/form-input.comp
 import EditPostForm from '../../components/edit-post-form/edit-post-form.component';
 
 import {
-  compareUserOrPostOrReactionLists,
   compareUserInfoAndDataObjArrays,
+  compareUserOrPostOrReactionArrays,
 } from '../../pages/feed-page/feed-page.utils';
 
 import './post-page.styles.scss';
-
-export interface ImmutableMap<T> extends Map<string, any> {
-  get<K extends keyof T>(name: K): T[K];
-}
 
 export interface AlreadyLikedAndReactionId {
   alreadyLikedPost: boolean;
@@ -104,23 +98,19 @@ export const PostPage: React.FC = () => {
 
   const [comment, setComment] = useState('');
 
-  const [captionInfoList, setCaptionInfoList] = useState<
-    List<UserInfoAndOtherData>
-  >(List());
+  const [captionInfoArray, setCaptionInfoArray] = useState<
+    UserInfoAndOtherData[]
+  >([]);
 
-  const [reactionsList, setReactionsList] = useState<List<Reaction>>(List());
+  const [reactionsArray, setReactionsArray] = useState<Reaction[]>([]);
 
   const [uniqueReactingUsers, setUniqueReactingUsers] = useState<Set<string>>(
     new Set()
   );
 
-  const [reactingUserInfoList, setReactingUsersInfoList] = useState<List<User>>(
-    List()
+  const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<User[]>(
+    []
   );
-
-  const [userProfilePhotoList, setUserProfilePhotoList] = useState<
-    List<PostFile>
-  >(List());
 
   const [commentingUserArray, setCommentingUserArray] = useState<
     UserInfoAndOtherData[]
@@ -255,18 +245,16 @@ export const PostPage: React.FC = () => {
 
   useEffect(() => {
     if (postData && otherUser && otherUserProfilePhotoFile) {
-      setCaptionInfoList(
-        List([
-          {
-            username: otherUser.username,
-            name: '',
-            profilePhotoFileString: otherUserProfilePhotoFile.fileString,
-            comment: postData.caption || '',
-            location: {} as Location,
-            commentDate: postData.createdAt,
-          },
-        ])
-      );
+      setCaptionInfoArray([
+        {
+          username: otherUser.username,
+          name: '',
+          profilePhotoFileString: otherUserProfilePhotoFile.fileString,
+          comment: postData.caption || '',
+          location: {} as Location,
+          commentDate: postData.createdAt,
+        },
+      ]);
     }
   }, [postData, otherUser, otherUserProfilePhotoFile]);
 
@@ -276,18 +264,16 @@ export const PostPage: React.FC = () => {
       let newLocation = editPostDetailsConfirm.postLocation || ({} as Location);
 
       if (postData && otherUser && otherUserProfilePhotoFile && newCaption) {
-        setCaptionInfoList(
-          List([
-            {
-              username: otherUser.username,
-              name: '',
-              profilePhotoFileString: otherUserProfilePhotoFile.fileString,
-              comment: newCaption,
-              location: newLocation,
-              commentDate: postData.createdAt,
-            },
-          ])
-        );
+        setCaptionInfoArray([
+          {
+            username: otherUser.username,
+            name: '',
+            profilePhotoFileString: otherUserProfilePhotoFile.fileString,
+            comment: newCaption,
+            location: newLocation,
+            commentDate: postData.createdAt,
+          },
+        ]);
 
         setEditPostDetails({
           editCaption: newCaption,
@@ -314,7 +300,7 @@ export const PostPage: React.FC = () => {
           );
         }
       } else {
-        setCaptionInfoList(List());
+        setCaptionInfoArray([]);
       }
 
       getSinglePostDataStart({ postId: editPostDetailsConfirm.id });
@@ -345,24 +331,16 @@ export const PostPage: React.FC = () => {
       !areReactionsReadyForRendering
     ) {
       postReactionsArray.forEach((innerArray) => {
-        let innerArrayAsList = List(innerArray);
-
-        if (
-          innerArrayAsList.size &&
-          innerArrayAsList.get(0)!.postId === postId
-        ) {
-          if (
-            !compareUserOrPostOrReactionLists(reactionsList, innerArrayAsList)
-          ) {
-            setReactionsList(innerArrayAsList);
+        if (innerArray.length && innerArray[0]!.postId === postId) {
+          if (!compareUserOrPostOrReactionArrays(reactionsArray, innerArray)) {
+            setReactionsArray(innerArray);
           }
         }
       });
     } else if (postReactionsArray && !postReactionsArray.length) {
-      setReactionsList(List());
+      setReactionsArray([]);
       setUniqueReactingUsers(new Set());
-      setReactingUsersInfoList(List());
-      setUserProfilePhotoList(List());
+      setReactingUsersInfoArray([]);
       setLikingUsersArray([]);
       setCommentingUserArray([]);
     }
@@ -370,12 +348,16 @@ export const PostPage: React.FC = () => {
     areReactionsReadyForRendering,
     postId,
     postReactionsArray,
-    reactionsList,
+    reactionsArray,
   ]);
 
   useEffect(() => {
-    if (currentUser && reactionsList.size && !areReactionsReadyForRendering) {
-      const foundPost = reactionsList.find(
+    if (
+      currentUser &&
+      reactionsArray.length &&
+      !areReactionsReadyForRendering
+    ) {
+      const foundPost = reactionsArray.find(
         (el) => el.reactingUserId === currentUser.id && el.likedPost
       );
 
@@ -391,7 +373,7 @@ export const PostPage: React.FC = () => {
         });
       }
     }
-  }, [areReactionsReadyForRendering, currentUser, reactionsList]);
+  }, [areReactionsReadyForRendering, currentUser, reactionsArray]);
 
   useEffect(() => {
     if (
@@ -482,8 +464,8 @@ export const PostPage: React.FC = () => {
   }, [deleteReactionConfirm, dispatch, postId]);
 
   useEffect(() => {
-    if (reactionsList.size && !areReactionsReadyForRendering) {
-      reactionsList.forEach((el) => {
+    if (reactionsArray.length && !areReactionsReadyForRendering) {
+      reactionsArray.forEach((el) => {
         dispatch(
           getOtherUserStart({
             type: OtherUserType.POST_REACTOR,
@@ -495,17 +477,17 @@ export const PostPage: React.FC = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, areReactionsReadyForRendering, reactionsList]);
+  }, [dispatch, areReactionsReadyForRendering, reactionsArray]);
 
   useEffect(() => {
     if (postReactingUsers && postReactingUsers.length) {
-      setReactingUsersInfoList(List(postReactingUsers));
+      setReactingUsersInfoArray(postReactingUsers);
     }
   }, [postReactingUsers]);
 
   useEffect(() => {
-    if (reactingUserInfoList.size && !areReactionsReadyForRendering) {
-      reactingUserInfoList.forEach((el) => {
+    if (reactingUserInfoArray.length && !areReactionsReadyForRendering) {
+      reactingUserInfoArray.forEach((el) => {
         if (el.photo) {
           dispatch(
             getPostFileStart({
@@ -526,29 +508,23 @@ export const PostPage: React.FC = () => {
     dispatch,
     areReactionsReadyForRendering,
     profileBucket,
-    reactingUserInfoList,
+    reactingUserInfoArray,
   ]);
 
   useEffect(() => {
-    if (reactorPhotoFileArray) {
-      setUserProfilePhotoList(List(reactorPhotoFileArray));
-    }
-  }, [reactorPhotoFileArray]);
-
-  useEffect(() => {
     if (
-      reactionsList.size &&
-      reactingUserInfoList.size &&
+      reactionsArray.length &&
+      reactingUserInfoArray.length &&
       uniqueReactingUsers.size &&
-      reactingUserInfoList.size >= uniqueReactingUsers.size &&
-      userProfilePhotoList.size &&
-      reactingUserInfoList.size === userProfilePhotoList.size &&
+      reactingUserInfoArray.length >= uniqueReactingUsers.size &&
+      reactorPhotoFileArray?.length &&
+      reactingUserInfoArray.length === reactorPhotoFileArray?.length &&
       !areReactionsReadyForRendering
     ) {
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
 
-      reactionsList.forEach((reactionEl) => {
+      reactionsArray.forEach((reactionEl) => {
         const userId = reactionEl.reactingUserId;
         let username: string;
         let name: string;
@@ -556,7 +532,7 @@ export const PostPage: React.FC = () => {
         let photoKey: string;
         let fileString: string;
 
-        reactingUserInfoList.forEach((infoEl) => {
+        reactingUserInfoArray.forEach((infoEl) => {
           if (infoEl.id === userId) {
             username = infoEl.username;
             name = infoEl.name;
@@ -564,7 +540,7 @@ export const PostPage: React.FC = () => {
           }
         });
 
-        userProfilePhotoList.forEach((photoEl) => {
+        reactorPhotoFileArray.forEach((photoEl) => {
           if (photoEl.s3Key === photoKey) {
             fileString = photoEl.fileString;
           }
@@ -617,10 +593,10 @@ export const PostPage: React.FC = () => {
       setAreReactionsReadyForRendering(true);
     }
   }, [
-    reactionsList,
+    reactionsArray,
     uniqueReactingUsers,
-    reactingUserInfoList,
-    userProfilePhotoList,
+    reactingUserInfoArray,
+    reactorPhotoFileArray,
   ]);
 
   const handleSetIsCurrentUserPost = (postData: Post) => {
@@ -875,17 +851,17 @@ export const PostPage: React.FC = () => {
             </div>
           </div>
           <div className='post-page-caption-and-comments-container'>
-            {captionInfoList.size && !showPostEditForm ? (
+            {captionInfoArray.length && !showPostEditForm ? (
               <UserInfo
                 styleType={StyleType.postPage}
-                userInfoList={captionInfoList}
+                userInfoArray={captionInfoArray}
                 isCaption
                 isCaptionOwner={isCurrentUserPost ? true : false}
               />
             ) : (
               handleRenderEditPostDetails()
             )}
-            {!areReactionsReadyForRendering && reactionsList.size ? (
+            {!areReactionsReadyForRendering && reactionsArray.length ? (
               <Box
                 sx={{
                   display: 'flex',
@@ -900,7 +876,7 @@ export const PostPage: React.FC = () => {
             {commentingUserArray.length ? (
               <UserInfo
                 styleType={StyleType.postPage}
-                userInfoList={List(commentingUserArray)}
+                userInfoArray={commentingUserArray}
               />
             ) : null}
           </div>

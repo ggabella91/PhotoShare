@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { List } from 'immutable';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -583,7 +582,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       data-testid='feed-post-container'
     >
       <div className='profile-and-options'>
-        <UserInfo styleType={StyleType.feed} userInfoList={List([userInfo])} />
+        <UserInfo styleType={StyleType.feed} userInfoArray={[userInfo]} />
       </div>
       <div className='media-background'>
         {!playVideo ? (
