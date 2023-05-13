@@ -163,19 +163,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   setShowPostEditForm,
   getPostDataConfirm,
 }) => {
-  const [user, setUser] = useState<UserLite>({
-    id: '',
-    name: '',
-    username: '',
-    bio: '',
-  });
-
   const [profilePhotoString, setProfilePhotoString] = useState<string>('');
-
-  // const [followers, setFollowersArray] = useState<Follower[]>([]);
-  // const [currentUserUsersFollowing, setUsersFollowingArray] = useState<Follower[]>(
-  //   []
-  // );
 
   const [postModalShow, setPostModalShow] = useState(false);
   const [postModalProps, setPostModalProps] = useState<PostModalMapProps>({
@@ -225,25 +213,24 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
-  useEffect(
-    // Clear post state and follow state when cleaning
-    // up before component leaves the screen
-    () => () => {
+  useEffect(() => {
+    clearPostState();
+    clearFollowState();
+    clearFollowersAndFollowing();
+    setIsCurrentUserProfilePage(true);
+
+    return () => {
+      // Clear post state and follow state when cleaning
+      // up before component leaves the screen
       clearPostState();
       clearFollowState();
-    },
-    []
-  );
+    };
+  }, []);
 
   useEffect(() => {
     if (!currentUser) {
       return;
     }
-
-    clearPostState();
-    clearFollowState();
-    clearFollowersAndFollowing();
-    setIsCurrentUserProfilePage(true);
 
     if (pageToFetch.current === 1) {
       getPostDataStart({
