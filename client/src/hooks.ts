@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { UserInfoData } from './components/search-bar/search-bar.component';
 
-import { List } from 'immutable';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { User } from './redux/user/user.types';
@@ -84,11 +83,11 @@ export const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-export const useUserInfoData = (usersList: User[] | null) => {
+export const useUserInfoData = (usersArray: User[] | null) => {
   const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
-  const [userSuggestionsList, setUserSuggestionsList] = useState<
-    List<UserInfoData>
-  >(List());
+  const [userSuggestionsArray, setUserSuggestionsArray] = useState<
+    UserInfoData[]
+  >([]);
   const dispatch = useDispatch();
 
   const userSuggestionProfilePhotoFiles = useSelector(
@@ -104,10 +103,10 @@ export const useUserInfoData = (usersList: User[] | null) => {
   }
 
   useEffect(() => {
-    if (usersList?.length) {
+    if (usersArray?.length) {
       let count = 0;
 
-      for (let user of usersList) {
+      for (let user of usersArray) {
         if (user.photo) {
           count++;
           dispatch(
@@ -125,57 +124,49 @@ export const useUserInfoData = (usersList: User[] | null) => {
         setNoProfilePhotosToFetch(true);
       }
     } else {
-      setUserSuggestionsList(List());
+      setUserSuggestionsArray([]);
     }
-  }, [dispatch, usersList, bucket]);
+  }, [dispatch, usersArray, bucket]);
 
   useEffect(() => {
-    if (usersList && userSuggestionProfilePhotoFiles?.length) {
-      const userSuggestionsAsList = List(usersList);
+    if (usersArray && userSuggestionProfilePhotoFiles?.length) {
+      const suggestedUser: UserInfoData[] = usersArray.map((el: User) => {
+        let photoFileString: string;
 
-      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
-        (el: User) => {
-          let photoFileString: string;
+        userSuggestionProfilePhotoFiles.forEach((file) => {
+          if (el.photo === file.s3Key) {
+            photoFileString = file.fileString;
+          }
+        });
 
-          userSuggestionProfilePhotoFiles.forEach((file) => {
-            if (el.photo === file.s3Key) {
-              photoFileString = file.fileString;
-            }
-          });
-
-          return {
-            id: el.id,
-            name: el.name,
-            username: el.username,
-            photo: el.photo || '',
-            profilePhotoFileString: photoFileString!,
-            location: {} as Location,
-            comment: '',
-          };
-        }
-      );
-
-      setUserSuggestionsList(suggestedUser);
-    } else if (usersList && noProfilePhotosToFetch) {
-      const userSuggestionsAsList = List(usersList);
-
-      const suggestedUser: List<UserInfoData> = userSuggestionsAsList.map(
-        (el: User) => ({
+        return {
           id: el.id,
           name: el.name,
           username: el.username,
           photo: el.photo || '',
-          profilePhotoFileString: '',
+          profilePhotoFileString: photoFileString!,
           location: {} as Location,
           comment: '',
-        })
-      );
+        };
+      });
 
-      setUserSuggestionsList(suggestedUser);
+      setUserSuggestionsArray(suggestedUser);
+    } else if (usersArray && noProfilePhotosToFetch) {
+      const suggestedUser: UserInfoData[] = usersArray.map((el: User) => ({
+        id: el.id,
+        name: el.name,
+        username: el.username,
+        photo: el.photo || '',
+        profilePhotoFileString: '',
+        location: {} as Location,
+        comment: '',
+      }));
+
+      setUserSuggestionsArray(suggestedUser);
     }
-  }, [usersList, userSuggestionProfilePhotoFiles, noProfilePhotosToFetch]);
+  }, [usersArray, userSuggestionProfilePhotoFiles, noProfilePhotosToFetch]);
 
-  return userSuggestionsList;
+  return userSuggestionsArray;
 };
 
 export const useInitializeWebsocketConnection = (currentUser: User | null) => {

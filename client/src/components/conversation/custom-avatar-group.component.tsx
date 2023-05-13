@@ -47,7 +47,7 @@ const CustomAvatarGroup: React.FC<CustomAvatarGroupProps> = ({
   const convoImageMap = useSelector(selectConvoImageMap);
   const convoAvatarFileStrings = avatarS3Keys?.length
     ? getConvoAvatars(avatarS3Keys, currentUser)?.map(
-        (s3Key) => convoAvatarMap.get(s3Key)?.fileString || ''
+        (s3Key) => convoAvatarMap?.[s3Key]?.fileString || ''
       )
     : [''];
   const convoImageFileString =

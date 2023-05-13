@@ -47,7 +47,7 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
   >([]);
   const userSuggestions = useSelector(selectUserSuggestions);
 
-  let userSuggestionsList = useUserInfoData(filteredUserSuggestions);
+  let userSuggestionsArray = useUserInfoData(filteredUserSuggestions);
 
   const usersArrayLength = useRef<number>(0);
 
@@ -177,7 +177,7 @@ const CreateOrUpdateConvoDialog: React.FC<CreateOrUpdateConvoDialogProps> = ({
         InputLabelProps={{ sx: { paddingLeft: '15px' } }}
       />
       <Grid sx={{ height: 'auto' }}>
-        <UserDetailsContainer userDataList={userSuggestionsList} />
+        <UserDetailsContainer userDataArray={userSuggestionsArray} />
       </Grid>
     </Dialog>
   );

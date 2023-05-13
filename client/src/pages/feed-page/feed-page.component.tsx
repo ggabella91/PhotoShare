@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
@@ -96,26 +95,18 @@ import PostOrCommentOptionsModal from '../../components/post-or-comment-options-
 
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
-import {
-  prepareUserInfoAndFileList,
-  compareUserOrPostOrReactionLists,
-  comparePostFileLists,
-} from './feed-page.utils';
+import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
 
-export interface ImmutableMap<T> extends Map<string, any> {
-  get<K extends keyof T>(name: K): T[K];
-}
-
-export type UserLite = ImmutableMap<{
+export interface UserLite {
   id: string;
   name: string;
   username: string;
   bio: string;
-}>;
+}
 
 export interface PostDataListMap {
-  postData: List<Post>;
+  postData: Post[];
   queryLength?: number;
   userId: string;
 }
@@ -204,33 +195,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   setShowCommentOptionsModal,
   deleteReactionStart,
 }) => {
-  const [user, setUser] = useState<UserLite>(
-    Map({
-      id: '',
-      name: '',
-      username: '',
-      bio: '',
-    })
-  );
-
-  const [usersFollowingList, setUsersFollowingList] = useState<List<Follower>>(
-    List()
-  );
-
-  const [followingInfoList, setFollowingInfoList] = useState<List<User>>(
-    List()
-  );
-
-  const [dataFeedMapList, setDataFeedMapList] = useState<List<PostDataListMap>>(
-    List()
-  );
-
-  const [followingProfilePhotoList, setFollowingProfilePhotoList] = useState<
-    List<PostFile>
-  >(List());
-
-  const [postFileFeedArray, setPostFileFeedArray] = useState<List<PostFile>>(
-    List()
+  const [dataFeedMapArray, setDataFeedMapArray] = useState<PostDataListMap[]>(
+    []
   );
 
   const [pageToFetch, setPageToFetch] = useState(1);
@@ -283,51 +249,22 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   );
 
   useEffect(() => {
-    let currentUserMap;
-
-    if (currentUser) {
-      currentUserMap = Map(currentUser);
-    } else {
+    if (!currentUser) {
       return;
     }
 
-    if (!user.equals(currentUserMap)) {
-      clearPostState();
-      clearFollowState();
-      clearFollowersAndFollowing();
+    clearPostState();
+    clearFollowState();
+    clearFollowersAndFollowing();
 
-      setUser(
-        Map({
-          id: currentUserMap.get('id'),
-          name: currentUserMap.get('name'),
-          username: currentUserMap.get('username'),
-          bio: currentUserMap.get('bio') || '',
-        })
-      );
-      getUsersFollowingStart({
-        userId: currentUserMap.get('id')!,
-        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
-      });
-    }
+    getUsersFollowingStart({
+      userId: currentUser.id,
+      whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+    });
   }, [currentUser]);
 
   useEffect(() => {
-    let currentUserUsersFollowingList;
-
-    if (currentUserUsersFollowing) {
-      currentUserUsersFollowingList = List(currentUserUsersFollowing);
-    } else {
-      setUsersFollowingList(List());
-      return;
-    }
-
-    if (!usersFollowingList.equals(currentUserUsersFollowingList)) {
-      setUsersFollowingList(currentUserUsersFollowingList);
-    }
-  }, [currentUserUsersFollowing]);
-
-  useEffect(() => {
-    usersFollowingList.forEach((user) => {
+    currentUserUsersFollowing?.forEach((user) => {
       if (currentUser) {
         getOtherUserStart({
           usernameOrId: user.userId,
@@ -342,11 +279,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         });
       }
     });
-  }, [usersFollowingList]);
+  }, [currentUserUsersFollowing]);
 
   useEffect(() => {
     if (postMetaDataForUser) {
-      const newDataFeedMapList = dataFeedMapList.map((el) => {
+      const newDataFeedMapList = dataFeedMapArray.map((el) => {
         if (postMetaDataForUser.userId === el.userId) {
           let elCopy = { ...el };
           elCopy.queryLength = postMetaDataForUser.queryLength;
@@ -356,13 +293,13 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         return el;
       });
 
-      setDataFeedMapList(newDataFeedMapList);
+      setDataFeedMapArray(newDataFeedMapList);
     }
   }, [postMetaDataForUser]);
 
   useEffect(() => {
     if (intersectionCounter > 1) {
-      dataFeedMapList.forEach((el) => {
+      dataFeedMapArray.forEach((el) => {
         if (
           el.queryLength &&
           currentUser &&
@@ -383,49 +320,35 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     if (postDataFeedArray.length) {
-      if (dataFeedMapList.size) {
+      if (dataFeedMapArray.length) {
         postDataFeedArray.forEach((el) => {
-          dataFeedMapList.forEach((mapEl) => {
+          dataFeedMapArray.forEach((mapEl) => {
             if (el[0].userId === mapEl.userId) {
-              mapEl.postData = List(el);
+              mapEl.postData = [...el];
             }
           });
         });
 
-        setDataFeedMapList(dataFeedMapList);
+        setDataFeedMapArray(dataFeedMapArray);
       } else {
-        let dataMapList: List<PostDataListMap> = List();
+        let dataMapArray: PostDataListMap[] = [];
 
         postDataFeedArray.forEach((el) => {
-          dataMapList = dataMapList.push({
-            postData: List(el),
+          dataMapArray.push({
+            postData: [...el],
             userId: el[0].userId,
           });
         });
 
-        setDataFeedMapList(dataMapList);
+        setDataFeedMapArray(dataMapArray);
       }
     }
   }, [postDataFeedArray]);
 
   useEffect(() => {
-    let followingList;
-
-    if (followingInfo) {
-      followingList = List(followingInfo);
-    } else {
-      return;
-    }
-
-    if (!compareUserOrPostOrReactionLists(followingInfoList, followingList)) {
-      setFollowingInfoList(followingList);
-    }
-  }, [followingInfo]);
-
-  useEffect(() => {
     if (currentUser) {
       let fetchCount = 0;
-      followingInfoList.forEach((el) => {
+      followingInfo?.forEach((el) => {
         if (el.photo) {
           fetchCount++;
           getPostFileStart({
@@ -441,11 +364,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         setNoProfilePhotosToFetch(true);
       }
     }
-  }, [followingInfoList]);
+  }, [followingInfo]);
 
   useEffect(() => {
     if (currentUser) {
-      dataFeedMapList.forEach((innerObj) => {
+      dataFeedMapArray.forEach((innerObj) => {
         innerObj.postData.forEach((el) => {
           getPostFileStart({
             s3Key: el.s3Key,
@@ -458,53 +381,27 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         });
       });
     }
-  }, [dataFeedMapList, getFeedPostDataConfirm]);
-
-  useEffect(() => {
-    let followPhotoFileList;
-
-    if (followPhotoFileArray) {
-      followPhotoFileList = List(followPhotoFileArray);
-    } else {
-      return;
-    }
-
-    if (!comparePostFileLists(followingProfilePhotoList, followPhotoFileList)) {
-      setFollowingProfilePhotoList(followPhotoFileList);
-    }
-  }, [followPhotoFileArray]);
-
-  useEffect(() => {
-    let postFilesList;
-
-    if (postFiles) {
-      postFilesList = List(postFiles);
-    } else {
-      return;
-    }
-
-    if (!comparePostFileLists(postFileFeedArray, postFilesList)) {
-      setPostFileFeedArray(postFilesList);
-    }
-  }, [postFiles]);
+  }, [dataFeedMapArray, getFeedPostDataConfirm]);
 
   const userInfoAndPostFileList = useMemo(() => {
     if (
-      dataFeedMapList.size &&
-      (followingProfilePhotoList.size || noProfilePhotosToFetch) &&
-      postFileFeedArray
+      dataFeedMapArray.length &&
+      (followPhotoFileArray?.length || noProfilePhotosToFetch) &&
+      postFiles &&
+      followingInfo &&
+      followPhotoFileArray
     ) {
-      let postDataMultiList: List<List<Post>> = List();
+      let postDataMultiArray: Post[][] = [];
 
-      dataFeedMapList.forEach((el) => {
-        postDataMultiList = postDataMultiList.push(el.postData);
+      dataFeedMapArray.forEach((el) => {
+        postDataMultiArray.push(el.postData);
       });
 
-      const userInfoAndPostObjList = prepareUserInfoAndFileList(
-        followingInfoList,
-        postDataMultiList,
-        followingProfilePhotoList,
-        postFileFeedArray
+      const userInfoAndPostObjList = prepareUserInfoAndFileArray(
+        followingInfo,
+        postDataMultiArray,
+        followPhotoFileArray,
+        postFiles
       );
 
       const sortedUserInfoAndPostList = userInfoAndPostObjList.sort(
@@ -514,10 +411,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       return sortedUserInfoAndPostList;
     }
   }, [
-    followingInfoList,
-    dataFeedMapList,
-    followingProfilePhotoList,
-    postFileFeedArray,
+    followingInfo,
+    dataFeedMapArray,
+    followPhotoFileArray,
+    postFiles,
     noProfilePhotosToFetch,
   ]);
 
@@ -570,7 +467,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const handleSetIsCurrentUserPost = () => {
     if (currentUser && postModalProps.postUserId) {
-      if (postModalProps.postUserId === user.get('id')) {
+      if (postModalProps.postUserId === currentUser.id) {
         setCurrentUserPost(true);
       } else {
         setCurrentUserPost(false);
@@ -613,7 +510,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   return (
     <div className='feed-page' data-testid='feed-page'>
-      {!!userInfoAndPostFileList?.size &&
+      {!!userInfoAndPostFileList?.length &&
         userInfoAndPostFileList.map((el, idx) => (
           <FeedPostContainer
             userInfo={{
@@ -633,7 +530,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             key={el.postId}
             id={el.postId}
             custRef={
-              idx === userInfoAndPostFileList.size - 1
+              idx === userInfoAndPostFileList.length - 1
                 ? observedElementRef
                 : null
             }

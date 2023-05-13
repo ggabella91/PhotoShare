@@ -111,3 +111,13 @@ export const replaceSinglePostInDataArray = (
 
   return [singlePostData];
 };
+
+export const removeObjectProperty = (
+  obj: Record<string, unknown>,
+  property: string
+) => {
+  if (obj?.[property]) {
+    delete obj[property];
+  }
+  return obj;
+};

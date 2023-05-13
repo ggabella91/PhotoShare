@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import { useLazyLoading } from '../../hooks';
@@ -9,7 +8,6 @@ import { useLazyLoading } from '../../hooks';
 import { OtherUserType } from '../../redux/user/user.types';
 import { getOtherUserStart } from '../../redux/user/user.actions';
 import {
-  Post,
   FileRequestType,
   PostFile,
   UserType,
@@ -36,20 +34,16 @@ import { AppState } from '../../redux/root-reducer';
 import './explore-tag-page.styles.scss';
 
 const ExploreTagPage: React.FC = () => {
-  const [postDataList, setPostDataList] = useState<List<Post>>(List());
-
   const [postModalShow, setPostModalShow] = useState(false);
-  const [postModalProps, setPostModalProps] = useState<PostModalMapProps>(
-    Map({
-      id: '',
-      s3Key: '',
-      caption: '',
-      location: '',
-      createdAt: null,
-      fileString: '',
-      isVideo: false,
-    })
-  );
+  const [postModalProps, setPostModalProps] = useState<PostModalMapProps>({
+    id: '',
+    s3Key: '',
+    caption: '',
+    location: null,
+    createdAt: null,
+    fileString: '',
+    isVideo: false,
+  });
 
   const [clearPostModalLocalState, setClearPostModalLocalState] =
     useState(false);
@@ -118,14 +112,6 @@ const ExploreTagPage: React.FC = () => {
   }, [hashtag]);
 
   useEffect(() => {
-    if (postData && postData.length) {
-      let postDataList = List(postData);
-
-      setPostDataList(postDataList);
-    }
-  }, [postData]);
-
-  useEffect(() => {
     if (
       postMetaDataForHashtag &&
       intersectionCounter > 1 &&
@@ -146,31 +132,29 @@ const ExploreTagPage: React.FC = () => {
   }, [intersectionCounter]);
 
   useEffect(() => {
-    if (postData && postDataList.size === postData.length) {
-      postDataList.forEach((post) => {
-        dispatch(
-          getPostFileStart({
-            s3Key: post.s3Key,
-            isVideo: post.isVideo,
-            videoThumbnailS3Key: post.videoThumbnailS3Key,
-            bucket: postsBucket,
-            user: UserType.self, // not relevant here but part of the request body
-            fileRequestType: FileRequestType.singlePost,
-          })
-        );
-      });
-    }
-  }, [postDataList]);
+    postData?.forEach((post) => {
+      dispatch(
+        getPostFileStart({
+          s3Key: post.s3Key,
+          isVideo: post.isVideo,
+          videoThumbnailS3Key: post.videoThumbnailS3Key,
+          bucket: postsBucket,
+          user: UserType.self, // not relevant here but part of the request body
+          fileRequestType: FileRequestType.singlePost,
+        })
+      );
+    });
+  }, [postData]);
 
   let postFileList = useMemo(() => {
     if (postData && postFiles.length === postData.length) {
-      let orderedFiles: List<PostFile> = List();
+      let orderedFiles: PostFile[] = [];
 
-      postDataList.forEach((post) => {
+      postData.forEach((post) => {
         const fileMatch = postFiles.find((el) => post.s3Key === el.s3Key);
 
         if (fileMatch) {
-          orderedFiles = orderedFiles.push(fileMatch);
+          orderedFiles.push(fileMatch);
         }
       });
 
@@ -184,53 +168,41 @@ const ExploreTagPage: React.FC = () => {
       setPostOptionsModalShow(false);
       setPostModalShow(false);
       setClearPostModalLocalState(true);
-
-      const newDataArray = postDataList.filter(
-        (el) => el.id !== postModalProps.get('id')
-      );
-      setPostDataList(newDataArray);
-
-      const newFileArray = postFileList?.filter(
-        (el) => el.s3Key !== postModalProps.get('s3Key')
-      );
-      postFileList = newFileArray;
     }
   }, [archivePostConfirm]);
 
   const handleRenderPostModal = (event: React.MouseEvent<HTMLDivElement>) => {
     const overlayDivElement = event.target as HTMLElement;
-    const postS3Key = overlayDivElement.dataset.s3key;
+    const postS3Key = overlayDivElement.dataset.s3key || '';
 
-    const postData = postDataList.find((el) => el.s3Key === postS3Key);
+    const data = postData?.find((el) => el.s3Key === postS3Key);
     const postFileString = postFileList?.find(
       (el) => el.s3Key === postS3Key
     )?.fileString;
 
-    if (postData) {
+    if (data) {
       dispatch(
         getOtherUserStart({
-          usernameOrId: postData.userId,
+          usernameOrId: data.userId,
           type: OtherUserType.EXPLORE_POST_MODAL,
         })
       );
     }
 
-    if (postData && postFileString) {
-      const caption = postData.caption || '';
-      const location = postData.postLocation || '';
-      const { createdAt } = postData;
+    if (data && postFileString) {
+      const caption = data.caption || '';
+      const location = data.postLocation || null;
+      const { createdAt } = data;
 
-      setPostModalProps(
-        Map({
-          id: postData.id,
-          caption,
-          s3Key: postS3Key,
-          location,
-          createdAt,
-          fileString: postFileString,
-          isVideo: postData.isVideo,
-        })
-      );
+      setPostModalProps({
+        id: data.id,
+        caption,
+        s3Key: postS3Key,
+        location,
+        createdAt,
+        fileString: postFileString,
+        isVideo: data.isVideo,
+      });
       setPostModalShow(true);
       setClearPostModalLocalState(false);
     }
@@ -250,17 +222,15 @@ const ExploreTagPage: React.FC = () => {
   }, [otherUser]);
 
   const handleHidePostModal = () => {
-    setPostModalProps(
-      Map({
-        id: '',
-        s3Key: '',
-        caption: '',
-        location: '',
-        createdAt: null,
-        fileString: '',
-        isVideo: false,
-      })
-    );
+    setPostModalProps({
+      id: '',
+      s3Key: '',
+      caption: '',
+      location: null,
+      createdAt: null,
+      fileString: '',
+      isVideo: false,
+    });
     setPostModalShow(false);
     setClearPostModalLocalState(true);
     dispatch(setShowPostEditForm(false));
@@ -287,8 +257,8 @@ const ExploreTagPage: React.FC = () => {
   const handleArchivePost = () =>
     dispatch(
       archivePostStart({
-        postId: postModalProps.get('id'),
-        s3Key: postModalProps.get('s3Key'),
+        postId: postModalProps.id,
+        s3Key: postModalProps.s3Key,
       })
     );
 
@@ -305,17 +275,17 @@ const ExploreTagPage: React.FC = () => {
   };
 
   const handleGoToPostClick = () => {
-    navigate(`/p/${postModalProps.get('id')}`);
+    navigate(`/p/${postModalProps.id}`);
   };
 
   return (
     <div className='explore-tag-page' data-testid='explore-tag-page'>
       <div className='photo-and-hashtag-details'>
         <div className='photo'>
-          {postFileList?.size ? (
+          {postFileList?.length ? (
             <img
               className='hashtag-photo'
-              src={`data:image/jpeg;base64,${postFileList.get(0)?.fileString}`}
+              src={`data:image/jpeg;base64,${postFileList?.[0]?.fileString}`}
               alt='hashtag-pic'
             />
           ) : (
@@ -348,7 +318,7 @@ const ExploreTagPage: React.FC = () => {
           <span className='top-posts'>Top posts</span>
         </div>
         <div className='posts-grid'>
-          {postFileList && postFileList.size
+          {postFileList && postFileList.length
             ? postFileList.map((file, idx) => (
                 <PostTile
                   fileString={file.fileString}
@@ -357,10 +327,10 @@ const ExploreTagPage: React.FC = () => {
                   dataS3Key={file.s3Key}
                   onClick={handleRenderPostModal}
                   custRef={
-                    idx === postFileList!.size - 1 ? observedElementRef : null
+                    idx === postFileList!.length - 1 ? observedElementRef : null
                   }
-                  postLikesCount={postDataList.get(idx)?.likes || 0}
-                  postCommentsCount={postDataList.get(idx)?.comments || 0}
+                  postLikesCount={postData?.[idx]?.likes || 0}
+                  postCommentsCount={postData?.[idx]?.comments || 0}
                 />
               ))
             : null}
@@ -372,12 +342,12 @@ const ExploreTagPage: React.FC = () => {
         </div>
       </div>
       <PostModal
-        postId={postModalProps.get('id')}
+        postId={postModalProps.id}
         show={postModalShow}
-        fileString={postModalProps.get('fileString')}
-        caption={postModalProps.get('caption')}
-        location={postModalProps.get('location')}
-        createdAt={postModalProps.get('createdAt') || ''}
+        fileString={postModalProps.fileString}
+        caption={postModalProps.caption}
+        location={postModalProps.location}
+        createdAt={postModalProps.createdAt || ''}
         onHide={handleHidePostModal}
         onOptionsClick={handlePostOptionsClick}
         onPostLikingUsersClick={handlePostLikingUsersClick}
@@ -385,8 +355,8 @@ const ExploreTagPage: React.FC = () => {
         userName={otherUser?.username || ''}
         userId={otherUser?.id || ''}
         clearLocalState={clearPostModalLocalState}
-        isVideo={postModalProps.get('isVideo')}
-        s3Key={postModalProps.get('s3Key')}
+        isVideo={postModalProps.isVideo}
+        s3Key={postModalProps.s3Key}
         isCurrentUserPost
       />
       <PostOrCommentOptionsModal
