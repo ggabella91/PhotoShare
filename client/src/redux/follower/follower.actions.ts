@@ -103,6 +103,13 @@ export const clearFollowState = (): FollowerActionTypes => ({
   type: FollowerActions.CLEAR_FOLLOW_STATE,
 });
 
+export const setIsFollowersModal = (
+  isFollowersModal: boolean
+): FollowerActionTypes => ({
+  type: FollowerActions.SET_IS_FOLLOWERS_MODAL,
+  payload: isFollowersModal,
+});
+
 export const postNotificationStart = (
   postNotificationReq: PostNotificationReq
 ): NotificationActionTypes => ({

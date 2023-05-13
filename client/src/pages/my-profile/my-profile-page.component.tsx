@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { CircularProgress } from '@mui/material';
@@ -72,6 +72,7 @@ import {
   getFollowersStart,
   getUsersFollowingStart,
   clearFollowState,
+  setIsFollowersModal,
 } from '../../redux/follower/follower.actions';
 
 import PostTile from '../../components/post-tile/post-tile.component';
@@ -181,8 +182,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
 
-  const [isFollowersModal, setIsFollowersModal] = useState(true);
-
   const [followersOrFollowingModalShow, setFollowersOrFollowingModalShow] =
     useState(false);
 
@@ -197,6 +196,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const postState = useSelector((state: AppState) => state.post);
 
   const { postMetaDataForUser, isLoadingPostData } = postState;
+  const dispatch = useDispatch();
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
@@ -219,12 +219,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     clearFollowersAndFollowing();
     setIsCurrentUserProfilePage(true);
 
+    // Clear post state and follow state when cleaning
+    // up before component leaves the screen
     return () => {
-      // Clear post state and follow state when cleaning
-      // up before component leaves the screen
+      console.log('Going to clear data from my-profile-page');
       clearPostState();
       clearFollowState();
+      clearFollowersAndFollowing();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -305,8 +308,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
   }, [postData]);
 
-  let postFileList = useMemo(() => {
-    if (postData && postFiles.length === postData.length) {
+  let postFileArray = useMemo(() => {
+    if (postData && postFiles.length >= postData.length) {
       let orderedFiles: PostFile[] = [];
 
       postData.forEach((post) => {
@@ -319,7 +322,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
       return orderedFiles;
     }
-  }, [postFiles]);
+  }, [postData, postFiles]);
 
   useEffect(() => {
     if (archivePostConfirm) {
@@ -336,7 +339,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
     const data = postData?.find((el) => el.s3Key === postS3Key);
     const postFileString =
-      postFileList?.find((el) => el.s3Key === postS3Key)?.fileString || '';
+      postFileArray?.find((el) => el.s3Key === postS3Key)?.fileString || '';
 
     if (data) {
       const caption = data.caption || '';
@@ -378,14 +381,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const handleRenderFollowersModal = () => {
     if (followers?.length) {
-      setIsFollowersModal(true);
+      dispatch(setIsFollowersModal(true));
       setFollowersOrFollowingModalShow(true);
     }
   };
 
   const handleRenderFollowingModal = () => {
     if (currentUserUsersFollowing?.length) {
-      setIsFollowersModal(false);
+      dispatch(setIsFollowersModal(false));
       setFollowersOrFollowingModalShow(true);
     }
   };
@@ -542,8 +545,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         </div>
       </div>
       <div className='posts-grid'>
-        {postFileList && postFileList.length
-          ? postFileList.map((file, idx) => (
+        {postFileArray?.length
+          ? postFileArray.map((file, idx) => (
               <PostTile
                 fileString={file.fileString}
                 key={idx}
@@ -551,7 +554,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
                 dataS3Key={file.s3Key}
                 onClick={handleRenderPostModal}
                 custRef={
-                  idx === (postFileList?.length || 0) - 1
+                  idx === (postFileArray?.length || 0) - 1
                     ? observedElementRef
                     : null
                 }
@@ -600,17 +603,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         postOptionsModal={false}
       />
       <FollowersOrFollowingOrLikesModal
-        users={isFollowersModal ? followers : currentUserUsersFollowing}
+        currentOrOtherUser='current'
         show={followersOrFollowingModalShow}
         onHide={handleHideFollowersOrFollowingModal}
-        isFollowersModal={isFollowersModal}
       />
       {postLikingUsersArray?.length ? (
         <FollowersOrFollowingOrLikesModal
-          users={null}
+          currentOrOtherUser='current'
           show={showPostLikingUsersModal}
           onHide={handleHideLikesModal}
-          isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersArray={postLikingUsersArray}
         />

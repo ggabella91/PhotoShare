@@ -163,7 +163,7 @@ const ExploreLocationPage: React.FC = () => {
   }, [dispatch, postData]);
 
   let postFileArray = useMemo(() => {
-    if (postData && postFiles.length === postData.length) {
+    if (postData && postFiles.length >= postData.length) {
       let orderedFiles: PostFile[] = [];
 
       postData.forEach((post) => {
@@ -375,10 +375,9 @@ const ExploreLocationPage: React.FC = () => {
       />
       {postLikingUsersArray?.length ? (
         <FollowersOrFollowingOrLikesModal
-          users={null}
+          currentOrOtherUser='current'
           show={showPostLikingUsersModal}
           onHide={handleHideLikesModal}
-          isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersArray={postLikingUsersArray}
         />

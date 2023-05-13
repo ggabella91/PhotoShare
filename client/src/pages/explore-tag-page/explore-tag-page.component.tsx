@@ -146,8 +146,8 @@ const ExploreTagPage: React.FC = () => {
     });
   }, [postData]);
 
-  let postFileList = useMemo(() => {
-    if (postData && postFiles.length === postData.length) {
+  let postFileArray = useMemo(() => {
+    if (postData && postFiles.length >= postData.length) {
       let orderedFiles: PostFile[] = [];
 
       postData.forEach((post) => {
@@ -176,7 +176,7 @@ const ExploreTagPage: React.FC = () => {
     const postS3Key = overlayDivElement.dataset.s3key || '';
 
     const data = postData?.find((el) => el.s3Key === postS3Key);
-    const postFileString = postFileList?.find(
+    const postFileString = postFileArray?.find(
       (el) => el.s3Key === postS3Key
     )?.fileString;
 
@@ -282,10 +282,10 @@ const ExploreTagPage: React.FC = () => {
     <div className='explore-tag-page' data-testid='explore-tag-page'>
       <div className='photo-and-hashtag-details'>
         <div className='photo'>
-          {postFileList?.length ? (
+          {postFileArray?.length ? (
             <img
               className='hashtag-photo'
-              src={`data:image/jpeg;base64,${postFileList?.[0]?.fileString}`}
+              src={`data:image/jpeg;base64,${postFileArray?.[0]?.fileString}`}
               alt='hashtag-pic'
             />
           ) : (
@@ -318,8 +318,8 @@ const ExploreTagPage: React.FC = () => {
           <span className='top-posts'>Top posts</span>
         </div>
         <div className='posts-grid'>
-          {postFileList && postFileList.length
-            ? postFileList.map((file, idx) => (
+          {postFileArray && postFileArray.length
+            ? postFileArray.map((file, idx) => (
                 <PostTile
                   fileString={file.fileString}
                   id={file.s3Key}
@@ -327,7 +327,9 @@ const ExploreTagPage: React.FC = () => {
                   dataS3Key={file.s3Key}
                   onClick={handleRenderPostModal}
                   custRef={
-                    idx === postFileList!.length - 1 ? observedElementRef : null
+                    idx === postFileArray!.length - 1
+                      ? observedElementRef
+                      : null
                   }
                   postLikesCount={postData?.[idx]?.likes || 0}
                   postCommentsCount={postData?.[idx]?.comments || 0}
@@ -376,10 +378,9 @@ const ExploreTagPage: React.FC = () => {
       />
       {postLikingUsersArray?.length ? (
         <FollowersOrFollowingOrLikesModal
-          users={null}
+          currentOrOtherUser='current'
           show={showPostLikingUsersModal}
           onHide={handleHideLikesModal}
-          isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersArray={postLikingUsersArray}
         />

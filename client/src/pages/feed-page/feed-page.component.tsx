@@ -548,10 +548,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       ) : null}
       {postLikingUsersArray ? (
         <FollowersOrFollowingOrLikesModal
-          users={null}
+          currentOrOtherUser='current'
           show={showLikingUsersModal}
           onHide={handleHideLikesModal}
-          isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersArray={postLikingUsersArray}
         />

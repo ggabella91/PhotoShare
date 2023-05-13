@@ -917,10 +917,9 @@ export const PostPage: React.FC = () => {
       </div>
       {likingUsersArray.length ? (
         <FollowersOrFollowingOrLikesModal
-          users={null}
+          currentOrOtherUser='current'
           show={showPostLikingUsersModal}
           onHide={handleHidePostLikingUsersModal}
-          isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersArray={likingUsersArray}
         />

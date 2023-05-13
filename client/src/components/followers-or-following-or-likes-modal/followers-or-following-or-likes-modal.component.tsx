@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
@@ -40,16 +40,19 @@ import UserInfo, {
 
 import './followers-or-following-or-likes-modal.styles.scss';
 import Modal from 'react-bootstrap/Modal';
+import {
+  selectCurrentUserUsersFollowing,
+  selectFollowers,
+  selectIsFollowersModal,
+  selectOtherUserUsersFollowing,
+} from '../../redux/follower/follower.selectors';
 
 interface FollowersOrFollowingOrLikesModalProps {
-  users: Follower[] | null;
+  currentOrOtherUser: string;
   show: boolean;
   onHide: () => void;
-  isFollowersModal: boolean;
   isPostLikingUsersModal?: boolean;
   postLikingUsersArray?: UserInfoAndOtherData[];
-  followers: User[] | null;
-  following: User[] | null;
   followPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
   getOtherUserStart: typeof getOtherUserStart;
@@ -69,13 +72,10 @@ export interface UserInfoData {
 export const FollowersOrFollowingOrLikesModal: React.FC<
   FollowersOrFollowingOrLikesModalProps
 > = ({
-  users,
-  isFollowersModal,
+  currentOrOtherUser,
   isPostLikingUsersModal,
   postLikingUsersArray,
   onHide,
-  followers,
-  following,
   followPhotoFileArray,
   usersProfilePhotoConfirm,
   getOtherUserStart,
@@ -88,7 +88,18 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   >([]);
   const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
 
-  let usersLoaded = useRef(false);
+  const isFollowersModal = useSelector(selectIsFollowersModal);
+  const followers = useSelector(selectFollowers) || [];
+  const currentUserUsersFollowing = useSelector(
+    selectCurrentUserUsersFollowing
+  );
+  const otherUserUsersFollowing = useSelector(selectOtherUserUsersFollowing);
+  const usersFollowing =
+    currentOrOtherUser === 'current'
+      ? currentUserUsersFollowing || []
+      : otherUserUsersFollowing || [];
+  const followersInfo = useSelector(selectFollowersInfo);
+  const followingInfo = useSelector(selectFollowingInfo);
 
   let bucket: string;
 
@@ -99,43 +110,54 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   }
 
   useEffect(() => {
-    if (users && users.length && !usersLoaded.current) {
-      usersLoaded.current = true;
-      clearFollowPhotoFileArray();
+    clearFollowPhotoFileArray();
 
-      if (isFollowersModal) {
-        users.forEach((user) => {
-          getOtherUserStart({
-            type: OtherUserType.FOLLOWERS,
-            usernameOrId: user.followerId,
-          });
+    if (isFollowersModal) {
+      followers?.forEach((user) => {
+        getOtherUserStart({
+          type: OtherUserType.FOLLOWERS,
+          usernameOrId: user.followerId,
         });
-      } else {
-        users.forEach((user) => {
-          getOtherUserStart({
-            type: OtherUserType.FOLLOWING,
-            usernameOrId: user.userId,
-          });
+      });
+    } else {
+      usersFollowing?.forEach((user) => {
+        getOtherUserStart({
+          type: OtherUserType.FOLLOWING,
+          usernameOrId: user.userId,
         });
-      }
+      });
     }
-  }, [users]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [followers, usersFollowing, isFollowersModal]);
 
   useEffect(() => {
     if (!isPostLikingUsersModal) {
-      if (isFollowersModal && followers) {
-        handleRenderFollowersOrFollowingInfoArray(followers);
-      } else if (!isFollowersModal && following) {
-        handleRenderFollowersOrFollowingInfoArray(following);
+      if (isFollowersModal && followersInfo) {
+        handleRenderFollowersOrFollowingInfoArray(followersInfo, followers);
+      } else if (!isFollowersModal && followingInfo) {
+        handleRenderFollowersOrFollowingInfoArray(
+          followingInfo,
+          usersFollowing
+        );
       }
     }
-  }, [followers, following, followPhotoFileArray, noProfilePhotosToFetch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    followersInfo,
+    followingInfo,
+    followPhotoFileArray,
+    noProfilePhotosToFetch,
+    isFollowersModal,
+    isPostLikingUsersModal,
+  ]);
 
   const handleRenderFollowersOrFollowingInfoArray = (
-    followersOrFollowing: User[]
+    followersOrFollowing: User[],
+    users: Follower[]
   ) => {
     if (
-      users &&
+      usersFollowing &&
       followersOrFollowing.length === users.length &&
       !followPhotoFileArray &&
       !noProfilePhotosToFetch
@@ -157,7 +179,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
       if (fetchCount === 0) {
         setNoProfilePhotosToFetch(true);
       }
-    } else if (followPhotoFileArray && followPhotoFileArray.length) {
+    } else if (followPhotoFileArray?.length) {
       const followerOrFollowing: UserInfoData[] = followersOrFollowing.map(
         (el: User) => {
           let photoFileString: string;
@@ -246,15 +268,11 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
 };
 
 interface LinkStateProps {
-  followers: User[] | null;
-  following: User[] | null;
   followPhotoFileArray: PostFile[] | null;
   usersProfilePhotoConfirm: string | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  followers: selectFollowersInfo,
-  following: selectFollowingInfo,
   followPhotoFileArray: selectFollowPhotoFileArray,
   usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
 });

@@ -24,6 +24,7 @@ const INITIAL_STATE: FollowerState = {
   notificationsQueryLength: 0,
   notifications: null,
   getNotificationsError: null,
+  isFollowersModal: true,
 };
 
 const followerReducer = (
@@ -70,6 +71,11 @@ const followerReducer = (
         ...state,
         unfollowConfirm: 'User unfollowed successfully',
         unfollowError: null,
+      };
+    case FollowerActions.SET_IS_FOLLOWERS_MODAL:
+      return {
+        ...state,
+        isFollowersModal: action.payload,
       };
     case NotificationActions.POST_NOTIFICATION_SUCCESS:
       return {
