@@ -60,6 +60,11 @@ export const selectUnfollowError = createSelector(
   (followerState: FollowerState) => followerState.unfollowError
 );
 
+export const selectIsFollowersModal = createSelector(
+  [selectFollowerState],
+  (followerState: FollowerState) => followerState.isFollowersModal
+);
+
 export const selectPostNotificationConfirm = createSelector(
   [selectFollowerState],
   (followerState: FollowerState) => followerState.postNotificationConfirm

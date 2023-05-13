@@ -1,24 +1,14 @@
-import { Map } from 'immutable';
-
-import {
-  PostActions,
-  PostActionTypes,
-  PostState,
-  PostModalCacheObj,
-  PostFile,
-  Post,
-} from './post.types';
+import { PostActions, PostActionTypes, PostState } from './post.types';
 import {
   addToPostDataArray,
   addPostFileToArray,
   addPostDataToFeedArray,
   addUserPhotoFileToArray,
   addPostReactionsToOuterReactionsArray,
+  removeObjectProperty,
 } from './post.utils';
 
 import { POST_MODAL_DATA_INITIAL_STATE } from '../../components/feed-post-container/feed-post-container.component';
-
-// TODO Change immmutable Maps to regular objects
 
 const INITIAL_STATE: PostState = {
   postData: null,
@@ -75,7 +65,7 @@ const INITIAL_STATE: PostState = {
   feedPagePostIdForNavigation: null,
 
   // Post modal data cache
-  postModalDataCache: Map<string, PostModalCacheObj>(),
+  postModalDataCache: {},
 
   // Location suggestions for posts
   locationsSuggestions: [],
@@ -97,7 +87,7 @@ const INITIAL_STATE: PostState = {
   videoPostFileChunkMetaData: null,
 
   // Used for conversation user avatars
-  convoAvatarMap: Map<string, PostFile>(),
+  convoAvatarMap: {},
 
   // Used for conversation images
   convoImageMap: {},
@@ -107,7 +97,7 @@ const INITIAL_STATE: PostState = {
   uploadConversationPhotoFailure: null,
 
   // Used for notification user avatars
-  notificationUserMap: Map<string, PostFile>(),
+  notificationUserMap: {},
 
   // Used for notification post data and files
   notificationPostData: {},
@@ -309,10 +299,10 @@ const postReducer = (
     case PostActions.GET_CONVERSATION_AVATAR_PHOTO_SUCCESS:
       return {
         ...state,
-        convoAvatarMap: state.convoAvatarMap.set(
-          action.payload.s3Key,
-          action.payload
-        ),
+        convoAvatarMap: {
+          ...state.convoAvatarMap,
+          [action.payload.s3Key]: action.payload,
+        },
       };
     case PostActions.GET_CONVERSATION_IMAGE_SUCCESS:
       return {
@@ -325,10 +315,10 @@ const postReducer = (
     case PostActions.GET_NOTIFICATION_USER_AVATAR_PHOTO_SUCCESS:
       return {
         ...state,
-        notificationUserMap: state.notificationUserMap.set(
-          action.payload.s3Key,
-          action.payload
-        ),
+        notificationUserMap: {
+          ...state.notificationUserMap,
+          [action.payload.s3Key]: action.payload,
+        },
       };
     case PostActions.UPLOAD_CONVERSATION_PHOTO_SUCCESS:
       return {
@@ -584,17 +574,20 @@ const postReducer = (
     case PostActions.SAVE_POST_MODAL_DATA_TO_CACHE:
       return {
         ...state,
-        postModalDataCache: state.postModalDataCache.set(
-          action.payload.postId,
-          {
+        postModalDataCache: {
+          ...state.postModalDataCache,
+          [action.payload.postId]: {
             ...action.payload.cacheObj,
-          }
-        ),
+          },
+        },
       };
     case PostActions.REMOVE_POST_MODAL_DATA_FROM_CACHE:
       return {
         ...state,
-        postModalDataCache: state.postModalDataCache.delete(action.payload),
+        postModalDataCache: removeObjectProperty(
+          state.postModalDataCache,
+          action.payload
+        ),
       };
     default:
       return state;

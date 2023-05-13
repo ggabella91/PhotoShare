@@ -101,7 +101,7 @@ interface PostModalProps {
   postId: string;
   caption: string;
   createdAt: Date | string;
-  location: Location;
+  location: Location | null;
   show: boolean;
   isVideo?: boolean;
   s3Key?: string;
@@ -287,21 +287,24 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [caption, userProfilePhotoFile]);
 
   useEffect(() => {
-    setEditPostDetails({ editCaption: caption, editLocation: location.label });
+    setEditPostDetails({
+      editCaption: caption,
+      editLocation: location?.label || '',
+    });
 
-    if (location.label) {
-      const slugifiedString = slugify(location.label, {
+    if (location?.label) {
+      const slugifiedString = slugify(location?.label, {
         lower: true,
         strict: true,
       });
       setSlugifiedLocationLabel(slugifiedString);
     }
 
-    if (location.latitude && location.longitude) {
+    if (location?.latitude && location?.longitude) {
       dispatch(
         setLocationCoordinates({
-          latitude: location.latitude,
-          longitude: location.longitude,
+          latitude: location?.latitude,
+          longitude: location?.longitude,
         })
       );
     }
@@ -354,17 +357,17 @@ export const PostModal: React.FC<PostModalProps> = ({
   }, [editPostDetailsConfirm]);
 
   useEffect(() => {
-    if (postModalDataCache.get(localPostId) && !areReactionsReadyForRendering) {
+    if (postModalDataCache?.[localPostId] && !areReactionsReadyForRendering) {
       setCommentingUserArray(
-        postModalDataCache.get(localPostId).commentingUserArray
+        postModalDataCache?.[localPostId].commentingUserArray
       );
 
-      const likersArray = postModalDataCache.get(localPostId).likingUsersArray;
+      const likersArray = postModalDataCache?.[localPostId].likingUsersArray;
 
       setLikingUsersArray(likersArray);
       setPostLikingUsersArray(likersArray);
       setAlreadyLikedPostAndReactionId(
-        postModalDataCache.get(localPostId).alreadyLikedPostAndReactionId
+        postModalDataCache?.[localPostId].alreadyLikedPostAndReactionId
       );
 
       setAreReactionsReadyForRendering(true);
@@ -374,7 +377,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   useEffect(() => {
     if (
       localPostId &&
-      !postModalDataCache.get(localPostId) &&
+      !postModalDataCache?.[localPostId] &&
       !areReactionsReadyForRendering
     ) {
       getPostReactionsStart({
@@ -389,7 +392,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       postReactionsArray &&
       postReactionsArray.length &&
       !areReactionsReadyForRendering &&
-      !postModalDataCache.get(localPostId)
+      !postModalDataCache?.[localPostId]
     ) {
       postReactionsArray.forEach((innerArray) => {
         if (innerArray.length && innerArray[0]!.postId === localPostId) {
@@ -406,7 +409,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       currentUser &&
       reactionsArray.length &&
       !areReactionsReadyForRendering &&
-      !postModalDataCache.get(localPostId)
+      !postModalDataCache?.[localPostId]
     ) {
       const foundPost = reactionsArray.find(
         (el) => el.reactingUserId === currentUser.id && el.likedPost
@@ -514,7 +517,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       reactionsArray.length &&
       !areReactionsReadyForRendering &&
-      !postModalDataCache.get(localPostId)
+      !postModalDataCache?.[localPostId]
     ) {
       reactionsArray.forEach((el) => {
         getOtherUserStart({
@@ -531,7 +534,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       postReactingUsers &&
       postReactingUsers.length &&
-      !postModalDataCache.get(localPostId)
+      !postModalDataCache?.[localPostId]
     ) {
       setReactingUsersInfoArray(postReactingUsers);
     }
@@ -541,7 +544,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       reactingUserInfoArray.length &&
       !areReactionsReadyForRendering &&
-      !postModalDataCache.get(localPostId)
+      !postModalDataCache?.[localPostId]
     ) {
       reactingUserInfoArray.forEach((el) => {
         if (el.photo) {
@@ -569,7 +572,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       reactorPhotoFileArray?.length &&
       reactingUserInfoArray.length === reactorPhotoFileArray?.length &&
       !areReactionsReadyForRendering &&
-      !postModalDataCache.get(localPostId)
+      !postModalDataCache?.[localPostId]
     ) {
       let commentsArray: UserInfoAndOtherData[] = [];
       let likesArray: UserInfoAndOtherData[] = [];
@@ -645,7 +648,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     if (
       areReactionsReadyForRendering &&
       alreadyLikedPostAndReactionId.reactionId &&
-      !postModalDataCache.get(localPostId)
+      !postModalDataCache?.[localPostId]
     ) {
       dispatch(
         savePostModalDataToCache({
@@ -816,7 +819,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               <div className='user-and-location'>
                 <span className='user-name'>{userName}</span>
                 <NavLink
-                  to={`/explore/locations/${location.id}/${slugifiedLocationLabel}`}
+                  to={`/explore/locations/${location?.id}/${slugifiedLocationLabel}`}
                   className='post-location'
                 >
                   {editPostDetails.editLocation}

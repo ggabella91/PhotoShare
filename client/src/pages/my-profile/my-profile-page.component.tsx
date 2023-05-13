@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { List, Map } from 'immutable';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
@@ -73,6 +72,7 @@ import {
   getFollowersStart,
   getUsersFollowingStart,
   clearFollowState,
+  setIsFollowersModal,
 } from '../../redux/follower/follower.actions';
 
 import PostTile from '../../components/post-tile/post-tile.component';
@@ -83,16 +83,12 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 
 import './profile-page.styles.scss';
 
-export interface ImmutableMap<T> extends Map<string, any> {
-  get<K extends keyof T>(name: K): T[K];
-}
-
-export type UserLite = ImmutableMap<{
+export interface UserLite {
   id: string;
   name: string;
   username: string;
   bio: string;
-}>;
+}
 
 interface MyProfilePageProps {
   currentUser: User | null;
@@ -129,15 +125,15 @@ interface MyProfilePageProps {
   setShowPostEditForm: typeof setShowPostEditForm;
 }
 
-export type PostModalMapProps = ImmutableMap<{
+export interface PostModalMapProps {
   id: string;
   s3Key: string;
   caption: string;
-  location: Location;
+  location: Location | null;
   createdAt: Date | null;
   fileString: string;
   isVideo?: boolean;
-}>;
+}
 
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   currentUser,
@@ -168,43 +164,23 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   setShowPostEditForm,
   getPostDataConfirm,
 }) => {
-  const [user, setUser] = useState<UserLite>(
-    Map({
-      id: '',
-      name: '',
-      username: '',
-      bio: '',
-    })
-  );
-
   const [profilePhotoString, setProfilePhotoString] = useState<string>('');
 
-  const [followersList, setFollowersList] = useState<List<Follower>>(List());
-  const [usersFollowingList, setUsersFollowingList] = useState<List<Follower>>(
-    List()
-  );
-
-  const [postDataList, setPostDataList] = useState<List<Post>>(List());
-
   const [postModalShow, setPostModalShow] = useState(false);
-  const [postModalProps, setPostModalProps] = useState<PostModalMapProps>(
-    Map({
-      id: '',
-      s3Key: '',
-      caption: '',
-      location: {} as Location,
-      createdAt: null,
-      fileString: '',
-      isVideo: false,
-    })
-  );
+  const [postModalProps, setPostModalProps] = useState<PostModalMapProps>({
+    id: '',
+    s3Key: '',
+    caption: '',
+    location: null,
+    createdAt: null,
+    fileString: '',
+    isVideo: false,
+  });
 
   const [clearPostModalLocalState, setClearPostModalLocalState] =
     useState(false);
 
   const [postOptionsModalShow, setPostOptionsModalShow] = useState(false);
-
-  const [isFollowersModal, setIsFollowersModal] = useState(true);
 
   const [followersOrFollowingModalShow, setFollowersOrFollowingModalShow] =
     useState(false);
@@ -220,6 +196,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const postState = useSelector((state: AppState) => state.post);
 
   const { postMetaDataForUser, isLoadingPostData } = postState;
+  const dispatch = useDispatch();
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
@@ -236,61 +213,42 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     profileBucket = 'photo-share-app-profile-photos-dev';
   }
 
-  useEffect(
+  useEffect(() => {
+    clearPostState();
+    clearFollowState();
+    clearFollowersAndFollowing();
+    setIsCurrentUserProfilePage(true);
+
     // Clear post state and follow state when cleaning
     // up before component leaves the screen
-    () => () => {
-      clearPostState();
-      clearFollowState();
-    },
-    []
-  );
-
-  useEffect(() => {
-    let currentUserMap;
-    if (currentUser) {
-      currentUserMap = Map(currentUser);
-    } else {
-      return;
-    }
-
-    if (user.get('id') !== currentUserMap.get('id')) {
+    return () => {
+      console.log('Going to clear data from my-profile-page');
       clearPostState();
       clearFollowState();
       clearFollowersAndFollowing();
-      setIsCurrentUserProfilePage(true);
-
-      setUser(
-        Map({
-          id: currentUserMap.get('id'),
-          name: currentUserMap.get('name'),
-          username: currentUserMap.get('username'),
-          bio: currentUserMap.get('bio') || '',
-        })
-      );
-      if (pageToFetch.current === 1) {
-        getPostDataStart({
-          userId: currentUser.id,
-          dataReqType: DataRequestType.single,
-          pageToShow: pageToFetch.current++,
-          limit: 9,
-        });
-        getFollowersStart(currentUser.id);
-        getUsersFollowingStart({
-          userId: currentUser.id,
-          whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
-        });
-      }
-    }
-  }, [currentUser]);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    followers ? setFollowersList(List(followers)) : setFollowersList(List());
+    if (!currentUser) {
+      return;
+    }
 
-    currentUserUsersFollowing
-      ? setUsersFollowingList(List(currentUserUsersFollowing))
-      : setUsersFollowingList(List());
-  }, [followers, currentUserUsersFollowing]);
+    if (pageToFetch.current === 1) {
+      getPostDataStart({
+        userId: currentUser.id,
+        dataReqType: DataRequestType.single,
+        pageToShow: pageToFetch.current++,
+        limit: 9,
+      });
+      getFollowersStart(currentUser.id);
+      getUsersFollowingStart({
+        userId: currentUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+      });
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     if (profilePhotoKey) {
@@ -300,7 +258,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         user: UserType.self,
         fileRequestType: FileRequestType.singlePost,
       });
-    } else if (!profilePhotoFile && currentUser && currentUser.photo) {
+    } else if (!profilePhotoFile && currentUser?.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket: profileBucket,
@@ -315,22 +273,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       setProfilePhotoString(profilePhotoFile.fileString);
     }
   }, [profilePhotoFile]);
-
-  useEffect(() => {
-    if (postData && postData.length) {
-      setPostDataList(List(postData));
-    }
-  }, [postData]);
-
-  useEffect(() => {
-    if (getSinglePostDataConfirm) {
-      const postDataArrayCopy = postDataList.map((el) =>
-        el.id === getSinglePostDataConfirm.id ? getSinglePostDataConfirm : el
-      );
-
-      setPostDataList(postDataArrayCopy);
-    }
-  }, [getSinglePostDataConfirm]);
 
   useEffect(() => {
     if (
@@ -352,12 +294,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }, [intersectionCounter]);
 
   useEffect(() => {
-    if (
-      postData &&
-      postDataList.size === postData.length &&
-      !getSinglePostDataConfirm
-    ) {
-      postDataList.forEach((post) => {
+    if (!getSinglePostDataConfirm) {
+      postData?.forEach((post) => {
         getPostFileStart({
           s3Key: post.s3Key,
           isVideo: post.isVideo,
@@ -368,23 +306,23 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         });
       });
     }
-  }, [postDataList]);
+  }, [postData]);
 
-  let postFileList = useMemo(() => {
-    if (postData && postFiles.length === postData.length) {
-      let orderedFiles: List<PostFile> = List();
+  let postFileArray = useMemo(() => {
+    if (postData && postFiles.length >= postData.length) {
+      let orderedFiles: PostFile[] = [];
 
-      postDataList.forEach((post) => {
+      postData.forEach((post) => {
         const fileMatch = postFiles.find((el) => post.s3Key === el.s3Key);
 
         if (fileMatch) {
-          orderedFiles = orderedFiles.push(fileMatch);
+          orderedFiles.push(fileMatch);
         }
       });
 
       return orderedFiles;
     }
-  }, [postFiles]);
+  }, [postData, postFiles]);
 
   useEffect(() => {
     if (archivePostConfirm) {
@@ -392,62 +330,46 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       setPostOptionsModalShow(false);
       setPostModalShow(false);
       setClearPostModalLocalState(true);
-
-      const newDataArray = postDataList.filter(
-        (el) => el.id !== postModalProps.get('id')
-      );
-      setPostDataList(newDataArray);
-
-      const newFileArray =
-        postFileList &&
-        postFileList.filter((el) => el.s3Key !== postModalProps.get('s3Key'));
-      postFileList = newFileArray;
     }
   }, [archivePostConfirm]);
 
   const handleRenderPostModal = (event: React.MouseEvent<HTMLDivElement>) => {
     const overlayDivElement = event.target as HTMLElement;
-    const postS3Key = overlayDivElement.dataset.s3key;
+    const postS3Key = overlayDivElement.dataset.s3key || '';
 
-    const postData = postDataList.find((el) => el.s3Key === postS3Key);
+    const data = postData?.find((el) => el.s3Key === postS3Key);
     const postFileString =
-      postFileList &&
-      postFileList.find((el) => el.s3Key === postS3Key) &&
-      postFileList.find((el) => el.s3Key === postS3Key)!.fileString;
+      postFileArray?.find((el) => el.s3Key === postS3Key)?.fileString || '';
 
-    if (postData) {
-      const caption = postData.caption || '';
-      const location = postData.postLocation || '';
-      const { createdAt } = postData;
+    if (data) {
+      const caption = data.caption || '';
+      const location = data.postLocation || null;
+      const { createdAt } = data;
 
-      setPostModalProps(
-        Map({
-          id: postData.id,
-          caption,
-          s3Key: postS3Key,
-          location,
-          createdAt,
-          fileString: postFileString,
-          isVideo: postData.isVideo,
-        })
-      );
+      setPostModalProps({
+        id: data.id,
+        caption,
+        s3Key: postS3Key,
+        location,
+        createdAt,
+        fileString: postFileString,
+        isVideo: data.isVideo,
+      });
       setPostModalShow(true);
       setClearPostModalLocalState(false);
     }
   };
 
   const handleHidePostModal = () => {
-    setPostModalProps(
-      Map({
-        id: '',
-        s3Key: '',
-        caption: '',
-        location: '',
-        createdAt: null,
-        fileString: '',
-        isVideo: false,
-      })
-    );
+    setPostModalProps({
+      id: '',
+      s3Key: '',
+      caption: '',
+      location: null,
+      createdAt: null,
+      fileString: '',
+      isVideo: false,
+    });
     setPostModalShow(false);
     setClearPostModalLocalState(true);
     setShowPostEditForm(false);
@@ -458,26 +380,26 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const handlePostLikingUsersClick = () => setShowPostLikingUsersModal(true);
 
   const handleRenderFollowersModal = () => {
-    if (followersList.size) {
-      setIsFollowersModal(true);
+    if (followers?.length) {
+      dispatch(setIsFollowersModal(true));
       setFollowersOrFollowingModalShow(true);
     }
   };
 
   const handleRenderFollowingModal = () => {
-    if (usersFollowingList.size) {
-      setIsFollowersModal(false);
+    if (currentUserUsersFollowing?.length) {
+      dispatch(setIsFollowersModal(false));
       setFollowersOrFollowingModalShow(true);
     }
   };
 
   const handleMakeStatClickable = (type: string, baseClassName: string) => {
     if (type === 'followers') {
-      return followersList.size
+      return followers?.length
         ? `${baseClassName} clickable`
         : `${baseClassName}`;
     } else if (type === 'following') {
-      return usersFollowingList.size
+      return currentUserUsersFollowing?.length
         ? `${baseClassName} clickable`
         : `${baseClassName}`;
     }
@@ -488,7 +410,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }, [showCommentOptionsModal]);
 
   const handleSetIsCurrentUserComment = () => {
-    if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
+    if (currentUser && commentToDelete?.reactingUserId) {
       commentToDelete.reactingUserId === currentUser.id
         ? setCurrentUserPostOrComment(true)
         : setCurrentUserPostOrComment(false);
@@ -499,8 +421,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const handleArchivePost = () =>
     archivePostStart({
-      postId: postModalProps.get('id'),
-      s3Key: postModalProps.get('s3Key'),
+      postId: postModalProps.id,
+      s3Key: postModalProps.s3Key,
     });
 
   const handleHideFollowersOrFollowingModal = () => {
@@ -521,7 +443,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   };
 
   const handleGoToPostClick = () => {
-    navigate(`/p/${postModalProps.get('id')}`);
+    navigate(`/p/${postModalProps.id}`);
   };
 
   return (
@@ -546,7 +468,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           </div>
           <div className='user-details'>
             <div className='username-and-edit'>
-              <span className='user-username'>{user.get('username')}</span>
+              <span className='user-username'>{currentUser?.username}</span>
               <NavLink className='edit-profile' to='/settings'>
                 <span className='edit-text'>Edit profile</span>
               </NavLink>
@@ -568,25 +490,27 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
                 className={handleMakeStatClickable('followers', 'user-stat')}
                 onClick={handleRenderFollowersModal}
               >
-                {followersList.size ? followersList.size : 0} Followers
+                {followers?.length ? followers.length : 0} Followers
               </span>
               <span
                 className={handleMakeStatClickable('following', 'user-stat')}
                 onClick={handleRenderFollowingModal}
               >
-                {usersFollowingList.size ? usersFollowingList.size : 0}{' '}
+                {currentUserUsersFollowing?.length
+                  ? currentUserUsersFollowing.length
+                  : 0}{' '}
                 Following
               </span>
             </div>
             <div className='name-and-bio'>
-              <span className='user-name'>{user.get('name')}</span>
-              <span className='user-bio'>{user.get('bio')}</span>
+              <span className='user-name'>{currentUser?.name}</span>
+              <span className='user-bio'>{currentUser?.bio}</span>
             </div>
           </div>
         </div>
         <div className='name-and-bio-narrow-screen'>
-          <span className='user-name-narrow'>{user.get('name')}</span>
-          <span className='user-bio-narrow'>{user.get('bio')}</span>
+          <span className='user-name-narrow'>{currentUser?.name}</span>
+          <span className='user-bio-narrow'>{currentUser?.bio}</span>
         </div>
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
@@ -606,20 +530,23 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               className={handleMakeStatClickable('followers', 'stats-item')}
               onClick={handleRenderFollowersModal}
             >
-              {followersList.size ? followersList.size : 0} Followers
+              {followers?.length ? followers.length : 0} Followers
             </li>
             <li
               className={handleMakeStatClickable('following', 'stats-item')}
               onClick={handleRenderFollowingModal}
             >
-              {usersFollowingList.size ? usersFollowingList.size : 0} Following
+              {currentUserUsersFollowing?.length
+                ? currentUserUsersFollowing.length
+                : 0}{' '}
+              Following
             </li>
           </ul>
         </div>
       </div>
       <div className='posts-grid'>
-        {postFileList && postFileList.size
-          ? postFileList.map((file, idx) => (
+        {postFileArray?.length
+          ? postFileArray.map((file, idx) => (
               <PostTile
                 fileString={file.fileString}
                 key={idx}
@@ -627,10 +554,12 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
                 dataS3Key={file.s3Key}
                 onClick={handleRenderPostModal}
                 custRef={
-                  idx === postFileList!.size - 1 ? observedElementRef : null
+                  idx === (postFileArray?.length || 0) - 1
+                    ? observedElementRef
+                    : null
                 }
-                postLikesCount={postDataList.get(idx)?.likes || 0}
-                postCommentsCount={postDataList.get(idx)?.comments || 0}
+                postLikesCount={postData?.[idx]?.likes || 0}
+                postCommentsCount={postData?.[idx]?.comments || 0}
               />
             ))
           : null}
@@ -641,22 +570,22 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         ) : null}
       </div>
       <PostModal
-        postId={postModalProps.get('id')}
+        postId={postModalProps.id}
         show={postModalShow}
-        fileString={postModalProps.get('fileString')}
-        caption={postModalProps.get('caption')}
-        location={postModalProps.get('location')}
-        createdAt={postModalProps.get('createdAt') || ''}
+        fileString={postModalProps.fileString}
+        caption={postModalProps.caption}
+        location={postModalProps.location}
+        createdAt={postModalProps.createdAt || ''}
         onHide={handleHidePostModal}
         onOptionsClick={handlePostOptionsClick}
         onPostLikingUsersClick={handlePostLikingUsersClick}
         userProfilePhotoFile={profilePhotoString}
-        userName={user.get('username')}
-        userId={user.get('id')}
+        userName={currentUser?.username || ''}
+        userId={currentUser?.id || ''}
         clearLocalState={clearPostModalLocalState}
         isCurrentUserPost
-        isVideo={postModalProps.get('isVideo')}
-        s3Key={postModalProps.get('s3Key')}
+        isVideo={postModalProps.isVideo}
+        s3Key={postModalProps.s3Key}
       />
       <PostOrCommentOptionsModal
         show={postOptionsModalShow}
@@ -674,21 +603,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         postOptionsModal={false}
       />
       <FollowersOrFollowingOrLikesModal
-        users={
-          isFollowersModal
-            ? followersList.toArray()
-            : usersFollowingList.toArray()
-        }
+        currentOrOtherUser='current'
         show={followersOrFollowingModalShow}
         onHide={handleHideFollowersOrFollowingModal}
-        isFollowersModal={isFollowersModal}
       />
       {postLikingUsersArray?.length ? (
         <FollowersOrFollowingOrLikesModal
-          users={null}
+          currentOrOtherUser='current'
           show={showPostLikingUsersModal}
           onHide={handleHideLikesModal}
-          isFollowersModal={false}
           isPostLikingUsersModal={true}
           postLikingUsersArray={postLikingUsersArray}
         />

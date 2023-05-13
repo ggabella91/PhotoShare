@@ -1,7 +1,5 @@
 import { render, screen, userEvent } from '../../test-utils/test-utils';
 
-import { List } from 'immutable';
-
 import { Location } from '../../redux/post/post.types';
 
 import {

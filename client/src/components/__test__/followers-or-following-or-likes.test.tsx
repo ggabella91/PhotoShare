@@ -13,12 +13,9 @@ describe('followers-following-or-likes-modal component tests', () => {
   const setup = (isFollowersModal: boolean, isPostLikingUsersModal?: boolean) =>
     render(
       <FollowersOrFollowingOrLikesModal
-        users={[]}
+        currentOrOtherUser='current'
         show={true}
         onHide={() => {}}
-        isFollowersModal={isFollowersModal}
-        followers={[]}
-        following={[]}
         usersProfilePhotoConfirm=''
         getOtherUserStart={(otherUserReq) => getOtherUserStart(otherUserReq)}
         getPostFileStart={(postFileReq) => getPostFileStart(postFileReq)}

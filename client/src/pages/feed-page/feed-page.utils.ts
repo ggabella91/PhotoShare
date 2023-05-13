@@ -6,18 +6,17 @@ import {
   Reaction,
   Location,
 } from '../../redux/post/post.types';
-import { List, Map } from 'immutable';
 
 import { UserInfoAndPostFile } from './feed-page.component';
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
-export const prepareUserInfoAndFileList = (
-  followingInfoList: List<User>,
-  dataFeedMultiList: List<List<Post>>,
-  followingProfilePhotoList: List<PostFile>,
-  postFileFeedList: List<PostFile>
+export const prepareUserInfoAndFileArray = (
+  followingInfoArray: User[],
+  dataFeedMultiArray: Post[][],
+  followingProfilePhotoArray: PostFile[],
+  postFileFeedArray: PostFile[]
 ) => {
-  let userInfoAndPostObjList: List<UserInfoAndPostFile> = postFileFeedList.map(
+  let userInfoAndPostObjArray: UserInfoAndPostFile[] = postFileFeedArray.map(
     (el) => {
       let location: Location = {} as Location;
       let dateString: string = '';
@@ -31,7 +30,7 @@ export const prepareUserInfoAndFileList = (
       let caption: string = '';
       let isVideo: boolean = false;
 
-      dataFeedMultiList.forEach((innerArray) => {
+      dataFeedMultiArray.forEach((innerArray) => {
         innerArray.forEach((innerEl) => {
           if (innerEl.s3Key === el.s3Key) {
             let date = innerEl.createdAt;
@@ -48,14 +47,14 @@ export const prepareUserInfoAndFileList = (
         });
       });
 
-      followingInfoList.forEach((userEl) => {
+      followingInfoArray.forEach((userEl) => {
         if (userEl.id === id!) {
           username = userEl.username;
           profilePhotoS3Key = userEl.photo || '';
         }
       });
 
-      followingProfilePhotoList.forEach((userEl) => {
+      followingProfilePhotoArray.forEach((userEl) => {
         if (profilePhotoS3Key && userEl.s3Key === profilePhotoS3Key) {
           profilePhotoString = userEl.fileString;
         }
@@ -77,7 +76,7 @@ export const prepareUserInfoAndFileList = (
     }
   );
 
-  return userInfoAndPostObjList;
+  return userInfoAndPostObjArray;
 };
 
 export const compareFollowerArrays = (
@@ -90,23 +89,6 @@ export const compareFollowerArrays = (
 
   for (let i = 0; i < array1.length; i++) {
     if (array1[i].followerId !== array2[i].followerId) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
-export const compareUserOrPostOrReactionLists = (
-  list1: List<User> | List<Post> | List<Reaction>,
-  list2: List<User> | List<Post> | List<Reaction>
-) => {
-  if (list1.size !== list2.size) {
-    return false;
-  }
-
-  for (let i = 0; i < list1.size; i++) {
-    if (list1.get(i)!.id !== list2.get(i)!.id) {
       return false;
     }
   }
@@ -131,23 +113,6 @@ export const compareUserOrPostOrReactionArrays = (
   return true;
 };
 
-export const comparePostFileLists = (
-  list1: List<PostFile>,
-  list2: List<PostFile>
-) => {
-  if (list1.size !== list2.size) {
-    return false;
-  }
-
-  for (let i = 0; i < list1.size; i++) {
-    if (list1.get(i)!.s3Key !== list2.get(i)!.s3Key) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
 export const comparePostFileArrays = (
   array1: PostFile[],
   array2: PostFile[]
@@ -159,28 +124,6 @@ export const comparePostFileArrays = (
   for (let i = 0; i < array1.length; i++) {
     if (array1[i].s3Key !== array2[i].s3Key) {
       return false;
-    }
-  }
-
-  return true;
-};
-
-export const compareUserInfoAndDataObjLists = (
-  list1: List<UserInfoAndPostFile> | List<UserInfoAndOtherData>,
-  list2: List<UserInfoAndPostFile> | List<UserInfoAndOtherData>
-) => {
-  if (list1.size !== list2.size) {
-    return false;
-  }
-
-  for (let i = 0; i < list1.size; i++) {
-    let list1AtIdxValues = List(Object.values(list1.toArray()[i]));
-    let list2AtIdxValues = List(Object.values(list2.toArray()[i]));
-
-    for (let j = 0; j < list1AtIdxValues.size; j++) {
-      if (list1AtIdxValues.get(j) !== list2AtIdxValues.get(j)) {
-        return false;
-      }
     }
   }
 

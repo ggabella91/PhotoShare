@@ -166,7 +166,7 @@ const NotificationsContainer: React.FC = () => {
   useEffect(() => {
     if (readyToFetchPhotos) {
       Object.values(notificationUsers).forEach((user) => {
-        if (user.photo && !notificationUserMap.get(user.photo)) {
+        if (user.photo && !notificationUserMap?.[user.photo]) {
           dispatch(
             getPostFileStart({
               fileRequestType: FileRequestType.singlePost,
@@ -209,8 +209,7 @@ const NotificationsContainer: React.FC = () => {
         notifications?.map((notification, idx) => {
           const user = notificationUsers?.[notification.fromUserId];
           const userPhotoInfo =
-            (!!user.photo?.length && notificationUserMap.get(user.photo)) ||
-            null;
+            (!!user.photo?.length && notificationUserMap?.[user.photo]) || null;
           const postPhotoS3Key =
             notification.postId &&
             notificationPostData?.[notification.postId].s3Key;

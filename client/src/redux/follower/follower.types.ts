@@ -13,6 +13,7 @@ export enum FollowerActions {
   UNFOLLOW_USER_SUCCESS = 'UNFOLLOW_USER_SUCCESS',
   UNFOLLOW_USER_FAILURE = 'UNFOLLOW_USER_FAILURE',
   CLEAR_FOLLOW_STATE = 'CLEAR_FOLLOW_STATE',
+  SET_IS_FOLLOWERS_MODAL = 'SET_IS_FOLLOWERS_MODAL',
 }
 
 export enum NotificationActions {
@@ -70,6 +71,7 @@ export interface FollowerState {
   notificationsQueryLength: number;
   notifications: Notification[] | null;
   getNotificationsError: NotificationError | null;
+  isFollowersModal: boolean;
 }
 
 export interface PostNotificationReq {
@@ -163,6 +165,11 @@ export interface ClearFollowState {
   type: typeof FollowerActions.CLEAR_FOLLOW_STATE;
 }
 
+export interface SetIsFollowersModal {
+  type: typeof FollowerActions.SET_IS_FOLLOWERS_MODAL;
+  payload: boolean;
+}
+
 export type FollowerActionTypes =
   | FollowNewUserStart
   | FollowNewUserSuccess
@@ -177,7 +184,8 @@ export type FollowerActionTypes =
   | UnfollowUserStart
   | UnfollowUserSuccess
   | UnfollowUserFailure
-  | ClearFollowState;
+  | ClearFollowState
+  | SetIsFollowersModal;
 
 export interface PostNotificationStart {
   type: typeof NotificationActions.POST_NOTIFICATION_START;

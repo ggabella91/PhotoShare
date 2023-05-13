@@ -144,7 +144,7 @@ const Conversation: React.FC<ConversationProps> = ({
   const conversationHistoricalMessageUsers =
     currentConversation?.historicalUsers;
   const conversationActiveUsers = currentConversation?.connectedUsers;
-  const usersInfoList = useUserInfoData(conversationUsers);
+  const usersInfoArray = useUserInfoData(conversationUsers);
   const {
     intersectionCounter,
     observedElementRef,
@@ -219,15 +219,15 @@ const Conversation: React.FC<ConversationProps> = ({
 
     if (cachedUserData) {
       setUserInfoMap(cachedUserData);
-    } else if (usersInfoList?.size) {
-      const userInfoMap = usersInfoList.reduce<UserInfoMap>((acc, cur) => {
+    } else if (usersInfoArray?.length) {
+      const userInfoMap = usersInfoArray.reduce<UserInfoMap>((acc, cur) => {
         acc[cur.id!] = cur;
         return acc;
       }, {});
 
       setUserInfoMap(userInfoMap);
     }
-  }, [usersInfoList, conversationToUserDataMap, conversationId]);
+  }, [usersInfoArray, conversationToUserDataMap, conversationId]);
 
   useEffect(() => {
     // TODO Add logic for handling when to delete a

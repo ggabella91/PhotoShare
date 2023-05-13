@@ -1,9 +1,6 @@
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 import { AlreadyLikedAndReactionId } from '../../components/post-modal/post-modal.component';
 import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
-import { List, Map } from 'immutable';
-
-// TODO Change immmutable Maps and Lists to regular objects and arrays
 
 export enum PostActions {
   CREATE_POST_START = 'CREATE_POST_START',
@@ -404,7 +401,7 @@ export interface PostState {
   feedPagePostIdForNavigation: string | null;
 
   // Post modal data cache
-  postModalDataCache: Map<string, any>;
+  postModalDataCache: Record<string, any>;
 
   // Locations suggestions / selection
   locationsSuggestions: Location[];
@@ -426,7 +423,7 @@ export interface PostState {
   videoPostFileChunkMetaData: UploadVideoPostFileChunkResponse | null;
 
   // Used for conversation user avatars
-  convoAvatarMap: Map<string, PostFile>;
+  convoAvatarMap: Record<string, PostFile>;
 
   // Used for conversation images
   convoImageMap: Record<string, PostFile>;
@@ -436,7 +433,7 @@ export interface PostState {
   uploadConversationPhotoFailure: PostError | null;
 
   // Used for notification user avatars
-  notificationUserMap: Map<string, PostFile>;
+  notificationUserMap: Record<string, PostFile>;
 
   // Used for notification post data and files
   notificationPostData: Record<string, Post>;
