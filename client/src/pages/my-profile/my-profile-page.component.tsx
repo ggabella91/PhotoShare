@@ -268,7 +268,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         user: UserType.self,
         fileRequestType: FileRequestType.singlePost,
       });
-    } else if (!profilePhotoFile && currentUser && currentUser.photo) {
+    } else if (!profilePhotoFile && currentUser?.photo) {
       getPostFileStart({
         s3Key: currentUser.photo,
         bucket: profileBucket,
@@ -420,7 +420,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }, [showCommentOptionsModal]);
 
   const handleSetIsCurrentUserComment = () => {
-    if (currentUser && commentToDelete && commentToDelete.reactingUserId) {
+    if (currentUser && commentToDelete?.reactingUserId) {
       commentToDelete.reactingUserId === currentUser.id
         ? setCurrentUserPostOrComment(true)
         : setCurrentUserPostOrComment(false);
@@ -478,7 +478,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
           </div>
           <div className='user-details'>
             <div className='username-and-edit'>
-              <span className='user-username'>{user.username}</span>
+              <span className='user-username'>{currentUser?.username}</span>
               <NavLink className='edit-profile' to='/settings'>
                 <span className='edit-text'>Edit profile</span>
               </NavLink>
@@ -513,14 +513,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
               </span>
             </div>
             <div className='name-and-bio'>
-              <span className='user-name'>{user.name}</span>
-              <span className='user-bio'>{user.bio}</span>
+              <span className='user-name'>{currentUser?.name}</span>
+              <span className='user-bio'>{currentUser?.bio}</span>
             </div>
           </div>
         </div>
         <div className='name-and-bio-narrow-screen'>
-          <span className='user-name-narrow'>{user.name}</span>
-          <span className='user-bio-narrow'>{user.bio}</span>
+          <span className='user-name-narrow'>{currentUser?.name}</span>
+          <span className='user-bio-narrow'>{currentUser?.bio}</span>
         </div>
         <div className='posts-followers-following-stats-narrow-screen'>
           <ul className='stats-list'>
@@ -590,8 +590,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         onOptionsClick={handlePostOptionsClick}
         onPostLikingUsersClick={handlePostLikingUsersClick}
         userProfilePhotoFile={profilePhotoString}
-        userName={user.username}
-        userId={user.id}
+        userName={currentUser?.username || ''}
+        userId={currentUser?.id || ''}
         clearLocalState={clearPostModalLocalState}
         isCurrentUserPost
         isVideo={postModalProps.isVideo}

@@ -38,7 +38,6 @@ import {
   PostError,
   UserType,
   DeleteReactionReq,
-  Location,
 } from '../../redux/post/post.types';
 import {
   selectPostData,
