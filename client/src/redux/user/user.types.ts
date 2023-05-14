@@ -43,6 +43,7 @@ export enum UserActions {
   GET_CONVERSATION_USER_SUCCESS = 'GET_CONVERSATION_USER_SUCCESS',
   GET_NOTIFICATION_USER_SUCCESS = 'GET_NOTIFICATION_USER_SUCCESS',
   CLEAR_CONVERSATION_USERS = 'CLEAR_CONVERSATION_USERS',
+  CLEAR_OTHER_USER = 'CLEAR_OTHER_USER',
 }
 
 export interface UserSignUp {
@@ -364,6 +365,10 @@ export interface ClearConversationUsers {
   type: typeof UserActions.CLEAR_CONVERSATION_USERS;
 }
 
+export interface ClearOtherUser {
+  type: typeof UserActions.CLEAR_OTHER_USER;
+}
+
 export type UserActionTypes =
   | SignUpStart
   | SignUpSuccess
@@ -409,4 +414,5 @@ export type UserActionTypes =
   | GetFeedPostReactorsSuccess
   | GetConversationUserSuccess
   | GetNotificationUserSuccess
-  | ClearConversationUsers;
+  | ClearConversationUsers
+  | ClearOtherUser;
