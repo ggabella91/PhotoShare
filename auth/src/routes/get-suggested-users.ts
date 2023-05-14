@@ -11,8 +11,8 @@ router.get(
 
     const existingUser = await User.find({
       $or: [
-        { username: { $regex: match, $options: 'ig' } },
-        { name: { $regex: match, $options: 'ig' } },
+        { username: { $regex: match, $options: 'i' } },
+        { name: { $regex: match, $options: 'i' } },
       ],
     }).limit(10);
 

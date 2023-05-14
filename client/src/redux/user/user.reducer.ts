@@ -230,6 +230,12 @@ const userReducer = (
         followingInfo: null,
         otherUserError: null,
       };
+    case UserActions.CLEAR_OTHER_USER:
+      return {
+        ...state,
+        otherUser: null,
+        otherUserError: null,
+      };
     case UserActions.SET_IS_CURRENT_USER_PROFILE_PAGE:
       return {
         ...state,

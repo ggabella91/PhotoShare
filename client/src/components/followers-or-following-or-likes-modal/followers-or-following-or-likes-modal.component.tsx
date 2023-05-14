@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
+import { useLocation } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { AppState } from '../../redux/root-reducer';
 
@@ -13,7 +14,10 @@ import {
   selectFollowersInfo,
   selectFollowingInfo,
 } from '../../redux/user/user.selectors';
-import { getOtherUserStart } from '../../redux/user/user.actions';
+import {
+  clearFollowersAndFollowing,
+  getOtherUserStart,
+} from '../../redux/user/user.actions';
 
 import {
   FileRequestType,
@@ -46,6 +50,7 @@ import {
   selectIsFollowersModal,
   selectOtherUserUsersFollowing,
 } from '../../redux/follower/follower.selectors';
+import { clearFollowState } from '../../redux/follower/follower.actions';
 
 interface FollowersOrFollowingOrLikesModalProps {
   currentOrOtherUser: string;
@@ -100,6 +105,8 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
       : otherUserUsersFollowing || [];
   const followersInfo = useSelector(selectFollowersInfo);
   const followingInfo = useSelector(selectFollowingInfo);
+  const location = useLocation();
+  const dispatch = useDispatch();
 
   let bucket: string;
 
@@ -108,6 +115,11 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   } else {
     bucket = 'photo-share-app-profile-photos-dev';
   }
+
+  useEffect(() => {
+    dispatch(clearFollowState());
+    dispatch(clearFollowersAndFollowing());
+  }, [dispatch, location.pathname]);
 
   useEffect(() => {
     clearFollowPhotoFileArray();

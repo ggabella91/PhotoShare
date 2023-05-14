@@ -255,3 +255,7 @@ export const getNotificationUserSuccess = (user: User): UserActionTypes => ({
 export const clearConversationUsers = (): UserActionTypes => ({
   type: UserActions.CLEAR_CONVERSATION_USERS,
 });
+
+export const clearOtherUser = (): UserActionTypes => ({
+  type: UserActions.CLEAR_OTHER_USER,
+});

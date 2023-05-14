@@ -26,6 +26,7 @@ import {
   getOtherUserStart,
   clearFollowersAndFollowing,
   setIsCurrentUserProfilePage,
+  clearOtherUser,
 } from '../../redux/user/user.actions';
 
 import {
@@ -228,7 +229,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const dispatch = useDispatch();
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   let postsBucket: string, profileBucket: string;
 
@@ -261,6 +262,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       setIsCurrentUserProfilePage(false);
     }
     setFollowersOrFollowingModalShow(false);
+    dispatch(clearOtherUser());
     clearFollowersAndFollowing();
     clearPostFilesAndData();
 

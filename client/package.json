@@ -28,7 +28,6 @@
     "cookie-session": "^1.4.0",
     "emoji-picker-react": "^4.4.3",
     "express": "^4.17.1",
-    "immutable": "^4.0.0-rc.14",
     "mapbox-gl": "^2.6.1",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
