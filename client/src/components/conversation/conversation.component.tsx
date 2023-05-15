@@ -525,8 +525,6 @@ const Conversation: React.FC<ConversationProps> = ({
     }
   };
 
-  // REVIEW May need to add check for whether stopFetchingMessagesForConvo is true for this conditional
-
   const handleStoreMessageRef = (
     node: HTMLDivElement | null,
     messageId: string
