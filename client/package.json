@@ -49,7 +49,7 @@
     "start": "node server/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:ci": "npm test -- --watchAll=false",
+    "test:ci": "npm test -- --watchAll=false --clear-cache",
     "eject": "react-scripts eject"
   },
   "jest": {
