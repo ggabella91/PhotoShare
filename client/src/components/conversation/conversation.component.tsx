@@ -46,7 +46,6 @@ import {
   updateMessageLastSeenBy,
   addMessageToConversation,
   updateMessageStatus,
-  setOldestMessageForConversation,
 } from '../../redux/message/message.actions';
 
 import {

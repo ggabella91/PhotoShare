@@ -146,6 +146,7 @@ const MessagesPage: React.FC<MessagesPageProps> = ({
 
       previouslyJoinedConversations.current = [...joinedConversations];
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, joinedConversations]);
 
   useEffect(() => {
