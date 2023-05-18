@@ -62,6 +62,7 @@ import {
   setShowCommentOptionsModal,
   deleteReactionStart,
   clearPostState,
+  clearPostMetaDataForUser,
 } from '../../redux/post/post.actions';
 
 import {
@@ -253,6 +254,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       clearPostState();
       clearFollowState();
       clearFollowersAndFollowing();
+      dispatch(clearOtherUser());
+      dispatch(clearPostMetaDataForUser());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

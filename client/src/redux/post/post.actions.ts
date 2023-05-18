@@ -274,6 +274,10 @@ export const setPostMetaDataForUser = (
   payload: postMetaData,
 });
 
+export const clearPostMetaDataForUser = (): PostActionTypes => ({
+  type: PostActions.CLEAR_POST_META_DATA_FOR_USER,
+});
+
 export const setPostMetaDataForHashtag = (
   postMetaData: PostHashtagMetaData
 ): PostActionTypes => ({
