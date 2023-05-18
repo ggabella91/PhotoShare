@@ -44,6 +44,7 @@ export enum PostActions {
   SET_SHOW_COMMENT_OPTIONS_MODAL = 'SET_SHOW_COMMENT_OPTIONS_MODAL',
   CLEAR_POST_REACTIONS = 'CLEAR_POST_REACTIONS',
   SET_POST_META_DATA_FOR_USER = 'SET_POST_META_DATA_FOR_USER',
+  CLEAR_POST_META_DATA_FOR_USER = 'CLEAR_POST_META_DATA_FOR_USER',
   SET_POST_LIKING_USERS_ARRAY = 'SET_POST_LIKING_USERS_ARRAY',
   SET_SHOW_POST_LIKING_USERS_MODAL = 'SET_SHOW_POST_LIKING_USERS_MODAL',
   SET_FEED_PAGE_POST_MODAL_DATA = 'SET_FEED_PAGE_POST_MODAL_DATA',
@@ -645,6 +646,10 @@ export interface SetPostMetaDataForUser {
   payload: PostMetaData;
 }
 
+export interface ClearPostMetaDataForUser {
+  type: typeof PostActions.CLEAR_POST_META_DATA_FOR_USER;
+}
+
 export interface SetPostMetaDataForHashtag {
   type: typeof PostActions.SET_META_DATA_FOR_HASHTAG;
   payload: PostHashtagMetaData;
@@ -931,6 +936,7 @@ export type PostActionTypes =
   | SetShowCommentOptionsModal
   | ClearPostReactions
   | SetPostMetaDataForUser
+  | ClearPostMetaDataForUser
   | SetPostMetaDataForHashtag
   | SetPostLikingUsersArray
   | SetShowPostLikingUsersModal

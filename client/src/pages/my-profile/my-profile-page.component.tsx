@@ -57,6 +57,7 @@ import {
   setShowCommentOptionsModal,
   deleteReactionStart,
   setShowPostEditForm,
+  clearPostMetaDataForUser,
 } from '../../redux/post/post.actions';
 
 import {
@@ -222,10 +223,10 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     // Clear post state and follow state when cleaning
     // up before component leaves the screen
     return () => {
-      console.log('Going to clear data from my-profile-page');
       clearPostState();
       clearFollowState();
       clearFollowersAndFollowing();
+      dispatch(clearPostMetaDataForUser());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

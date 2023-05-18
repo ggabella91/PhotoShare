@@ -506,6 +506,11 @@ const postReducer = (
         ...state,
         postMetaDataForUser: action.payload,
       };
+    case PostActions.CLEAR_POST_META_DATA_FOR_USER:
+      return {
+        ...state,
+        postMetaDataForUser: null,
+      };
     case PostActions.SET_META_DATA_FOR_HASHTAG:
       return {
         ...state,
