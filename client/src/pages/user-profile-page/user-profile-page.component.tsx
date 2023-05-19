@@ -268,6 +268,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     dispatch(clearOtherUser());
     clearFollowersAndFollowing();
     clearPostFilesAndData();
+    isInitialPostDataFetched.current = false;
 
     getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -283,6 +284,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         getFollowersStart(otherUser.id);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [followConfirm]);
 
   useEffect(() => {
@@ -293,6 +295,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         whoseUsersFollowing: WhoseUsersFollowing.OTHER_USER,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otherUser]);
 
   useEffect(() => {
@@ -310,6 +313,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         limit: 9,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otherUser]);
 
   useEffect(() => {
@@ -328,6 +332,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         fileRequestType: FileRequestType.singlePost,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otherUser]);
 
   useEffect(() => {
@@ -354,6 +359,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
       setPageToFetch(pageToFetch + 1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intersectionCounter]);
 
   useEffect(() => {
@@ -369,6 +375,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postData]);
 
   const postFileArray = useMemo(() => {
@@ -452,6 +459,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     handleDetermineIfFollowing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getUsersFollowingConfirm]);
 
   const handleDetermineIfFollowing = () => {
@@ -474,6 +482,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       getFollowersStart(otherUser!.id);
       clearFollowState();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unfollowConfirm]);
 
   const handleRenderFollowOrFollowingButton = (narrow: boolean) => {
@@ -519,6 +528,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     handleSetIsCurrentUserComment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCommentOptionsModal]);
 
   const handleSetIsCurrentUserComment = () => {
