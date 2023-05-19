@@ -249,6 +249,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   useEffect(() => {
@@ -267,6 +268,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         fileRequestType: FileRequestType.singlePost,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profilePhotoKey]);
 
   useEffect(() => {
@@ -292,6 +294,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         limit: 9,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intersectionCounter]);
 
   useEffect(() => {
@@ -307,6 +310,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postData]);
 
   let postFileArray = useMemo(() => {
@@ -332,6 +336,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       setPostModalShow(false);
       setClearPostModalLocalState(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [archivePostConfirm]);
 
   const handleRenderPostModal = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -408,6 +413,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     handleSetIsCurrentUserComment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCommentOptionsModal]);
 
   const handleSetIsCurrentUserComment = () => {
