@@ -95,7 +95,6 @@ interface MyProfilePageProps {
   currentUser: User | null;
   profilePhotoKey: string | null;
   profilePhotoFile: PostFile | null;
-  postData: Post[] | null;
   postFiles: PostFile[];
   postError: PostError | null;
   getPostDataConfirm: string | null;
@@ -140,7 +139,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   currentUser,
   profilePhotoKey,
   profilePhotoFile,
-  postData,
   postFiles,
   getPostDataStart,
   getPostFileStart,
@@ -196,7 +194,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const postState = useSelector((state: AppState) => state.post);
 
-  const { postMetaDataForUser, isLoadingPostData } = postState;
+  const { postMetaDataForUser, isLoadingPostData, postData } = postState;
   const dispatch = useDispatch();
 
   const { intersectionCounter, observedElementRef } =
@@ -629,7 +627,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
 interface LinkStateProps {
   currentUser: User | null;
-  postData: Post[] | null;
   postFiles: PostFile[];
   profilePhotoKey: string | null;
   profilePhotoFile: PostFile | null;
@@ -650,7 +647,6 @@ interface LinkStateProps {
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   currentUser: selectCurrentUser,
-  postData: selectPostData,
   postFiles: selectPostFiles,
   profilePhotoKey: selectProfilePhotoKey,
   profilePhotoFile: selectProfilePhotoFile,

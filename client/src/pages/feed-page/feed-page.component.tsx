@@ -245,6 +245,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     () => () => {
       clearPostState();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -261,6 +262,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       userId: currentUser.id,
       whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   useEffect(() => {
@@ -279,6 +281,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         });
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUserUsersFollowing]);
 
   useEffect(() => {
@@ -295,6 +298,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
       setDataFeedMapArray(newDataFeedMapList);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postMetaDataForUser]);
 
   useEffect(() => {
@@ -316,6 +320,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intersectionCounter]);
 
   useEffect(() => {
@@ -343,6 +348,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         setDataFeedMapArray(dataMapArray);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postDataFeedArray]);
 
   useEffect(() => {
@@ -364,6 +370,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         setNoProfilePhotosToFetch(true);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [followingInfo]);
 
   useEffect(() => {
@@ -381,6 +388,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataFeedMapArray, getFeedPostDataConfirm]);
 
   const userInfoAndPostFileList = useMemo(() => {
@@ -422,6 +430,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     if (feedPagePostModalData.id) {
       setPostModalProps(feedPagePostModalData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedPagePostModalData.id]);
 
   useEffect(() => {
@@ -433,6 +442,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       setPostModalShow(feedPagePostModalShow);
       setFeedPagePostModalShow(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedPagePostModalShow]);
 
   useEffect(() => {
@@ -449,6 +459,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     if (postModalProps.postUserId) {
       handleSetIsCurrentUserPost();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postModalProps]);
 
   const handleHideLikesModal = () => setShowPostLikingUsersModal(false);
@@ -477,6 +488,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   useEffect(() => {
     handleSetIsCurrentUserComment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCommentOptionsModal]);
 
   const handleSetIsCurrentUserComment = () => {

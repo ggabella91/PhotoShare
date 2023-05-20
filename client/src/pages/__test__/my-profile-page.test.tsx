@@ -39,7 +39,6 @@ describe('my-profile-page component tests', () => {
         currentUser={currentUser}
         profilePhotoKey='test-photo-filestring'
         profilePhotoFile={null}
-        postData={postData}
         postFiles={postFiles}
         postError={null}
         getPostDataStart={getPostDataStart}
