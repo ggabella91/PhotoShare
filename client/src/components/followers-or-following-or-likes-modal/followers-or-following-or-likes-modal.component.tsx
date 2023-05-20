@@ -249,6 +249,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
 
       setUserInfoAndPhotoArray(postLikerArray);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postLikingUsersArray]);
 
   return (
