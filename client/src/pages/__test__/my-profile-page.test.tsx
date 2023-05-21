@@ -13,7 +13,6 @@ describe('my-profile-page component tests', () => {
   const setup = () => {
     const currentUser = {} as User;
     const followers = [{}, {}] as Follower[];
-    const postData = [{}, {}, {}, {}] as Post[];
     const postFiles = [{}, {}, {}, {}] as PostFile[];
     const currentUserUsersFollowing = [{}, {}] as Follower[];
     const commentToDelete = {} as DeleteReactionReq;
