@@ -1,7 +1,7 @@
 import { render, screen } from '../../test-utils/test-utils';
 import { UserProfilePage } from '../user-profile-page/user-profile-page.component';
 
-import { Post, PostFile, DeleteReactionReq } from '../../redux/post/post.types';
+import { PostFile, DeleteReactionReq } from '../../redux/post/post.types';
 
 import { User } from '../../redux/user/user.types';
 
@@ -14,7 +14,6 @@ describe('user-profile-page component tests', () => {
     const currentUser = {} as User;
     const otherUser = {} as User;
     const profilePhotoFile = {} as PostFile;
-    const postFiles = [{}, {}, {}, {}] as PostFile[];
     const followers = [{}, {}] as Follower[];
     const currentUserUsersFollowing = [{}, {}] as Follower[];
     const otherUserUsersFollowing = [{}, {}] as Follower[];
@@ -44,7 +43,6 @@ describe('user-profile-page component tests', () => {
         otherUserError={null}
         getOtherUserStart={getOtherUserStart}
         profilePhotoFile={profilePhotoFile}
-        postFiles={postFiles}
         postError={null}
         getPostDataStart={getPostDataStart}
         getPostDataConfirm='confirm'

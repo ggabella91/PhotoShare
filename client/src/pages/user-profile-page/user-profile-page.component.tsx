@@ -41,8 +41,6 @@ import {
   DeleteReactionReq,
 } from '../../redux/post/post.types';
 import {
-  selectPostData,
-  selectPostFiles,
   selectPostError,
   selectGetPostDataConfirm,
   selectGetPostDataError,
@@ -114,7 +112,6 @@ interface UserProfilePageProps {
   otherUser: User | null;
   otherUserError: Error | null;
   profilePhotoFile: PostFile | null;
-  postFiles: PostFile[];
   postError: PostError | null;
   getPostDataConfirm: string | null;
   getPostDataError: PostError | null;
@@ -155,7 +152,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   otherUser,
   otherUserError,
   profilePhotoFile,
-  postFiles,
   currentUserUsersFollowing,
   otherUserUsersFollowing,
   currentUser,
@@ -221,7 +217,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const postState = useSelector((state: AppState) => state.post);
 
-  const { postData, postMetaDataForUser, isLoadingPostData } = postState;
+  const { postData, postFiles, postMetaDataForUser, isLoadingPostData } =
+    postState;
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
@@ -754,7 +751,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 interface LinkStateProps {
   otherUser: User | null;
   otherUserError: Error | null;
-  postFiles: PostFile[];
   profilePhotoFile: PostFile | null;
   postError: PostError | null;
   getPostDataConfirm: string | null;
@@ -779,7 +775,6 @@ interface LinkStateProps {
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   otherUser: selectOtherUser,
   otherUserError: selectOtherUserError,
-  postFiles: selectPostFiles,
   profilePhotoFile: selectOtherUserProfilePhotoFile,
   postError: selectPostError,
   getPostDataConfirm: selectGetPostDataConfirm,
