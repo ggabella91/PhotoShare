@@ -12,7 +12,6 @@ import { UserInfoAndOtherData } from '../../components/user-info/user-info.compo
 describe('user-profile-page component tests', () => {
   const setup = () => {
     const currentUser = {} as User;
-    const otherUser = {} as User;
     const profilePhotoFile = {} as PostFile;
     const followers = [{}, {}] as Follower[];
     const currentUserUsersFollowing = [{}, {}] as Follower[];
@@ -39,7 +38,6 @@ describe('user-profile-page component tests', () => {
     render(
       <UserProfilePage
         username='giuliano_gabella'
-        otherUser={otherUser}
         otherUserError={null}
         getOtherUserStart={getOtherUserStart}
         profilePhotoFile={profilePhotoFile}
