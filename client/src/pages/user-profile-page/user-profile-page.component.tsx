@@ -18,7 +18,6 @@ import {
 } from '../../redux/user/user.types';
 import {
   selectCurrentUser,
-  selectOtherUser,
   selectOtherUserError,
   selectIsCurrentUserProfilePage,
 } from '../../redux/user/user.selectors';
@@ -30,7 +29,6 @@ import {
 } from '../../redux/user/user.actions';
 
 import {
-  Post,
   DataRequestType,
   FileRequestType,
   PostDataReq,
@@ -109,7 +107,6 @@ export interface UserLite {
 
 interface UserProfilePageProps {
   username: string;
-  otherUser: User | null;
   otherUserError: Error | null;
   profilePhotoFile: PostFile | null;
   postError: PostError | null;
@@ -149,7 +146,6 @@ interface UserProfilePageProps {
 
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
-  otherUser,
   otherUserError,
   profilePhotoFile,
   currentUserUsersFollowing,
@@ -216,9 +212,11 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   let isInitialPostDataFetched = useRef(false);
 
   const postState = useSelector((state: AppState) => state.post);
+  const userState = useSelector((state: AppState) => state.user);
 
   const { postData, postFiles, postMetaDataForUser, isLoadingPostData } =
     postState;
+  const { otherUser } = userState;
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
@@ -749,7 +747,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 };
 
 interface LinkStateProps {
-  otherUser: User | null;
   otherUserError: Error | null;
   profilePhotoFile: PostFile | null;
   postError: PostError | null;
@@ -773,7 +770,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  otherUser: selectOtherUser,
   otherUserError: selectOtherUserError,
   profilePhotoFile: selectOtherUserProfilePhotoFile,
   postError: selectPostError,
