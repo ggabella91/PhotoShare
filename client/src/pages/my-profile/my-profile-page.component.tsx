@@ -10,8 +10,6 @@ import { AppState } from '../../redux/root-reducer';
 
 import { useLazyLoading } from '../../hooks';
 
-import { User } from '../../redux/user/user.types';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
 import {
   clearFollowersAndFollowing,
   setIsCurrentUserProfilePage,
@@ -33,8 +31,6 @@ import {
 import {
   selectProfilePhotoKey,
   selectProfilePhotoFile,
-  selectPostData,
-  selectPostFiles,
   selectPostError,
   selectGetPostDataConfirm,
   selectGetPostDataError,
@@ -92,7 +88,6 @@ export interface UserLite {
 }
 
 interface MyProfilePageProps {
-  currentUser: User | null;
   profilePhotoKey: string | null;
   profilePhotoFile: PostFile | null;
   postError: PostError | null;
@@ -135,7 +130,6 @@ export interface PostModalMapProps {
 }
 
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
-  currentUser,
   profilePhotoKey,
   profilePhotoFile,
   getPostDataStart,
@@ -191,9 +185,11 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const pageToFetch = useRef(1);
 
   const postState = useSelector((state: AppState) => state.post);
+  const userState = useSelector((state: AppState) => state.user);
 
   const { postMetaDataForUser, isLoadingPostData, postData, postFiles } =
     postState;
+  const { currentUser } = userState;
   const dispatch = useDispatch();
 
   const { intersectionCounter, observedElementRef } =
@@ -625,7 +621,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 };
 
 interface LinkStateProps {
-  currentUser: User | null;
   profilePhotoKey: string | null;
   profilePhotoFile: PostFile | null;
   postError: PostError | null;
@@ -644,7 +639,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
   profilePhotoKey: selectProfilePhotoKey,
   profilePhotoFile: selectProfilePhotoFile,
   postError: selectPostError,

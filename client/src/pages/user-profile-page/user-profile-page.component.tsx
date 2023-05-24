@@ -17,7 +17,6 @@ import {
   OtherUserRequest,
 } from '../../redux/user/user.types';
 import {
-  selectCurrentUser,
   selectOtherUserError,
   selectIsCurrentUserProfilePage,
 } from '../../redux/user/user.selectors';
@@ -120,7 +119,6 @@ interface UserProfilePageProps {
   otherUserUsersFollowing: Follower[] | null;
   getFollowersConfirm: string | null;
   getUsersFollowingConfirm: string | null;
-  currentUser: User | null;
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
   isCurrentUserProfilePage: boolean;
@@ -150,7 +148,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   profilePhotoFile,
   currentUserUsersFollowing,
   otherUserUsersFollowing,
-  currentUser,
   followConfirm,
   followers,
   getUsersFollowingConfirm,
@@ -216,7 +213,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const { postData, postFiles, postMetaDataForUser, isLoadingPostData } =
     postState;
-  const { otherUser } = userState;
+  const { currentUser, otherUser } = userState;
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
@@ -760,7 +757,6 @@ interface LinkStateProps {
   otherUserUsersFollowing: Follower[] | null;
   getFollowersConfirm: string | null;
   getUsersFollowingConfirm: string | null;
-  currentUser: User | null;
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
   isCurrentUserProfilePage: boolean;
@@ -783,7 +779,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   otherUserUsersFollowing: selectOtherUserUsersFollowing,
   getFollowersConfirm: selectGetFollowersConfirm,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
-  currentUser: selectCurrentUser,
   unfollowConfirm: selectUnfollowConfirm,
   unfollowError: selectUnfollowError,
   isCurrentUserProfilePage: selectIsCurrentUserProfilePage,
