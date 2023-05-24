@@ -3,15 +3,12 @@ import { UserProfilePage } from '../user-profile-page/user-profile-page.componen
 
 import { PostFile, DeleteReactionReq } from '../../redux/post/post.types';
 
-import { User } from '../../redux/user/user.types';
-
 import { Follower } from '../../redux/follower/follower.types';
 
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 describe('user-profile-page component tests', () => {
   const setup = () => {
-    const currentUser = {} as User;
     const profilePhotoFile = {} as PostFile;
     const followers = [{}, {}] as Follower[];
     const currentUserUsersFollowing = [{}, {}] as Follower[];
@@ -54,7 +51,6 @@ describe('user-profile-page component tests', () => {
         otherUserUsersFollowing={otherUserUsersFollowing}
         getFollowersConfirm='confirm'
         getUsersFollowingConfirm='confirm'
-        currentUser={currentUser}
         unfollowConfirm={null}
         unfollowError={null}
         isCurrentUserProfilePage={false}
