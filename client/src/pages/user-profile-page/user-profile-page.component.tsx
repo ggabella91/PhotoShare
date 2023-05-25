@@ -10,16 +10,8 @@ import { AppState } from '../../redux/root-reducer';
 
 import { useLazyLoading } from '../../hooks';
 
-import {
-  User,
-  Error,
-  OtherUserType,
-  OtherUserRequest,
-} from '../../redux/user/user.types';
-import {
-  selectOtherUserError,
-  selectIsCurrentUserProfilePage,
-} from '../../redux/user/user.selectors';
+import { OtherUserType, OtherUserRequest } from '../../redux/user/user.types';
+import { selectIsCurrentUserProfilePage } from '../../redux/user/user.selectors';
 import {
   getOtherUserStart,
   clearFollowersAndFollowing,
@@ -106,7 +98,6 @@ export interface UserLite {
 
 interface UserProfilePageProps {
   username: string;
-  otherUserError: Error | null;
   profilePhotoFile: PostFile | null;
   postError: PostError | null;
   getPostDataConfirm: string | null;
@@ -121,7 +112,6 @@ interface UserProfilePageProps {
   getUsersFollowingConfirm: string | null;
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
-  isCurrentUserProfilePage: boolean;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
@@ -144,14 +134,12 @@ interface UserProfilePageProps {
 
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
-  otherUserError,
   profilePhotoFile,
   currentUserUsersFollowing,
   otherUserUsersFollowing,
   followConfirm,
   followers,
   getUsersFollowingConfirm,
-  isCurrentUserProfilePage,
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
@@ -213,7 +201,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const { postData, postFiles, postMetaDataForUser, isLoadingPostData } =
     postState;
-  const { currentUser, otherUser } = userState;
+  const { currentUser, otherUser, otherUserError, isCurrentUserProfilePage } =
+    userState;
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
@@ -744,7 +733,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 };
 
 interface LinkStateProps {
-  otherUserError: Error | null;
   profilePhotoFile: PostFile | null;
   postError: PostError | null;
   getPostDataConfirm: string | null;
@@ -759,14 +747,12 @@ interface LinkStateProps {
   getUsersFollowingConfirm: string | null;
   unfollowConfirm: string | null;
   unfollowError: FollowError | null;
-  isCurrentUserProfilePage: boolean;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  otherUserError: selectOtherUserError,
   profilePhotoFile: selectOtherUserProfilePhotoFile,
   postError: selectPostError,
   getPostDataConfirm: selectGetPostDataConfirm,
@@ -781,7 +767,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   unfollowConfirm: selectUnfollowConfirm,
   unfollowError: selectUnfollowError,
-  isCurrentUserProfilePage: selectIsCurrentUserProfilePage,
   commentToDelete: selectCommentToDelete,
   showCommentOptionsModal: selectShowCommentOptionsModal,
   postLikingUsersArray: selectPostLikingUsersArray,

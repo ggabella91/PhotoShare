@@ -35,7 +35,6 @@ describe('user-profile-page component tests', () => {
     render(
       <UserProfilePage
         username='giuliano_gabella'
-        otherUserError={null}
         getOtherUserStart={getOtherUserStart}
         profilePhotoFile={profilePhotoFile}
         postError={null}
@@ -53,7 +52,6 @@ describe('user-profile-page component tests', () => {
         getUsersFollowingConfirm='confirm'
         unfollowConfirm={null}
         unfollowError={null}
-        isCurrentUserProfilePage={false}
         commentToDelete={commentToDelete}
         showCommentOptionsModal={false}
         postLikingUsersArray={postLikingUsersArray}
