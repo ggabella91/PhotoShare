@@ -62,10 +62,6 @@ import {
   UsersFollowingRequest,
 } from '../../redux/follower/follower.types';
 import {
-  selectFollowers,
-  selectCurrentUserUsersFollowing,
-} from '../../redux/follower/follower.selectors';
-import {
   getFollowersStart,
   getUsersFollowingStart,
   clearFollowState,
@@ -97,8 +93,6 @@ interface MyProfilePageProps {
   getPostFileError: PostError | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
-  followers: Follower[] | null;
-  currentUserUsersFollowing: Follower[] | null;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
@@ -139,8 +133,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   clearArchivePostStatuses,
   clearFollowPhotoFileArray,
   clearPostState,
-  followers,
-  currentUserUsersFollowing,
   getFollowersStart,
   getUsersFollowingStart,
   clearFollowersAndFollowing,
@@ -186,10 +178,12 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const postState = useSelector((state: AppState) => state.post);
   const userState = useSelector((state: AppState) => state.user);
+  const followerState = useSelector((state: AppState) => state.follower);
 
   const { postMetaDataForUser, isLoadingPostData, postData, postFiles } =
     postState;
   const { currentUser } = userState;
+  const { followers, currentUserUsersFollowing } = followerState;
   const dispatch = useDispatch();
 
   const { intersectionCounter, observedElementRef } =
@@ -630,8 +624,6 @@ interface LinkStateProps {
   getPostFileError: PostError | null;
   archivePostConfirm: string | null;
   archivePostError: PostError | null;
-  followers: Follower[] | null;
-  currentUserUsersFollowing: Follower[] | null;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
@@ -648,8 +640,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileError: selectGetPostFileError,
   archivePostConfirm: selectArchivePostConfirm,
   archivePostError: selectArchivePostError,
-  followers: selectFollowers,
-  currentUserUsersFollowing: selectCurrentUserUsersFollowing,
   commentToDelete: selectCommentToDelete,
   showCommentOptionsModal: selectShowCommentOptionsModal,
   postLikingUsersArray: selectPostLikingUsersArray,

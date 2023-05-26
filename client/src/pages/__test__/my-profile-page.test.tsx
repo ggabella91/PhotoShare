@@ -3,14 +3,10 @@ import { MyProfilePage } from '../my-profile/my-profile-page.component';
 
 import { DeleteReactionReq } from '../../redux/post/post.types';
 
-import { Follower } from '../../redux/follower/follower.types';
-
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 describe('my-profile-page component tests', () => {
   const setup = () => {
-    const followers = [{}, {}] as Follower[];
-    const currentUserUsersFollowing = [{}, {}] as Follower[];
     const commentToDelete = {} as DeleteReactionReq;
     const postLikingUsersArray = [{}, {}] as UserInfoAndOtherData[];
 
@@ -43,8 +39,6 @@ describe('my-profile-page component tests', () => {
         archivePostStart={archivePostStart}
         archivePostConfirm={null}
         archivePostError={null}
-        followers={followers}
-        currentUserUsersFollowing={currentUserUsersFollowing}
         commentToDelete={commentToDelete}
         showCommentOptionsModal={false}
         postLikingUsersArray={postLikingUsersArray}
