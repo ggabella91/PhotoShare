@@ -11,7 +11,6 @@ import { AppState } from '../../redux/root-reducer';
 import { useLazyLoading } from '../../hooks';
 
 import { OtherUserType, OtherUserRequest } from '../../redux/user/user.types';
-import { selectIsCurrentUserProfilePage } from '../../redux/user/user.selectors';
 import {
   getOtherUserStart,
   clearFollowersAndFollowing,
@@ -53,16 +52,12 @@ import {
 } from '../../redux/post/post.actions';
 
 import {
-  Follower,
   FollowError,
   WhoseUsersFollowing,
   UsersFollowingRequest,
 } from '../../redux/follower/follower.types';
 import {
   selectFollowConfirm,
-  selectFollowers,
-  selectCurrentUserUsersFollowing,
-  selectOtherUserUsersFollowing,
   selectGetFollowersConfirm,
   selectGetUsersFollowingConfirm,
   selectUnfollowConfirm,
@@ -105,9 +100,6 @@ interface UserProfilePageProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   followConfirm: string | null;
-  followers: Follower[] | null;
-  currentUserUsersFollowing: Follower[] | null;
-  otherUserUsersFollowing: Follower[] | null;
   getFollowersConfirm: string | null;
   getUsersFollowingConfirm: string | null;
   unfollowConfirm: string | null;
@@ -135,10 +127,7 @@ interface UserProfilePageProps {
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
   profilePhotoFile,
-  currentUserUsersFollowing,
-  otherUserUsersFollowing,
   followConfirm,
-  followers,
   getUsersFollowingConfirm,
   getOtherUserStart,
   getPostDataStart,
@@ -198,11 +187,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const postState = useSelector((state: AppState) => state.post);
   const userState = useSelector((state: AppState) => state.user);
+  const followerState = useSelector((state: AppState) => state.follower);
 
   const { postData, postFiles, postMetaDataForUser, isLoadingPostData } =
     postState;
   const { currentUser, otherUser, otherUserError, isCurrentUserProfilePage } =
     userState;
+  const { followers, currentUserUsersFollowing, otherUserUsersFollowing } =
+    followerState;
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
@@ -740,9 +732,6 @@ interface LinkStateProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   followConfirm: string | null;
-  followers: Follower[] | null;
-  currentUserUsersFollowing: Follower[] | null;
-  otherUserUsersFollowing: Follower[] | null;
   getFollowersConfirm: string | null;
   getUsersFollowingConfirm: string | null;
   unfollowConfirm: string | null;
@@ -760,9 +749,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
   followConfirm: selectFollowConfirm,
-  followers: selectFollowers,
-  currentUserUsersFollowing: selectCurrentUserUsersFollowing,
-  otherUserUsersFollowing: selectOtherUserUsersFollowing,
   getFollowersConfirm: selectGetFollowersConfirm,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   unfollowConfirm: selectUnfollowConfirm,

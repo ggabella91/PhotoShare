@@ -3,16 +3,11 @@ import { UserProfilePage } from '../user-profile-page/user-profile-page.componen
 
 import { PostFile, DeleteReactionReq } from '../../redux/post/post.types';
 
-import { Follower } from '../../redux/follower/follower.types';
-
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 describe('user-profile-page component tests', () => {
   const setup = () => {
     const profilePhotoFile = {} as PostFile;
-    const followers = [{}, {}] as Follower[];
-    const currentUserUsersFollowing = [{}, {}] as Follower[];
-    const otherUserUsersFollowing = [{}, {}] as Follower[];
     const commentToDelete = {} as DeleteReactionReq;
     const postLikingUsersArray = [{}, {}] as UserInfoAndOtherData[];
 
@@ -45,9 +40,6 @@ describe('user-profile-page component tests', () => {
         getPostFileConfirm='confirm'
         getPostFileError={null}
         followConfirm='confirm'
-        followers={followers}
-        currentUserUsersFollowing={currentUserUsersFollowing}
-        otherUserUsersFollowing={otherUserUsersFollowing}
         getFollowersConfirm='confirm'
         getUsersFollowingConfirm='confirm'
         unfollowConfirm={null}
