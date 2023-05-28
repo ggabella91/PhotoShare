@@ -52,17 +52,10 @@ import {
 } from '../../redux/post/post.actions';
 
 import {
-  FollowError,
   WhoseUsersFollowing,
   UsersFollowingRequest,
 } from '../../redux/follower/follower.types';
-import {
-  selectFollowConfirm,
-  selectGetFollowersConfirm,
-  selectGetUsersFollowingConfirm,
-  selectUnfollowConfirm,
-  selectUnfollowError,
-} from '../../redux/follower/follower.selectors';
+
 import {
   followNewUserStart,
   getFollowersStart,
@@ -99,11 +92,6 @@ interface UserProfilePageProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
-  followConfirm: string | null;
-  getFollowersConfirm: string | null;
-  getUsersFollowingConfirm: string | null;
-  unfollowConfirm: string | null;
-  unfollowError: FollowError | null;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
@@ -127,8 +115,6 @@ interface UserProfilePageProps {
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
   profilePhotoFile,
-  followConfirm,
-  getUsersFollowingConfirm,
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
@@ -137,7 +123,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   getFollowersStart,
   getUsersFollowingStart,
   unfollowUserStart,
-  unfollowConfirm,
   clearFollowersAndFollowing,
   clearPostFilesAndData,
   clearFollowState,
@@ -193,8 +178,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     postState;
   const { currentUser, otherUser, otherUserError, isCurrentUserProfilePage } =
     userState;
-  const { followers, currentUserUsersFollowing, otherUserUsersFollowing } =
-    followerState;
+  const {
+    followers,
+    currentUserUsersFollowing,
+    otherUserUsersFollowing,
+    followConfirm,
+    unfollowConfirm,
+    getUsersFollowingConfirm,
+  } = followerState;
 
   const { intersectionCounter, observedElementRef } =
     useLazyLoading(isLoadingPostData);
@@ -731,11 +722,6 @@ interface LinkStateProps {
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
-  followConfirm: string | null;
-  getFollowersConfirm: string | null;
-  getUsersFollowingConfirm: string | null;
-  unfollowConfirm: string | null;
-  unfollowError: FollowError | null;
   commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
@@ -748,11 +734,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostDataError: selectGetPostDataError,
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
-  followConfirm: selectFollowConfirm,
-  getFollowersConfirm: selectGetFollowersConfirm,
-  getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
-  unfollowConfirm: selectUnfollowConfirm,
-  unfollowError: selectUnfollowError,
   commentToDelete: selectCommentToDelete,
   showCommentOptionsModal: selectShowCommentOptionsModal,
   postLikingUsersArray: selectPostLikingUsersArray,
