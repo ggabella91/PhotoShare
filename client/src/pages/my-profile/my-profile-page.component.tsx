@@ -29,9 +29,6 @@ import {
   Location,
 } from '../../redux/post/post.types';
 import {
-  selectProfilePhotoKey,
-  selectProfilePhotoFile,
-  selectPostError,
   selectGetPostDataConfirm,
   selectGetPostDataError,
   selectGetPostFileConfirm,
@@ -57,7 +54,6 @@ import {
 } from '../../redux/post/post.actions';
 
 import {
-  Follower,
   WhoseUsersFollowing,
   UsersFollowingRequest,
 } from '../../redux/follower/follower.types';
@@ -84,10 +80,6 @@ export interface UserLite {
 }
 
 interface MyProfilePageProps {
-  profilePhotoKey: string | null;
-  profilePhotoFile: PostFile | null;
-  postError: PostError | null;
-  getPostDataConfirm: string | null;
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
@@ -124,8 +116,6 @@ export interface PostModalMapProps {
 }
 
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
-  profilePhotoKey,
-  profilePhotoFile,
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
@@ -145,7 +135,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   postLikingUsersArray,
   getSinglePostDataConfirm,
   setShowPostEditForm,
-  getPostDataConfirm,
 }) => {
   const [profilePhotoString, setProfilePhotoString] = useState<string>('');
 
@@ -180,8 +169,15 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const userState = useSelector((state: AppState) => state.user);
   const followerState = useSelector((state: AppState) => state.follower);
 
-  const { postMetaDataForUser, isLoadingPostData, postData, postFiles } =
-    postState;
+  const {
+    postMetaDataForUser,
+    isLoadingPostData,
+    postData,
+    postFiles,
+    profilePhotoKey,
+    profilePhotoFile,
+    getPostDataConfirm,
+  } = postState;
   const { currentUser } = userState;
   const { followers, currentUserUsersFollowing } = followerState;
   const dispatch = useDispatch();
@@ -615,10 +611,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 };
 
 interface LinkStateProps {
-  profilePhotoKey: string | null;
-  profilePhotoFile: PostFile | null;
-  postError: PostError | null;
-  getPostDataConfirm: string | null;
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
@@ -631,10 +623,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  profilePhotoKey: selectProfilePhotoKey,
-  profilePhotoFile: selectProfilePhotoFile,
-  postError: selectPostError,
-  getPostDataConfirm: selectGetPostDataConfirm,
   getPostDataError: selectGetPostDataError,
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
