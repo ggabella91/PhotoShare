@@ -27,11 +27,7 @@ describe('my-profile-page component tests', () => {
 
     render(
       <MyProfilePage
-        profilePhotoKey='test-photo-filestring'
-        profilePhotoFile={null}
-        postError={null}
         getPostDataStart={getPostDataStart}
-        getPostDataConfirm='confirm'
         getPostDataError={null}
         getPostFileStart={getPostFileStart}
         getPostFileConfirm='confirm'
