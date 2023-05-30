@@ -1,13 +1,10 @@
 import { render, screen } from '../../test-utils/test-utils';
 import { MyProfilePage } from '../my-profile/my-profile-page.component';
 
-import { DeleteReactionReq } from '../../redux/post/post.types';
-
 import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 describe('my-profile-page component tests', () => {
   const setup = () => {
-    const commentToDelete = {} as DeleteReactionReq;
     const postLikingUsersArray = [{}, {}] as UserInfoAndOtherData[];
 
     const getPostDataStart = jest.fn();
@@ -28,14 +25,9 @@ describe('my-profile-page component tests', () => {
     render(
       <MyProfilePage
         getPostDataStart={getPostDataStart}
-        getPostDataError={null}
         getPostFileStart={getPostFileStart}
-        getPostFileConfirm='confirm'
-        getPostFileError={null}
         archivePostStart={archivePostStart}
-        archivePostConfirm={null}
         archivePostError={null}
-        commentToDelete={commentToDelete}
         showCommentOptionsModal={false}
         postLikingUsersArray={postLikingUsersArray}
         getSinglePostDataConfirm={null}

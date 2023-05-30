@@ -29,13 +29,6 @@ import {
   Location,
 } from '../../redux/post/post.types';
 import {
-  selectGetPostDataConfirm,
-  selectGetPostDataError,
-  selectGetPostFileConfirm,
-  selectGetPostFileError,
-  selectArchivePostConfirm,
-  selectArchivePostError,
-  selectCommentToDelete,
   selectShowCommentOptionsModal,
   selectPostLikingUsersArray,
   selectGetSinglePostDataConfirm,
@@ -80,12 +73,7 @@ export interface UserLite {
 }
 
 interface MyProfilePageProps {
-  getPostDataError: PostError | null;
-  getPostFileConfirm: string | null;
-  getPostFileError: PostError | null;
-  archivePostConfirm: string | null;
   archivePostError: PostError | null;
-  commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   getSinglePostDataConfirm: Post | null;
@@ -119,7 +107,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   getPostDataStart,
   getPostFileStart,
   archivePostStart,
-  archivePostConfirm,
   clearArchivePostStatuses,
   clearFollowPhotoFileArray,
   clearPostState,
@@ -128,7 +115,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   clearFollowersAndFollowing,
   clearFollowState,
   setIsCurrentUserProfilePage,
-  commentToDelete,
   showCommentOptionsModal,
   setShowCommentOptionsModal,
   deleteReactionStart,
@@ -177,6 +163,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     profilePhotoKey,
     profilePhotoFile,
     getPostDataConfirm,
+    archivePostConfirm,
+    commentToDelete,
   } = postState;
   const { currentUser } = userState;
   const { followers, currentUserUsersFollowing } = followerState;
@@ -611,24 +599,12 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 };
 
 interface LinkStateProps {
-  getPostDataError: PostError | null;
-  getPostFileConfirm: string | null;
-  getPostFileError: PostError | null;
-  archivePostConfirm: string | null;
-  archivePostError: PostError | null;
-  commentToDelete: DeleteReactionReq | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   getSinglePostDataConfirm: Post | null;
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  getPostDataError: selectGetPostDataError,
-  getPostFileConfirm: selectGetPostFileConfirm,
-  getPostFileError: selectGetPostFileError,
-  archivePostConfirm: selectArchivePostConfirm,
-  archivePostError: selectArchivePostError,
-  commentToDelete: selectCommentToDelete,
   showCommentOptionsModal: selectShowCommentOptionsModal,
   postLikingUsersArray: selectPostLikingUsersArray,
   getSinglePostDataConfirm: selectGetSinglePostDataConfirm,
