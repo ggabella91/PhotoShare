@@ -27,7 +27,6 @@ describe('my-profile-page component tests', () => {
         getPostDataStart={getPostDataStart}
         getPostFileStart={getPostFileStart}
         archivePostStart={archivePostStart}
-        archivePostError={null}
         showCommentOptionsModal={false}
         postLikingUsersArray={postLikingUsersArray}
         getSinglePostDataConfirm={null}
