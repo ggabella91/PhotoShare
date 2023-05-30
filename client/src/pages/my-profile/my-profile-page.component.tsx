@@ -73,7 +73,6 @@ export interface UserLite {
 }
 
 interface MyProfilePageProps {
-  archivePostError: PostError | null;
   showCommentOptionsModal: boolean;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   getSinglePostDataConfirm: Post | null;
