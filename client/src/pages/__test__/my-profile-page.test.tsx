@@ -1,12 +1,8 @@
 import { render, screen } from '../../test-utils/test-utils';
 import { MyProfilePage } from '../my-profile/my-profile-page.component';
 
-import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
-
 describe('my-profile-page component tests', () => {
   const setup = () => {
-    const postLikingUsersArray = [{}, {}] as UserInfoAndOtherData[];
-
     const getPostDataStart = jest.fn();
     const getPostFileStart = jest.fn();
     const archivePostStart = jest.fn();
@@ -27,9 +23,6 @@ describe('my-profile-page component tests', () => {
         getPostDataStart={getPostDataStart}
         getPostFileStart={getPostFileStart}
         archivePostStart={archivePostStart}
-        showCommentOptionsModal={false}
-        postLikingUsersArray={postLikingUsersArray}
-        getSinglePostDataConfirm={null}
         clearArchivePostStatuses={clearArchivePostStatuses}
         clearPostState={clearPostState}
         clearFollowPhotoFileArray={clearFollowPhotoFileArray}
