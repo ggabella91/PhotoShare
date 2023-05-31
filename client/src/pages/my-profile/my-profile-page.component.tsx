@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
@@ -16,23 +15,16 @@ import {
 } from '../../redux/user/user.actions';
 
 import {
-  Post,
   DataRequestType,
   FileRequestType,
   PostDataReq,
   PostFileReq,
   ArchivePostReq,
   PostFile,
-  PostError,
   UserType,
   DeleteReactionReq,
   Location,
 } from '../../redux/post/post.types';
-import {
-  selectShowCommentOptionsModal,
-  selectPostLikingUsersArray,
-  selectGetSinglePostDataConfirm,
-} from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
   getPostFileStart,
@@ -61,7 +53,6 @@ import PostTile from '../../components/post-tile/post-tile.component';
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
-import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 import './profile-page.styles.scss';
 
@@ -73,9 +64,6 @@ export interface UserLite {
 }
 
 interface MyProfilePageProps {
-  showCommentOptionsModal: boolean;
-  postLikingUsersArray: UserInfoAndOtherData[] | null;
-  getSinglePostDataConfirm: Post | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
@@ -114,11 +102,8 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   clearFollowersAndFollowing,
   clearFollowState,
   setIsCurrentUserProfilePage,
-  showCommentOptionsModal,
   setShowCommentOptionsModal,
   deleteReactionStart,
-  postLikingUsersArray,
-  getSinglePostDataConfirm,
   setShowPostEditForm,
 }) => {
   const [profilePhotoString, setProfilePhotoString] = useState<string>('');
@@ -164,6 +149,9 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     getPostDataConfirm,
     archivePostConfirm,
     commentToDelete,
+    showCommentOptionsModal,
+    postLikingUsersArray,
+    getSinglePostDataConfirm,
   } = postState;
   const { currentUser } = userState;
   const { followers, currentUserUsersFollowing } = followerState;
@@ -597,18 +585,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   );
 };
 
-interface LinkStateProps {
-  showCommentOptionsModal: boolean;
-  postLikingUsersArray: UserInfoAndOtherData[] | null;
-  getSinglePostDataConfirm: Post | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  showCommentOptionsModal: selectShowCommentOptionsModal,
-  postLikingUsersArray: selectPostLikingUsersArray,
-  getSinglePostDataConfirm: selectGetSinglePostDataConfirm,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostDataStart: (postDataReq: PostDataReq) =>
     dispatch(getPostDataStart(postDataReq)),
@@ -634,4 +610,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setShowPostEditForm(showPostEditForm)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyProfilePage);
+export default connect(null, mapDispatchToProps)(MyProfilePage);
