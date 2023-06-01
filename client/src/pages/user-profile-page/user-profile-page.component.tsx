@@ -24,21 +24,10 @@ import {
   PostDataReq,
   PostFileReq,
   PostFile,
-  PostError,
   UserType,
   DeleteReactionReq,
 } from '../../redux/post/post.types';
-import {
-  selectPostError,
-  selectGetPostDataConfirm,
-  selectGetPostDataError,
-  selectGetPostFileConfirm,
-  selectGetPostFileError,
-  selectOtherUserProfilePhotoFile,
-  selectCommentToDelete,
-  selectShowCommentOptionsModal,
-  selectPostLikingUsersArray,
-} from '../../redux/post/post.selectors';
+import { selectPostLikingUsersArray } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
   getPostFileStart,
@@ -86,15 +75,6 @@ export interface UserLite {
 
 interface UserProfilePageProps {
   username: string;
-  profilePhotoFile: PostFile | null;
-  postError: PostError | null;
-  getPostDataConfirm: string | null;
-  getPostDataError: PostError | null;
-  getPostFileConfirm: string | null;
-  getPostFileError: PostError | null;
-  commentToDelete: DeleteReactionReq | null;
-  showCommentOptionsModal: boolean;
-  postLikingUsersArray: UserInfoAndOtherData[] | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
@@ -114,7 +94,6 @@ interface UserProfilePageProps {
 
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
-  profilePhotoFile,
   getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
@@ -127,13 +106,9 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   clearPostFilesAndData,
   clearFollowState,
   setIsCurrentUserProfilePage,
-  commentToDelete,
-  showCommentOptionsModal,
   setShowCommentOptionsModal,
   deleteReactionStart,
-  postLikingUsersArray,
   clearPostState,
-  getPostDataConfirm,
 }) => {
   const [profilePhotoString, setProfilePhoto] = useState<string>('');
 
@@ -174,8 +149,17 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const userState = useSelector((state: AppState) => state.user);
   const followerState = useSelector((state: AppState) => state.follower);
 
-  const { postData, postFiles, postMetaDataForUser, isLoadingPostData } =
-    postState;
+  const {
+    postData,
+    postFiles,
+    postMetaDataForUser,
+    isLoadingPostData,
+    getPostDataConfirm,
+    profilePhotoFile,
+    commentToDelete,
+    showCommentOptionsModal,
+    postLikingUsersArray,
+  } = postState;
   const { currentUser, otherUser, otherUserError, isCurrentUserProfilePage } =
     userState;
   const {
@@ -715,30 +699,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   );
 };
 
-interface LinkStateProps {
-  profilePhotoFile: PostFile | null;
-  postError: PostError | null;
-  getPostDataConfirm: string | null;
-  getPostDataError: PostError | null;
-  getPostFileConfirm: string | null;
-  getPostFileError: PostError | null;
-  commentToDelete: DeleteReactionReq | null;
-  showCommentOptionsModal: boolean;
-  postLikingUsersArray: UserInfoAndOtherData[] | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  profilePhotoFile: selectOtherUserProfilePhotoFile,
-  postError: selectPostError,
-  getPostDataConfirm: selectGetPostDataConfirm,
-  getPostDataError: selectGetPostDataError,
-  getPostFileConfirm: selectGetPostFileConfirm,
-  getPostFileError: selectGetPostFileError,
-  commentToDelete: selectCommentToDelete,
-  showCommentOptionsModal: selectShowCommentOptionsModal,
-  postLikingUsersArray: selectPostLikingUsersArray,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserRequest)),
@@ -765,4 +725,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearPostState: () => dispatch(clearPostState()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);
+export default connect(null, mapDispatchToProps)(UserProfilePage);

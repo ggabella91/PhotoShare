@@ -1,16 +1,8 @@
 import { render, screen } from '../../test-utils/test-utils';
 import { UserProfilePage } from '../user-profile-page/user-profile-page.component';
 
-import { PostFile, DeleteReactionReq } from '../../redux/post/post.types';
-
-import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
-
 describe('user-profile-page component tests', () => {
   const setup = () => {
-    const profilePhotoFile = {} as PostFile;
-    const commentToDelete = {} as DeleteReactionReq;
-    const postLikingUsersArray = [{}, {}] as UserInfoAndOtherData[];
-
     const getOtherUserStart = jest.fn();
     const getPostDataStart = jest.fn();
     const getPostFileStart = jest.fn();
@@ -31,17 +23,8 @@ describe('user-profile-page component tests', () => {
       <UserProfilePage
         username='giuliano_gabella'
         getOtherUserStart={getOtherUserStart}
-        profilePhotoFile={profilePhotoFile}
-        postError={null}
         getPostDataStart={getPostDataStart}
-        getPostDataConfirm='confirm'
-        getPostDataError={null}
         getPostFileStart={getPostFileStart}
-        getPostFileConfirm='confirm'
-        getPostFileError={null}
-        commentToDelete={commentToDelete}
-        showCommentOptionsModal={false}
-        postLikingUsersArray={postLikingUsersArray}
         clearFollowPhotoFileArray={clearFollowPhotoFileArray}
         followNewUserStart={followNewUserStart}
         getFollowersStart={getFollowersStart}
