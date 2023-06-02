@@ -109,7 +109,7 @@ const ExploreTagPage: React.FC = () => {
     return () => {
       dispatch(clearPostState());
     };
-  }, [hashtag]);
+  }, [dispatch, hashtag]);
 
   useEffect(() => {
     if (
@@ -129,6 +129,7 @@ const ExploreTagPage: React.FC = () => {
 
       setPageToFetch(pageToFetch + 1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intersectionCounter]);
 
   useEffect(() => {
@@ -144,7 +145,7 @@ const ExploreTagPage: React.FC = () => {
         })
       );
     });
-  }, [postData]);
+  }, [dispatch, postsBucket, postData]);
 
   let postFileArray = useMemo(() => {
     if (postData && postFiles.length >= postData.length) {
@@ -160,6 +161,7 @@ const ExploreTagPage: React.FC = () => {
 
       return orderedFiles;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postFiles]);
 
   useEffect(() => {
@@ -169,7 +171,7 @@ const ExploreTagPage: React.FC = () => {
       setPostModalShow(false);
       setClearPostModalLocalState(true);
     }
-  }, [archivePostConfirm]);
+  }, [dispatch, archivePostConfirm]);
 
   const handleRenderPostModal = (event: React.MouseEvent<HTMLDivElement>) => {
     const overlayDivElement = event.target as HTMLElement;
@@ -219,7 +221,7 @@ const ExploreTagPage: React.FC = () => {
         })
       );
     }
-  }, [otherUser]);
+  }, [dispatch, profileBucket, otherUser]);
 
   const handleHidePostModal = () => {
     setPostModalProps({
@@ -242,6 +244,7 @@ const ExploreTagPage: React.FC = () => {
 
   useEffect(() => {
     handleSetIsCurrentUserComment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCommentOptionsModal]);
 
   const handleSetIsCurrentUserComment = () => {
