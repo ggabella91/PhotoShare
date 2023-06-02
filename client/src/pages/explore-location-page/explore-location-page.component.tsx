@@ -123,6 +123,7 @@ const ExploreLocationPage: React.FC = () => {
         dispatch(setLocationCoordinates({ latitude, longitude }));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, postData]);
 
   useEffect(() => {
@@ -143,6 +144,7 @@ const ExploreLocationPage: React.FC = () => {
 
       setPageToFetch(pageToFetch + 1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intersectionCounter]);
 
   useEffect(() => {
@@ -160,7 +162,7 @@ const ExploreLocationPage: React.FC = () => {
         );
       });
     }
-  }, [dispatch, postData]);
+  }, [dispatch, postData, postsBucket]);
 
   let postFileArray = useMemo(() => {
     if (postData && postFiles.length >= postData.length) {
@@ -176,6 +178,7 @@ const ExploreLocationPage: React.FC = () => {
 
       return orderedFiles;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postFiles]);
 
   useEffect(() => {
@@ -185,7 +188,7 @@ const ExploreLocationPage: React.FC = () => {
       setPostModalShow(false);
       setClearPostModalLocalState(true);
     }
-  }, [archivePostConfirm]);
+  }, [dispatch, archivePostConfirm]);
 
   const handleRenderPostModal = (event: React.MouseEvent<HTMLDivElement>) => {
     const overlayDivElement = event.target as HTMLElement;

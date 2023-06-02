@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
@@ -27,7 +26,6 @@ import {
   UserType,
   DeleteReactionReq,
 } from '../../redux/post/post.types';
-import { selectPostLikingUsersArray } from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
   getPostFileStart,
