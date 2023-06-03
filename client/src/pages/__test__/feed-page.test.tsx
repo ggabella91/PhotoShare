@@ -9,14 +9,11 @@ import {
   PostMetaData,
   DeleteReactionReq,
 } from '../../redux/post/post.types';
-import { User } from '../../redux/user/user.types';
 import { Follower } from '../../redux/follower/follower.types';
 
 describe('feed page component tests', () => {
   const setup = () => {
-    const currentUser = {} as User;
     const currentUserUsersFollowing = [{}, {}] as Follower[];
-    const followingInfo = [{}, {}] as User[];
     const postDataFeedArray = [
       [{ id: '1' }, { id: '2' }],
       [{ id: '3' }, { id: '4' }],
@@ -49,9 +46,7 @@ describe('feed page component tests', () => {
 
     render(
       <FeedPage
-        currentUser={currentUser}
         currentUserUsersFollowing={currentUserUsersFollowing}
-        followingInfo={followingInfo}
         clearFollowState={clearFollowState}
         getUsersFollowingConfirm='confirm'
         clearFollowersAndFollowing={clearFollowersAndFollowing}

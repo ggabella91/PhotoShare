@@ -61,6 +61,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
     } else if (resetConfirm) {
       setStatus({ ...status, success: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetError, resetConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {

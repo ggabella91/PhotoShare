@@ -2,7 +2,6 @@
 import { render, screen, userEvent } from '../../test-utils/test-utils';
 import { CreatePostPage } from '../create-post-page/create-post-page.component';
 
-import { User } from '../../redux/user/user.types';
 import { Post } from '../../redux/post/post.types';
 
 describe('create-post page component tests', () => {

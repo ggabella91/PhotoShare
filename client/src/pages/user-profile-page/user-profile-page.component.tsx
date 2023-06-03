@@ -59,7 +59,6 @@ import PostOrCommentOptionsModal from '../../components/post-or-comment-options-
 import NotFoundPage from '../../pages/not-found/not-found-page.component';
 import UnfollowModal from '../../components/unfollow-modal/unfollow-modal.component';
 import FollowersOrFollowingOrLikesModal from '../../components/followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
-import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
 
 import '../my-profile/profile-page.styles.scss';
 import { PostModalMapProps } from '../my-profile/my-profile-page.component';
