@@ -53,6 +53,7 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
     } else if (forgotConfirm) {
       setStatus({ ...status, success: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forgotError, forgotConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {

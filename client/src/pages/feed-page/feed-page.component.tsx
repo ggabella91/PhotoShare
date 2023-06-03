@@ -10,15 +10,7 @@ import { AppState } from '../../redux/root-reducer';
 
 import { useLazyLoading } from '../../hooks';
 
-import {
-  User,
-  OtherUserRequest,
-  OtherUserType,
-} from '../../redux/user/user.types';
-import {
-  selectCurrentUser,
-  selectFollowingInfo,
-} from '../../redux/user/user.selectors';
+import { OtherUserRequest, OtherUserType } from '../../redux/user/user.types';
 import {
   getOtherUserStart,
   clearFollowersAndFollowing,
@@ -126,7 +118,6 @@ export interface UserInfoAndPostFile {
 }
 
 interface FeedPageProps {
-  currentUser: User | null;
   postDataFeedArray: Post[][];
   postFiles: PostFile[];
   postError: PostError | null;
@@ -135,7 +126,6 @@ interface FeedPageProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
-  followingInfo: User[] | null;
   followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
   isLoadingPostData: boolean;
@@ -165,11 +155,9 @@ interface FeedPageProps {
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
-  currentUser,
   postDataFeedArray,
   postFiles,
   currentUserUsersFollowing,
-  followingInfo,
   followPhotoFileArray,
   isLoadingPostData,
   postMetaDataForUser,
@@ -226,8 +214,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   let navigate = useNavigate();
 
   const postState = useSelector((state: AppState) => state.post);
+  const userState = useSelector((state: AppState) => state.user);
 
   const { feedPagePostIdForNavigation } = postState;
+  const { currentUser, followingInfo } = userState;
 
   let postsBucket: string, profileBucket: string;
 
@@ -604,7 +594,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 };
 
 interface LinkStateProps {
-  currentUser: User | null;
   postDataFeedArray: Post[][];
   postFiles: PostFile[];
   postError: PostError | null;
@@ -613,7 +602,6 @@ interface LinkStateProps {
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
-  followingInfo: User[] | null;
   followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
   isLoadingPostData: boolean;
@@ -629,7 +617,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
   postDataFeedArray: selectPostDataFeedArray,
   postFiles: selectFeedPostFiles,
   postError: selectPostError,
@@ -638,7 +625,6 @@ const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
-  followingInfo: selectFollowingInfo,
   followPhotoFileArray: selectFollowPhotoFileArray,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   isLoadingPostData: selectIsLoadingPostData,

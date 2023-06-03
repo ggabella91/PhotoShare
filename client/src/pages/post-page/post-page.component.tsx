@@ -592,6 +592,7 @@ export const PostPage: React.FC = () => {
 
       setAreReactionsReadyForRendering(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     reactionsArray,
     uniqueReactingUsers,
