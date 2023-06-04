@@ -3,24 +3,13 @@ import { render, screen } from '../../test-utils/test-utils';
 import { FeedPage } from '../feed-page/feed-page.component';
 import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 
-import {
-  Post,
-  PostFile,
-  PostMetaData,
-  DeleteReactionReq,
-} from '../../redux/post/post.types';
+import { PostMetaData, DeleteReactionReq } from '../../redux/post/post.types';
 import { Follower } from '../../redux/follower/follower.types';
 
 describe('feed page component tests', () => {
   const setup = () => {
     const currentUserUsersFollowing = [{}, {}] as Follower[];
-    const postDataFeedArray = [
-      [{ id: '1' }, { id: '2' }],
-      [{ id: '3' }, { id: '4' }],
-    ] as Post[][];
-    const postFiles = [{}, {}, {}, {}] as PostFile[];
     const commentToDelete = {} as DeleteReactionReq;
-    const followPhotoFileArray = [{}, {}] as PostFile[];
     const clearFollowState = jest.fn();
     const clearFollowersAndFollowing = jest.fn();
     const clearPostState = jest.fn();
@@ -51,9 +40,6 @@ describe('feed page component tests', () => {
         getUsersFollowingConfirm='confirm'
         clearFollowersAndFollowing={clearFollowersAndFollowing}
         clearPostState={clearPostState}
-        postDataFeedArray={postDataFeedArray}
-        postError={null}
-        postFiles={postFiles}
         getPostDataError={null}
         getPostDataStart={getPostDataStart}
         getPostFileStart={getPostFileStart}
@@ -61,7 +47,6 @@ describe('feed page component tests', () => {
         getPostFileError={null}
         getOtherUserStart={getOtherUserStart}
         getUsersFollowingStart={getUsersFollowingStart}
-        followPhotoFileArray={followPhotoFileArray}
         isLoadingPostData={false}
         postMetaDataForUser={postMetaData}
         getFeedPostDataConfirm={null}
