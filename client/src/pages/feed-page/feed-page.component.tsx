@@ -22,7 +22,6 @@ import {
   FileRequestType,
   PostDataReq,
   PostFileReq,
-  PostFile,
   PostError,
   ArchivePostReq,
   UserType,
@@ -31,9 +30,6 @@ import {
   Location,
 } from '../../redux/post/post.types';
 import {
-  selectPostDataFeedArray,
-  selectFollowPhotoFileArray,
-  selectPostError,
   selectGetFeedPostDataConfirm,
   selectGetPostDataError,
   selectGetPostFileConfirm,
@@ -46,7 +42,6 @@ import {
   selectFeedPagePostModalShow,
   selectFeedPagePostOptionsModalShow,
   selectClearFeedPagePostModalState,
-  selectFeedPostFiles,
   selectShowCommentOptionsModal,
   selectCommentToDelete,
 } from '../../redux/post/post.selectors';
@@ -118,15 +113,11 @@ export interface UserInfoAndPostFile {
 }
 
 interface FeedPageProps {
-  postDataFeedArray: Post[][];
-  postFiles: PostFile[];
-  postError: PostError | null;
   getFeedPostDataConfirm: string | null;
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
-  followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
@@ -155,10 +146,7 @@ interface FeedPageProps {
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
-  postDataFeedArray,
-  postFiles,
   currentUserUsersFollowing,
-  followPhotoFileArray,
   isLoadingPostData,
   postMetaDataForUser,
   getFeedPostDataConfirm,
@@ -216,7 +204,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const postState = useSelector((state: AppState) => state.post);
   const userState = useSelector((state: AppState) => state.user);
 
-  const { feedPagePostIdForNavigation } = postState;
+  const {
+    postDataFeedArray,
+    postFiles,
+    followPhotoFileArray,
+    feedPagePostIdForNavigation,
+  } = postState;
   const { currentUser, followingInfo } = userState;
 
   let postsBucket: string, profileBucket: string;
@@ -594,15 +587,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 };
 
 interface LinkStateProps {
-  postDataFeedArray: Post[][];
-  postFiles: PostFile[];
-  postError: PostError | null;
   getFeedPostDataConfirm: string | null;
   getPostDataError: PostError | null;
   getPostFileConfirm: string | null;
   getPostFileError: PostError | null;
   currentUserUsersFollowing: Follower[] | null;
-  followPhotoFileArray: PostFile[] | null;
   getUsersFollowingConfirm: string | null;
   isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
@@ -617,15 +606,11 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  postDataFeedArray: selectPostDataFeedArray,
-  postFiles: selectFeedPostFiles,
-  postError: selectPostError,
   getFeedPostDataConfirm: selectGetFeedPostDataConfirm,
   getPostDataError: selectGetPostDataError,
   getPostFileConfirm: selectGetPostFileConfirm,
   getPostFileError: selectGetPostFileError,
   currentUserUsersFollowing: selectCurrentUserUsersFollowing,
-  followPhotoFileArray: selectFollowPhotoFileArray,
   getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
   isLoadingPostData: selectIsLoadingPostData,
   postMetaDataForUser: selectPostMetaDataForUser,
