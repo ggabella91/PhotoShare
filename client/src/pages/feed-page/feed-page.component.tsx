@@ -22,7 +22,6 @@ import {
   FileRequestType,
   PostDataReq,
   PostFileReq,
-  PostError,
   ArchivePostReq,
   UserType,
   PostMetaData,
@@ -30,11 +29,6 @@ import {
   Location,
 } from '../../redux/post/post.types';
 import {
-  selectGetFeedPostDataConfirm,
-  selectGetPostDataError,
-  selectGetPostFileConfirm,
-  selectGetPostFileError,
-  selectIsLoadingPostData,
   selectPostMetaDataForUser,
   selectPostLikingUsersArray,
   selectShowPostLikingUsersModal,
@@ -59,14 +53,9 @@ import {
 } from '../../redux/post/post.actions';
 
 import {
-  Follower,
   WhoseUsersFollowing,
   UsersFollowingRequest,
 } from '../../redux/follower/follower.types';
-import {
-  selectCurrentUserUsersFollowing,
-  selectGetUsersFollowingConfirm,
-} from '../../redux/follower/follower.selectors';
 import {
   getUsersFollowingStart,
   clearFollowState,
@@ -113,13 +102,6 @@ export interface UserInfoAndPostFile {
 }
 
 interface FeedPageProps {
-  getFeedPostDataConfirm: string | null;
-  getPostDataError: PostError | null;
-  getPostFileConfirm: string | null;
-  getPostFileError: PostError | null;
-  currentUserUsersFollowing: Follower[] | null;
-  getUsersFollowingConfirm: string | null;
-  isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
@@ -146,10 +128,7 @@ interface FeedPageProps {
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
-  currentUserUsersFollowing,
-  isLoadingPostData,
   postMetaDataForUser,
-  getFeedPostDataConfirm,
   getPostDataStart,
   getPostFileStart,
   clearPostState,
@@ -177,9 +156,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const [pageToFetch, setPageToFetch] = useState(1);
 
-  const { intersectionCounter, observedElementRef } =
-    useLazyLoading(isLoadingPostData);
-
   const [postModalProps, setPostModalProps] = useState<PostModalDataToFeed>(
     POST_MODAL_DATA_INITIAL_STATE
   );
@@ -203,14 +179,21 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 
   const postState = useSelector((state: AppState) => state.post);
   const userState = useSelector((state: AppState) => state.user);
+  const followerState = useSelector((state: AppState) => state.follower);
 
   const {
     postDataFeedArray,
     postFiles,
     followPhotoFileArray,
     feedPagePostIdForNavigation,
+    getFeedPostDataConfirm,
+    isLoadingPostData,
   } = postState;
   const { currentUser, followingInfo } = userState;
+  const { currentUserUsersFollowing } = followerState;
+
+  const { intersectionCounter, observedElementRef } =
+    useLazyLoading(isLoadingPostData);
 
   let postsBucket: string, profileBucket: string;
 
@@ -587,13 +570,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 };
 
 interface LinkStateProps {
-  getFeedPostDataConfirm: string | null;
-  getPostDataError: PostError | null;
-  getPostFileConfirm: string | null;
-  getPostFileError: PostError | null;
-  currentUserUsersFollowing: Follower[] | null;
-  getUsersFollowingConfirm: string | null;
-  isLoadingPostData: boolean;
   postMetaDataForUser: PostMetaData | null;
   postLikingUsersArray: UserInfoAndOtherData[] | null;
   showPostLikingUsersModal: boolean;
@@ -606,13 +582,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  getFeedPostDataConfirm: selectGetFeedPostDataConfirm,
-  getPostDataError: selectGetPostDataError,
-  getPostFileConfirm: selectGetPostFileConfirm,
-  getPostFileError: selectGetPostFileError,
-  currentUserUsersFollowing: selectCurrentUserUsersFollowing,
-  getUsersFollowingConfirm: selectGetUsersFollowingConfirm,
-  isLoadingPostData: selectIsLoadingPostData,
   postMetaDataForUser: selectPostMetaDataForUser,
   postLikingUsersArray: selectPostLikingUsersArray,
   showPostLikingUsersModal: selectShowPostLikingUsersModal,
