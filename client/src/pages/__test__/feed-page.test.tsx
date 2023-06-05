@@ -4,11 +4,9 @@ import { FeedPage } from '../feed-page/feed-page.component';
 import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 
 import { PostMetaData, DeleteReactionReq } from '../../redux/post/post.types';
-import { Follower } from '../../redux/follower/follower.types';
 
 describe('feed page component tests', () => {
   const setup = () => {
-    const currentUserUsersFollowing = [{}, {}] as Follower[];
     const commentToDelete = {} as DeleteReactionReq;
     const clearFollowState = jest.fn();
     const clearFollowersAndFollowing = jest.fn();
@@ -35,21 +33,14 @@ describe('feed page component tests', () => {
 
     render(
       <FeedPage
-        currentUserUsersFollowing={currentUserUsersFollowing}
         clearFollowState={clearFollowState}
-        getUsersFollowingConfirm='confirm'
         clearFollowersAndFollowing={clearFollowersAndFollowing}
         clearPostState={clearPostState}
-        getPostDataError={null}
         getPostDataStart={getPostDataStart}
         getPostFileStart={getPostFileStart}
-        getPostFileConfirm='confirm'
-        getPostFileError={null}
         getOtherUserStart={getOtherUserStart}
         getUsersFollowingStart={getUsersFollowingStart}
-        isLoadingPostData={false}
         postMetaDataForUser={postMetaData}
-        getFeedPostDataConfirm={null}
         postLikingUsersArray={[]}
         showPostLikingUsersModal={false}
         feedPagePostModalData={feedPagePostModalData}
