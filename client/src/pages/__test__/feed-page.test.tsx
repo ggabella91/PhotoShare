@@ -1,9 +1,8 @@
 import { render, screen } from '../../test-utils/test-utils';
 
 import { FeedPage } from '../feed-page/feed-page.component';
-import { PostModalDataToFeed } from '../../components/feed-post-container/feed-post-container.component';
 
-import { PostMetaData, DeleteReactionReq } from '../../redux/post/post.types';
+import { DeleteReactionReq } from '../../redux/post/post.types';
 
 describe('feed page component tests', () => {
   const setup = () => {
@@ -15,8 +14,6 @@ describe('feed page component tests', () => {
     const getPostFileStart = jest.fn();
     const getOtherUserStart = jest.fn();
     const getUsersFollowingStart = jest.fn();
-    const postMetaData = {} as PostMetaData;
-    const feedPagePostModalData = {} as PostModalDataToFeed;
     const archivePostStart = jest.fn();
     const setShowPostLikingUsersModal = jest.fn();
     const setFeedPagePostModalShow = jest.fn();
@@ -40,10 +37,6 @@ describe('feed page component tests', () => {
         getPostFileStart={getPostFileStart}
         getOtherUserStart={getOtherUserStart}
         getUsersFollowingStart={getUsersFollowingStart}
-        postMetaDataForUser={postMetaData}
-        postLikingUsersArray={[]}
-        showPostLikingUsersModal={false}
-        feedPagePostModalData={feedPagePostModalData}
         feedPagePostModalShow={false}
         feedPagePostOptionsModalShow={false}
         clearFeedPagePostModalState={false}

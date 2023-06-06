@@ -24,15 +24,10 @@ import {
   PostFileReq,
   ArchivePostReq,
   UserType,
-  PostMetaData,
   DeleteReactionReq,
   Location,
 } from '../../redux/post/post.types';
 import {
-  selectPostMetaDataForUser,
-  selectPostLikingUsersArray,
-  selectShowPostLikingUsersModal,
-  selectFeedPagePostModalData,
   selectFeedPagePostModalShow,
   selectFeedPagePostOptionsModalShow,
   selectClearFeedPagePostModalState,
@@ -69,8 +64,6 @@ import FollowersOrFollowingOrLikesModal from '../../components/followers-or-foll
 import PostModal from '../../components/post-modal/post-modal.component';
 import PostOrCommentOptionsModal from '../../components/post-or-comment-options-modal/post-or-comment-options-modal.component';
 
-import { UserInfoAndOtherData } from '../../components/user-info/user-info.component';
-
 import { prepareUserInfoAndFileArray } from './feed-page.utils';
 import './feed-page.styles.scss';
 
@@ -102,10 +95,6 @@ export interface UserInfoAndPostFile {
 }
 
 interface FeedPageProps {
-  postMetaDataForUser: PostMetaData | null;
-  postLikingUsersArray: UserInfoAndOtherData[] | null;
-  showPostLikingUsersModal: boolean;
-  feedPagePostModalData: PostModalDataToFeed;
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
@@ -128,7 +117,6 @@ interface FeedPageProps {
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
-  postMetaDataForUser,
   getPostDataStart,
   getPostFileStart,
   clearPostState,
@@ -136,10 +124,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   getOtherUserStart,
   clearFollowersAndFollowing,
   clearFollowState,
-  postLikingUsersArray,
-  showPostLikingUsersModal,
   setShowPostLikingUsersModal,
-  feedPagePostModalData,
   feedPagePostModalShow,
   feedPagePostOptionsModalShow,
   showCommentOptionsModal,
@@ -188,6 +173,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     feedPagePostIdForNavigation,
     getFeedPostDataConfirm,
     isLoadingPostData,
+    postMetaDataForUser,
+    postLikingUsersArray,
+    showPostLikingUsersModal,
+    feedPagePostModalData,
   } = postState;
   const { currentUser, followingInfo } = userState;
   const { currentUserUsersFollowing } = followerState;
@@ -570,10 +559,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 };
 
 interface LinkStateProps {
-  postMetaDataForUser: PostMetaData | null;
-  postLikingUsersArray: UserInfoAndOtherData[] | null;
-  showPostLikingUsersModal: boolean;
-  feedPagePostModalData: PostModalDataToFeed;
   feedPagePostModalShow: boolean;
   feedPagePostOptionsModalShow: boolean;
   clearFeedPagePostModalState: boolean;
@@ -582,10 +567,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  postMetaDataForUser: selectPostMetaDataForUser,
-  postLikingUsersArray: selectPostLikingUsersArray,
-  showPostLikingUsersModal: selectShowPostLikingUsersModal,
-  feedPagePostModalData: selectFeedPagePostModalData,
   feedPagePostModalShow: selectFeedPagePostModalShow,
   feedPagePostOptionsModalShow: selectFeedPagePostOptionsModalShow,
   clearFeedPagePostModalState: selectClearFeedPagePostModalState,
