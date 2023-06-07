@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
@@ -27,13 +26,6 @@ import {
   DeleteReactionReq,
   Location,
 } from '../../redux/post/post.types';
-import {
-  selectFeedPagePostModalShow,
-  selectFeedPagePostOptionsModalShow,
-  selectClearFeedPagePostModalState,
-  selectShowCommentOptionsModal,
-  selectCommentToDelete,
-} from '../../redux/post/post.selectors';
 import {
   getPostDataStart,
   getPostFileStart,
@@ -95,11 +87,6 @@ export interface UserInfoAndPostFile {
 }
 
 interface FeedPageProps {
-  feedPagePostModalShow: boolean;
-  feedPagePostOptionsModalShow: boolean;
-  clearFeedPagePostModalState: boolean;
-  showCommentOptionsModal: boolean;
-  commentToDelete: DeleteReactionReq | null;
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
@@ -125,10 +112,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   clearFollowersAndFollowing,
   clearFollowState,
   setShowPostLikingUsersModal,
-  feedPagePostModalShow,
-  feedPagePostOptionsModalShow,
-  showCommentOptionsModal,
-  commentToDelete,
   setFeedPagePostModalShow,
   setFeedPagePostOptionsModalShow,
   setClearFeedPagePostModalState,
@@ -177,6 +160,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     postLikingUsersArray,
     showPostLikingUsersModal,
     feedPagePostModalData,
+    feedPagePostModalShow,
+    feedPagePostOptionsModalShow,
+    showCommentOptionsModal,
+    commentToDelete,
   } = postState;
   const { currentUser, followingInfo } = userState;
   const { currentUserUsersFollowing } = followerState;
@@ -558,22 +545,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   );
 };
 
-interface LinkStateProps {
-  feedPagePostModalShow: boolean;
-  feedPagePostOptionsModalShow: boolean;
-  clearFeedPagePostModalState: boolean;
-  showCommentOptionsModal: boolean;
-  commentToDelete: DeleteReactionReq | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  feedPagePostModalShow: selectFeedPagePostModalShow,
-  feedPagePostOptionsModalShow: selectFeedPagePostOptionsModalShow,
-  clearFeedPagePostModalState: selectClearFeedPagePostModalState,
-  showCommentOptionsModal: selectShowCommentOptionsModal,
-  commentToDelete: selectCommentToDelete,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostDataStart: (postDataReq: PostDataReq) =>
     dispatch(getPostDataStart(postDataReq)),
@@ -602,4 +573,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(deleteReactionStart(deleteReactionReq)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FeedPage);
+export default connect(null, mapDispatchToProps)(FeedPage);
