@@ -2,11 +2,8 @@ import { render, screen } from '../../test-utils/test-utils';
 
 import { FeedPage } from '../feed-page/feed-page.component';
 
-import { DeleteReactionReq } from '../../redux/post/post.types';
-
 describe('feed page component tests', () => {
   const setup = () => {
-    const commentToDelete = {} as DeleteReactionReq;
     const clearFollowState = jest.fn();
     const clearFollowersAndFollowing = jest.fn();
     const clearPostState = jest.fn();
@@ -37,11 +34,6 @@ describe('feed page component tests', () => {
         getPostFileStart={getPostFileStart}
         getOtherUserStart={getOtherUserStart}
         getUsersFollowingStart={getUsersFollowingStart}
-        feedPagePostModalShow={false}
-        feedPagePostOptionsModalShow={false}
-        clearFeedPagePostModalState={false}
-        showCommentOptionsModal={false}
-        commentToDelete={commentToDelete}
         archivePostStart={archivePostStart}
         setShowPostLikingUsersModal={setShowPostLikingUsersModal}
         setFeedPagePostModalShow={setFeedPagePostModalShow}
