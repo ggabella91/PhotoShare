@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
-import { Post, PostError, Location } from '../../redux/post/post.types';
-import {
-  selectPostConfirm,
-  selectPostError,
-  selectLocationSelection,
-} from '../../redux/post/post.selectors';
+import { Location } from '../../redux/post/post.types';
 import {
   createPostStart,
   clearPostStatuses,
@@ -39,8 +33,6 @@ interface PostStatus {
 
 interface CreatePostPageProps {
   createPostStart: typeof createPostStart;
-  postConfirm: Post | null;
-  postError: PostError | null;
   clearPostStatuses: typeof clearPostStatuses;
 }
 
@@ -51,8 +43,6 @@ interface ImgPreview {
 
 export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   createPostStart,
-  postConfirm,
-  postError,
   clearPostStatuses,
 }) => {
   const [post, setPost] = useState<FormData | null>(null);
@@ -71,7 +61,8 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const dispatch = useDispatch();
-  const locationSelection = useSelector(selectLocationSelection);
+  const postState = useSelector((state: AppState) => state.post);
+  const { postConfirm, postError, locationSelection } = postState;
 
   useEffect(() => {
     if (postError) {
@@ -281,19 +272,9 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   );
 };
 
-interface LinkStateProps {
-  postConfirm: Post | null;
-  postError: PostError | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  postConfirm: selectPostConfirm,
-  postError: selectPostError,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostStart: (post: FormData) => dispatch(createPostStart(post)),
   clearPostStatuses: () => dispatch(clearPostStatuses()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreatePostPage);
+export default connect(null, mapDispatchToProps)(CreatePostPage);
