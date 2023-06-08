@@ -8,8 +8,6 @@ describe('forgot password page component tests', () => {
     render(
       <ForgotPasswordPage
         forgotPasswordStart={forgotPasswordStart}
-        forgotConfirm={null}
-        forgotError={null}
       />
     );
 
