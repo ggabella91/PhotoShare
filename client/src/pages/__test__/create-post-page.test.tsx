@@ -2,12 +2,8 @@
 import { render, screen, userEvent } from '../../test-utils/test-utils';
 import { CreatePostPage } from '../create-post-page/create-post-page.component';
 
-import { Post } from '../../redux/post/post.types';
-
 describe('create-post page component tests', () => {
   const setup = () => {
-    const postConfirm = {} as Post;
-
     const createPostStart = jest.fn();
     const clearPostStatuses = jest.fn();
     const getUsersFollowingStart = jest.fn();
@@ -16,8 +12,6 @@ describe('create-post page component tests', () => {
     render(
       <CreatePostPage
         createPostStart={createPostStart}
-        postConfirm={postConfirm}
-        postError={null}
         clearPostStatuses={clearPostStatuses}
       />
     );
