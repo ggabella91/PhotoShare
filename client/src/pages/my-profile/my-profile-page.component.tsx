@@ -38,10 +38,7 @@ import {
   clearPostMetaDataForUser,
 } from '../../redux/post/post.actions';
 
-import {
-  WhoseUsersFollowing,
-  UsersFollowingRequest,
-} from '../../redux/follower/follower.types';
+import { WhoseUsersFollowing } from '../../redux/follower/follower.types';
 import {
   getFollowersStart,
   getUsersFollowingStart,
@@ -70,11 +67,6 @@ interface MyProfilePageProps {
   clearArchivePostStatuses: typeof clearArchivePostStatuses;
   clearPostState: typeof clearPostState;
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
-  getFollowersStart: typeof getFollowersStart;
-  getUsersFollowingStart: typeof getUsersFollowingStart;
-  clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
-  clearFollowState: typeof clearFollowState;
-  setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
   deleteReactionStart: typeof deleteReactionStart;
   setShowPostEditForm: typeof setShowPostEditForm;
@@ -97,11 +89,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   clearArchivePostStatuses,
   clearFollowPhotoFileArray,
   clearPostState,
-  getFollowersStart,
-  getUsersFollowingStart,
-  clearFollowersAndFollowing,
-  clearFollowState,
-  setIsCurrentUserProfilePage,
   setShowCommentOptionsModal,
   deleteReactionStart,
   setShowPostEditForm,
@@ -174,16 +161,16 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     clearPostState();
-    clearFollowState();
-    clearFollowersAndFollowing();
-    setIsCurrentUserProfilePage(true);
+    dispatch(clearFollowState());
+    dispatch(clearFollowersAndFollowing());
+    dispatch(setIsCurrentUserProfilePage(true));
 
     // Clear post state and follow state when cleaning
     // up before component leaves the screen
     return () => {
       clearPostState();
-      clearFollowState();
-      clearFollowersAndFollowing();
+      dispatch(clearFollowState());
+      dispatch(clearFollowersAndFollowing());
       dispatch(clearPostMetaDataForUser());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,11 +188,13 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
         pageToShow: pageToFetch.current++,
         limit: 9,
       });
-      getFollowersStart(currentUser.id);
-      getUsersFollowingStart({
-        userId: currentUser.id,
-        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
-      });
+      dispatch(getFollowersStart(currentUser.id));
+      dispatch(
+        getUsersFollowingStart({
+          userId: currentUser.id,
+          whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
@@ -392,7 +381,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   const handleHideFollowersOrFollowingModal = () => {
     setFollowersOrFollowingModalShow(false);
-    clearFollowersAndFollowing();
+    dispatch(clearFollowersAndFollowing());
     clearFollowPhotoFileArray();
   };
 
@@ -594,14 +583,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(archivePostStart(archiveReq)),
   clearArchivePostStatuses: () => dispatch(clearArchivePostStatuses()),
   clearPostState: () => dispatch(clearPostState()),
-  getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
-  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
-    dispatch(getUsersFollowingStart(usersFollowingObj)),
   clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
-  clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
-  clearFollowState: () => dispatch(clearFollowState()),
-  setIsCurrentUserProfilePage: (isCurrentUserProfilePage: boolean) =>
-    dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
   setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>

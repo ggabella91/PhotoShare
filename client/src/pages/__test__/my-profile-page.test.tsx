@@ -8,10 +8,7 @@ describe('my-profile-page component tests', () => {
     const archivePostStart = jest.fn();
     const clearArchivePostStatuses = jest.fn();
     const clearPostState = jest.fn();
-    const getFollowersStart = jest.fn();
-    const clearFollowersAndFollowing = jest.fn();
     const clearFollowPhotoFileArray = jest.fn();
-    const getUsersFollowingStart = jest.fn();
     const clearFollowState = jest.fn();
     const setIsCurrentUserProfilePage = jest.fn();
     const setShowCommentOptionsModal = jest.fn();
@@ -26,11 +23,6 @@ describe('my-profile-page component tests', () => {
         clearArchivePostStatuses={clearArchivePostStatuses}
         clearPostState={clearPostState}
         clearFollowPhotoFileArray={clearFollowPhotoFileArray}
-        getFollowersStart={getFollowersStart}
-        getUsersFollowingStart={getUsersFollowingStart}
-        clearFollowersAndFollowing={clearFollowersAndFollowing}
-        clearFollowState={clearFollowState}
-        setIsCurrentUserProfilePage={setIsCurrentUserProfilePage}
         setShowCommentOptionsModal={setShowCommentOptionsModal}
         deleteReactionStart={deleteReactionStart}
         setShowPostEditForm={setShowPostEditForm}
@@ -43,10 +35,7 @@ describe('my-profile-page component tests', () => {
       archivePostStart,
       clearArchivePostStatuses,
       clearPostState,
-      getFollowersStart,
-      clearFollowersAndFollowing,
       clearFollowPhotoFileArray,
-      getUsersFollowingStart,
       clearFollowState,
       setIsCurrentUserProfilePage,
       setShowCommentOptionsModal,
@@ -56,19 +45,12 @@ describe('my-profile-page component tests', () => {
   };
 
   it('renders a my-profile-page component', () => {
-    const {
-      getPostDataStart,
-      getPostFileStart,
-      getFollowersStart,
-      getUsersFollowingStart,
-    } = setup();
+    const { getPostDataStart, getPostFileStart } = setup();
 
     const myProfilePage = screen.getByTestId('my-profile-page');
 
     expect(myProfilePage).toBeInTheDocument();
     expect(getPostDataStart).toBeCalled();
     expect(getPostFileStart).toBeCalled();
-    expect(getFollowersStart).toBeCalled();
-    expect(getUsersFollowingStart).toBeCalled();
   });
 });
