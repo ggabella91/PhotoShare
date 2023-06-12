@@ -17,8 +17,6 @@ import {
 import {
   DataRequestType,
   FileRequestType,
-  PostDataReq,
-  PostFileReq,
   ArchivePostReq,
   PostFile,
   UserType,
@@ -61,8 +59,6 @@ export interface UserLite {
 }
 
 interface MyProfilePageProps {
-  getPostDataStart: typeof getPostDataStart;
-  getPostFileStart: typeof getPostFileStart;
   archivePostStart: typeof archivePostStart;
   clearArchivePostStatuses: typeof clearArchivePostStatuses;
   clearPostState: typeof clearPostState;
@@ -83,8 +79,6 @@ export interface PostModalMapProps {
 }
 
 export const MyProfilePage: React.FC<MyProfilePageProps> = ({
-  getPostDataStart,
-  getPostFileStart,
   archivePostStart,
   clearArchivePostStatuses,
   clearFollowPhotoFileArray,
@@ -182,12 +176,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     }
 
     if (pageToFetch.current === 1) {
-      getPostDataStart({
-        userId: currentUser.id,
-        dataReqType: DataRequestType.single,
-        pageToShow: pageToFetch.current++,
-        limit: 9,
-      });
+      dispatch(
+        getPostDataStart({
+          userId: currentUser.id,
+          dataReqType: DataRequestType.single,
+          pageToShow: pageToFetch.current++,
+          limit: 9,
+        })
+      );
       dispatch(getFollowersStart(currentUser.id));
       dispatch(
         getUsersFollowingStart({
@@ -201,19 +197,23 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (profilePhotoKey) {
-      getPostFileStart({
-        s3Key: profilePhotoKey,
-        bucket: profileBucket,
-        user: UserType.self,
-        fileRequestType: FileRequestType.singlePost,
-      });
+      dispatch(
+        getPostFileStart({
+          s3Key: profilePhotoKey,
+          bucket: profileBucket,
+          user: UserType.self,
+          fileRequestType: FileRequestType.singlePost,
+        })
+      );
     } else if (!profilePhotoFile && currentUser?.photo) {
-      getPostFileStart({
-        s3Key: currentUser.photo,
-        bucket: profileBucket,
-        user: UserType.self,
-        fileRequestType: FileRequestType.singlePost,
-      });
+      dispatch(
+        getPostFileStart({
+          s3Key: currentUser.photo,
+          bucket: profileBucket,
+          user: UserType.self,
+          fileRequestType: FileRequestType.singlePost,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profilePhotoKey]);
@@ -234,12 +234,14 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
       postData &&
       postData.length === postFiles.length
     ) {
-      getPostDataStart({
-        userId: currentUser.id,
-        dataReqType: DataRequestType.single,
-        pageToShow: pageToFetch.current++,
-        limit: 9,
-      });
+      dispatch(
+        getPostDataStart({
+          userId: currentUser.id,
+          dataReqType: DataRequestType.single,
+          pageToShow: pageToFetch.current++,
+          limit: 9,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intersectionCounter]);
@@ -247,14 +249,16 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   useEffect(() => {
     if (!getSinglePostDataConfirm) {
       postData?.forEach((post) => {
-        getPostFileStart({
-          s3Key: post.s3Key,
-          isVideo: post.isVideo,
-          videoThumbnailS3Key: post.videoThumbnailS3Key,
-          bucket: postsBucket,
-          user: UserType.self,
-          fileRequestType: FileRequestType.singlePost,
-        });
+        dispatch(
+          getPostFileStart({
+            s3Key: post.s3Key,
+            isVideo: post.isVideo,
+            videoThumbnailS3Key: post.videoThumbnailS3Key,
+            bucket: postsBucket,
+            user: UserType.self,
+            fileRequestType: FileRequestType.singlePost,
+          })
+        );
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -575,10 +579,6 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getPostDataStart: (postDataReq: PostDataReq) =>
-    dispatch(getPostDataStart(postDataReq)),
-  getPostFileStart: (fileReq: PostFileReq) =>
-    dispatch(getPostFileStart(fileReq)),
   archivePostStart: (archiveReq: ArchivePostReq) =>
     dispatch(archivePostStart(archiveReq)),
   clearArchivePostStatuses: () => dispatch(clearArchivePostStatuses()),
