@@ -4,7 +4,6 @@ import { MyProfilePage } from '../my-profile/my-profile-page.component';
 describe('my-profile-page component tests', () => {
   const setup = () => {
     const getPostDataStart = jest.fn();
-    const getPostFileStart = jest.fn();
     const archivePostStart = jest.fn();
     const clearArchivePostStatuses = jest.fn();
     const clearPostState = jest.fn();
@@ -17,8 +16,6 @@ describe('my-profile-page component tests', () => {
 
     render(
       <MyProfilePage
-        getPostDataStart={getPostDataStart}
-        getPostFileStart={getPostFileStart}
         archivePostStart={archivePostStart}
         clearArchivePostStatuses={clearArchivePostStatuses}
         clearPostState={clearPostState}
@@ -31,7 +28,6 @@ describe('my-profile-page component tests', () => {
 
     return {
       getPostDataStart,
-      getPostFileStart,
       archivePostStart,
       clearArchivePostStatuses,
       clearPostState,
@@ -45,12 +41,10 @@ describe('my-profile-page component tests', () => {
   };
 
   it('renders a my-profile-page component', () => {
-    const { getPostDataStart, getPostFileStart } = setup();
+    setup();
 
     const myProfilePage = screen.getByTestId('my-profile-page');
 
     expect(myProfilePage).toBeInTheDocument();
-    expect(getPostDataStart).toBeCalled();
-    expect(getPostFileStart).toBeCalled();
   });
 });
