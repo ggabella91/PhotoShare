@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
@@ -17,10 +16,8 @@ import {
 import {
   DataRequestType,
   FileRequestType,
-  ArchivePostReq,
   PostFile,
   UserType,
-  DeleteReactionReq,
   Location,
 } from '../../redux/post/post.types';
 import {
@@ -58,16 +55,6 @@ export interface UserLite {
   bio: string;
 }
 
-interface MyProfilePageProps {
-  archivePostStart: typeof archivePostStart;
-  clearArchivePostStatuses: typeof clearArchivePostStatuses;
-  clearPostState: typeof clearPostState;
-  clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
-  setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
-  deleteReactionStart: typeof deleteReactionStart;
-  setShowPostEditForm: typeof setShowPostEditForm;
-}
-
 export interface PostModalMapProps {
   id: string;
   s3Key: string;
@@ -78,15 +65,7 @@ export interface PostModalMapProps {
   isVideo?: boolean;
 }
 
-export const MyProfilePage: React.FC<MyProfilePageProps> = ({
-  archivePostStart,
-  clearArchivePostStatuses,
-  clearFollowPhotoFileArray,
-  clearPostState,
-  setShowCommentOptionsModal,
-  deleteReactionStart,
-  setShowPostEditForm,
-}) => {
+export const MyProfilePage: React.FC = () => {
   const [profilePhotoString, setProfilePhotoString] = useState<string>('');
 
   const [postModalShow, setPostModalShow] = useState(false);
@@ -154,7 +133,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   }
 
   useEffect(() => {
-    clearPostState();
+    dispatch(clearPostState());
     dispatch(clearFollowState());
     dispatch(clearFollowersAndFollowing());
     dispatch(setIsCurrentUserProfilePage(true));
@@ -162,7 +141,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     // Clear post state and follow state when cleaning
     // up before component leaves the screen
     return () => {
-      clearPostState();
+      dispatch(clearPostState());
       dispatch(clearFollowState());
       dispatch(clearFollowersAndFollowing());
       dispatch(clearPostMetaDataForUser());
@@ -282,7 +261,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
 
   useEffect(() => {
     if (archivePostConfirm) {
-      clearArchivePostStatuses();
+      dispatch(clearArchivePostStatuses());
       setPostOptionsModalShow(false);
       setPostModalShow(false);
       setClearPostModalLocalState(true);
@@ -329,7 +308,7 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
     });
     setPostModalShow(false);
     setClearPostModalLocalState(true);
-    setShowPostEditForm(false);
+    dispatch(setShowPostEditForm(false));
   };
 
   const handlePostOptionsClick = () => setPostOptionsModalShow(true);
@@ -378,25 +357,28 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   const handleHidePostOptionsModal = () => setPostOptionsModalShow(false);
 
   const handleArchivePost = () =>
-    archivePostStart({
-      postId: postModalProps.id,
-      s3Key: postModalProps.s3Key,
-    });
+    dispatch(
+      archivePostStart({
+        postId: postModalProps.id,
+        s3Key: postModalProps.s3Key,
+      })
+    );
 
   const handleHideFollowersOrFollowingModal = () => {
     setFollowersOrFollowingModalShow(false);
     dispatch(clearFollowersAndFollowing());
-    clearFollowPhotoFileArray();
+    dispatch(clearFollowPhotoFileArray());
   };
 
   const handleHideLikesModal = () => setShowPostLikingUsersModal(false);
 
-  const handleHideCommentOptionsModal = () => setShowCommentOptionsModal(false);
+  const handleHideCommentOptionsModal = () =>
+    dispatch(setShowCommentOptionsModal(false));
 
   const handleArchiveCommentOptionsModal = () => {
     if (commentToDelete) {
-      deleteReactionStart(commentToDelete);
-      setShowCommentOptionsModal(false);
+      dispatch(deleteReactionStart(commentToDelete));
+      dispatch(setShowCommentOptionsModal(false));
     }
   };
 
@@ -578,18 +560,4 @@ export const MyProfilePage: React.FC<MyProfilePageProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  archivePostStart: (archiveReq: ArchivePostReq) =>
-    dispatch(archivePostStart(archiveReq)),
-  clearArchivePostStatuses: () => dispatch(clearArchivePostStatuses()),
-  clearPostState: () => dispatch(clearPostState()),
-  clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
-  setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
-    dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
-  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
-    dispatch(deleteReactionStart(deleteReactionReq)),
-  setShowPostEditForm: (showPostEditForm: boolean) =>
-    dispatch(setShowPostEditForm(showPostEditForm)),
-});
-
-export default connect(null, mapDispatchToProps)(MyProfilePage);
+export default MyProfilePage;
