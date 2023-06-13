@@ -9,7 +9,7 @@ import { AppState } from '../../redux/root-reducer';
 
 import { useLazyLoading } from '../../hooks';
 
-import { OtherUserType, OtherUserRequest } from '../../redux/user/user.types';
+import { OtherUserType } from '../../redux/user/user.types';
 import {
   getOtherUserStart,
   clearFollowersAndFollowing,
@@ -75,15 +75,12 @@ interface UserProfilePageProps {
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
-  getOtherUserStart: typeof getOtherUserStart;
   followNewUserStart: typeof followNewUserStart;
   getFollowersStart: typeof getFollowersStart;
   getUsersFollowingStart: typeof getUsersFollowingStart;
   unfollowUserStart: typeof unfollowUserStart;
-  clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
   clearPostFilesAndData: typeof clearPostFilesAndData;
   clearFollowState: typeof clearFollowState;
-  setIsCurrentUserProfilePage: typeof setIsCurrentUserProfilePage;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
   deleteReactionStart: typeof deleteReactionStart;
   clearPostState: typeof clearPostState;
@@ -91,7 +88,6 @@ interface UserProfilePageProps {
 
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
-  getOtherUserStart,
   getPostDataStart,
   getPostFileStart,
   clearFollowPhotoFileArray,
@@ -99,10 +95,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   getFollowersStart,
   getUsersFollowingStart,
   unfollowUserStart,
-  clearFollowersAndFollowing,
   clearPostFilesAndData,
   clearFollowState,
-  setIsCurrentUserProfilePage,
   setShowCommentOptionsModal,
   deleteReactionStart,
   clearPostState,
@@ -188,15 +182,15 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     clearPostState();
     clearFollowState();
-    clearFollowersAndFollowing();
-    setIsCurrentUserProfilePage(false);
+    dispatch(clearFollowersAndFollowing());
+    dispatch(setIsCurrentUserProfilePage(false));
 
     // Clear post state and follow state when cleaning
     // up before component leaves the screen
     return () => {
       clearPostState();
       clearFollowState();
-      clearFollowersAndFollowing();
+      dispatch(clearFollowersAndFollowing());
       dispatch(clearOtherUser());
       dispatch(clearPostMetaDataForUser());
     };
@@ -205,15 +199,17 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (isCurrentUserProfilePage) {
-      setIsCurrentUserProfilePage(false);
+      dispatch(setIsCurrentUserProfilePage(false));
     }
     setFollowersOrFollowingModalShow(false);
     dispatch(clearOtherUser());
-    clearFollowersAndFollowing();
+    dispatch(clearFollowersAndFollowing());
     clearPostFilesAndData();
     isInitialPostDataFetched.current = false;
 
-    getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username });
+    dispatch(
+      getOtherUserStart({ type: OtherUserType.OTHER, usernameOrId: username })
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, isCurrentUserProfilePage]);
 
@@ -492,7 +488,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   const handleHideFollowersOrFollowingModal = () => {
     setFollowersOrFollowingModalShow(false);
-    clearFollowersAndFollowing();
+    dispatch(clearFollowersAndFollowing());
     clearFollowPhotoFileArray();
   };
 
@@ -697,8 +693,6 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
-    dispatch(getOtherUserStart(otherUserRequest)),
   getPostDataStart: (postDataReq: PostDataReq) =>
     dispatch(getPostDataStart(postDataReq)),
   getPostFileStart: (fileReq: PostFileReq) =>
@@ -710,11 +704,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
   unfollowUserStart: (userId: string) => dispatch(unfollowUserStart(userId)),
-  clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
   clearPostFilesAndData: () => dispatch(clearPostFilesAndData()),
   clearFollowState: () => dispatch(clearFollowState()),
-  setIsCurrentUserProfilePage: (isCurrentUserProfilePage: boolean) =>
-    dispatch(setIsCurrentUserProfilePage(isCurrentUserProfilePage)),
   setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
