@@ -38,10 +38,7 @@ import {
   clearPostMetaDataForUser,
 } from '../../redux/post/post.actions';
 
-import {
-  WhoseUsersFollowing,
-  UsersFollowingRequest,
-} from '../../redux/follower/follower.types';
+import { WhoseUsersFollowing } from '../../redux/follower/follower.types';
 
 import {
   followNewUserStart,
@@ -75,12 +72,7 @@ interface UserProfilePageProps {
   getPostDataStart: typeof getPostDataStart;
   getPostFileStart: typeof getPostFileStart;
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
-  followNewUserStart: typeof followNewUserStart;
-  getFollowersStart: typeof getFollowersStart;
-  getUsersFollowingStart: typeof getUsersFollowingStart;
-  unfollowUserStart: typeof unfollowUserStart;
   clearPostFilesAndData: typeof clearPostFilesAndData;
-  clearFollowState: typeof clearFollowState;
   setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
   deleteReactionStart: typeof deleteReactionStart;
   clearPostState: typeof clearPostState;
@@ -91,12 +83,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   getPostDataStart,
   getPostFileStart,
   clearFollowPhotoFileArray,
-  followNewUserStart,
-  getFollowersStart,
-  getUsersFollowingStart,
-  unfollowUserStart,
   clearPostFilesAndData,
-  clearFollowState,
   setShowCommentOptionsModal,
   deleteReactionStart,
   clearPostState,
@@ -181,7 +168,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     clearPostState();
-    clearFollowState();
+    dispatch(clearFollowState());
     dispatch(clearFollowersAndFollowing());
     dispatch(setIsCurrentUserProfilePage(false));
 
@@ -189,7 +176,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     // up before component leaves the screen
     return () => {
       clearPostState();
-      clearFollowState();
+      dispatch(clearFollowState());
       dispatch(clearFollowersAndFollowing());
       dispatch(clearOtherUser());
       dispatch(clearPostMetaDataForUser());
@@ -215,12 +202,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (currentUser) {
-      getUsersFollowingStart({
-        userId: currentUser.id,
-        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
-      });
+      dispatch(
+        getUsersFollowingStart({
+          userId: currentUser.id,
+          whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+        })
+      );
       if (otherUser) {
-        getFollowersStart(otherUser.id);
+        dispatch(getFollowersStart(otherUser.id));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -228,11 +217,13 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
 
   useEffect(() => {
     if (otherUser) {
-      getFollowersStart(otherUser.id);
-      getUsersFollowingStart({
-        userId: otherUser.id,
-        whoseUsersFollowing: WhoseUsersFollowing.OTHER_USER,
-      });
+      dispatch(getFollowersStart(otherUser.id));
+      dispatch(
+        getUsersFollowingStart({
+          userId: otherUser.id,
+          whoseUsersFollowing: WhoseUsersFollowing.OTHER_USER,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otherUser]);
@@ -382,7 +373,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     if (isFollowing) {
       setUnfollowModalShow(true);
     } else if (otherUser) {
-      followNewUserStart(otherUser.id);
+      dispatch(followNewUserStart(otherUser.id));
 
       if (currentUser) {
         dispatch(
@@ -418,8 +409,8 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     if (unfollowConfirm) {
       setIsFollowing(false);
-      getFollowersStart(otherUser!.id);
-      clearFollowState();
+      dispatch(getFollowersStart(otherUser!.id));
+      dispatch(clearFollowState());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unfollowConfirm]);
@@ -506,7 +497,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const handleHideUnfollowModal = () => setUnfollowModalShow(false);
 
   const handleUnfollow = () => {
-    unfollowUserStart(otherUser!.id);
+    dispatch(unfollowUserStart(otherUser!.id));
     setUnfollowModalShow(false);
   };
 
@@ -698,14 +689,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
   clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
-  followNewUserStart: (userToFollowId: string) =>
-    dispatch(followNewUserStart(userToFollowId)),
-  getFollowersStart: (userId: string) => dispatch(getFollowersStart(userId)),
-  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
-    dispatch(getUsersFollowingStart(usersFollowingObj)),
-  unfollowUserStart: (userId: string) => dispatch(unfollowUserStart(userId)),
   clearPostFilesAndData: () => dispatch(clearPostFilesAndData()),
-  clearFollowState: () => dispatch(clearFollowState()),
   setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
     dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
   deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
