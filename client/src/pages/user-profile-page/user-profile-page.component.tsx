@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
@@ -20,11 +19,8 @@ import {
 import {
   DataRequestType,
   FileRequestType,
-  PostDataReq,
-  PostFileReq,
   PostFile,
   UserType,
-  DeleteReactionReq,
 } from '../../redux/post/post.types';
 import {
   getPostDataStart,
@@ -69,24 +65,10 @@ export interface UserLite {
 
 interface UserProfilePageProps {
   username: string;
-  getPostDataStart: typeof getPostDataStart;
-  getPostFileStart: typeof getPostFileStart;
-  clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
-  clearPostFilesAndData: typeof clearPostFilesAndData;
-  setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
-  deleteReactionStart: typeof deleteReactionStart;
-  clearPostState: typeof clearPostState;
 }
 
 export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   username,
-  getPostDataStart,
-  getPostFileStart,
-  clearFollowPhotoFileArray,
-  clearPostFilesAndData,
-  setShowCommentOptionsModal,
-  deleteReactionStart,
-  clearPostState,
 }) => {
   const [profilePhotoString, setProfilePhoto] = useState<string>('');
 
@@ -167,7 +149,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   }
 
   useEffect(() => {
-    clearPostState();
+    dispatch(clearPostState());
     dispatch(clearFollowState());
     dispatch(clearFollowersAndFollowing());
     dispatch(setIsCurrentUserProfilePage(false));
@@ -175,7 +157,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     // Clear post state and follow state when cleaning
     // up before component leaves the screen
     return () => {
-      clearPostState();
+      dispatch(clearPostState());
       dispatch(clearFollowState());
       dispatch(clearFollowersAndFollowing());
       dispatch(clearOtherUser());
@@ -191,7 +173,7 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
     setFollowersOrFollowingModalShow(false);
     dispatch(clearOtherUser());
     dispatch(clearFollowersAndFollowing());
-    clearPostFilesAndData();
+    dispatch(clearPostFilesAndData());
     isInitialPostDataFetched.current = false;
 
     dispatch(
@@ -236,31 +218,37 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       !isInitialPostDataFetched.current
     ) {
       isInitialPostDataFetched.current = true;
-      getPostDataStart({
-        userId: otherUser.id,
-        dataReqType: DataRequestType.single,
-        pageToShow: pageToFetch,
-        limit: 9,
-      });
+      dispatch(
+        getPostDataStart({
+          userId: otherUser.id,
+          dataReqType: DataRequestType.single,
+          pageToShow: pageToFetch,
+          limit: 9,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otherUser]);
 
   useEffect(() => {
     if (otherUser && otherUser.photo) {
-      getPostFileStart({
-        s3Key: otherUser.photo,
-        bucket: profileBucket,
-        user: UserType.other,
-        fileRequestType: FileRequestType.singlePost,
-      });
+      dispatch(
+        getPostFileStart({
+          s3Key: otherUser.photo,
+          bucket: profileBucket,
+          user: UserType.other,
+          fileRequestType: FileRequestType.singlePost,
+        })
+      );
     } else if (!profilePhotoFile && otherUser && otherUser.photo) {
-      getPostFileStart({
-        s3Key: otherUser.photo,
-        bucket: profileBucket,
-        user: UserType.other,
-        fileRequestType: FileRequestType.singlePost,
-      });
+      dispatch(
+        getPostFileStart({
+          s3Key: otherUser.photo,
+          bucket: profileBucket,
+          user: UserType.other,
+          fileRequestType: FileRequestType.singlePost,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otherUser]);
@@ -280,12 +268,14 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
       postData &&
       postData.length === postFiles.length
     ) {
-      getPostDataStart({
-        userId: otherUser.id,
-        dataReqType: DataRequestType.single,
-        pageToShow: pageToFetch + 1,
-        limit: 9,
-      });
+      dispatch(
+        getPostDataStart({
+          userId: otherUser.id,
+          dataReqType: DataRequestType.single,
+          pageToShow: pageToFetch + 1,
+          limit: 9,
+        })
+      );
 
       setPageToFetch(pageToFetch + 1);
     }
@@ -295,14 +285,16 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   useEffect(() => {
     if (otherUser && postData) {
       postData.forEach((post) => {
-        getPostFileStart({
-          s3Key: post.s3Key,
-          isVideo: post.isVideo,
-          videoThumbnailS3Key: post.videoThumbnailS3Key,
-          bucket: postsBucket,
-          user: UserType.other,
-          fileRequestType: FileRequestType.singlePost,
-        });
+        dispatch(
+          getPostFileStart({
+            s3Key: post.s3Key,
+            isVideo: post.isVideo,
+            videoThumbnailS3Key: post.videoThumbnailS3Key,
+            bucket: postsBucket,
+            user: UserType.other,
+            fileRequestType: FileRequestType.singlePost,
+          })
+        );
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -472,25 +464,28 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   const handleHidePostOptionsModal = () => setPostOptionsModalShow(false);
 
   const handleArchivePost = () =>
-    archivePostStart({
-      postId: postModalProps.id,
-      s3Key: postModalProps.s3Key,
-    });
+    dispatch(
+      archivePostStart({
+        postId: postModalProps.id,
+        s3Key: postModalProps.s3Key,
+      })
+    );
 
   const handleHideFollowersOrFollowingModal = () => {
     setFollowersOrFollowingModalShow(false);
     dispatch(clearFollowersAndFollowing());
-    clearFollowPhotoFileArray();
+    dispatch(clearFollowPhotoFileArray());
   };
 
   const handleHideLikesModal = () => setShowPostLikingUsersModal(false);
 
-  const handleHideCommentOptionsModal = () => setShowCommentOptionsModal(false);
+  const handleHideCommentOptionsModal = () =>
+    dispatch(setShowCommentOptionsModal(false));
 
   const handleArchiveCommentOptionsModal = () => {
     if (commentToDelete) {
-      deleteReactionStart(commentToDelete);
-      setShowCommentOptionsModal(false);
+      dispatch(deleteReactionStart(commentToDelete));
+      dispatch(setShowCommentOptionsModal(false));
     }
   };
 
@@ -683,18 +678,4 @@ export const UserProfilePage: React.FC<UserProfilePageProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getPostDataStart: (postDataReq: PostDataReq) =>
-    dispatch(getPostDataStart(postDataReq)),
-  getPostFileStart: (fileReq: PostFileReq) =>
-    dispatch(getPostFileStart(fileReq)),
-  clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
-  clearPostFilesAndData: () => dispatch(clearPostFilesAndData()),
-  setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
-    dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
-  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
-    dispatch(deleteReactionStart(deleteReactionReq)),
-  clearPostState: () => dispatch(clearPostState()),
-});
-
-export default connect(null, mapDispatchToProps)(UserProfilePage);
+export default UserProfilePage;
