@@ -4,8 +4,6 @@ import { MyProfilePage } from '../my-profile/my-profile-page.component';
 describe('my-profile-page component tests', () => {
   const setup = () => {
     render(<MyProfilePage />);
-
-    return {};
   };
 
   it('renders a my-profile-page component', () => {
