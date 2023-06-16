@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { connect, useSelector } from 'react-redux';
 
 import { FormInput } from '../form-input/form-input.component';
 import Button from '../button/button.component';
 import Alert from 'react-bootstrap/Alert';
 
-import { AppState } from '../../redux/root-reducer';
 import { signInStart } from '../../redux/user/user.actions';
 import { selectUserSignInOrOutError } from '../../redux/user/user.selectors';
-import { UserSignIn, UserPayload, Error } from '../../redux/user/user.types';
+import { UserSignIn } from '../../redux/user/user.types';
 
 interface SignInProps {
   signInStart: typeof signInStart;
-  signInError: UserPayload;
 }
 
-export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
+export const SignIn: React.FC<SignInProps> = ({ signInStart }) => {
   const [userCredentials, setCredentials] = useState({
     email: '',
     password: '',
@@ -34,6 +31,7 @@ export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
   };
 
   const [error, setError] = useState(false);
+  const signInError = useSelector(selectUserSignInOrOutError);
 
   useEffect(() => {
     if (signInError) {
@@ -102,16 +100,8 @@ export const SignIn: React.FC<SignInProps> = ({ signInStart, signInError }) => {
   );
 };
 
-interface LinkStateProps {
-  signInError: Error | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  signInError: selectUserSignInOrOutError,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   signInStart: (userSignIn: UserSignIn) => dispatch(signInStart(userSignIn)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default connect(null, mapDispatchToProps)(SignIn);

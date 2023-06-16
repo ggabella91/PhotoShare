@@ -1,25 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
 import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { connect, useSelector } from 'react-redux';
 
 import { FormInput } from '../form-input/form-input.component';
 import Button from '../button/button.component';
 import Alert from 'react-bootstrap/Alert';
 
-import { AppState } from '../../redux/root-reducer';
-import { Error } from '../../redux/user/user.types';
 import { signUpStart } from '../../redux/user/user.actions';
 import { selectUserSignUpError } from '../../redux/user/user.selectors';
-import { UserSignUp, UserPayload } from '../../redux/user/user.types';
+import { UserSignUp } from '../../redux/user/user.types';
 
 interface SignUpProps {
   signUpStart: typeof signUpStart;
-  signUpError: UserPayload;
 }
 
-export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
+export const SignUp: React.FC<SignUpProps> = ({ signUpStart }) => {
   const [userCredentials, setUserCredentials] = useState({
     username: '',
     name: '',
@@ -40,6 +36,8 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
   };
 
   const [error, setError] = useState(false);
+
+  const signUpError = useSelector(selectUserSignUpError);
 
   useEffect(() => {
     if (signUpError) {
@@ -122,17 +120,9 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart, signUpError }) => {
   );
 };
 
-interface LinkStateProps {
-  signUpError: Error | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  signUpError: selectUserSignUpError,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   // Add username after updating /signup route in auth service
   signUpStart: (userSignUp: UserSignUp) => dispatch(signUpStart(userSignUp)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(SignUp);
