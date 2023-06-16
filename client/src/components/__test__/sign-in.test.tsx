@@ -6,7 +6,7 @@ describe('sign-in component tests', () => {
   const setup = () => {
     const signInStart = jest.fn();
 
-    render(<SignIn signInStart={signInStart} signInError={null} />);
+    render(<SignIn signInStart={signInStart} />);
 
     return { signInStart };
   };
