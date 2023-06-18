@@ -1,19 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 
-import { PostError } from '../../redux/post/post.types';
-
-import { User, FieldsToUpdate } from '../../redux/user/user.types';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { FieldsToUpdate } from '../../redux/user/user.types';
 import { changeInfoStart } from '../../redux/user/user.actions';
 
-import {
-  selectUpdateProfilePhotoError,
-  selectUpdateProfilePhotoConfirm,
-  selectProfilePhotoKey,
-} from '../../redux/post/post.selectors';
 import {
   updateProfilePhotoStart,
   clearProfilePhotoStatuses,
@@ -28,12 +19,8 @@ import Alert from 'react-bootstrap/Alert';
 import './update-profile-photo.styles.scss';
 
 interface UpdateProfilePhotoProps {
-  updateProfilePhotoConfirm: string | null;
-  updateProfilePhotoError: PostError | null;
   updateProfilePhotoStart: typeof updateProfilePhotoStart;
-  profilePhotoKey: string | null;
   clearProfilePhotoStatuses: typeof clearProfilePhotoStatuses;
-  currentUser: User | null;
   changeInfoStart: typeof changeInfoStart;
 }
 
@@ -44,12 +31,8 @@ interface ImgPreview {
 
 export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   updateProfilePhotoStart,
-  updateProfilePhotoError,
-  updateProfilePhotoConfirm,
   clearProfilePhotoStatuses,
-  profilePhotoKey,
   changeInfoStart,
-  currentUser,
 }) => {
   const [profilePhoto, setProfilePhoto] = useState<FormData | null>(null);
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
@@ -60,6 +43,16 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   });
   const [showProfilePhotoAlert, setShowProfilePhotoAlert] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const userState = useSelector((state: AppState) => state.user);
+  const postState = useSelector((state: AppState) => state.post);
+
+  const { currentUser } = userState;
+  const {
+    profilePhotoConfirm: updateProfilePhotoConfirm,
+    profilePhotoError: updateProfilePhotoError,
+    profilePhotoKey,
+  } = postState;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
@@ -117,6 +110,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateProfilePhotoError, updateProfilePhotoConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
@@ -201,20 +195,6 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   );
 };
 
-interface LinkStateProps {
-  updateProfilePhotoConfirm: string | null;
-  updateProfilePhotoError: PostError | null;
-  profilePhotoKey: string | null;
-  currentUser: User | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  updateProfilePhotoConfirm: selectUpdateProfilePhotoConfirm,
-  updateProfilePhotoError: selectUpdateProfilePhotoError,
-  profilePhotoKey: selectProfilePhotoKey,
-  currentUser: selectCurrentUser,
-});
-
 const mapDispatchProps = (dispatch: Dispatch) => ({
   updateProfilePhotoStart: (photo: FormData) =>
     dispatch(updateProfilePhotoStart(photo)),
@@ -224,4 +204,4 @@ const mapDispatchProps = (dispatch: Dispatch) => ({
     dispatch(changeInfoStart(fieldsToUpdate)),
 });
 
-export default connect(mapStateToProps, mapDispatchProps)(UpdateProfilePhoto);
+export default connect(null, mapDispatchProps)(UpdateProfilePhoto);

@@ -2,8 +2,6 @@ import { render, screen, userEvent } from '../../test-utils/test-utils';
 
 import { UpdateProfilePhoto } from '../update-profile-photo/update-profile-photo.component';
 
-import { User } from '../../redux/user/user.types';
-
 describe('update-profile-photo component tests', () => {
   const setup = () => {
     const updateProfilePhotoStart = jest.fn();
@@ -11,21 +9,10 @@ describe('update-profile-photo component tests', () => {
     const clearProfilePhotoStatuses = jest.fn();
     global.URL.createObjectURL = jest.fn();
 
-    const currentUser: User = {
-      id: '12345',
-      username: 'testdude',
-      name: 'Test Dude',
-      email: 'test@email.com',
-    };
-
     render(
       <UpdateProfilePhoto
         updateProfilePhotoStart={updateProfilePhotoStart}
-        currentUser={currentUser}
         changeInfoStart={changeInfoStart}
-        updateProfilePhotoConfirm={null}
-        updateProfilePhotoError={null}
-        profilePhotoKey={null}
         clearProfilePhotoStatuses={clearProfilePhotoStatuses}
       />
     );
