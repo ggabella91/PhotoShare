@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { FieldsToUpdate } from '../../redux/user/user.types';
 import { changeInfoStart } from '../../redux/user/user.actions';
@@ -18,22 +17,12 @@ import Alert from 'react-bootstrap/Alert';
 
 import './update-profile-photo.styles.scss';
 
-interface UpdateProfilePhotoProps {
-  updateProfilePhotoStart: typeof updateProfilePhotoStart;
-  clearProfilePhotoStatuses: typeof clearProfilePhotoStatuses;
-  changeInfoStart: typeof changeInfoStart;
-}
-
 interface ImgPreview {
   src: string;
   alt: string;
 }
 
-export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
-  updateProfilePhotoStart,
-  clearProfilePhotoStatuses,
-  changeInfoStart,
-}) => {
+export const UpdateProfilePhoto: React.FC = () => {
   const [profilePhoto, setProfilePhoto] = useState<FormData | null>(null);
   const [imgPreview, setImgPreview] = useState<ImgPreview | null>(null);
   const [fileInputKey, setFileInputKey] = useState(1609996842790);
@@ -46,6 +35,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
 
   const userState = useSelector((state: AppState) => state.user);
   const postState = useSelector((state: AppState) => state.post);
+  const dispatch = useDispatch();
 
   const { currentUser } = userState;
   const {
@@ -80,7 +70,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
       if (profilePhoto) {
         setShowProfilePhotoAlert(true);
 
-        updateProfilePhotoStart(profilePhoto);
+        dispatch(updateProfilePhotoStart(profilePhoto));
         setTimeout(() => setShowProfilePhotoAlert(false), 5000);
       }
 
@@ -106,7 +96,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
             photo: profilePhotoKey,
           };
 
-          changeInfoStart(fieldsToUpdate);
+          dispatch(changeInfoStart(fieldsToUpdate));
         }
       }
     }
@@ -115,7 +105,7 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
 
   const handleRenderAlert = (type: string, message: string) => {
     if (currentUser) {
-      clearProfilePhotoStatuses();
+      dispatch(clearProfilePhotoStatuses());
       setTimeout(() => {
         setProfilePhotoStatus({ success: false, error: false });
         setShowProfilePhotoAlert(false);
@@ -195,13 +185,4 @@ export const UpdateProfilePhoto: React.FC<UpdateProfilePhotoProps> = ({
   );
 };
 
-const mapDispatchProps = (dispatch: Dispatch) => ({
-  updateProfilePhotoStart: (photo: FormData) =>
-    dispatch(updateProfilePhotoStart(photo)),
-
-  clearProfilePhotoStatuses: () => dispatch(clearProfilePhotoStatuses()),
-  changeInfoStart: (fieldsToUpdate: FieldsToUpdate) =>
-    dispatch(changeInfoStart(fieldsToUpdate)),
-});
-
-export default connect(null, mapDispatchProps)(UpdateProfilePhoto);
+export default UpdateProfilePhoto;

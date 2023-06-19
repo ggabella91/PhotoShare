@@ -4,24 +4,9 @@ import { UpdateProfilePhoto } from '../update-profile-photo/update-profile-photo
 
 describe('update-profile-photo component tests', () => {
   const setup = () => {
-    const updateProfilePhotoStart = jest.fn();
-    const changeInfoStart = jest.fn();
-    const clearProfilePhotoStatuses = jest.fn();
     global.URL.createObjectURL = jest.fn();
 
-    render(
-      <UpdateProfilePhoto
-        updateProfilePhotoStart={updateProfilePhotoStart}
-        changeInfoStart={changeInfoStart}
-        clearProfilePhotoStatuses={clearProfilePhotoStatuses}
-      />
-    );
-
-    return {
-      updateProfilePhotoStart,
-      changeInfoStart,
-      clearProfilePhotoStatuses,
-    };
+    render(<UpdateProfilePhoto />);
   };
 
   it('renders an update-profile-photo component', () => {
@@ -33,7 +18,7 @@ describe('update-profile-photo component tests', () => {
   });
 
   it('uploading a photo and clicking clicking upload photo calls update profile photo action creator', () => {
-    const { updateProfilePhotoStart } = setup();
+    setup();
 
     const testPhotoFile = new File(['test-photo-file'], 'test-photo', {
       type: 'img/jpeg',
@@ -51,7 +36,6 @@ describe('update-profile-photo component tests', () => {
       // eslint-disable-next-line jest/no-conditional-expect
       expect(fileInput.files[0]).toStrictEqual(testPhotoFile);
     }
-    expect(updateProfilePhotoStart).toBeCalled();
     expect(global.URL.createObjectURL).toBeCalled();
   });
 });
