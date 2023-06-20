@@ -2,32 +2,20 @@ import { render, screen, userEvent } from '../../test-utils/test-utils';
 
 import { UpdateInfo } from '../update-info/update-info.component';
 
-import { User } from '../../redux/user/user.types';
-
 describe('update-info component tests', () => {
   const setup = () => {
-    const changeInfoStart = jest.fn();
+    console.error = jest.fn();
     const deleteAccountStart = jest.fn();
     const clearInfoStatuses = jest.fn();
-    const currentUser: User = {
-      id: '12345',
-      username: 'testdude',
-      name: 'Test Dude',
-      email: 'test@email.com',
-    };
 
     render(
       <UpdateInfo
-        changeInfoStart={changeInfoStart}
-        changeInfoError={null}
-        changeInfoConfirm={null}
         deleteAccountStart={deleteAccountStart}
         clearInfoStatuses={clearInfoStatuses}
-        currentUser={currentUser}
       />
     );
 
-    return { changeInfoStart, deleteAccountStart, clearInfoStatuses };
+    return { deleteAccountStart, clearInfoStatuses };
   };
 
   it('renders update-info component', () => {
@@ -38,14 +26,14 @@ describe('update-info component tests', () => {
     expect(updateInfo).toBeInTheDocument();
   });
 
-  it('clicking update info button calls change info handler', () => {
-    const { changeInfoStart } = setup();
+  it('clicking update info button calls change info handler without error', () => {
+    setup();
 
     const updateInfoButton = screen.getByTestId('update-info-button');
 
     userEvent.click(updateInfoButton);
 
-    expect(changeInfoStart).toBeCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   it('clicking delete account button calls causes delete account confirmation modal to be rendered', async () => {

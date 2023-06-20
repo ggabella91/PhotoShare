@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 
 import { AppState } from '../../redux/root-reducer';
 
-import {
-  selectCurrentUser,
-  selectChangeInfoConfirm,
-  selectChangeInfoError,
-} from '../../redux/user/user.selectors';
 import {
   changeInfoStart,
   deleteAccountStart,
   clearInfoStatuses,
 } from '../../redux/user/user.actions';
-import { User, FieldsToUpdate, Error } from '../../redux/user/user.types';
+import { FieldsToUpdate } from '../../redux/user/user.types';
 
 import { FormInput } from '../form-input/form-input.component';
 import Button from '../button/button.component';
@@ -24,19 +18,11 @@ import DeleteAccountConfirmModal from '../delete-account-confirm-modal/delete-ac
 import Alert from 'react-bootstrap/Alert';
 
 interface UpdateInfoProps {
-  currentUser: User | null;
-  changeInfoConfirm: string | null;
-  changeInfoError: Error | null;
-  changeInfoStart: typeof changeInfoStart;
   clearInfoStatuses: typeof clearInfoStatuses;
   deleteAccountStart: typeof deleteAccountStart;
 }
 
 export const UpdateInfo: React.FC<UpdateInfoProps> = ({
-  currentUser,
-  changeInfoStart,
-  changeInfoError,
-  changeInfoConfirm,
   deleteAccountStart,
   clearInfoStatuses,
 }) => {
@@ -47,13 +33,18 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
     bio: '',
   });
 
-  const [showInfoAlert, setShowInfoAlert] = useState(true);
+  const [, setShowInfoAlert] = useState(true);
   const [statusInfo, setStatusInfo] = useState({
     success: false,
     error: false,
   });
 
   const [modalShow, setModalShow] = useState(false);
+
+  const userState = useSelector((state: AppState) => state.user);
+  const dispatch = useDispatch();
+
+  const { currentUser, changeInfoConfirm, changeInfoError } = userState;
 
   const { name, email, username, bio } = userInfo;
 
@@ -95,7 +86,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
       fieldsToUpdate.username = username ? username : currentUser!.username;
       fieldsToUpdate.bio = bio ? bio : currentUser!.bio;
 
-      changeInfoStart(fieldsToUpdate);
+      dispatch(changeInfoStart(fieldsToUpdate));
       setUserInfo({ name: '', email: '', username: '', bio: '' });
     }
   };
@@ -195,24 +186,9 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
   );
 };
 
-interface LinkStateProps {
-  currentUser: User | null;
-  changeInfoConfirm: string | null;
-  changeInfoError: Error | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
-  changeInfoConfirm: selectChangeInfoConfirm,
-  changeInfoError: selectChangeInfoError,
-});
-
 const mapDispatchProps = (dispatch: Dispatch) => ({
-  changeInfoStart: (fieldsToUpdate: FieldsToUpdate) =>
-    dispatch(changeInfoStart(fieldsToUpdate)),
-
   deleteAccountStart: () => dispatch(deleteAccountStart()),
   clearInfoStatuses: () => dispatch(clearInfoStatuses()),
 });
 
-export default connect(mapStateToProps, mapDispatchProps)(UpdateInfo);
+export default connect(null, mapDispatchProps)(UpdateInfo);
