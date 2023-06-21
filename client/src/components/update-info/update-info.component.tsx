@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -17,15 +16,7 @@ import DeleteAccountConfirmModal from '../delete-account-confirm-modal/delete-ac
 
 import Alert from 'react-bootstrap/Alert';
 
-interface UpdateInfoProps {
-  clearInfoStatuses: typeof clearInfoStatuses;
-  deleteAccountStart: typeof deleteAccountStart;
-}
-
-export const UpdateInfo: React.FC<UpdateInfoProps> = ({
-  deleteAccountStart,
-  clearInfoStatuses,
-}) => {
+export const UpdateInfo: React.FC = () => {
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
@@ -93,7 +84,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 
   const handleRenderAlert = (type: string, message: string) => {
     if (currentUser) {
-      clearInfoStatuses();
+      dispatch(clearInfoStatuses());
       setTimeout(() => {
         setStatusInfo({ success: false, error: false });
       }, 3000);
@@ -111,7 +102,7 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
 
   const handleHideAccountDeletionModal = () => setModalShow(false);
 
-  const handleDeleteAccount = () => deleteAccountStart();
+  const handleDeleteAccount = () => dispatch(deleteAccountStart());
 
   return (
     <div className='settings'>
@@ -186,9 +177,4 @@ export const UpdateInfo: React.FC<UpdateInfoProps> = ({
   );
 };
 
-const mapDispatchProps = (dispatch: Dispatch) => ({
-  deleteAccountStart: () => dispatch(deleteAccountStart()),
-  clearInfoStatuses: () => dispatch(clearInfoStatuses()),
-});
-
-export default connect(null, mapDispatchProps)(UpdateInfo);
+export default UpdateInfo;

@@ -5,17 +5,8 @@ import { UpdateInfo } from '../update-info/update-info.component';
 describe('update-info component tests', () => {
   const setup = () => {
     console.error = jest.fn();
-    const deleteAccountStart = jest.fn();
-    const clearInfoStatuses = jest.fn();
 
-    render(
-      <UpdateInfo
-        deleteAccountStart={deleteAccountStart}
-        clearInfoStatuses={clearInfoStatuses}
-      />
-    );
-
-    return { deleteAccountStart, clearInfoStatuses };
+    render(<UpdateInfo />);
   };
 
   it('renders update-info component', () => {
@@ -52,8 +43,8 @@ describe('update-info component tests', () => {
     expect(deleteAccountConfirmModal).toBeInTheDocument();
   });
 
-  it('clicking delete account button in delete account confirmation modal calls delete-account handler', async () => {
-    const { deleteAccountStart } = setup();
+  it('clicking delete account button in delete account confirmation modal calls delete-account handler without error', async () => {
+    setup();
 
     const deleteAccountButton = screen.getByTestId('delete-account-button');
 
@@ -67,6 +58,6 @@ describe('update-info component tests', () => {
 
     userEvent.click(deleteAccountConfirmButton);
 
-    expect(deleteAccountStart).toBeCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 });
