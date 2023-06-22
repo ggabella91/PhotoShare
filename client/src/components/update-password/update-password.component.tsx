@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 
-import {
-  selectChangePasswordConfirm,
-  selectChangePasswordError,
-} from '../../redux/user/user.selectors';
 import {
   changePasswordStart,
   clearPasswordStatuses,
 } from '../../redux/user/user.actions';
-import { Error, ChangePassword } from '../../redux/user/user.types';
+import { ChangePassword } from '../../redux/user/user.types';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -21,16 +16,12 @@ import Button from '../../components/button/button.component';
 import Alert from 'react-bootstrap/Alert';
 
 interface UpdatePasswordProps {
-  changePassConfirm: string | null;
-  changePassError: Error | null;
   changePasswordStart: typeof changePasswordStart;
   clearPasswordStatuses: typeof clearPasswordStatuses;
 }
 
 export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   changePasswordStart,
-  changePassError,
-  changePassConfirm,
   clearPasswordStatuses,
 }) => {
   const [userPassword, setUserPassword] = useState({
@@ -39,11 +30,15 @@ export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
     passwordConfirm: '',
   });
 
-  const [showPassAlert, setShowPassAlert] = useState(true);
+  const [, setShowPassAlert] = useState(true);
   const [statusPass, setStatusPass] = useState({
     success: false,
     error: false,
   });
+
+  const userState = useSelector((state: AppState) => state.user);
+
+  const { changePasswordConfirm, changePasswordError } = userState;
 
   const { passwordCurrent, password, passwordConfirm } = userPassword;
 
@@ -62,12 +57,12 @@ export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   };
 
   useEffect(() => {
-    if (changePassError) {
+    if (changePasswordError) {
       setStatusPass({ ...statusPass, error: true });
-    } else if (changePassConfirm) {
+    } else if (changePasswordConfirm) {
       setStatusPass({ ...statusPass, success: true });
     }
-  }, [changePassError, changePassConfirm]);
+  }, [changePasswordError, changePasswordConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {
     setTimeout(() => {
@@ -134,16 +129,6 @@ export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   );
 };
 
-interface LinkStateProps {
-  changePassConfirm: string | null;
-  changePassError: Error | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  changePassConfirm: selectChangePasswordConfirm,
-  changePassError: selectChangePasswordError,
-});
-
 const mapDispatchProps = (dispatch: Dispatch) => ({
   changePasswordStart: ({
     passwordCurrent,
@@ -156,4 +141,4 @@ const mapDispatchProps = (dispatch: Dispatch) => ({
   clearPasswordStatuses: () => dispatch(clearPasswordStatuses()),
 });
 
-export default connect(mapStateToProps, mapDispatchProps)(UpdatePassword);
+export default connect(null, mapDispatchProps)(UpdatePassword);

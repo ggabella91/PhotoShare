@@ -10,8 +10,6 @@ describe('update-password component tests', () => {
     render(
       <UpdatePassword
         changePasswordStart={changePasswordStart}
-        changePassError={null}
-        changePassConfirm={null}
         clearPasswordStatuses={clearPasswordStatuses}
       />
     );
