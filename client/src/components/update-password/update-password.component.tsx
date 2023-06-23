@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   changePasswordStart,
   clearPasswordStatuses,
 } from '../../redux/user/user.actions';
-import { ChangePassword } from '../../redux/user/user.types';
 
 import { AppState } from '../../redux/root-reducer';
 
@@ -15,15 +13,7 @@ import Button from '../../components/button/button.component';
 
 import Alert from 'react-bootstrap/Alert';
 
-interface UpdatePasswordProps {
-  changePasswordStart: typeof changePasswordStart;
-  clearPasswordStatuses: typeof clearPasswordStatuses;
-}
-
-export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
-  changePasswordStart,
-  clearPasswordStatuses,
-}) => {
+export const UpdatePassword: React.FC = () => {
   const [userPassword, setUserPassword] = useState({
     passwordCurrent: '',
     password: '',
@@ -39,6 +29,7 @@ export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   const userState = useSelector((state: AppState) => state.user);
 
   const { changePasswordConfirm, changePasswordError } = userState;
+  const dispatch = useDispatch();
 
   const { passwordCurrent, password, passwordConfirm } = userPassword;
 
@@ -53,7 +44,9 @@ export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   ) => {
     event.preventDefault();
 
-    changePasswordStart({ passwordCurrent, password, passwordConfirm });
+    dispatch(
+      changePasswordStart({ passwordCurrent, password, passwordConfirm })
+    );
   };
 
   useEffect(() => {
@@ -72,7 +65,7 @@ export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
         passwordConfirm: '',
       });
       setStatusPass({ success: false, error: false });
-      clearPasswordStatuses();
+      dispatch(clearPasswordStatuses());
     }, 5000);
     return (
       <Alert variant={type} onClose={handleHidePassAlert} dismissible>
@@ -129,16 +122,4 @@ export const UpdatePassword: React.FC<UpdatePasswordProps> = ({
   );
 };
 
-const mapDispatchProps = (dispatch: Dispatch) => ({
-  changePasswordStart: ({
-    passwordCurrent,
-    password,
-    passwordConfirm,
-  }: ChangePassword) =>
-    dispatch(
-      changePasswordStart({ passwordCurrent, password, passwordConfirm })
-    ),
-  clearPasswordStatuses: () => dispatch(clearPasswordStatuses()),
-});
-
-export default connect(null, mapDispatchProps)(UpdatePassword);
+export default UpdatePassword;
