@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
+import { useDispatch } from 'react-redux';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
-import { AppState } from '../../redux/root-reducer';
-
-import { DeleteReactionReq, Location } from '../../redux/post/post.types';
+import { Location } from '../../redux/post/post.types';
 
 import {
   setCommentToDelete,
@@ -46,10 +42,6 @@ interface UserInfoProps {
   userInfoArray: UserInfoAndOtherData[];
   isCaption?: boolean;
   isCaptionOwner?: boolean;
-  setCommentToDelete: typeof setCommentToDelete;
-  setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
-  setShowPostEditForm: typeof setShowPostEditForm;
-  setFeedPagePostOptionsModalShow: typeof setFeedPagePostOptionsModalShow;
   selectedSuggestion?: number | null;
   shouldNavigate?: boolean;
 }
@@ -59,10 +51,6 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   styleType,
   isCaption,
   isCaptionOwner,
-  setCommentToDelete,
-  setShowCommentOptionsModal,
-  setShowPostEditForm,
-  setFeedPagePostOptionsModalShow,
   selectedSuggestion,
   shouldNavigate,
 }) => {
@@ -113,25 +101,27 @@ export const UserInfo: React.FC<UserInfoProps> = ({
     const commentToDelete: UserInfoAndOtherData = userInfoArray[idx]!;
 
     if (commentToDelete.reactionId && commentToDelete.reactingUserId) {
-      setCommentToDelete({
-        reactionId: commentToDelete.reactionId,
-        isLikeRemoval: false,
-        reactingUserId: commentToDelete.reactingUserId,
-        postId: commentToDelete.postId || '',
-      });
+      dispatch(
+        setCommentToDelete({
+          reactionId: commentToDelete.reactionId,
+          isLikeRemoval: false,
+          reactingUserId: commentToDelete.reactingUserId,
+          postId: commentToDelete.postId || '',
+        })
+      );
 
-      setShowCommentOptionsModal(true);
+      dispatch(setShowCommentOptionsModal(true));
     }
   };
 
   const handleClickCaptionOptions = () => {
     if (isCaptionOwner) {
-      setShowPostEditForm(true);
+      dispatch(setShowPostEditForm(true));
     }
   };
 
   const handleSetFeedPagePostOptionsModalShow = () => {
-    setFeedPagePostOptionsModalShow(true);
+    dispatch(setFeedPagePostOptionsModalShow(true));
     if (userInfoArray[0] && userInfoArray[0]!.postId) {
       dispatch(setFeedPagePostIdForNavigation(userInfoArray[0]!.postId!));
     }
@@ -185,6 +175,7 @@ export const UserInfo: React.FC<UserInfoProps> = ({
         navigate(`/${username}`);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSuggestion, shouldNavigate]);
 
   const userInfo = userInfoArray.map(
@@ -307,19 +298,4 @@ export const UserInfo: React.FC<UserInfoProps> = ({
   );
 };
 
-interface LinkStateProps {}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setCommentToDelete: (deleteReactionReq: DeleteReactionReq) =>
-    dispatch(setCommentToDelete(deleteReactionReq)),
-  setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
-    dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
-  setShowPostEditForm: (showPostEditForm: boolean) =>
-    dispatch(setShowPostEditForm(showPostEditForm)),
-  setFeedPagePostOptionsModalShow: (feedPagePostOptionsModalShow: boolean) =>
-    dispatch(setFeedPagePostOptionsModalShow(feedPagePostOptionsModalShow)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
+export default UserInfo;

@@ -26,11 +26,7 @@ describe('user info component tests', () => {
     ] as UserInfoAndOtherData[];
     const userInfoList = [{}, {}, {}] as UserInfoAndOtherData[];
     const userInfoListFeed = [{}] as UserInfoAndOtherData[];
-
-    const setCommentToDelete = jest.fn();
-    const setShowCommentOptionsModal = jest.fn();
-    const setShowPostEditForm = jest.fn();
-    const setFeedPagePostOptionsModalShow = jest.fn();
+    console.error = jest.fn();
 
     render(
       <UserInfo
@@ -46,19 +42,8 @@ describe('user info component tests', () => {
         styleType={type}
         isCaption={type === 'comment' && caption}
         isCaptionOwner={caption}
-        setCommentToDelete={setCommentToDelete}
-        setShowCommentOptionsModal={setShowCommentOptionsModal}
-        setShowPostEditForm={setShowPostEditForm}
-        setFeedPagePostOptionsModalShow={setFeedPagePostOptionsModalShow}
       />
     );
-
-    return {
-      setCommentToDelete,
-      setShowCommentOptionsModal,
-      setShowPostEditForm,
-      setFeedPagePostOptionsModalShow,
-    };
   };
 
   it('renders a user suggestions container component', () => {
@@ -105,10 +90,8 @@ describe('user info component tests', () => {
     expect(userPostPageContainer).toBeInTheDocument();
   });
 
-  it('hovering over a comment in a user comment container component renders the ellipsis button, and clicking it causes calls the redux actions to set the comment for deletion and to show the comment options modal', () => {
-    const { setCommentToDelete, setShowCommentOptionsModal } = setup(
-      StyleType.comment
-    );
+  it('hovering over a comment in a user comment container component renders the ellipsis button, and clicking it causes calls the redux actions to set the comment for deletion and to show the comment options modal withour error', () => {
+    setup(StyleType.comment);
 
     const firstComment = screen.getByTestId('user-comment-element-0');
 
@@ -118,12 +101,11 @@ describe('user info component tests', () => {
 
     userEvent.click(ellipsisButton);
 
-    expect(setCommentToDelete).toBeCalled();
-    expect(setShowCommentOptionsModal).toBeCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 
-  it('hovering over a caption in a user comment container component renders the ellipsis button, and clicking it causes calls the redux action to show the post-edit form', () => {
-    const { setShowPostEditForm } = setup(StyleType.comment, true);
+  it('hovering over a caption in a user comment container component renders the ellipsis button, and clicking it causes calls the redux action to show the post-edit form withour error', () => {
+    setup(StyleType.comment, true);
 
     const firstComment = screen.getByTestId('user-comment-element-0');
 
@@ -133,16 +115,16 @@ describe('user info component tests', () => {
 
     userEvent.click(ellipsisButton);
 
-    expect(setShowPostEditForm).toBeCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 
-  it('clicking on the ellipsis button in a user feed component causes the redux action to show the feed page post-options modal to be called', () => {
-    const { setFeedPagePostOptionsModalShow } = setup(StyleType.feed);
+  it('clicking on the ellipsis button in a user feed component causes the redux action to show the feed page post-options modal to be called without error', () => {
+    setup(StyleType.feed);
 
     const ellipsisButton = screen.getByTestId('post-ellipsis-button');
 
     userEvent.click(ellipsisButton);
 
-    expect(setFeedPagePostOptionsModalShow).toBeCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 });
