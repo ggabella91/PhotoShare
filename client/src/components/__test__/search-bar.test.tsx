@@ -2,15 +2,10 @@ import { render, screen, userEvent } from '../../test-utils/test-utils';
 
 import { SearchBar } from '../search-bar/search-bar.component';
 
-import { User } from '../../redux/user/user.types';
 import '../../redux/post/post.actions';
-import { PostFile } from '../../redux/post/post.types';
 
 describe('renders a search-bar component', () => {
   const setup = () => {
-    const testUserArray = [] as User[];
-    const testPostFileArray = [] as PostFile[];
-
     const getUserSuggestionsStart = jest.fn();
     const getPostFileStart = jest.fn();
     const clearUserSuggestions = jest.fn();
@@ -20,12 +15,7 @@ describe('renders a search-bar component', () => {
       <SearchBar
         key={0}
         getUserSuggestionsStart={getUserSuggestionsStart}
-        userSuggestions={testUserArray}
-        userSuggestionsError={null}
         getPostFileStart={getPostFileStart}
-        userSuggestionProfilePhotoFiles={testPostFileArray}
-        userSuggestionsConfirm='confirm'
-        userSuggestionProfilePhotoConfirm='confirm'
         clearUserSuggestions={clearUserSuggestions}
         clearSuggestionPhotoFileArray={clearSuggestionPhotoFileArray}
       />
