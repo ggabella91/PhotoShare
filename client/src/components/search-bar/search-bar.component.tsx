@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
-import { AppState } from '../../redux/root-reducer';
 
-import { User, Error } from '../../redux/user/user.types';
+import { User } from '../../redux/user/user.types';
 import {
   selectUserSuggestions,
   selectUserSuggestionsConfirm,
-  selectUserSuggestionsError,
 } from '../../redux/user/user.selectors';
 import {
   getUserSuggestionsStart,
@@ -17,15 +14,11 @@ import {
 
 import {
   FileRequestType,
-  PostFile,
   PostFileReq,
   UserType,
   Location,
 } from '../../redux/post/post.types';
-import {
-  selectSuggestionPhotoFileArray,
-  selectUsersProfilePhotoConfirm,
-} from '../../redux/post/post.selectors';
+import { selectSuggestionPhotoFileArray } from '../../redux/post/post.selectors';
 import {
   getPostFileStart,
   clearSuggestionPhotoFileArray,
@@ -37,11 +30,6 @@ import './search-bar.styles.scss';
 
 export interface SearchBarProps {
   key: number;
-  userSuggestions: User[] | null;
-  userSuggestionsConfirm: string | null;
-  userSuggestionsError: Error | null;
-  userSuggestionProfilePhotoFiles: PostFile[] | null;
-  userSuggestionProfilePhotoConfirm: string | null;
   getUserSuggestionsStart: typeof getUserSuggestionsStart;
   getPostFileStart: typeof getPostFileStart;
   clearUserSuggestions: typeof clearUserSuggestions;
@@ -61,9 +49,6 @@ export interface UserInfoData {
 export const SearchBar: React.FC<SearchBarProps> = ({
   getUserSuggestionsStart,
   getPostFileStart,
-  userSuggestions,
-  userSuggestionsConfirm,
-  userSuggestionProfilePhotoFiles,
   clearUserSuggestions,
   clearSuggestionPhotoFileArray,
 }) => {
@@ -79,6 +64,12 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   );
   const [shouldNavigate, setShouldNavigate] = useState(false);
   const [noProfilePhotosToFetch, setNoProfilePhotosToFetch] = useState(false);
+
+  const userSuggestions = useSelector(selectUserSuggestions);
+  const userSuggestionsConfirm = useSelector(selectUserSuggestionsConfirm);
+  const userSuggestionProfilePhotoFiles = useSelector(
+    selectSuggestionPhotoFileArray
+  );
 
   let bucket: string;
 
@@ -268,22 +259,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   );
 };
 
-interface LinkStateProps {
-  userSuggestions: User[] | null;
-  userSuggestionsConfirm: string | null;
-  userSuggestionsError: Error | null;
-  userSuggestionProfilePhotoFiles: PostFile[] | null;
-  userSuggestionProfilePhotoConfirm: string | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  userSuggestions: selectUserSuggestions,
-  userSuggestionsConfirm: selectUserSuggestionsConfirm,
-  userSuggestionsError: selectUserSuggestionsError,
-  userSuggestionProfilePhotoFiles: selectSuggestionPhotoFileArray,
-  userSuggestionProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getUserSuggestionsStart: (match: string) =>
     dispatch(getUserSuggestionsStart(match)),
@@ -294,4 +269,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(clearSuggestionPhotoFileArray()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
+export default connect(null, mapDispatchToProps)(SearchBar);
