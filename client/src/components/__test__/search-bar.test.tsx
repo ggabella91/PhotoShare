@@ -6,27 +6,7 @@ import '../../redux/post/post.actions';
 
 describe('renders a search-bar component', () => {
   const setup = () => {
-    const getUserSuggestionsStart = jest.fn();
-    const getPostFileStart = jest.fn();
-    const clearUserSuggestions = jest.fn();
-    const clearSuggestionPhotoFileArray = jest.fn();
-
-    render(
-      <SearchBar
-        key={0}
-        getUserSuggestionsStart={getUserSuggestionsStart}
-        getPostFileStart={getPostFileStart}
-        clearUserSuggestions={clearUserSuggestions}
-        clearSuggestionPhotoFileArray={clearSuggestionPhotoFileArray}
-      />
-    );
-
-    return {
-      getUserSuggestionsStart,
-      getPostFileStart,
-      clearUserSuggestions,
-      clearSuggestionPhotoFileArray,
-    };
+    render(<SearchBar key={0} />);
   };
 
   it('renders a search bar component', () => {

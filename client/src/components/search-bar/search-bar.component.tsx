@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { User } from '../../redux/user/user.types';
 import {
@@ -14,7 +13,6 @@ import {
 
 import {
   FileRequestType,
-  PostFileReq,
   UserType,
   Location,
 } from '../../redux/post/post.types';
@@ -28,14 +26,6 @@ import UserInfo, { StyleType } from '../user-info/user-info.component';
 
 import './search-bar.styles.scss';
 
-export interface SearchBarProps {
-  key: number;
-  getUserSuggestionsStart: typeof getUserSuggestionsStart;
-  getPostFileStart: typeof getPostFileStart;
-  clearUserSuggestions: typeof clearUserSuggestions;
-  clearSuggestionPhotoFileArray: typeof clearSuggestionPhotoFileArray;
-}
-
 export interface UserInfoData {
   id?: string;
   profilePhotoFileString: string;
@@ -46,12 +36,7 @@ export interface UserInfoData {
   comment: string;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({
-  getUserSuggestionsStart,
-  getPostFileStart,
-  clearUserSuggestions,
-  clearSuggestionPhotoFileArray,
-}) => {
+export const SearchBar: React.FC = () => {
   const [searchString, setSearchString] = useState('');
   const [userSuggestionsArray, setUserSuggestionsArray] = useState<
     UserInfoData[]
@@ -71,6 +56,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     selectSuggestionPhotoFileArray
   );
 
+  const dispatch = useDispatch();
+
   let bucket: string;
 
   if (process.env.NODE_ENV === 'production') {
@@ -80,22 +67,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   }
 
   useCallback(() => {
-    clearUserSuggestions();
+    dispatch(clearUserSuggestions());
     setUserSuggestionsArray([]);
-    clearSuggestionPhotoFileArray();
-  }, [
-    clearUserSuggestions,
-    setUserSuggestionsArray,
-    clearSuggestionPhotoFileArray,
-  ]);
+    dispatch(clearSuggestionPhotoFileArray());
+  }, [dispatch]);
 
   useEffect(() => {
     if (searchString.length >= 3) {
-      getUserSuggestionsStart(searchString);
+      dispatch(getUserSuggestionsStart(searchString));
     } else {
       setShowUserSuggestions(false);
     }
-  }, [searchString]);
+  }, [dispatch, searchString]);
 
   useEffect(() => {
     if (userSuggestions && userSuggestions.length) {
@@ -104,12 +87,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       for (let user of userSuggestions) {
         if (user.photo) {
           count++;
-          getPostFileStart({
-            user: UserType.suggestionArray,
-            bucket,
-            s3Key: user.photo,
-            fileRequestType: FileRequestType.singlePost,
-          });
+          dispatch(
+            getPostFileStart({
+              user: UserType.suggestionArray,
+              bucket,
+              s3Key: user.photo,
+              fileRequestType: FileRequestType.singlePost,
+            })
+          );
         }
       }
 
@@ -117,7 +102,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         setNoProfilePhotosToFetch(true);
       }
     }
-  }, [userSuggestions]);
+  }, [bucket, dispatch, userSuggestions]);
 
   useEffect(() => {
     if (userSuggestions && userSuggestionProfilePhotoFiles?.length) {
@@ -259,14 +244,4 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getUserSuggestionsStart: (match: string) =>
-    dispatch(getUserSuggestionsStart(match)),
-  getPostFileStart: (fileReq: PostFileReq) =>
-    dispatch(getPostFileStart(fileReq)),
-  clearUserSuggestions: () => dispatch(clearUserSuggestions()),
-  clearSuggestionPhotoFileArray: () =>
-    dispatch(clearSuggestionPhotoFileArray()),
-});
-
-export default connect(null, mapDispatchToProps)(SearchBar);
+export default SearchBar;
