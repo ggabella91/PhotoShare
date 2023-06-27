@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
-import { AppState } from '../../redux/root-reducer';
-import { User } from '../../redux/user/user.types';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { signOutStart } from '../../redux/user/user.actions';
 import {
-  PostFile,
   FileRequestType,
   PostFileReq,
   UserType,
@@ -26,17 +22,11 @@ import { Button, Grid, Popover } from '@mui/material';
 import NotificationsContainer from './notifications-container.component';
 
 interface HeaderProps {
-  currentUser: User | null;
-  profilePhotoKey: string | null;
-  profilePhotoFile: PostFile | null;
   getPostFileStart: typeof getPostFileStart;
   signOutStart: typeof signOutStart;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  currentUser,
-  profilePhotoKey,
-  profilePhotoFile,
   getPostFileStart,
   signOutStart,
 }) => {
@@ -44,6 +34,10 @@ export const Header: React.FC<HeaderProps> = ({
   const [searchBarKey, setSearchBarKey] = useState(Math.random());
   const [openNotifications, setOpenNotifications] = useState(false);
   const notificationsButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const currentUser = useSelector(selectCurrentUser);
+  const profilePhotoKey = useSelector(selectProfilePhotoKey);
+  const profilePhotoFile = useSelector(selectProfilePhotoFile);
 
   const params = useParams();
   const location = useLocation();
@@ -198,22 +192,10 @@ export const Header: React.FC<HeaderProps> = ({
   );
 };
 
-interface LinkStateProps {
-  currentUser: User | null;
-  profilePhotoKey: string | null;
-  profilePhotoFile: PostFile | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
-  profilePhotoKey: selectProfilePhotoKey,
-  profilePhotoFile: selectProfilePhotoFile,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getPostFileStart: (fileReq: PostFileReq) =>
     dispatch(getPostFileStart(fileReq)),
   signOutStart: () => dispatch(signOutStart()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(null, mapDispatchToProps)(Header);
