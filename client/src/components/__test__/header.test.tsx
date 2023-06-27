@@ -1,23 +1,13 @@
 import { render, screen, fireEvent } from '../../test-utils/test-utils';
 import { Header } from '../header/header.component';
-import { User } from '../../redux/user/user.types';
-import { PostFile } from '../../redux/post/post.types';
 
 describe('header component tests', () => {
   const getPostFileStart = jest.fn();
   const signOutStart = jest.fn();
-  const testUser = { username: 'test-dude' } as User;
-  const testPostFile = {} as PostFile;
 
   const setup = () =>
     render(
-      <Header
-        currentUser={testUser}
-        profilePhotoFile={testPostFile}
-        profilePhotoKey='photo-key'
-        getPostFileStart={getPostFileStart}
-        signOutStart={signOutStart}
-      />
+      <Header getPostFileStart={getPostFileStart} signOutStart={signOutStart} />
     );
 
   it('renders a header component', () => {
