@@ -1,14 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useParams, useLocation } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { signOutStart } from '../../redux/user/user.actions';
-import {
-  FileRequestType,
-  PostFileReq,
-  UserType,
-} from '../../redux/post/post.types';
+import { FileRequestType, UserType } from '../../redux/post/post.types';
 import {
   selectProfilePhotoKey,
   selectProfilePhotoFile,
@@ -21,15 +16,7 @@ import './header.styles.scss';
 import { Button, Grid, Popover } from '@mui/material';
 import NotificationsContainer from './notifications-container.component';
 
-interface HeaderProps {
-  getPostFileStart: typeof getPostFileStart;
-  signOutStart: typeof signOutStart;
-}
-
-export const Header: React.FC<HeaderProps> = ({
-  getPostFileStart,
-  signOutStart,
-}) => {
+export const Header: React.FC = () => {
   const [photoFileString, setPhotoFileString] = useState<string>('');
   const [searchBarKey, setSearchBarKey] = useState(Math.random());
   const [openNotifications, setOpenNotifications] = useState(false);
@@ -38,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   const currentUser = useSelector(selectCurrentUser);
   const profilePhotoKey = useSelector(selectProfilePhotoKey);
   const profilePhotoFile = useSelector(selectProfilePhotoFile);
-
+  const dispatch = useDispatch();
   const params = useParams();
   const location = useLocation();
 
@@ -54,23 +41,28 @@ export const Header: React.FC<HeaderProps> = ({
 
   useEffect(() => {
     if (currentUser && profilePhotoKey) {
-      getPostFileStart({
-        s3Key: profilePhotoKey,
-        bucket,
-        user: UserType.self,
-        fileRequestType: FileRequestType.singlePost,
-      });
+      dispatch(
+        getPostFileStart({
+          s3Key: profilePhotoKey,
+          bucket,
+          user: UserType.self,
+          fileRequestType: FileRequestType.singlePost,
+        })
+      );
     } else if (!profilePhotoFile && currentUser && currentUser.photo) {
-      getPostFileStart({
-        s3Key: currentUser.photo,
-        bucket,
-        user: UserType.self,
-        fileRequestType: FileRequestType.singlePost,
-      });
+      dispatch(
+        getPostFileStart({
+          s3Key: currentUser.photo,
+          bucket,
+          user: UserType.self,
+          fileRequestType: FileRequestType.singlePost,
+        })
+      );
     } else if (!currentUser && photoFileString.length) {
       setPhotoFileString('');
     }
-  }, [profilePhotoKey, currentUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, profilePhotoKey, currentUser]);
 
   useEffect(() => {
     if (profilePhotoFile && profilePhotoFile.fileString) {
@@ -86,6 +78,8 @@ export const Header: React.FC<HeaderProps> = ({
     setOpenNotifications(!openNotifications);
 
   const handleCloseNotifications = () => setOpenNotifications(false);
+
+  const handleClickSignOut = () => dispatch(signOutStart());
 
   return (
     <div className='header' data-testid='header'>
@@ -180,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({
             <NavLink
               className='link'
               to='/'
-              onClick={signOutStart}
+              onClick={handleClickSignOut}
               data-testid='sign-out-link'
             >
               Sign Out
@@ -192,10 +186,4 @@ export const Header: React.FC<HeaderProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getPostFileStart: (fileReq: PostFileReq) =>
-    dispatch(getPostFileStart(fileReq)),
-  signOutStart: () => dispatch(signOutStart()),
-});
-
-export default connect(null, mapDispatchToProps)(Header);
+export default Header;

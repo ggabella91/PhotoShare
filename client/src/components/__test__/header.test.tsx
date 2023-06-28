@@ -2,13 +2,7 @@ import { render, screen, fireEvent } from '../../test-utils/test-utils';
 import { Header } from '../header/header.component';
 
 describe('header component tests', () => {
-  const getPostFileStart = jest.fn();
-  const signOutStart = jest.fn();
-
-  const setup = () =>
-    render(
-      <Header getPostFileStart={getPostFileStart} signOutStart={signOutStart} />
-    );
+  const setup = () => render(<Header />);
 
   it('renders a header component', () => {
     setup();
