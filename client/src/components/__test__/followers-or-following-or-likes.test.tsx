@@ -16,10 +16,8 @@ describe('followers-following-or-likes-modal component tests', () => {
         currentOrOtherUser='current'
         show={true}
         onHide={() => {}}
-        usersProfilePhotoConfirm=''
         getOtherUserStart={(otherUserReq) => getOtherUserStart(otherUserReq)}
         getPostFileStart={(postFileReq) => getPostFileStart(postFileReq)}
-        followPhotoFileArray={[]}
         clearFollowPhotoFileArray={() => clearFollowPhotoFileArray()}
         isPostLikingUsersModal={isPostLikingUsersModal}
       />

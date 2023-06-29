@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { useLocation } from 'react-router-dom';
-import { createStructuredSelector } from 'reselect';
-import { AppState } from '../../redux/root-reducer';
 
 import {
   User,
@@ -22,14 +20,10 @@ import {
 import {
   FileRequestType,
   PostFileReq,
-  PostFile,
   UserType,
   Location,
 } from '../../redux/post/post.types';
-import {
-  selectFollowPhotoFileArray,
-  selectUsersProfilePhotoConfirm,
-} from '../../redux/post/post.selectors';
+import { selectFollowPhotoFileArray } from '../../redux/post/post.selectors';
 import {
   clearFollowPhotoFileArray,
   getPostFileStart,
@@ -58,8 +52,6 @@ interface FollowersOrFollowingOrLikesModalProps {
   onHide: () => void;
   isPostLikingUsersModal?: boolean;
   postLikingUsersArray?: UserInfoAndOtherData[];
-  followPhotoFileArray: PostFile[] | null;
-  usersProfilePhotoConfirm: string | null;
   getOtherUserStart: typeof getOtherUserStart;
   getPostFileStart: typeof getPostFileStart;
   clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
@@ -81,8 +73,6 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   isPostLikingUsersModal,
   postLikingUsersArray,
   onHide,
-  followPhotoFileArray,
-  usersProfilePhotoConfirm,
   getOtherUserStart,
   getPostFileStart,
   clearFollowPhotoFileArray,
@@ -105,6 +95,7 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
       : otherUserUsersFollowing || [];
   const followersInfo = useSelector(selectFollowersInfo);
   const followingInfo = useSelector(selectFollowingInfo);
+  const followPhotoFileArray = useSelector(selectFollowPhotoFileArray);
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -280,16 +271,6 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   );
 };
 
-interface LinkStateProps {
-  followPhotoFileArray: PostFile[] | null;
-  usersProfilePhotoConfirm: string | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  followPhotoFileArray: selectFollowPhotoFileArray,
-  usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getOtherUserStart: (otherUserReq: OtherUserRequest) =>
     dispatch(getOtherUserStart(otherUserReq)),
@@ -299,6 +280,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(FollowersOrFollowingOrLikesModal);
