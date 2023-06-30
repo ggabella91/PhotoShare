@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import {
-  User,
-  OtherUserType,
-  OtherUserRequest,
-} from '../../redux/user/user.types';
+import { User, OtherUserType } from '../../redux/user/user.types';
 import {
   selectFollowersInfo,
   selectFollowingInfo,
@@ -19,7 +14,6 @@ import {
 
 import {
   FileRequestType,
-  PostFileReq,
   UserType,
   Location,
 } from '../../redux/post/post.types';
@@ -52,9 +46,6 @@ interface FollowersOrFollowingOrLikesModalProps {
   onHide: () => void;
   isPostLikingUsersModal?: boolean;
   postLikingUsersArray?: UserInfoAndOtherData[];
-  getOtherUserStart: typeof getOtherUserStart;
-  getPostFileStart: typeof getPostFileStart;
-  clearFollowPhotoFileArray: typeof clearFollowPhotoFileArray;
 }
 
 export interface UserInfoData {
@@ -73,9 +64,6 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   isPostLikingUsersModal,
   postLikingUsersArray,
   onHide,
-  getOtherUserStart,
-  getPostFileStart,
-  clearFollowPhotoFileArray,
   ...props
 }) => {
   const [userInfoAndPhotoArray, setUserInfoAndPhotoArray] = useState<
@@ -113,21 +101,25 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   }, [dispatch, location.pathname]);
 
   useEffect(() => {
-    clearFollowPhotoFileArray();
+    dispatch(clearFollowPhotoFileArray());
 
     if (isFollowersModal) {
       followers?.forEach((user) => {
-        getOtherUserStart({
-          type: OtherUserType.FOLLOWERS,
-          usernameOrId: user.followerId,
-        });
+        dispatch(
+          getOtherUserStart({
+            type: OtherUserType.FOLLOWERS,
+            usernameOrId: user.followerId,
+          })
+        );
       });
     } else {
       usersFollowing?.forEach((user) => {
-        getOtherUserStart({
-          type: OtherUserType.FOLLOWING,
-          usernameOrId: user.userId,
-        });
+        dispatch(
+          getOtherUserStart({
+            type: OtherUserType.FOLLOWING,
+            usernameOrId: user.userId,
+          })
+        );
       });
     }
 
@@ -170,12 +162,14 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
       followersOrFollowing.forEach((user) => {
         if (user.photo) {
           fetchCount++;
-          getPostFileStart({
-            user: UserType.followArray,
-            s3Key: user.photo,
-            bucket,
-            fileRequestType: FileRequestType.singlePost,
-          });
+          dispatch(
+            getPostFileStart({
+              user: UserType.followArray,
+              s3Key: user.photo,
+              bucket,
+              fileRequestType: FileRequestType.singlePost,
+            })
+          );
         }
       });
 
@@ -271,15 +265,4 @@ export const FollowersOrFollowingOrLikesModal: React.FC<
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getOtherUserStart: (otherUserReq: OtherUserRequest) =>
-    dispatch(getOtherUserStart(otherUserReq)),
-  getPostFileStart: (postFileReq: PostFileReq) =>
-    dispatch(getPostFileStart(postFileReq)),
-  clearFollowPhotoFileArray: () => dispatch(clearFollowPhotoFileArray()),
-});
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(FollowersOrFollowingOrLikesModal);
+export default FollowersOrFollowingOrLikesModal;
