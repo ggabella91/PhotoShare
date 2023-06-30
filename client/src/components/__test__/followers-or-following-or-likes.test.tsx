@@ -1,12 +1,6 @@
 /* eslint-disable testing-library/prefer-presence-queries */
 import { render, screen } from '../../test-utils/test-utils';
 
-import { getOtherUserStart } from '../../redux/user/user.actions';
-import {
-  getPostFileStart,
-  clearFollowPhotoFileArray,
-} from '../../redux/post/post.actions';
-
 import { FollowersOrFollowingOrLikesModal } from '../followers-or-following-or-likes-modal/followers-or-following-or-likes-modal.component';
 
 describe('followers-following-or-likes-modal component tests', () => {
@@ -16,9 +10,6 @@ describe('followers-following-or-likes-modal component tests', () => {
         currentOrOtherUser='current'
         show={true}
         onHide={() => {}}
-        getOtherUserStart={(otherUserReq) => getOtherUserStart(otherUserReq)}
-        getPostFileStart={(postFileReq) => getPostFileStart(postFileReq)}
-        clearFollowPhotoFileArray={() => clearFollowPhotoFileArray()}
         isPostLikingUsersModal={isPostLikingUsersModal}
       />
     );
