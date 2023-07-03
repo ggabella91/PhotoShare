@@ -161,6 +161,7 @@ const NotificationsContainer: React.FC = () => {
         );
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, postsBucket, notificationPostData, notificationPostFiles.size]);
 
   useEffect(() => {
@@ -212,7 +213,7 @@ const NotificationsContainer: React.FC = () => {
             (!!user.photo?.length && notificationUserMap?.[user.photo]) || null;
           const postPhotoS3Key =
             notification.postId &&
-            notificationPostData?.[notification.postId].s3Key;
+            notificationPostData?.[notification.postId]?.s3Key;
           const postPhotoInfo =
             postPhotoS3Key && notificationPostFiles[postPhotoS3Key];
 
