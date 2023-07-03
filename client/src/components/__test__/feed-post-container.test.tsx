@@ -35,12 +35,6 @@ describe('feed post container component tests', () => {
         s3Key='post-key'
         custRef={null}
         key='0'
-        currentUser={{
-          name: 'test name',
-          username: 'testname',
-          id: '2323',
-          email: 'test@test.com',
-        }}
         caption='test caption'
         userInfo={{
           profilePhotoFileString: 'sndfjnbss',
@@ -53,16 +47,12 @@ describe('feed post container component tests', () => {
         }}
         fileString='string'
         date='March 19th 2021'
-        feedPostReactionsArray={[]}
         getOtherUserStart={(otherUserReq: OtherUserRequest) =>
           getOtherUserStart(otherUserReq)
         }
         getPostFileStart={(postFileReq: PostFileReq) =>
           getPostFileStart(postFileReq)
         }
-        feedPostReactingUsers={[]}
-        reactorPhotoFileArray={[]}
-        usersProfilePhotoConfirm=''
         createPostReactionStart={(reactionReq) =>
           createPostReactionStart(reactionReq)
         }
