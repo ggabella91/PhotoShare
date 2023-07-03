@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -86,11 +86,6 @@ interface FeedPostContainerProps {
   date: string;
   custRef: CustomRef | null;
   id: string;
-  currentUser: User | null;
-  feedPostReactionsArray: Reaction[][];
-  feedPostReactingUsers: User[] | null;
-  reactorPhotoFileArray: PostFile[] | null;
-  usersProfilePhotoConfirm: string | null;
   postReactionConfirm: ReactionConfirm | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -154,11 +149,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   date,
   custRef,
   id,
-  currentUser,
-  feedPostReactionsArray,
-  feedPostReactingUsers,
-  reactorPhotoFileArray,
-  usersProfilePhotoConfirm,
   postReactionConfirm,
   deleteReactionConfirm,
   getPostReactionsStart,
@@ -174,33 +164,32 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   setClearFeedPagePostModalState,
 }) => {
   const [postId, setPostId] = useState('');
-
   const [didFetchReactions, setDidFetchReactions] = useState(false);
-
   const [comment, setComment] = useState('');
-
   const [reactionsArray, setReactionsArray] = useState<Reaction[]>([]);
-
   const [reactingUserInfoArray, setReactingUsersInfoArray] = useState<User[]>(
     []
   );
-
   const [userProfilePhotoArray, setUserProfilePhotoArray] = useState<
     PostFile[]
   >([]);
-
   const [commentingUserArray, setCommentingUserArray] = useState<
     UserInfoAndOtherData[]
   >([]);
-
   const [likingUsersArray, setLikingUsersArray] = useState<
     UserInfoAndOtherData[]
   >([]);
-
   const [alreadyLikedPostAndReactionId, setAlreadyLikedPostAndReactionId] =
     useState({ alreadyLikedPost: false, reactionId: '' });
-
   const [playVideo, setPlayVideo] = useState(false);
+
+  const currentUser = useSelector(selectCurrentUser);
+  const feedPostReactionsArray = useSelector(selectFeedPostReactionsArray);
+  const feedPostReactingUsers = useSelector(selectFeedPostReactingUsers);
+  const reactorPhotoFileArray = useSelector(selectFeedReactorPhotoFileArray);
+  const usersProfilePhotoConfirm = useSelector(
+    selectFeedUsersProfilePhotoConfirm
+  );
 
   const { isVideo } = userInfo;
 
@@ -672,11 +661,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 };
 
 interface LinkStateProps {
-  currentUser: User | null;
-  feedPostReactionsArray: Reaction[][];
-  feedPostReactingUsers: User[] | null;
-  reactorPhotoFileArray: PostFile[] | null;
-  usersProfilePhotoConfirm: string | null;
   postReactionConfirm: ReactionConfirm | null;
   postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
@@ -685,11 +669,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
-  feedPostReactionsArray: selectFeedPostReactionsArray,
-  feedPostReactingUsers: selectFeedPostReactingUsers,
-  reactorPhotoFileArray: selectFeedReactorPhotoFileArray,
-  usersProfilePhotoConfirm: selectFeedUsersProfilePhotoConfirm,
   postReactionConfirm: selectPostReactionConfirm,
   postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
