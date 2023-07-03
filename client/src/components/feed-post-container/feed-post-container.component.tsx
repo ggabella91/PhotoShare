@@ -229,6 +229,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (userInfo.postId !== postId) {
       setPostId(userInfo.postId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
   useEffect(() => {
@@ -240,6 +241,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
       setDidFetchReactions(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId]);
 
   useEffect(() => {
@@ -255,6 +257,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedPostReactionsArray]);
 
   useEffect(() => {
@@ -272,6 +275,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reactionsArray]);
 
   useEffect(() => {
@@ -294,6 +298,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         reactionReqType: ReactionRequestType.feedPost,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postReactionConfirm]);
 
   useEffect(() => {
@@ -316,6 +321,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         reactionReqType: ReactionRequestType.feedPost,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
@@ -333,6 +339,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         reactionReqType: ReactionRequestType.feedPost,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postReactionConfirm]);
 
   useEffect(() => {
@@ -350,6 +357,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         reactionReqType: ReactionRequestType.feedPost,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteReactionConfirm]);
 
   useEffect(() => {
@@ -361,6 +369,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reactionsArray]);
 
   useEffect(() => {
@@ -381,6 +390,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     ) {
       setReactingUsersInfoArray(feedPostReactingUsersList);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedPostReactingUsers]);
 
   useEffect(() => {
@@ -396,6 +406,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reactingUserInfoArray]);
 
   useEffect(() => {
@@ -409,6 +420,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     ) {
       setUserProfilePhotoArray(reactorPhotoFileArray);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reactorPhotoFileArray]);
 
   useEffect(() => {
@@ -475,6 +487,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
         setPostLikingUsersArray(likesArray);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     reactionsArray,
     reactingUserInfoArray,
