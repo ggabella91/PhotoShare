@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-
-import { AppState } from '../../redux/root-reducer';
 
 import { postNotificationStart } from '../../redux/follower/follower.actions';
 
@@ -24,16 +21,13 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 import {
   Reaction,
   ReactionReq,
-  ReactionConfirm,
   PostFileReq,
   FileRequestType,
   ReactionRequestType,
   GetPostReactionsReq,
   PostFile,
   UserType,
-  PostError,
   DeleteReactionReq,
-  DeleteReactionConfirm,
   Location,
 } from '../../redux/post/post.types';
 import {
@@ -41,9 +35,6 @@ import {
   selectFeedReactorPhotoFileArray,
   selectFeedUsersProfilePhotoConfirm,
   selectPostReactionConfirm,
-  selectPostReactionError,
-  selectGetPostReactionsConfirm,
-  selectGetPostReactionsError,
   selectDeleteReactionConfirm,
 } from '../../redux/post/post.selectors';
 import {
@@ -86,11 +77,6 @@ interface FeedPostContainerProps {
   date: string;
   custRef: CustomRef | null;
   id: string;
-  postReactionConfirm: ReactionConfirm | null;
-  postReactionError: PostError | null;
-  getPostReactionsConfirm: string | null;
-  getPostReactionsError: PostError | null;
-  deleteReactionConfirm: DeleteReactionConfirm | null;
   createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -149,8 +135,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   date,
   custRef,
   id,
-  postReactionConfirm,
-  deleteReactionConfirm,
   getPostReactionsStart,
   getOtherUserStart,
   getPostFileStart,
@@ -190,6 +174,8 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   const usersProfilePhotoConfirm = useSelector(
     selectFeedUsersProfilePhotoConfirm
   );
+  const postReactionConfirm = useSelector(selectPostReactionConfirm);
+  const deleteReactionConfirm = useSelector(selectDeleteReactionConfirm);
 
   const { isVideo } = userInfo;
 
@@ -660,22 +646,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   );
 };
 
-interface LinkStateProps {
-  postReactionConfirm: ReactionConfirm | null;
-  postReactionError: PostError | null;
-  getPostReactionsConfirm: string | null;
-  getPostReactionsError: PostError | null;
-  deleteReactionConfirm: DeleteReactionConfirm | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  postReactionConfirm: selectPostReactionConfirm,
-  postReactionError: selectPostReactionError,
-  getPostReactionsConfirm: selectGetPostReactionsConfirm,
-  getPostReactionsError: selectGetPostReactionsError,
-  deleteReactionConfirm: selectDeleteReactionConfirm,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   createPostReactionStart: (reactionReq: ReactionReq) =>
     dispatch(createPostReactionStart(reactionReq)),
@@ -700,4 +670,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setClearFeedPagePostModalState(clearFeedPagePostModalState)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FeedPostContainer);
+export default connect(null, mapDispatchToProps)(FeedPostContainer);
