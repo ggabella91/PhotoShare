@@ -59,17 +59,7 @@ describe('feed post container component tests', () => {
         deleteReactionStart={(deleteReactionReq: DeleteReactionReq) =>
           deleteReactionStart(deleteReactionReq)
         }
-        deleteReactionConfirm={{ reactionId: '', postId: '', message: '' }}
-        postReactionConfirm={{
-          reactionId: '',
-          message: '',
-          likedPost: false,
-          postId: '',
-        }}
-        postReactionError={null}
         getPostReactionsStart={(postId) => getPostReactionsStart(postId)}
-        getPostReactionsConfirm=''
-        getPostReactionsError={null}
         setPostLikingUsersArray={(
           postLikingUsersArray: UserInfoAndOtherData[]
         ) => setPostLikingUsersArray(postLikingUsersArray)}
