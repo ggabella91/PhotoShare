@@ -4,25 +4,14 @@ import {
   PostModalDataToFeed,
 } from '../feed-post-container/feed-post-container.component';
 
+import { Location } from '../../redux/post/post.types';
 import {
-  DeleteReactionReq,
-  PostFileReq,
-  Location,
-} from '../../redux/post/post.types';
-import {
-  createPostReactionStart,
-  getPostReactionsStart,
-  deleteReactionStart,
-  getPostFileStart,
   setPostLikingUsersArray,
   setFeedPagePostModalData,
   setFeedPagePostModalShow,
   setClearFeedPagePostModalState,
   setShowPostLikingUsersModal,
-  clearPostReactions,
 } from '../../redux/post/post.actions';
-import { OtherUserRequest } from '../../redux/user/user.types';
-import { getOtherUserStart } from '../../redux/user/user.actions';
 import { UserInfoAndOtherData } from '../user-info/user-info.component';
 
 describe('feed post container component tests', () => {
@@ -47,19 +36,6 @@ describe('feed post container component tests', () => {
         }}
         fileString='string'
         date='March 19th 2021'
-        getOtherUserStart={(otherUserReq: OtherUserRequest) =>
-          getOtherUserStart(otherUserReq)
-        }
-        getPostFileStart={(postFileReq: PostFileReq) =>
-          getPostFileStart(postFileReq)
-        }
-        createPostReactionStart={(reactionReq) =>
-          createPostReactionStart(reactionReq)
-        }
-        deleteReactionStart={(deleteReactionReq: DeleteReactionReq) =>
-          deleteReactionStart(deleteReactionReq)
-        }
-        getPostReactionsStart={(postId) => getPostReactionsStart(postId)}
         setPostLikingUsersArray={(
           postLikingUsersArray: UserInfoAndOtherData[]
         ) => setPostLikingUsersArray(postLikingUsersArray)}
@@ -75,7 +51,6 @@ describe('feed post container component tests', () => {
         setClearFeedPagePostModalState={(
           clearFeedPagePostModalState: boolean
         ) => setClearFeedPagePostModalState(clearFeedPagePostModalState)}
-        clearPostReactions={() => clearPostReactions()}
       />
     );
   };

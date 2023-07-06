@@ -7,11 +7,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import { postNotificationStart } from '../../redux/follower/follower.actions';
 
-import {
-  User,
-  OtherUserType,
-  OtherUserRequest,
-} from '../../redux/user/user.types';
+import { User, OtherUserType } from '../../redux/user/user.types';
 import {
   selectCurrentUser,
   selectFeedPostReactingUsers,
@@ -20,14 +16,10 @@ import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
   Reaction,
-  ReactionReq,
-  PostFileReq,
   FileRequestType,
   ReactionRequestType,
-  GetPostReactionsReq,
   PostFile,
   UserType,
-  DeleteReactionReq,
   Location,
 } from '../../redux/post/post.types';
 import {
@@ -77,17 +69,11 @@ interface FeedPostContainerProps {
   date: string;
   custRef: CustomRef | null;
   id: string;
-  createPostReactionStart: typeof createPostReactionStart;
-  getPostReactionsStart: typeof getPostReactionsStart;
-  getOtherUserStart: typeof getOtherUserStart;
-  getPostFileStart: typeof getPostFileStart;
-  deleteReactionStart: typeof deleteReactionStart;
   setPostLikingUsersArray: typeof setPostLikingUsersArray;
   setShowPostLikingUsersModal: typeof setShowPostLikingUsersModal;
   setFeedPagePostModalData: typeof setFeedPagePostModalData;
   setFeedPagePostModalShow: typeof setFeedPagePostModalShow;
   setClearFeedPagePostModalState: typeof setClearFeedPagePostModalState;
-  clearPostReactions: typeof clearPostReactions;
 }
 
 export interface UserInfoData {
@@ -135,12 +121,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   date,
   custRef,
   id,
-  getPostReactionsStart,
-  getOtherUserStart,
-  getPostFileStart,
-  createPostReactionStart,
-  deleteReactionStart,
-  clearPostReactions,
   setPostLikingUsersArray,
   setShowPostLikingUsersModal,
   setFeedPagePostModalData,
@@ -209,10 +189,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
   useEffect(() => {
     if (postId && !didFetchReactions) {
-      getPostReactionsStart({
-        postId,
-        reactionReqType: ReactionRequestType.feedPost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId,
+          reactionReqType: ReactionRequestType.feedPost,
+        })
+      );
 
       setDidFetchReactions(true);
     }
@@ -260,7 +242,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postId &&
       postReactionConfirm.postId === postId
     ) {
-      clearPostReactions();
+      dispatch(clearPostReactions());
 
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: true,
@@ -268,10 +250,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       });
       setLikingUsersArray([]);
       dispatch(removePostModalDataFromCache(postId));
-      getPostReactionsStart({
-        postId,
-        reactionReqType: ReactionRequestType.feedPost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId,
+          reactionReqType: ReactionRequestType.feedPost,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postReactionConfirm]);
@@ -283,7 +267,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postId &&
       deleteReactionConfirm.postId === postId
     ) {
-      clearPostReactions();
+      dispatch(clearPostReactions());
 
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
@@ -291,10 +275,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       });
       setLikingUsersArray([]);
       dispatch(removePostModalDataFromCache(postId));
-      getPostReactionsStart({
-        postId,
-        reactionReqType: ReactionRequestType.feedPost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId,
+          reactionReqType: ReactionRequestType.feedPost,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteReactionConfirm]);
@@ -306,13 +292,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postId &&
       postReactionConfirm.postId === postId
     ) {
-      clearPostReactions();
+      dispatch(clearPostReactions());
 
       dispatch(removePostModalDataFromCache(postId));
-      getPostReactionsStart({
-        postId,
-        reactionReqType: ReactionRequestType.feedPost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId,
+          reactionReqType: ReactionRequestType.feedPost,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postReactionConfirm]);
@@ -324,13 +312,15 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       postId &&
       deleteReactionConfirm.postId === postId
     ) {
-      clearPostReactions();
+      dispatch(clearPostReactions());
 
       dispatch(removePostModalDataFromCache(postId));
-      getPostReactionsStart({
-        postId,
-        reactionReqType: ReactionRequestType.feedPost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId,
+          reactionReqType: ReactionRequestType.feedPost,
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteReactionConfirm]);
@@ -338,10 +328,12 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   useEffect(() => {
     if (reactionsArray.length) {
       reactionsArray.forEach((el) => {
-        getOtherUserStart({
-          type: OtherUserType.FEED_POST_REACTOR,
-          usernameOrId: el.reactingUserId,
-        });
+        dispatch(
+          getOtherUserStart({
+            type: OtherUserType.FEED_POST_REACTOR,
+            usernameOrId: el.reactingUserId,
+          })
+        );
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -372,12 +364,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     if (reactingUserInfoArray.length) {
       reactingUserInfoArray.forEach((el) => {
         if (el.photo) {
-          getPostFileStart({
-            s3Key: el.photo,
-            bucket,
-            user: UserType.postReactorsArray,
-            fileRequestType: FileRequestType.feedPost,
-          });
+          dispatch(
+            getPostFileStart({
+              s3Key: el.photo,
+              bucket,
+              user: UserType.postReactorsArray,
+              fileRequestType: FileRequestType.feedPost,
+            })
+          );
         }
       });
     }
@@ -480,12 +474,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
     event.preventDefault();
 
     if (comment && currentUser) {
-      createPostReactionStart({
-        reactingUserId: currentUser.id,
-        postId,
-        likedPost: false,
-        comment,
-      });
+      dispatch(
+        createPostReactionStart({
+          reactingUserId: currentUser.id,
+          postId,
+          likedPost: false,
+          comment,
+        })
+      );
 
       dispatch(
         postNotificationStart({
@@ -517,12 +513,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
       : handleSubmitLike();
 
   const handleSubmitLike = () => {
-    createPostReactionStart({
-      reactingUserId: userInfo.userId,
-      postId,
-      likedPost: true,
-      comment: '',
-    });
+    dispatch(
+      createPostReactionStart({
+        reactingUserId: userInfo.userId,
+        postId,
+        likedPost: true,
+        comment: '',
+      })
+    );
 
     if (currentUser) {
       dispatch(
@@ -537,12 +535,14 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   };
 
   const handleSubmitRemoveLike = () => {
-    deleteReactionStart({
-      reactingUserId: currentUser!.id,
-      reactionId: alreadyLikedPostAndReactionId.reactionId,
-      isLikeRemoval: true,
-      postId,
-    });
+    dispatch(
+      deleteReactionStart({
+        reactingUserId: currentUser!.id,
+        reactionId: alreadyLikedPostAndReactionId.reactionId,
+        isLikeRemoval: true,
+        postId,
+      })
+    );
   };
 
   const handlePostLikingUsersClick = () => {
@@ -647,17 +647,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  createPostReactionStart: (reactionReq: ReactionReq) =>
-    dispatch(createPostReactionStart(reactionReq)),
-  getPostReactionsStart: (getPostReactionsReq: GetPostReactionsReq) =>
-    dispatch(getPostReactionsStart(getPostReactionsReq)),
-  getOtherUserStart: (otherUserReq: OtherUserRequest) =>
-    dispatch(getOtherUserStart(otherUserReq)),
-  getPostFileStart: (postFileReq: PostFileReq) =>
-    dispatch(getPostFileStart(postFileReq)),
-  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
-    dispatch(deleteReactionStart(deleteReactionReq)),
-  clearPostReactions: () => dispatch(clearPostReactions()),
   setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
     dispatch(setPostLikingUsersArray(postLikingUsersArray)),
   setShowPostLikingUsersModal: (showPostLikingUsersModal: boolean) =>
