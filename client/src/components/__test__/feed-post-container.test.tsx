@@ -1,18 +1,7 @@
 import { render, screen } from '../../test-utils/test-utils';
-import {
-  FeedPostContainer,
-  PostModalDataToFeed,
-} from '../feed-post-container/feed-post-container.component';
+import { FeedPostContainer } from '../feed-post-container/feed-post-container.component';
 
 import { Location } from '../../redux/post/post.types';
-import {
-  setPostLikingUsersArray,
-  setFeedPagePostModalData,
-  setFeedPagePostModalShow,
-  setClearFeedPagePostModalState,
-  setShowPostLikingUsersModal,
-} from '../../redux/post/post.actions';
-import { UserInfoAndOtherData } from '../user-info/user-info.component';
 
 describe('feed post container component tests', () => {
   const setup = () => {
@@ -36,21 +25,6 @@ describe('feed post container component tests', () => {
         }}
         fileString='string'
         date='March 19th 2021'
-        setPostLikingUsersArray={(
-          postLikingUsersArray: UserInfoAndOtherData[]
-        ) => setPostLikingUsersArray(postLikingUsersArray)}
-        setShowPostLikingUsersModal={(showPostLikingUsersModal: boolean) =>
-          setShowPostLikingUsersModal(showPostLikingUsersModal)
-        }
-        setFeedPagePostModalData={(postModalDataToFeed: PostModalDataToFeed) =>
-          setFeedPagePostModalData(postModalDataToFeed)
-        }
-        setFeedPagePostModalShow={(feedPagePostModalShow: boolean) =>
-          setFeedPagePostModalShow(feedPagePostModalShow)
-        }
-        setClearFeedPagePostModalState={(
-          clearFeedPagePostModalState: boolean
-        ) => setClearFeedPagePostModalState(clearFeedPagePostModalState)}
       />
     );
   };

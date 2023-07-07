@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -69,11 +68,6 @@ interface FeedPostContainerProps {
   date: string;
   custRef: CustomRef | null;
   id: string;
-  setPostLikingUsersArray: typeof setPostLikingUsersArray;
-  setShowPostLikingUsersModal: typeof setShowPostLikingUsersModal;
-  setFeedPagePostModalData: typeof setFeedPagePostModalData;
-  setFeedPagePostModalShow: typeof setFeedPagePostModalShow;
-  setClearFeedPagePostModalState: typeof setClearFeedPagePostModalState;
 }
 
 export interface UserInfoData {
@@ -121,11 +115,6 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   date,
   custRef,
   id,
-  setPostLikingUsersArray,
-  setShowPostLikingUsersModal,
-  setFeedPagePostModalData,
-  setFeedPagePostModalShow,
-  setClearFeedPagePostModalState,
 }) => {
   const [postId, setPostId] = useState('');
   const [didFetchReactions, setDidFetchReactions] = useState(false);
@@ -453,7 +442,7 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
 
       if (!compareUserInfoAndDataObjArrays(likingUsersArray, likesArray)) {
         setLikingUsersArray(likesArray);
-        setPostLikingUsersArray(likesArray);
+        dispatch(setPostLikingUsersArray(likesArray));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -546,18 +535,18 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   };
 
   const handlePostLikingUsersClick = () => {
-    setShowPostLikingUsersModal(true);
+    dispatch(setShowPostLikingUsersModal(true));
 
     if (likingUsersArray) {
-      setPostLikingUsersArray(likingUsersArray);
+      dispatch(setPostLikingUsersArray(likingUsersArray));
     }
   };
 
   const handleClickViewAllComments = () => {
-    setFeedPagePostModalShow(true);
-    setClearFeedPagePostModalState(false);
+    dispatch(setFeedPagePostModalShow(true));
+    dispatch(setClearFeedPagePostModalState(false));
 
-    setFeedPagePostModalData(postModalProps);
+    dispatch(setFeedPagePostModalData(postModalProps));
   };
 
   const handleClickPlayArrowIcon = () => setPlayVideo(true);
@@ -646,17 +635,4 @@ export const FeedPostContainer: React.FC<FeedPostContainerProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
-    dispatch(setPostLikingUsersArray(postLikingUsersArray)),
-  setShowPostLikingUsersModal: (showPostLikingUsersModal: boolean) =>
-    dispatch(setShowPostLikingUsersModal(showPostLikingUsersModal)),
-  setFeedPagePostModalData: (postModalDataToFeed: PostModalDataToFeed) =>
-    dispatch(setFeedPagePostModalData(postModalDataToFeed)),
-  setFeedPagePostModalShow: (feedPagePostModalShow: boolean) =>
-    dispatch(setFeedPagePostModalShow(feedPagePostModalShow)),
-  setClearFeedPagePostModalState: (clearFeedPagePostModalState: boolean) =>
-    dispatch(setClearFeedPagePostModalState(clearFeedPagePostModalState)),
-});
-
-export default connect(null, mapDispatchToProps)(FeedPostContainer);
+export default FeedPostContainer;
