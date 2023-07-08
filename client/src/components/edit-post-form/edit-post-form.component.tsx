@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { AppState } from '../../redux/root-reducer';
-
-import { EditPostDetailsReq, Location } from '../../redux/post/post.types';
+import { Location } from '../../redux/post/post.types';
 import { selectLocationSelection } from '../../redux/post/post.selectors';
 import {
   setShowPostEditForm,
@@ -24,16 +20,12 @@ interface EditPostFormProps {
   postId: string;
   editCaption: string;
   editLocation: string;
-  setShowPostEditForm: typeof setShowPostEditForm;
-  editPostDetailsStart: typeof editPostDetailsStart;
 }
 
 const EditPostForm: React.FC<EditPostFormProps> = ({
   postId,
   editCaption,
   editLocation,
-  setShowPostEditForm,
-  editPostDetailsStart,
 }) => {
   const [editPostDetails, setEditPostDetails] = useState({
     caption: '',
@@ -62,7 +54,8 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
     ) {
       dispatch(getLocationsSuggestionsStart(debouncedLocationSearchString));
     }
-  }, [debouncedLocationSearchString]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, debouncedLocationSearchString]);
 
   useEffect(() => {
     if (locationSelection) {
@@ -73,6 +66,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
       });
       setShowSuggestions(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationSelection]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,15 +78,17 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
   const handleEditPostFormSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
 
-    editPostDetailsStart({
-      postId,
-      caption,
-      location: locationObj || ({} as Location),
-    });
-    setShowPostEditForm(false);
+    dispatch(
+      editPostDetailsStart({
+        postId,
+        caption,
+        location: locationObj || ({} as Location),
+      })
+    );
+    dispatch(setShowPostEditForm(false));
   };
 
-  const handleCancelEdit = () => setShowPostEditForm(false);
+  const handleCancelEdit = () => dispatch(setShowPostEditForm(false));
 
   const handleFocus = () => setShowSuggestions(true);
 
@@ -146,14 +142,4 @@ const EditPostForm: React.FC<EditPostFormProps> = ({
   );
 };
 
-interface LinkStateProps {}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setShowPostEditForm: (showPostEditForm: boolean) =>
-    dispatch(setShowPostEditForm(showPostEditForm)),
-  editPostDetailsStart: (editPostDetailsReq: EditPostDetailsReq) =>
-    dispatch(editPostDetailsStart(editPostDetailsReq)),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(EditPostForm);
+export default EditPostForm;
