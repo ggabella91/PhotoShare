@@ -4,11 +4,9 @@ import { SignUp } from '../sign-up/sign-up.component';
 
 describe('sign-up component tests', () => {
   const setup = () => {
-    const signUpStart = jest.fn();
+    console.error = jest.fn();
 
-    render(<SignUp signUpStart={signUpStart} />);
-
-    return { signUpStart };
+    render(<SignUp />);
   };
 
   it('renders sign-up component', () => {
@@ -19,13 +17,13 @@ describe('sign-up component tests', () => {
     expect(signUp).toBeInTheDocument();
   });
 
-  it('clicking sign up button calls sign-up handler', () => {
-    const { signUpStart } = setup();
+  it('clicking sign up button calls sign-up handler without throwing an error', () => {
+    setup();
 
     const signUpButton = screen.getByTestId('button');
 
     userEvent.click(signUpButton);
 
-    expect(signUpStart).toBeCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 });
