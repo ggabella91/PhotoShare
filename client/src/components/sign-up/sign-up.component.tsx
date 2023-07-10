@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Dispatch } from 'redux';
-import { connect, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { FormInput } from '../form-input/form-input.component';
 import Button from '../button/button.component';
@@ -9,13 +8,8 @@ import Alert from 'react-bootstrap/Alert';
 
 import { signUpStart } from '../../redux/user/user.actions';
 import { selectUserSignUpError } from '../../redux/user/user.selectors';
-import { UserSignUp } from '../../redux/user/user.types';
 
-interface SignUpProps {
-  signUpStart: typeof signUpStart;
-}
-
-export const SignUp: React.FC<SignUpProps> = ({ signUpStart }) => {
+export const SignUp: React.FC = () => {
   const [userCredentials, setUserCredentials] = useState({
     username: '',
     name: '',
@@ -25,6 +19,7 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart }) => {
   });
 
   const [show, setShow] = useState(true);
+  const dispatch = useDispatch();
 
   const { username, name, email, password, passwordConfirm } = userCredentials;
 
@@ -32,7 +27,7 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart }) => {
     event.preventDefault();
 
     // Need to handle including username in /signup route request body in auth service
-    signUpStart({ username, name, email, password, passwordConfirm });
+    dispatch(signUpStart({ username, name, email, password, passwordConfirm }));
   };
 
   const [error, setError] = useState(false);
@@ -120,9 +115,4 @@ export const SignUp: React.FC<SignUpProps> = ({ signUpStart }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  // Add username after updating /signup route in auth service
-  signUpStart: (userSignUp: UserSignUp) => dispatch(signUpStart(userSignUp)),
-});
-
-export default connect(null, mapDispatchToProps)(SignUp);
+export default SignUp;
