@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Dispatch } from 'redux';
-import { connect, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { FormInput } from '../form-input/form-input.component';
 import Button from '../button/button.component';
@@ -9,25 +8,21 @@ import Alert from 'react-bootstrap/Alert';
 
 import { signInStart } from '../../redux/user/user.actions';
 import { selectUserSignInOrOutError } from '../../redux/user/user.selectors';
-import { UserSignIn } from '../../redux/user/user.types';
 
-interface SignInProps {
-  signInStart: typeof signInStart;
-}
-
-export const SignIn: React.FC<SignInProps> = ({ signInStart }) => {
+export const SignIn: React.FC = () => {
   const [userCredentials, setCredentials] = useState({
     email: '',
     password: '',
   });
 
   const [show, setShow] = useState(true);
+  const dispatch = useDispatch();
 
   const { email, password } = userCredentials;
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    signInStart({ email, password });
+    dispatch(signInStart({ email, password }));
   };
 
   const [error, setError] = useState(false);
@@ -100,8 +95,4 @@ export const SignIn: React.FC<SignInProps> = ({ signInStart }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  signInStart: (userSignIn: UserSignIn) => dispatch(signInStart(userSignIn)),
-});
-
-export default connect(null, mapDispatchToProps)(SignIn);
+export default SignIn;
