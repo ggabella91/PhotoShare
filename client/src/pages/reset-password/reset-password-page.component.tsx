@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { FormInput } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
 
 import Alert from 'react-bootstrap/Alert';
 
-import { Error, ResetPassword } from '../../redux/user/user.types';
-import { AppState } from '../../redux/root-reducer';
 import {
   selectResetError,
   selectResetConfirm,
@@ -20,24 +16,17 @@ import { resetPasswordStart } from '../../redux/user/user.actions';
 
 import './reset-password-page.styles.scss';
 
-interface ResetPasswordPageProps {
-  resetError: Error | null;
-  resetConfirm: string | null;
-  resetPasswordStart: typeof resetPasswordStart;
-}
-
-export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
-  resetError,
-  resetConfirm,
-  resetPasswordStart,
-}) => {
+export const ResetPasswordPage: React.FC = () => {
   const [userPassword, setUserPassword] = useState({
     password: '',
     passwordConfirm: '',
   });
   const [showAlert, setShowAlert] = useState(true);
   const [status, setStatus] = useState({ success: false, error: false });
+  const resetError = useSelector(selectResetError);
+  const resetConfirm = useSelector(selectResetConfirm);
   const { token } = useParams();
+  const dispatch = useDispatch();
 
   let navigate = useNavigate();
 
@@ -52,7 +41,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    token && resetPasswordStart({ password, passwordConfirm, token });
+    token && dispatch(resetPasswordStart({ password, passwordConfirm, token }));
   };
 
   useEffect(() => {
@@ -119,19 +108,4 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
   );
 };
 
-interface LinkStateProps {
-  resetError: Error | null;
-  resetConfirm: string | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  resetError: selectResetError,
-  resetConfirm: selectResetConfirm,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  resetPasswordStart: ({ password, passwordConfirm, token }: ResetPassword) =>
-    dispatch(resetPasswordStart({ password, passwordConfirm, token })),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ResetPasswordPage);
+export default ResetPasswordPage;

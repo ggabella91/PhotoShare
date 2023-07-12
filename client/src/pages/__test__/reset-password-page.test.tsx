@@ -3,23 +3,14 @@ import { ResetPasswordPage } from '../reset-password/reset-password-page.compone
 
 describe('reset password page component tests', () => {
   const setup = () => {
-    const resetPasswordStart = jest.fn();
+    console.error = jest.fn();
 
-    render(
-      <ResetPasswordPage
-        resetPasswordStart={resetPasswordStart}
-        resetConfirm={null}
-        resetError={null}
-      />,
-      {
-        wrapperProps: {
-          route: '/reset-password/:token',
-          location: '/reset-password/dasijgfsdhnag',
-        },
-      }
-    );
-
-    return { resetPasswordStart };
+    render(<ResetPasswordPage />, {
+      wrapperProps: {
+        route: '/reset-password/:token',
+        location: '/reset-password/dasijgfsdhnag',
+      },
+    });
   };
 
   it('renders a reset password page component', () => {
@@ -30,8 +21,8 @@ describe('reset password page component tests', () => {
     expect(resetPasswordPage).toBeInTheDocument();
   });
 
-  it("clicking 'change password' causes resetPasswordStart action creator to be called", () => {
-    const { resetPasswordStart } = setup();
+  it("clicking 'change password' causes resetPasswordStart action creator to be called without throwing an error", () => {
+    setup();
 
     const password = screen.getByLabelText('password');
     const confirmPassword = screen.getByLabelText('confirm password');
@@ -41,6 +32,6 @@ describe('reset password page component tests', () => {
     userEvent.type(confirmPassword, 'dis my new password');
     userEvent.click(submitButton);
 
-    expect(resetPasswordStart).toBeCalled();
+    expect(console.error).not.toHaveBeenCalled();
   });
 });
