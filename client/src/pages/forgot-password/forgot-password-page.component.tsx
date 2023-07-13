@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { FormInput } from '../../components/form-input/form-input.component';
 import Button from '../../components/button/button.component';
@@ -12,19 +11,14 @@ import { forgotPasswordStart } from '../../redux/user/user.actions';
 
 import './forgot-password-page.styles.scss';
 
-interface ForgotPasswordPageProps {
-  forgotPasswordStart: typeof forgotPasswordStart;
-}
-
-export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
-  forgotPasswordStart,
-}) => {
+export const ForgotPasswordPage: React.FC = () => {
   const [userEmail, setUserEmail] = useState('');
   const [showAlert, setShowAlert] = useState(true);
   const [status, setStatus] = useState({ success: false, error: false });
 
   const userState = useSelector((state: AppState) => state.user);
   const { forgotConfirm, forgotError } = userState;
+  const dispatch = useDispatch();
 
   const email = userEmail;
 
@@ -37,7 +31,7 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    forgotPasswordStart(email);
+    dispatch(forgotPasswordStart(email));
   };
 
   useEffect(() => {
@@ -97,8 +91,4 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  forgotPasswordStart: (email: string) => dispatch(forgotPasswordStart(email)),
-});
-
-export default connect(null, mapDispatchToProps)(ForgotPasswordPage);
+export default ForgotPasswordPage;
