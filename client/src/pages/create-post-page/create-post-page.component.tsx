@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { AppState } from '../../redux/root-reducer';
 import { Location } from '../../redux/post/post.types';
@@ -31,20 +30,12 @@ interface PostStatus {
   error: boolean;
 }
 
-interface CreatePostPageProps {
-  createPostStart: typeof createPostStart;
-  clearPostStatuses: typeof clearPostStatuses;
-}
-
 interface ImgPreview {
   src: string;
   alt: string;
 }
 
-export const CreatePostPage: React.FC<CreatePostPageProps> = ({
-  createPostStart,
-  clearPostStatuses,
-}) => {
+export const CreatePostPage: React.FC = () => {
   const [post, setPost] = useState<FormData | null>(null);
   const [caption, setCaption] = useState('');
   const [locationSearchString, setLocationSearchString] = useState('');
@@ -70,6 +61,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     } else if (postConfirm) {
       setPostStatus({ ...postStatus, success: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postError, postConfirm]);
 
   const debouncedLocationSearchString = useDebounce(locationSearchString, 1000);
@@ -78,6 +70,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
     if (debouncedLocationSearchString.length >= 3 && showSuggestions) {
       dispatch(getLocationsSuggestionsStart(debouncedLocationSearchString));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedLocationSearchString]);
 
   useEffect(() => {
@@ -133,7 +126,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
         post.append('location', locationObjString);
       }
 
-      createPostStart(post);
+      dispatch(createPostStart(post));
       setTimeout(() => setShowAlert(false), 5000);
     }
 
@@ -159,7 +152,7 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
 
   const handleRenderAlert = (type: string, message: string) => {
     if (showAlert) {
-      clearPostStatuses();
+      dispatch(clearPostStatuses());
       setTimeout(() => {
         setPostStatus({ success: false, error: false });
         setShowAlert(false);
@@ -272,9 +265,4 @@ export const CreatePostPage: React.FC<CreatePostPageProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  createPostStart: (post: FormData) => dispatch(createPostStart(post)),
-  clearPostStatuses: () => dispatch(clearPostStatuses()),
-});
-
-export default connect(null, mapDispatchToProps)(CreatePostPage);
+export default CreatePostPage;
