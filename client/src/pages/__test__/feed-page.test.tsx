@@ -6,12 +6,8 @@ describe('feed page component tests', () => {
   const setup = () => {
     const clearFollowState = jest.fn();
     const clearFollowersAndFollowing = jest.fn();
-    const clearPostState = jest.fn();
-    const getPostDataStart = jest.fn();
-    const getPostFileStart = jest.fn();
     const getOtherUserStart = jest.fn();
     const getUsersFollowingStart = jest.fn();
-    const archivePostStart = jest.fn();
     const setShowPostLikingUsersModal = jest.fn();
     const setFeedPagePostModalShow = jest.fn();
     const setFeedPagePostOptionsModalShow = jest.fn();
@@ -29,12 +25,8 @@ describe('feed page component tests', () => {
       <FeedPage
         clearFollowState={clearFollowState}
         clearFollowersAndFollowing={clearFollowersAndFollowing}
-        clearPostState={clearPostState}
-        getPostDataStart={getPostDataStart}
-        getPostFileStart={getPostFileStart}
         getOtherUserStart={getOtherUserStart}
         getUsersFollowingStart={getUsersFollowingStart}
-        archivePostStart={archivePostStart}
         setShowPostLikingUsersModal={setShowPostLikingUsersModal}
         setFeedPagePostModalShow={setFeedPagePostModalShow}
         setFeedPagePostOptionsModalShow={setFeedPagePostOptionsModalShow}
@@ -47,12 +39,8 @@ describe('feed page component tests', () => {
     return {
       clearFollowState,
       clearFollowersAndFollowing,
-      clearPostState,
-      getPostDataStart,
-      getPostFileStart,
       getOtherUserStart,
       getUsersFollowingStart,
-      archivePostStart,
       setShowPostLikingUsersModal,
       setFeedPagePostModalShow,
       setFeedPagePostOptionsModalShow,
@@ -63,20 +51,13 @@ describe('feed page component tests', () => {
   };
 
   it('render a feed page component', () => {
-    const {
-      getPostDataStart,
-      getPostFileStart,
-      getOtherUserStart,
-      getUsersFollowingStart,
-    } = setup();
+    const { getOtherUserStart, getUsersFollowingStart } = setup();
 
     const feedPage = screen.getByTestId('feed-page');
 
     const feedPostContainers = screen.getAllByTestId('feed-post-container');
 
     expect(feedPage).toBeInTheDocument();
-    expect(getPostDataStart).toBeCalled();
-    expect(getPostFileStart).toBeCalled();
     expect(getOtherUserStart).toBeCalled();
     expect(getUsersFollowingStart).toBeCalled();
     expect(feedPostContainers.length).toEqual(4);
