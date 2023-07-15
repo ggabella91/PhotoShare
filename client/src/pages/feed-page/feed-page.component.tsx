@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
@@ -19,9 +19,6 @@ import {
   Post,
   DataRequestType,
   FileRequestType,
-  PostDataReq,
-  PostFileReq,
-  ArchivePostReq,
   UserType,
   DeleteReactionReq,
   Location,
@@ -87,10 +84,6 @@ export interface UserInfoAndPostFile {
 }
 
 interface FeedPageProps {
-  getPostDataStart: typeof getPostDataStart;
-  getPostFileStart: typeof getPostFileStart;
-  archivePostStart: typeof archivePostStart;
-  clearPostState: typeof clearPostState;
   getUsersFollowingStart: typeof getUsersFollowingStart;
   getOtherUserStart: typeof getOtherUserStart;
   clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
@@ -104,9 +97,6 @@ interface FeedPageProps {
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
-  getPostDataStart,
-  getPostFileStart,
-  clearPostState,
   getUsersFollowingStart,
   getOtherUserStart,
   clearFollowersAndFollowing,
@@ -148,6 +138,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const postState = useSelector((state: AppState) => state.post);
   const userState = useSelector((state: AppState) => state.user);
   const followerState = useSelector((state: AppState) => state.follower);
+  const dispatch = useDispatch();
 
   const {
     postDataFeedArray,
@@ -185,7 +176,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     // Clear post state when cleaning up before component
     // leaves the screen
     () => () => {
-      clearPostState();
+      dispatch(clearPostState());
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -196,7 +187,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       return;
     }
 
-    clearPostState();
+    dispatch(clearPostState());
     clearFollowState();
     clearFollowersAndFollowing();
 
@@ -215,12 +206,14 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           type: OtherUserType.FOLLOWING,
         });
 
-        getPostDataStart({
-          userId: user.userId,
-          dataReqType: DataRequestType.feed,
-          pageToShow: pageToFetch,
-          limit: 2,
-        });
+        dispatch(
+          getPostDataStart({
+            userId: user.userId,
+            dataReqType: DataRequestType.feed,
+            pageToShow: pageToFetch,
+            limit: 2,
+          })
+        );
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -251,12 +244,14 @@ export const FeedPage: React.FC<FeedPageProps> = ({
           currentUser &&
           pageToFetch + 1 <= Math.ceil(el.queryLength / 2)
         ) {
-          getPostDataStart({
-            userId: el.userId,
-            dataReqType: DataRequestType.feed,
-            pageToShow: pageToFetch + 1,
-            limit: 2,
-          });
+          dispatch(
+            getPostDataStart({
+              userId: el.userId,
+              dataReqType: DataRequestType.feed,
+              pageToShow: pageToFetch + 1,
+              limit: 2,
+            })
+          );
 
           setPageToFetch(pageToFetch + 1);
         }
@@ -299,12 +294,14 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       followingInfo?.forEach((el) => {
         if (el.photo) {
           fetchCount++;
-          getPostFileStart({
-            s3Key: el.photo,
-            bucket: profileBucket,
-            user: UserType.followArray,
-            fileRequestType: FileRequestType.feedPost,
-          });
+          dispatch(
+            getPostFileStart({
+              s3Key: el.photo,
+              bucket: profileBucket,
+              user: UserType.followArray,
+              fileRequestType: FileRequestType.feedPost,
+            })
+          );
         }
       });
 
@@ -319,14 +316,16 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     if (currentUser) {
       dataFeedMapArray.forEach((innerObj) => {
         innerObj.postData.forEach((el) => {
-          getPostFileStart({
-            s3Key: el.s3Key,
-            isVideo: el.isVideo,
-            videoThumbnailS3Key: el.videoThumbnailS3Key,
-            bucket: postsBucket,
-            user: UserType.other,
-            fileRequestType: FileRequestType.feedPost,
-          });
+          dispatch(
+            getPostFileStart({
+              s3Key: el.s3Key,
+              isVideo: el.isVideo,
+              videoThumbnailS3Key: el.videoThumbnailS3Key,
+              bucket: postsBucket,
+              user: UserType.other,
+              fileRequestType: FileRequestType.feedPost,
+            })
+          );
         });
       });
     }
@@ -448,10 +447,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   };
 
   const handleArchivePost = () =>
-    archivePostStart({
-      postId: postModalProps.id,
-      s3Key: postModalProps.postS3Key,
-    });
+    dispatch(
+      archivePostStart({
+        postId: postModalProps.id,
+        s3Key: postModalProps.postS3Key,
+      })
+    );
 
   const handleHideCommentOptionsModal = () => setShowCommentOptionsModal(false);
 
@@ -546,13 +547,6 @@ export const FeedPage: React.FC<FeedPageProps> = ({
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getPostDataStart: (postDataReq: PostDataReq) =>
-    dispatch(getPostDataStart(postDataReq)),
-  getPostFileStart: (fileReq: PostFileReq) =>
-    dispatch(getPostFileStart(fileReq)),
-  archivePostStart: (archiveReq: ArchivePostReq) =>
-    dispatch(archivePostStart(archiveReq)),
-  clearPostState: () => dispatch(clearPostState()),
   getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
     dispatch(getUsersFollowingStart(usersFollowingObj)),
   getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
