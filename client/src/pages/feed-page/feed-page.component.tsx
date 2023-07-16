@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 
@@ -9,7 +8,7 @@ import { AppState } from '../../redux/root-reducer';
 
 import { useLazyLoading } from '../../hooks';
 
-import { OtherUserRequest, OtherUserType } from '../../redux/user/user.types';
+import { OtherUserType } from '../../redux/user/user.types';
 import {
   getOtherUserStart,
   clearFollowersAndFollowing,
@@ -20,7 +19,6 @@ import {
   DataRequestType,
   FileRequestType,
   UserType,
-  DeleteReactionReq,
   Location,
 } from '../../redux/post/post.types';
 import {
@@ -36,10 +34,7 @@ import {
   deleteReactionStart,
 } from '../../redux/post/post.actions';
 
-import {
-  WhoseUsersFollowing,
-  UsersFollowingRequest,
-} from '../../redux/follower/follower.types';
+import { WhoseUsersFollowing } from '../../redux/follower/follower.types';
 import {
   getUsersFollowingStart,
   clearFollowState,
@@ -83,31 +78,7 @@ export interface UserInfoAndPostFile {
   isVideo?: boolean;
 }
 
-interface FeedPageProps {
-  getUsersFollowingStart: typeof getUsersFollowingStart;
-  getOtherUserStart: typeof getOtherUserStart;
-  clearFollowersAndFollowing: typeof clearFollowersAndFollowing;
-  clearFollowState: typeof clearFollowState;
-  setShowPostLikingUsersModal: typeof setShowPostLikingUsersModal;
-  setFeedPagePostModalShow: typeof setFeedPagePostModalShow;
-  setFeedPagePostOptionsModalShow: typeof setFeedPagePostOptionsModalShow;
-  setClearFeedPagePostModalState: typeof setClearFeedPagePostModalState;
-  setShowCommentOptionsModal: typeof setShowCommentOptionsModal;
-  deleteReactionStart: typeof deleteReactionStart;
-}
-
-export const FeedPage: React.FC<FeedPageProps> = ({
-  getUsersFollowingStart,
-  getOtherUserStart,
-  clearFollowersAndFollowing,
-  clearFollowState,
-  setShowPostLikingUsersModal,
-  setFeedPagePostModalShow,
-  setFeedPagePostOptionsModalShow,
-  setClearFeedPagePostModalState,
-  setShowCommentOptionsModal,
-  deleteReactionStart,
-}) => {
+export const FeedPage: React.FC = () => {
   const [dataFeedMapArray, setDataFeedMapArray] = useState<PostDataListMap[]>(
     []
   );
@@ -188,23 +159,27 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     }
 
     dispatch(clearPostState());
-    clearFollowState();
-    clearFollowersAndFollowing();
+    dispatch(clearFollowState());
+    dispatch(clearFollowersAndFollowing());
 
-    getUsersFollowingStart({
-      userId: currentUser.id,
-      whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
-    });
+    dispatch(
+      getUsersFollowingStart({
+        userId: currentUser.id,
+        whoseUsersFollowing: WhoseUsersFollowing.CURRENT_USER,
+      })
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   useEffect(() => {
     currentUserUsersFollowing?.forEach((user) => {
       if (currentUser) {
-        getOtherUserStart({
-          usernameOrId: user.userId,
-          type: OtherUserType.FOLLOWING,
-        });
+        dispatch(
+          getOtherUserStart({
+            usernameOrId: user.userId,
+            type: OtherUserType.FOLLOWING,
+          })
+        );
 
         dispatch(
           getPostDataStart({
@@ -381,7 +356,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   useEffect(() => {
     if (feedPagePostModalShow) {
       setPostModalShow(feedPagePostModalShow);
-      setFeedPagePostModalShow(false);
+      dispatch(setFeedPagePostModalShow(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedPagePostModalShow]);
@@ -403,19 +378,22 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postModalProps]);
 
-  const handleHideLikesModal = () => setShowPostLikingUsersModal(false);
+  const handleHideLikesModal = () =>
+    dispatch(setShowPostLikingUsersModal(false));
 
   const handleHidePostModal = () => {
     setPostModalShow(false);
-    setClearFeedPagePostModalState(true);
+    dispatch(setClearFeedPagePostModalState(true));
   };
 
-  const handlePostOptionsClick = () => setFeedPagePostOptionsModalShow(true);
+  const handlePostOptionsClick = () =>
+    dispatch(setFeedPagePostOptionsModalShow(true));
 
-  const handlePostLikingUsersClick = () => setShowPostLikingUsersModal(true);
+  const handlePostLikingUsersClick = () =>
+    dispatch(setShowPostLikingUsersModal(true));
 
   const handleHidePostOptionsModal = () =>
-    setFeedPagePostOptionsModalShow(false);
+    dispatch(setFeedPagePostOptionsModalShow(false));
 
   const handleSetIsCurrentUserPost = () => {
     if (currentUser && postModalProps.postUserId) {
@@ -454,13 +432,14 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       })
     );
 
-  const handleHideCommentOptionsModal = () => setShowCommentOptionsModal(false);
+  const handleHideCommentOptionsModal = () =>
+    dispatch(setShowCommentOptionsModal(false));
 
   const handleArchiveComment = () => {
     if (commentToDelete) {
-      deleteReactionStart(commentToDelete);
+      dispatch(deleteReactionStart(commentToDelete));
     }
-    setShowCommentOptionsModal(false);
+    dispatch(setShowCommentOptionsModal(false));
   };
 
   return (
@@ -546,25 +525,4 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getUsersFollowingStart: (usersFollowingObj: UsersFollowingRequest) =>
-    dispatch(getUsersFollowingStart(usersFollowingObj)),
-  getOtherUserStart: (otherUserRequest: OtherUserRequest) =>
-    dispatch(getOtherUserStart(otherUserRequest)),
-  clearFollowersAndFollowing: () => dispatch(clearFollowersAndFollowing()),
-  clearFollowState: () => dispatch(clearFollowState()),
-  setShowPostLikingUsersModal: (showPostLikingUsersModal: boolean) =>
-    dispatch(setShowPostLikingUsersModal(showPostLikingUsersModal)),
-  setFeedPagePostModalShow: (feedPagePostModalShow: boolean) =>
-    dispatch(setFeedPagePostModalShow(feedPagePostModalShow)),
-  setFeedPagePostOptionsModalShow: (feedPagePostOptionsModalShow: boolean) =>
-    dispatch(setFeedPagePostOptionsModalShow(feedPagePostOptionsModalShow)),
-  setClearFeedPagePostModalState: (clearFeedPagePostModalState: boolean) =>
-    dispatch(setClearFeedPagePostModalState(clearFeedPagePostModalState)),
-  setShowCommentOptionsModal: (showCommentOptionsModal: boolean) =>
-    dispatch(setShowCommentOptionsModal(showCommentOptionsModal)),
-  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
-    dispatch(deleteReactionStart(deleteReactionReq)),
-});
-
-export default connect(null, mapDispatchToProps)(FeedPage);
+export default FeedPage;
