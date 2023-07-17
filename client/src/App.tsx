@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, Outlet, Navigate } from 'react-router-dom';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { AppState } from './redux/root-reducer';
-import { User } from './redux/user/user.types';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { checkUserSession } from './redux/user/user.actions';
 
@@ -31,26 +27,22 @@ import CreateVideoPostPage from './pages/create-video-post-page/create-video-pos
 import MessagesPage from './pages/messages-page/messages-page.component';
 import { useInitializeWebsocketConnection } from './hooks';
 
-interface AppProps {
-  checkUserSession: typeof checkUserSession;
-  currentUser: User | null;
-}
-
 const defaultState = {
   loading: true,
 };
 
-export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
+export const App: React.FC = () => {
   const [loading, setLoading] = useState(defaultState.loading);
   const mapBoxAccessToken = useSelector(selectMapBoxAccessToken);
+  const currentUser = useSelector(selectCurrentUser);
   const { socket, isSocketConnectionActive } =
     useInitializeWebsocketConnection(currentUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    checkUserSession();
+    dispatch(checkUserSession());
     setLoading(false);
-  }, [checkUserSession]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (currentUser && !mapBoxAccessToken) {
@@ -136,16 +128,4 @@ export const App: React.FC<AppProps> = ({ checkUserSession, currentUser }) => {
   );
 };
 
-interface LinkStateProps {
-  currentUser: User | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  checkUserSession: () => dispatch(checkUserSession()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
