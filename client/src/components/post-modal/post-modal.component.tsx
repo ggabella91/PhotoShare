@@ -96,7 +96,6 @@ export interface AlreadyLikedAndReactionId {
 }
 
 interface PostModalProps {
-  currentUser: User | null;
   isCurrentUserPost?: boolean;
   postId: string;
   caption: string;
@@ -113,12 +112,6 @@ interface PostModalProps {
   onOptionsClick: () => void;
   onPostLikingUsersClick?: () => void;
   userProfilePhotoFile: string;
-  postReactionsArray: Reaction[][];
-  postReactionConfirm: ReactionConfirm | null;
-  postReactionError: PostError | null;
-  postReactingUsers: User[] | null;
-  reactorPhotoFileArray: PostFile[] | null;
-  usersProfilePhotoConfirm: string | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
   deleteReactionConfirm: DeleteReactionConfirm | null;
@@ -139,7 +132,6 @@ interface PostModalProps {
 
 export const PostModal: React.FC<PostModalProps> = ({
   clearLocalState,
-  currentUser,
   isCurrentUserPost,
   postId,
   isVideo,
@@ -153,11 +145,6 @@ export const PostModal: React.FC<PostModalProps> = ({
   onOptionsClick,
   onPostLikingUsersClick,
   userProfilePhotoFile,
-  postReactionsArray,
-  postReactingUsers,
-  reactorPhotoFileArray,
-  usersProfilePhotoConfirm,
-  postReactionConfirm,
   deleteReactionConfirm,
   showPostEditForm,
   editPostDetailsConfirm,
@@ -171,7 +158,6 @@ export const PostModal: React.FC<PostModalProps> = ({
   setShowPostEditForm,
   getSinglePostDataStart,
   clearPostState,
-  postReactionError,
   getPostReactionsConfirm,
   getPostReactionsError,
   deleteReactionError,
@@ -221,9 +207,16 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const [playVideo, setPlayVideo] = useState(false);
 
-  const postModalDataCache = useSelector(
-    (state: AppState) => state.post.postModalDataCache
-  );
+  const postState = useSelector((state: AppState) => state.post);
+  const userState = useSelector((state: AppState) => state.user);
+
+  const {
+    postModalDataCache,
+    postReactionsArray,
+    reactorPhotoFileArray,
+    postReactionConfirm,
+  } = postState;
+  const { currentUser, postReactingUsers } = userState;
 
   const dispatch = useDispatch();
 
@@ -899,13 +892,6 @@ export const PostModal: React.FC<PostModalProps> = ({
 };
 
 interface LinkStateProps {
-  currentUser: User | null;
-  postReactionsArray: Reaction[][];
-  postReactingUsers: User[] | null;
-  reactorPhotoFileArray: PostFile[] | null;
-  usersProfilePhotoConfirm: string | null;
-  postReactionConfirm: ReactionConfirm | null;
-  postReactionError: PostError | null;
   getPostReactionsConfirm: string | null;
   getPostReactionsError: PostError | null;
   deleteReactionConfirm: DeleteReactionConfirm | null;
@@ -915,13 +901,6 @@ interface LinkStateProps {
 }
 
 const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  currentUser: selectCurrentUser,
-  postReactionsArray: selectPostReactionsArray,
-  postReactingUsers: selectPostReactingUsers,
-  reactorPhotoFileArray: selectReactorPhotoFileArray,
-  usersProfilePhotoConfirm: selectUsersProfilePhotoConfirm,
-  postReactionConfirm: selectPostReactionConfirm,
-  postReactionError: selectPostReactionError,
   getPostReactionsConfirm: selectGetPostReactionsConfirm,
   getPostReactionsError: selectGetPostReactionsError,
   deleteReactionConfirm: selectDeleteReactionConfirm,
