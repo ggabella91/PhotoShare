@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import { createStructuredSelector } from 'reselect';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -18,42 +17,21 @@ import {
   OtherUserType,
   OtherUserRequest,
 } from '../../redux/user/user.types';
-import {
-  selectCurrentUser,
-  selectPostReactingUsers,
-} from '../../redux/user/user.selectors';
+
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
   Reaction,
-  ReactionReq,
-  ReactionConfirm,
   DeleteReactionReq,
-  DeleteReactionConfirm,
-  Post,
-  PostError,
   PostFileReq,
   FileRequestType,
-  PostFile,
   GetPostReactionsReq,
   ReactionRequestType,
   UserType,
   SinglePostDataReq,
   Location,
 } from '../../redux/post/post.types';
-import {
-  selectPostReactionsArray,
-  selectReactorPhotoFileArray,
-  selectUsersProfilePhotoConfirm,
-  selectPostReactionConfirm,
-  selectPostReactionError,
-  selectGetPostReactionsConfirm,
-  selectGetPostReactionsError,
-  selectDeleteReactionConfirm,
-  selectDeleteReactionError,
-  selectShowPostEditForm,
-  selectEditPostDetailsConfirm,
-} from '../../redux/post/post.selectors';
+
 import {
   createPostReactionStart,
   getPostReactionsStart,
@@ -112,13 +90,6 @@ interface PostModalProps {
   onOptionsClick: () => void;
   onPostLikingUsersClick?: () => void;
   userProfilePhotoFile: string;
-  getPostReactionsConfirm: string | null;
-  getPostReactionsError: PostError | null;
-  deleteReactionConfirm: DeleteReactionConfirm | null;
-  deleteReactionError: PostError | null;
-  showPostEditForm: boolean;
-  editPostDetailsConfirm: Post | null;
-  createPostReactionStart: typeof createPostReactionStart;
   getPostReactionsStart: typeof getPostReactionsStart;
   getPostFileStart: typeof getPostFileStart;
   getOtherUserStart: typeof getOtherUserStart;
@@ -145,11 +116,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   onOptionsClick,
   onPostLikingUsersClick,
   userProfilePhotoFile,
-  deleteReactionConfirm,
-  showPostEditForm,
-  editPostDetailsConfirm,
   clearPostReactions,
-  createPostReactionStart,
   getPostReactionsStart,
   getOtherUserStart,
   getPostFileStart,
@@ -158,9 +125,6 @@ export const PostModal: React.FC<PostModalProps> = ({
   setShowPostEditForm,
   getSinglePostDataStart,
   clearPostState,
-  getPostReactionsConfirm,
-  getPostReactionsError,
-  deleteReactionError,
   ...props
 }) => {
   const [localPostId, setLocalPostId] = useState(postId);
@@ -215,6 +179,9 @@ export const PostModal: React.FC<PostModalProps> = ({
     postReactionsArray,
     reactorPhotoFileArray,
     postReactionConfirm,
+    deleteReactionConfirm,
+    showPostEditForm,
+    editPostDetailsConfirm,
   } = postState;
   const { currentUser, postReactingUsers } = userState;
 
@@ -671,12 +638,14 @@ export const PostModal: React.FC<PostModalProps> = ({
     event.preventDefault();
 
     if (comment) {
-      createPostReactionStart({
-        reactingUserId: userId,
-        postId: localPostId,
-        likedPost: false,
-        comment,
-      });
+      dispatch(
+        createPostReactionStart({
+          reactingUserId: userId,
+          postId: localPostId,
+          likedPost: false,
+          comment,
+        })
+      );
 
       if (currentUser) {
         dispatch(
@@ -710,12 +679,14 @@ export const PostModal: React.FC<PostModalProps> = ({
       : handleSubmitLike();
 
   const handleSubmitLike = () => {
-    createPostReactionStart({
-      reactingUserId: userId,
-      postId: localPostId,
-      likedPost: true,
-      comment: '',
-    });
+    dispatch(
+      createPostReactionStart({
+        reactingUserId: userId,
+        postId: localPostId,
+        likedPost: true,
+        comment: '',
+      })
+    );
 
     if (currentUser) {
       dispatch(
@@ -891,27 +862,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   );
 };
 
-interface LinkStateProps {
-  getPostReactionsConfirm: string | null;
-  getPostReactionsError: PostError | null;
-  deleteReactionConfirm: DeleteReactionConfirm | null;
-  deleteReactionError: PostError | null;
-  showPostEditForm: boolean;
-  editPostDetailsConfirm: Post | null;
-}
-
-const mapStateToProps = createStructuredSelector<AppState, LinkStateProps>({
-  getPostReactionsConfirm: selectGetPostReactionsConfirm,
-  getPostReactionsError: selectGetPostReactionsError,
-  deleteReactionConfirm: selectDeleteReactionConfirm,
-  deleteReactionError: selectDeleteReactionError,
-  showPostEditForm: selectShowPostEditForm,
-  editPostDetailsConfirm: selectEditPostDetailsConfirm,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  createPostReactionStart: (reactionReq: ReactionReq) =>
-    dispatch(createPostReactionStart(reactionReq)),
   getPostReactionsStart: (getPostReactionsReq: GetPostReactionsReq) =>
     dispatch(getPostReactionsStart(getPostReactionsReq)),
   getPostFileStart: (postFileReq: PostFileReq) =>
@@ -930,4 +881,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   clearPostState: () => dispatch(clearPostState()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
+export default connect(null, mapDispatchToProps)(PostModal);
