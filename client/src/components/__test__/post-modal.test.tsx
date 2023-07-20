@@ -8,12 +8,7 @@ describe('post modal component tests', () => {
     const testLocation = { label: 'test location' } as Location;
     const handleHide = jest.fn();
     const handleOptionsClick = jest.fn();
-    const getPostReactionsStart = jest.fn();
-    const getPostFileStart = jest.fn();
-    const deleteReactionStart = jest.fn();
-    const getOtherUserStart = jest.fn();
     const setPostLikingUsersArray = jest.fn();
-    const clearPostReactions = jest.fn();
     const setShowPostEditForm = jest.fn();
     const clearPostState = jest.fn();
     const getSinglePostDataStart = jest.fn();
@@ -31,13 +26,8 @@ describe('post modal component tests', () => {
         userProfilePhotoFile='userFile'
         postId=''
         userId=''
-        getPostReactionsStart={getPostReactionsStart}
         clearLocalState={false}
-        getPostFileStart={getPostFileStart}
-        getOtherUserStart={getOtherUserStart}
-        deleteReactionStart={deleteReactionStart}
         setPostLikingUsersArray={setPostLikingUsersArray}
-        clearPostReactions={clearPostReactions}
         setShowPostEditForm={setShowPostEditForm}
         getSinglePostDataStart={getSinglePostDataStart}
         clearPostState={clearPostState}
@@ -47,12 +37,7 @@ describe('post modal component tests', () => {
     return {
       handleHide,
       handleOptionsClick,
-      getPostReactionsStart,
-      getPostFileStart,
-      deleteReactionStart,
-      getOtherUserStart,
       setPostLikingUsersArray,
-      clearPostReactions,
       setShowPostEditForm,
       getSinglePostDataStart,
       clearPostState,
