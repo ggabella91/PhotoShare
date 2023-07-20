@@ -12,20 +12,13 @@ import slugify from 'slugify';
 
 import { AppState } from '../../redux/root-reducer';
 
-import {
-  User,
-  OtherUserType,
-  OtherUserRequest,
-} from '../../redux/user/user.types';
+import { User, OtherUserType } from '../../redux/user/user.types';
 
 import { getOtherUserStart } from '../../redux/user/user.actions';
 
 import {
   Reaction,
-  DeleteReactionReq,
-  PostFileReq,
   FileRequestType,
-  GetPostReactionsReq,
   ReactionRequestType,
   UserType,
   SinglePostDataReq,
@@ -90,12 +83,7 @@ interface PostModalProps {
   onOptionsClick: () => void;
   onPostLikingUsersClick?: () => void;
   userProfilePhotoFile: string;
-  getPostReactionsStart: typeof getPostReactionsStart;
-  getPostFileStart: typeof getPostFileStart;
-  getOtherUserStart: typeof getOtherUserStart;
-  deleteReactionStart: typeof deleteReactionStart;
   setPostLikingUsersArray: typeof setPostLikingUsersArray;
-  clearPostReactions: typeof clearPostReactions;
   setShowPostEditForm: typeof setShowPostEditForm;
   getSinglePostDataStart: typeof getSinglePostDataStart;
   clearPostState: typeof clearPostState;
@@ -116,11 +104,6 @@ export const PostModal: React.FC<PostModalProps> = ({
   onOptionsClick,
   onPostLikingUsersClick,
   userProfilePhotoFile,
-  clearPostReactions,
-  getPostReactionsStart,
-  getOtherUserStart,
-  getPostFileStart,
-  deleteReactionStart,
   setPostLikingUsersArray,
   setShowPostEditForm,
   getSinglePostDataStart,
@@ -340,12 +323,15 @@ export const PostModal: React.FC<PostModalProps> = ({
       !postModalDataCache?.[localPostId] &&
       !areReactionsReadyForRendering
     ) {
-      getPostReactionsStart({
-        postId: localPostId,
-        reactionReqType: ReactionRequestType.singlePost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId: localPostId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
     }
-  }, [localPostId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, localPostId]);
 
   useEffect(() => {
     if (
@@ -396,7 +382,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       localPostId &&
       postReactionConfirm.postId === localPostId
     ) {
-      clearPostReactions();
+      dispatch(clearPostReactions());
 
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: true,
@@ -406,12 +392,15 @@ export const PostModal: React.FC<PostModalProps> = ({
       setLikingUsersArray([]);
       dispatch(removePostModalDataFromCache(localPostId));
       setAreReactionsReadyForRendering(false);
-      getPostReactionsStart({
-        postId: localPostId,
-        reactionReqType: ReactionRequestType.singlePost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId: localPostId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
     }
-  }, [postReactionConfirm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, postReactionConfirm]);
 
   useEffect(() => {
     if (
@@ -420,7 +409,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       localPostId &&
       deleteReactionConfirm.postId === localPostId
     ) {
-      clearPostReactions();
+      dispatch(clearPostReactions());
 
       setAlreadyLikedPostAndReactionId({
         alreadyLikedPost: false,
@@ -430,12 +419,15 @@ export const PostModal: React.FC<PostModalProps> = ({
       setLikingUsersArray([]);
       dispatch(removePostModalDataFromCache(localPostId));
       setAreReactionsReadyForRendering(false);
-      getPostReactionsStart({
-        postId: localPostId,
-        reactionReqType: ReactionRequestType.singlePost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId: localPostId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
     }
-  }, [deleteReactionConfirm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, deleteReactionConfirm]);
 
   useEffect(() => {
     if (
@@ -444,16 +436,19 @@ export const PostModal: React.FC<PostModalProps> = ({
       localPostId &&
       postReactionConfirm.postId === localPostId
     ) {
-      clearPostReactions();
+      dispatch(clearPostReactions());
 
       dispatch(removePostModalDataFromCache(localPostId));
       setAreReactionsReadyForRendering(false);
-      getPostReactionsStart({
-        postId: localPostId,
-        reactionReqType: ReactionRequestType.singlePost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId: localPostId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
     }
-  }, [postReactionConfirm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, postReactionConfirm]);
 
   useEffect(() => {
     if (
@@ -462,16 +457,19 @@ export const PostModal: React.FC<PostModalProps> = ({
       localPostId &&
       deleteReactionConfirm.postId === localPostId
     ) {
-      clearPostReactions();
+      dispatch(clearPostReactions());
 
       dispatch(removePostModalDataFromCache(localPostId));
       setAreReactionsReadyForRendering(false);
-      getPostReactionsStart({
-        postId: localPostId,
-        reactionReqType: ReactionRequestType.singlePost,
-      });
+      dispatch(
+        getPostReactionsStart({
+          postId: localPostId,
+          reactionReqType: ReactionRequestType.singlePost,
+        })
+      );
     }
-  }, [deleteReactionConfirm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, deleteReactionConfirm]);
 
   useEffect(() => {
     if (
@@ -480,15 +478,18 @@ export const PostModal: React.FC<PostModalProps> = ({
       !postModalDataCache?.[localPostId]
     ) {
       reactionsArray.forEach((el) => {
-        getOtherUserStart({
-          type: OtherUserType.POST_REACTOR,
-          usernameOrId: el.reactingUserId,
-        });
+        dispatch(
+          getOtherUserStart({
+            type: OtherUserType.POST_REACTOR,
+            usernameOrId: el.reactingUserId,
+          })
+        );
 
         setUniqueReactingUsers(uniqueReactingUsers.add(el.reactingUserId));
       });
     }
-  }, [reactionsArray]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, reactionsArray]);
 
   useEffect(() => {
     if (
@@ -508,12 +509,14 @@ export const PostModal: React.FC<PostModalProps> = ({
     ) {
       reactingUserInfoArray.forEach((el) => {
         if (el.photo) {
-          getPostFileStart({
-            s3Key: el.photo,
-            bucket,
-            user: UserType.postReactorsArray,
-            fileRequestType: FileRequestType.singlePost,
-          });
+          dispatch(
+            getPostFileStart({
+              s3Key: el.photo,
+              bucket,
+              user: UserType.postReactorsArray,
+              fileRequestType: FileRequestType.singlePost,
+            })
+          );
         } else {
           dispatch(
             getUserPhotoForReactorArraySuccess({ s3Key: '', fileString: '' })
@@ -521,7 +524,8 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       });
     }
-  }, [reactingUserInfoArray]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, reactingUserInfoArray]);
 
   useEffect(() => {
     if (
@@ -701,11 +705,13 @@ export const PostModal: React.FC<PostModalProps> = ({
   };
 
   const handleSubmitRemoveLike = () => {
-    deleteReactionStart({
-      reactionId: alreadyLikedPostAndReactionId.reactionId,
-      isLikeRemoval: true,
-      postId: localPostId,
-    });
+    dispatch(
+      deleteReactionStart({
+        reactionId: alreadyLikedPostAndReactionId.reactionId,
+        isLikeRemoval: true,
+        postId: localPostId,
+      })
+    );
   };
 
   const handleRenderEditPostDetails = () => {
@@ -863,15 +869,6 @@ export const PostModal: React.FC<PostModalProps> = ({
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getPostReactionsStart: (getPostReactionsReq: GetPostReactionsReq) =>
-    dispatch(getPostReactionsStart(getPostReactionsReq)),
-  getPostFileStart: (postFileReq: PostFileReq) =>
-    dispatch(getPostFileStart(postFileReq)),
-  getOtherUserStart: (otherUserReq: OtherUserRequest) =>
-    dispatch(getOtherUserStart(otherUserReq)),
-  deleteReactionStart: (deleteReactionReq: DeleteReactionReq) =>
-    dispatch(deleteReactionStart(deleteReactionReq)),
-  clearPostReactions: () => dispatch(clearPostReactions()),
   setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
     dispatch(setPostLikingUsersArray(postLikingUsersArray)),
   setShowPostEditForm: (showPostEditForm: boolean) =>
