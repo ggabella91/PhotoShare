@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -21,7 +20,6 @@ import {
   FileRequestType,
   ReactionRequestType,
   UserType,
-  SinglePostDataReq,
   Location,
 } from '../../redux/post/post.types';
 
@@ -37,7 +35,6 @@ import {
   getSinglePostDataStart,
   savePostModalDataToCache,
   removePostModalDataFromCache,
-  clearPostState,
   setLocationCoordinates,
   clearSinglePostData,
 } from '../../redux/post/post.actions';
@@ -83,10 +80,6 @@ interface PostModalProps {
   onOptionsClick: () => void;
   onPostLikingUsersClick?: () => void;
   userProfilePhotoFile: string;
-  setPostLikingUsersArray: typeof setPostLikingUsersArray;
-  setShowPostEditForm: typeof setShowPostEditForm;
-  getSinglePostDataStart: typeof getSinglePostDataStart;
-  clearPostState: typeof clearPostState;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -104,10 +97,6 @@ export const PostModal: React.FC<PostModalProps> = ({
   onOptionsClick,
   onPostLikingUsersClick,
   userProfilePhotoFile,
-  setPostLikingUsersArray,
-  setShowPostEditForm,
-  getSinglePostDataStart,
-  clearPostState,
   ...props
 }) => {
   const [localPostId, setLocalPostId] = useState(postId);
@@ -295,9 +284,10 @@ export const PostModal: React.FC<PostModalProps> = ({
         setCaptionInfoArray([]);
       }
 
-      getSinglePostDataStart({ postId: editPostDetailsConfirm.id });
+      dispatch(getSinglePostDataStart({ postId: editPostDetailsConfirm.id }));
     }
-  }, [editPostDetailsConfirm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, editPostDetailsConfirm]);
 
   useEffect(() => {
     if (postModalDataCache?.[localPostId] && !areReactionsReadyForRendering) {
@@ -308,7 +298,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       const likersArray = postModalDataCache?.[localPostId].likingUsersArray;
 
       setLikingUsersArray(likersArray);
-      setPostLikingUsersArray(likersArray);
+      dispatch(setPostLikingUsersArray(likersArray));
       setAlreadyLikedPostAndReactionId(
         postModalDataCache?.[localPostId].alreadyLikedPostAndReactionId
       );
@@ -596,12 +586,14 @@ export const PostModal: React.FC<PostModalProps> = ({
 
       if (!compareUserInfoAndDataObjArrays(likingUsersArray, likesArray)) {
         setLikingUsersArray(likesArray);
-        setPostLikingUsersArray(likesArray);
+        dispatch(setPostLikingUsersArray(likesArray));
       }
 
       setAreReactionsReadyForRendering(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    dispatch,
     reactionsArray,
     uniqueReactingUsers,
     reactingUserInfoArray,
@@ -732,7 +724,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     } else return null;
   };
 
-  const handleShowPostEditForm = () => setShowPostEditForm(true);
+  const handleShowPostEditForm = () => dispatch(setShowPostEditForm(true));
 
   const handleClickPlayArrowIcon = () => setPlayVideo(true);
 
@@ -868,14 +860,4 @@ export const PostModal: React.FC<PostModalProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setPostLikingUsersArray: (postLikingUsersArray: UserInfoAndOtherData[]) =>
-    dispatch(setPostLikingUsersArray(postLikingUsersArray)),
-  setShowPostEditForm: (showPostEditForm: boolean) =>
-    dispatch(setShowPostEditForm(showPostEditForm)),
-  getSinglePostDataStart: (singlePostDataReq: SinglePostDataReq) =>
-    dispatch(getSinglePostDataStart(singlePostDataReq)),
-  clearPostState: () => dispatch(clearPostState()),
-});
-
-export default connect(null, mapDispatchToProps)(PostModal);
+export default PostModal;

@@ -8,10 +8,6 @@ describe('post modal component tests', () => {
     const testLocation = { label: 'test location' } as Location;
     const handleHide = jest.fn();
     const handleOptionsClick = jest.fn();
-    const setPostLikingUsersArray = jest.fn();
-    const setShowPostEditForm = jest.fn();
-    const clearPostState = jest.fn();
-    const getSinglePostDataStart = jest.fn();
 
     render(
       <PostModal
@@ -27,20 +23,12 @@ describe('post modal component tests', () => {
         postId=''
         userId=''
         clearLocalState={false}
-        setPostLikingUsersArray={setPostLikingUsersArray}
-        setShowPostEditForm={setShowPostEditForm}
-        getSinglePostDataStart={getSinglePostDataStart}
-        clearPostState={clearPostState}
       />
     );
 
     return {
       handleHide,
       handleOptionsClick,
-      setPostLikingUsersArray,
-      setShowPostEditForm,
-      getSinglePostDataStart,
-      clearPostState,
     };
   };
 
