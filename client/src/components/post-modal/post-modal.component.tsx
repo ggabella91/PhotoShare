@@ -179,6 +179,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         window.history.pushState({}, '', `${urlLocation.pathname}`);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.show, postId]);
 
   useEffect(() => {
@@ -201,7 +202,8 @@ export const PostModal: React.FC<PostModalProps> = ({
         editLocation: '',
       });
     }
-  }, [postId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, postId]);
 
   useEffect(() => {
     caption
@@ -216,6 +218,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           },
         ])
       : setCaptionInfoArray([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [caption, userProfilePhotoFile]);
 
   useEffect(() => {
@@ -240,7 +243,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         })
       );
     }
-  }, [caption, location]);
+  }, [dispatch, caption, location]);
 
   useEffect(() => {
     if (editPostDetailsConfirm) {
@@ -305,7 +308,8 @@ export const PostModal: React.FC<PostModalProps> = ({
 
       setAreReactionsReadyForRendering(true);
     }
-  }, [localPostId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, localPostId]);
 
   useEffect(() => {
     if (
@@ -338,6 +342,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postReactionsArray]);
 
   useEffect(() => {
@@ -363,6 +368,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reactionsArray]);
 
   useEffect(() => {
@@ -489,6 +495,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     ) {
       setReactingUsersInfoArray(postReactingUsers);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postReactingUsers]);
 
   useEffect(() => {
@@ -617,7 +624,9 @@ export const PostModal: React.FC<PostModalProps> = ({
         })
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    dispatch,
     commentingUserArray,
     likingUsersArray,
     areReactionsReadyForRendering,
