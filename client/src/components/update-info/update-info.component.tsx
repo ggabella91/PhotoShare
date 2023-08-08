@@ -48,7 +48,7 @@ export const UpdateInfo: React.FC = () => {
         bio: currentUser.bio || '',
       });
     }
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     if (currentUser) {
@@ -58,6 +58,7 @@ export const UpdateInfo: React.FC = () => {
         setStatusInfo({ ...statusInfo, success: true });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changeInfoError, changeInfoConfirm]);
 
   const handleInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
