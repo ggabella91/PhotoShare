@@ -55,6 +55,7 @@ export const UpdatePassword: React.FC = () => {
     } else if (changePasswordConfirm) {
       setStatusPass({ ...statusPass, success: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changePasswordError, changePasswordConfirm]);
 
   const handleRenderAlert = (type: string, message: string) => {

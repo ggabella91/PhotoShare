@@ -32,6 +32,7 @@ const UserDetails = ({ userData }: UserDetailsProps) => {
     if (!userChipFound && isChecked) {
       setIsChecked(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usersArrayForNewConvoReq]);
 
   const handleClick = () => {
