@@ -94,7 +94,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
     if (debouncedLocationSearchString.length >= 3 && showSuggestions) {
       dispatch(getLocationsSuggestionsStart(debouncedLocationSearchString));
     }
-  }, [debouncedLocationSearchString]);
+  }, [dispatch, debouncedLocationSearchString, showSuggestions]);
 
   useEffect(() => {
     if (locationSelection) {
@@ -149,6 +149,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
       const idx = completed ? chunkIndex.idx : chunkIndex.idx + 1;
       setChunkIndex({ idx: idx, completed });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoPostFileChunkMetaData]);
 
   useEffect(() => {
@@ -166,6 +167,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
       reader.onload = (e) => prepareAndSendFileChunkRequest(e);
       reader.readAsDataURL(fileChunk);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chunkIndex, uploadPartArray]);
 
   useEffect(() => {
@@ -183,6 +185,7 @@ const CreateVideoPostPage: React.FC<VideoPostPageProps> = () => {
       setUploadPartArray([]);
       setPostStatus({ ...postStatus, success: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postError, postConfirm]);
 
   const getAllChunksSent = (file: File) => {
